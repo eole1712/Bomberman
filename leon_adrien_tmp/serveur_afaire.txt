@@ -1,0 +1,22 @@
+menu suivant l'intro -> plusieurs modes de jeu -> menant à choix de map (liste des maps présentes OU random) & choix du nombre de joueurs & choix des pseudos
+                     -> options modifiables (à stocker dans un fichier / sauvegarder ?)*****
+		     -> high-scores (à stocker dans un fichier / sauvegarder)
+		     -> replays des anciennes parties jouées (à enregistrer / charger)
+
+possibilité de générer / load une map
+créer un thread par joueur -> check quand il n'en reste qu'un (victoire) ou quand les deux humains sont morts (défaite)
+gérer le spawn des joueurs (random ET le plus éloigné possible)
+gérer le déplacement du ou des deux joueur(s) humain(s) -> UP, RIGHT, LEFT, DOWN ARROW & zqsd
+gérer l'explosion des bombes / la destruction du décor
+gérer des events liés aux sons (plusieurs kills sur un temps donné, multi-kill, ...)
+gérer la génération de bonus (+1 bombe posable, +1 range sur les bombes, +1 speed)
+
+afficher le tableau des scores à la fin d'une partie
+
+IA scriptée
+
+
+***** Liste des options :
+
+- Difficulté : 3 difficultés (donc 3 IA scriptées)
+- Nombre d'IA présentes : de 0 à l'infini (enfin... à définir)
