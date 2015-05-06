@@ -1,13 +1,3 @@
-//
-// GenericMap.hpp for nibbler in /home/tea_a/Work/cpp_nibbler/sources/lib_sfml
-//
-// Made by Alexandre Tea
-// Login   <tea_a@epitech.net>
-//
-// Started on  Tue Mar 24 22:53:02 2015 Alexandre Tea
-// Last update Sat Apr  4 00:00:09 2015 Alexandre Tea
-//
-
 #ifndef __GENERICMAP_HPP__
 # define __GENERICMAP_HPP__
 

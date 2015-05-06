@@ -1,13 +1,3 @@
-//
-// StringConversion.hh for  in /home/tea_a/Work/cpp_nibbler/sources
-//
-// Made by Alexandre Tea
-// Login   <tea_a@epitech.net>
-//
-// Started on  Thu Mar 26 21:35:03 2015 Alexandre Tea
-// Last update Sat Apr  4 00:00:46 2015 Alexandre Tea
-//
-
 #ifndef __STRINGCONVERSION_HPP__
 # define __STRINGCONVERSION_HPP__
 

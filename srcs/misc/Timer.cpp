@@ -1,9 +1,6 @@
 #include <unistd.h>
 #include "Timer.hpp"
 
-namespace PlazzaTime
-{
-
 Timer::Timer(uintmax_t time)
   :_time(std::chrono::microseconds(35000)),
    _saveTime(0),
@@ -49,6 +46,4 @@ std::chrono::microseconds	Timer::getCurTime()
 {
   std::chrono::time_point<std::chrono::system_clock> newTime = std::chrono::system_clock::now();
   return (_saveTime + std::chrono::duration_cast<std::chrono::microseconds>((newTime - _clock)));
-}
-
 }

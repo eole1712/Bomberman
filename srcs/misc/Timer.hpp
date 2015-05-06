@@ -4,9 +4,6 @@
 # include <ctime>
 # include <chrono>
 
-namespace PlazzaTime
-{
-
 class Timer
 {
 public:
@@ -29,5 +26,4 @@ private:
   std::chrono::time_point<std::chrono::system_clock>	_clock;
 };
 
-}
 #endif /* !TIMER_H_ */
