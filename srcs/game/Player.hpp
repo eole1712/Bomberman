@@ -5,7 +5,7 @@
 // Login   <ghukas_g@epitech.net>
 //
 // Started on  Wed May  6 19:57:54 2015 Grisha GHUKASYAN
-// Last update Wed May  6 20:42:44 2015 Grisha GHUKASYAN
+// Last update Thu May  7 16:32:33 2015 Grisha GHUKASYAN
 //
 
 #ifndef PLAYER_H_
@@ -14,6 +14,7 @@
 # include <string>
 # include <list>
 # include "IObject.hpp"
+# include "buffs/IBuff.hpp"
 
 namespace Bomberman
 {
@@ -22,7 +23,7 @@ class Player
   : public Map::IObject
 {
 public:
-  Player();
+  Player(std::string const &);
   virtual ~Player();
 
 private:
