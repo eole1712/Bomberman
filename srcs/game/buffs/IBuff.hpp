@@ -17,13 +17,13 @@ public:
     };
 
 public:
-  virtual ~Buff() {}
+  virtual ~IBuff() {}
 
 public:
-  unsigned int	getDuration() const = 0;
-  BuffType	getType() const = 0;
-  bool		isBonus() const = 0;
-  bool		isMalus() const = 0;
+  virtual unsigned int	getDuration() const = 0;
+  virtual BuffType	getType() const = 0;
+  virtual bool		isBonus() const = 0;
+  virtual bool		isMalus() const = 0;
 };
 
 }
