@@ -1,20 +1,10 @@
-//
-// Player.hpp for  in /home/ghukas_g/rendu/cpp_bomberman/srcs
-//
-// Made by Grisha GHUKASYAN
-// Login   <ghukas_g@epitech.net>
-//
-// Started on  Wed May  6 19:57:54 2015 Grisha GHUKASYAN
-// Last update Thu May  7 16:32:33 2015 Grisha GHUKASYAN
-//
-
 #ifndef PLAYER_H_
 # define PLAYER_H_
 
 # include <string>
 # include <list>
 # include "IObject.hpp"
-# include "IBuff.hpp"
+# include "buffs/IBuff.hpp"
 
 namespace Bomberman
 {
@@ -64,13 +54,32 @@ private:
   bool			_isAlive;
 
 public:
+  template<enum IBuff::Type>
+  void			execBuff(IBuff *);
   void			addBuff(IBuff *);
   void			delBuff(IBuff *);
   void			checkBuffList();
 
 private:
   std::list<IBuff*>	_buff;
+
+private:
+  unsigned int		_putBomb;
+  unsigned int		_maxBomb;
 };
+
+template <>
+void			Player::execBuff<IBuff::INC_SPEED>(IBuff *);
+template <>
+void			Player::execBuff<IBuff::DEC_SPEED>(IBuff *);
+template <>
+void			Player::execBuff<IBuff::INC_BOMB>(IBuff *);
+template <>
+void			Player::execBuff<IBuff::NO_BOMB>(IBuff *);
+template <>
+void			Player::execBuff<IBuff::PARALYZED>(IBuff *);
+template <>
+void			Player::execBuff<IBuff::SHIELD>(IBuff *);
 
 }
 

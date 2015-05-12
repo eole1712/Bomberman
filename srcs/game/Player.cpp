@@ -1,13 +1,3 @@
-//
-// Player.cpp for  in /home/ghukas_g/rendu/cpp_bomberman/srcs/game
-//
-// Made by Grisha GHUKASYAN
-// Login   <ghukas_g@epitech.net>
-//
-// Started on  Thu May  7 16:31:13 2015 Grisha GHUKASYAN
-// Last update Thu May  7 16:46:25 2015 Grisha GHUKASYAN
-//
-
 #include <string>
 #include <list>
 #include "Player.hpp"
@@ -85,6 +75,43 @@ bool			Bomberman::Player::isAlive() const
 }
 
 // buff methods --- pas complète
+
+template<>
+void			Bomberman::Player::execBuff<Bomberman::IBuff::INC_SPEED>(Bomberman::IBuff *n)
+{
+  incSpeed();
+}
+
+template<>
+void			Bomberman::Player::execBuff<Bomberman::IBuff::DEC_SPEED>(Bomberman::IBuff *n)
+{
+  decSpeed();
+}
+
+template<>
+void			Bomberman::Player::execBuff<Bomberman::IBuff::INC_BOMB>(Bomberman::IBuff *n)
+{
+  ;
+}
+
+template<>
+void			Bomberman::Player::execBuff<Bomberman::IBuff::NO_BOMB>(Bomberman::IBuff *n)
+{
+  _maxBomb = 0;
+}
+
+template<>
+void			Bomberman::Player::execBuff<Bomberman::IBuff::PARALYZED>(Bomberman::IBuff *n)
+{
+  _maxBomb = 0;
+}
+
+
+template<>
+void			Bomberman::Player::execBuff<Bomberman::IBuff::SHIELD>(Bomberman::IBuff *n)
+{
+  ;
+}
 
 void			Bomberman::Player::addBuff(Bomberman::IBuff *n)
 {
