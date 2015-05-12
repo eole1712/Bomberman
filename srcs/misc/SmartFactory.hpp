@@ -12,7 +12,7 @@
 ** Factory that can learn/unlearn types and then generates them
 ** Be careful, Type has to be able to use the clone member function /!\
 */
-template <typename Type = IClonable>
+template <typename Type>
 class SmartFactory
 {
 public:
@@ -58,7 +58,7 @@ public:
 
     if (type == NULL)
       return (false);
-    ret = _book.insert(SmartEntry(type->getName(), type->clone()));
+    ret = _book.insert(SmartEntry(type->getClassName(), type->clone()));
     return (ret.second);
   }
 
@@ -82,5 +82,8 @@ protected:
   SmartBook              _book;
   static SmartFactory*   _instance;
 };
+
+template <typename Type>
+SmartFactory<Type>*   SmartFactory<Type>::_instance = NULL;
 
 #endif /* !__SMARTFACTORY_HPP__ */
