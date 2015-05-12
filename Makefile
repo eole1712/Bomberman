@@ -6,12 +6,12 @@ SRCSDIR		= srcs/
 GAMEDIR		= $(SRCSDIR)/game/
 MISCDIR		= $(SRCSDIR)/misc/
 COREDIR		= $(SRCSDIR)/core/
-
 BUFFDIR		= $(GAMEDIR)/buffs/
 
 CORESRCS	= main.cpp
 
-GAMESRCS	= #Player.cpp # tea to grisha -> ton player compile pas :p
+GAMESRCS	= Player.cpp \
+		  BuffTimer.cpp
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
