@@ -17,7 +17,7 @@ namespace Bomberman
 namespace Map
 {
 
-  enum	ObjectType 
+  enum ObjectType 
     {
       Bomb, 
       Player, 
@@ -26,7 +26,7 @@ namespace Map
       DestroyableWall
     };
 
-class	IObject
+class IObject
 {
 public:
   virtual		~IObject() {}
