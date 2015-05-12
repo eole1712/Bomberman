@@ -20,7 +20,7 @@ namespace Buff
   */
   int		IncSpeed::getDuration() const
   {
-    return (10);
+    return (15);
   }
 
   IBuff::Type	IncSpeed::getType() const

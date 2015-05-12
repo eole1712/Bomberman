@@ -13,9 +13,14 @@ CORESRCS	= main.cpp
 
 GAMESRCS	= #Player.cpp # tea to grisha -> ton player compile pas :p
 
-BUFFSRCS	= IBuff.cpp		\
+BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
+		  BuffIncBomb.cpp	\
 		  BuffIncSpeed.cpp	\
+		  BuffNoBomb.cpp	\
+		  BuffParalyzed.cpp	\
+		  BuffShield.cpp	\
+		  IBuff.cpp		\
 
 MISCSRCS	= Timer.cpp		\
 
