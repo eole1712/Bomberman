@@ -3,12 +3,15 @@ CC		= g++
 NAME		= bomberman
 
 SRCSDIR		= srcs/
+GAMEDIR		= $(SRCSDIR)/game/
+MISCDIR		= $(SRCSDIR)/misc/
+COREDIR		= $(SRCSDIR)/core/
 
 SRCS		= main.cpp
 
 OBJS		= $(addprefix $(SRCSDIR), $(SRCS:.cpp=.o))
 
-CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
+CXXFLAGS	+= -W -Wall -Werror -Wextra -g #-std=c++11
 CXXFLAGS	+= -I./$(SRCSDIR)
 
 LDFLAGS		+= -pthread
