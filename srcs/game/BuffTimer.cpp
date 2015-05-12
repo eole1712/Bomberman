@@ -1,7 +1,7 @@
 #include "BuffTimer.hpp"
 
 Bomberman::BuffTimer::BuffTimer(IBuff *buff)
-  : Timer(), _buff(buff)
+  : Timer(buff->getDuration() * 1000000), _buff(buff)
 {
 
 }

@@ -5,6 +5,8 @@
 # include <list>
 # include "IObject.hpp"
 # include "buffs/IBuff.hpp"
+# include "BuffTimer.hpp"
+
 
 namespace Bomberman
 {
@@ -19,6 +21,9 @@ public:
 private:
   Player(const Player &);
   Player&		operator=(const Player &);
+
+public:
+  typedef void (Player::*Buff_exec)();
 
 public:
   std::string const&	getName() const;
@@ -54,32 +59,20 @@ private:
   bool			_isAlive;
 
 public:
-  template<enum IBuff::Type>
-  void			execBuff(IBuff *);
   void			addBuff(IBuff *);
   void			delBuff(IBuff *);
   void			checkBuffList();
 
 private:
-  std::list<IBuff*>	_buff;
+  std::list<BuffTimer*>	_buff;
 
 private:
   unsigned int		_putBomb;
   unsigned int		_maxBomb;
-};
 
-template <>
-void			Player::execBuff<IBuff::INC_SPEED>(IBuff *);
-template <>
-void			Player::execBuff<IBuff::DEC_SPEED>(IBuff *);
-template <>
-void			Player::execBuff<IBuff::INC_BOMB>(IBuff *);
-template <>
-void			Player::execBuff<IBuff::NO_BOMB>(IBuff *);
-template <>
-void			Player::execBuff<IBuff::PARALYZED>(IBuff *);
-template <>
-void			Player::execBuff<IBuff::SHIELD>(IBuff *);
+  Buff_exec		_buffOn[6];
+  Buff_exec		_buffOff[6];
+};
 
 }
 
