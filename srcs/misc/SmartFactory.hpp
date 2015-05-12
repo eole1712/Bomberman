@@ -78,6 +78,15 @@ public:
     return (it->second->clone());
   }
 
+  Type const*		getObject(std::string const& name) const
+  {
+    typename SmartBook::const_iterator      it;
+
+    if ((it = _book.find(name)) == _book.end())
+      return (NULL);
+    return (it->second);
+  }
+
 protected:
   SmartBook              _book;
   static SmartFactory*   _instance;
