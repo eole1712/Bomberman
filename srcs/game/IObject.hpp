@@ -17,7 +17,14 @@ namespace Bomberman
 namespace Map
 {
 
-enum	ObjectType {Bomb, Player, Bonus, Wall, DestroyableWall};
+  enum	ObjectType 
+    {
+      Bomb, 
+      Player, 
+      Bonus, 
+      Wall, 
+      DestroyableWall
+    };
 
 class	IObject
 {
