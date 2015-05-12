@@ -2,11 +2,14 @@
 
 namespace Bomberman
 {
-  BuffFactory::BuffFactory()
+  namespace Buff
   {
-  }
+    Factory::Factory()
+    {
+    }
 
-  BuffFactory::~BuffFactory()
-  {
+    Factory::~Factory()
+    {
+    }
   }
 }

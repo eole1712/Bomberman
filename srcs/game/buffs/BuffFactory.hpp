@@ -6,18 +6,19 @@
 
 namespace Bomberman
 {
-
-class BuffFactory : public SmartFactory<IBuff>
+namespace Buff
 {
-public:
-  BuffFactory();
-  ~BuffFactory();
-
-private:
-  BuffFactory(BuffFactory const& other);
-  BuffFactory&	operator=(BuffFactory const& other);
-};
-
+  class Factory : public SmartFactory<IBuff>
+  {
+  public:
+    Factory();
+    ~Factory();
+    
+  private:
+    Factory(Factory const& other);
+    Factory&	operator=(Factory const& other);
+  };
+}
 }
 
 #endif /* !__BUFFFACTORY_HPP__ */

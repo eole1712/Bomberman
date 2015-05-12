@@ -10,9 +10,19 @@ COREDIR		= $(SRCSDIR)/core/
 BUFFDIR		= $(GAMEDIR)/buffs/
 
 CORESRCS	= main.cpp
+
 GAMESRCS	= #Player.cpp # tea to grisha -> ton player compile pas :p
-BUFFSRCS	= BuffFactory.cpp
-MISCSRCS	= Timer.cpp
+
+BUFFSRCS	= BuffDecSpeed.cpp	\
+		  BuffFactory.cpp	\
+		  BuffIncBomb.cpp	\
+		  BuffIncSpeed.cpp	\
+		  BuffNoBomb.cpp	\
+		  BuffParalyzed.cpp	\
+		  BuffShield.cpp	\
+		  IBuff.cpp		\
+
+MISCSRCS	= Timer.cpp		\
 
 SRCS		+= $(addprefix $(COREDIR), $(CORESRCS))
 SRCS		+= $(addprefix $(GAMEDIR), $(GAMESRCS))

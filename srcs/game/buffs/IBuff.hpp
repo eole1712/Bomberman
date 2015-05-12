@@ -5,15 +5,16 @@
 
 namespace Bomberman
 {
-  class IBuff : public IClonable
+  class IBuff : public IClonable<IBuff>
   {
   public:
-    enum BuffType
+    enum Type
       {
 	INC_SPEED,
 	DEC_SPEED,
-	BOMB,
-	NO_ATTACK,
+	INC_BOMB,
+	NO_BOMB,
+	PARALYZED,
 	SHIELD
       };
 
@@ -21,10 +22,16 @@ namespace Bomberman
     virtual ~IBuff() {}
 
   public:
-    virtual unsigned int	getDuration() const = 0;
-    virtual BuffType		getType() const = 0;
-    virtual bool		isBonus() const = 0;
-    virtual bool		isMalus() const = 0;
+    /*
+    ** if duration is equals to IBuff::infinite, the buff never disappears
+    */
+    virtual int		getDuration() const = 0;
+    virtual Type	getType() const = 0;
+    virtual bool	isBonus() const = 0;
+    virtual bool	isMalus() const = 0;
+
+  public:
+    static const int	infinite;
   };
 }
 
