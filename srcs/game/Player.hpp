@@ -55,9 +55,9 @@ private:
 
 public:
   template<enum IBuff::Type>
-  void			execBuff(IBuff *);
-  void			addBuff(IBuff *);
-  void			delBuff(IBuff *);
+  void			execBuff(IBuff*);
+  void			addBuff(IBuff*);
+  void			delBuff(IBuff*);
   void			checkBuffList();
 
 private:
@@ -69,17 +69,17 @@ private:
 };
 
 template <>
-void			Player::execBuff<IBuff::INC_SPEED>(IBuff *);
+void			Player::execBuff<IBuff::INC_SPEED>(IBuff*);
 template <>
-void			Player::execBuff<IBuff::DEC_SPEED>(IBuff *);
+void			Player::execBuff<IBuff::DEC_SPEED>(IBuff*);
 template <>
-void			Player::execBuff<IBuff::INC_BOMB>(IBuff *);
+void			Player::execBuff<IBuff::INC_BOMB>(IBuff*);
 template <>
-void			Player::execBuff<IBuff::NO_BOMB>(IBuff *);
+void			Player::execBuff<IBuff::NO_BOMB>(IBuff*);
 template <>
-void			Player::execBuff<IBuff::PARALYZED>(IBuff *);
+void			Player::execBuff<IBuff::PARALYZED>(IBuff*);
 template <>
-void			Player::execBuff<IBuff::SHIELD>(IBuff *);
+void			Player::execBuff<IBuff::SHIELD>(IBuff*);
 
 }
 

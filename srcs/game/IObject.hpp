@@ -20,12 +20,12 @@ namespace Map
 class IObject
 {
 public:
-  enum Type 
+  enum Type
     {
-      BOMB, 
-      PLAYER, 
-      BONUS, 
-      WALL, 
+      BOMB,
+      PLAYER,
+      BONUS,
+      WALL,
       DESTROYABLEWALL
     };
 
