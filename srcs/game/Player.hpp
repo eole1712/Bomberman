@@ -14,7 +14,7 @@
 # include <string>
 # include <list>
 # include "IObject.hpp"
-# include "buffs/IBuff.hpp"
+# include "IBuff.hpp"
 
 namespace Bomberman
 {

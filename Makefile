@@ -7,12 +7,22 @@ GAMEDIR		= $(SRCSDIR)/game/
 MISCDIR		= $(SRCSDIR)/misc/
 COREDIR		= $(SRCSDIR)/core/
 
-SRCS		= main.cpp
+BUFFDIR		= $(GAMEDIR)/buffs/
 
-OBJS		= $(addprefix $(SRCSDIR), $(SRCS:.cpp=.o))
+CORESRCS	= main.cpp
+GAMESRCS	= #Player.cpp # tea to grisha -> ton player compile pas :p
+BUFFSRCS	= BuffFactory.cpp
+MISCSRCS	= Timer.cpp
 
-CXXFLAGS	+= -W -Wall -Werror -Wextra -g #-std=c++11
-CXXFLAGS	+= -I./$(SRCSDIR)
+SRCS		+= $(addprefix $(COREDIR), $(CORESRCS))
+SRCS		+= $(addprefix $(GAMEDIR), $(GAMESRCS))
+SRCS		+= $(addprefix $(MISCDIR), $(MISCSRCS))
+SRCS		+= $(addprefix $(BUFFDIR), $(BUFFSRCS))
+
+OBJS		= $(SRCS:.cpp=.o)
+
+CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
+CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(MISCDIR) -I./$(BUFFDIR)
 
 LDFLAGS		+= -pthread
 

@@ -2,7 +2,7 @@
 #include "Timer.hpp"
 
 Timer::Timer(uintmax_t time)
-  :_time(std::chrono::microseconds(35000)),
+  :_time(std::chrono::microseconds(time)),
    _saveTime(0),
    _clock(std::chrono::system_clock::now())
 {

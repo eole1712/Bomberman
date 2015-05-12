@@ -1,6 +1,8 @@
 #ifndef __SMARTFACTORY_HPP__
 # define __SMARTFACTORY_HPP__
 
+# include <map>
+# include <utility>
 # include <string>
 # include "IClonable.hpp"
 
@@ -17,14 +19,14 @@ public:
   typedef std::map<std::string, Type*>	SmartBook;
   typedef std::pair<std::string, Type*>	SmartEntry;
 
-private:
+protected:
   SmartFactory()
   {
   }
 
   ~SmartFactory()
   {    
-    for (SmartBook::iterator it = _book.begin() ;
+    for (typename SmartBook::iterator it = _book.begin() ;
          it != _book.end() ;
          ++it)
       {
@@ -52,7 +54,7 @@ public:
 public:
   bool			learn(Type const* type)
   {
-    std::pair<SmartBook::iterator, bool>	ret;
+    std::pair<typename SmartBook::iterator, bool>	ret;
 
     if (type == NULL)
       return (false);
@@ -69,7 +71,7 @@ public:
 
   Type*			generate(std::string const& name) const
   {
-    SmartBook::const_iterator      it;
+    typename SmartBook::const_iterator      it;
 
     if ((it = _book.find(name)) == _book.end())
       return (NULL);
