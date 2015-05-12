@@ -8,7 +8,7 @@ Bomberman::BuffTimer::BuffTimer(IBuff *buff)
 
 Bomberman::BuffTimer::~BuffTimer()
 {
-  delete _buff;
+  //  delete _buff; << SE CORDONNER AVEC LA MAP
 }
 
 Bomberman::IBuff const	*Bomberman::BuffTimer::getBuff()

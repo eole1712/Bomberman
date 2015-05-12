@@ -34,6 +34,17 @@ private:
   std::string		_name;
 
 public:
+  bool			isAlive() const;
+  bool			isParalyzed() const;
+  bool			zeroBomb() const;
+  bool			canAbsorb() const;
+
+private:
+  bool			_isAlive;
+  bool			_isParalyzed;
+  bool			_zeroBomb;
+
+public:
   void			incRange();
   void			decRange();
   void			resetRange();
@@ -41,7 +52,7 @@ public:
 private:
   unsigned int		_range;
   static const
-  unsigned int		defRange;
+  unsigned int		dftRange;
 
 public:
   void			incSpeed();
@@ -50,13 +61,31 @@ public:
 
 private:
   unsigned int		_speed;
-  static const unsigned int defSpeed;
+  static const unsigned int dftSpeed;
 
 public:
-  bool			isAlive() const;
+  void			incShield();
+  void			decShield();
+  void			resetShield();
 
 private:
-  bool			_isAlive;
+  unsigned int		_shield;
+  static const unsigned int dftShield;
+
+public:
+  void			incBomb();
+  void			decBomb();
+  void			resetBomb();
+  void			enableAttack();
+  void			disableAttack();
+
+private:
+  unsigned int		_bomb;
+  static const unsigned int dftBomb;
+
+public:
+  void			paralyze();
+  void			unparalyze();
 
 public:
   void			addBuff(IBuff*);
@@ -65,13 +94,17 @@ public:
 
 private:
   std::list<BuffTimer*>	_buff;
+  Buff_exec		_buffOn[7];
+  Buff_exec		_buffOff[7];
+
+public:
+  unsigned int		getX() const;
+  unsigned int		getY() const;
 
 private:
-  unsigned int		_putBomb;
-  unsigned int		_maxBomb;
+  unsigned int		_x;
+  unsigned int		_y;
 
-  Buff_exec		_buffOn[6];
-  Buff_exec		_buffOff[6];
 };
 
 }

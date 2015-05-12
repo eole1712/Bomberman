@@ -10,7 +10,7 @@ namespace Bomberman
   public:
     enum Type
       {
-	INC_SPEED,
+	INC_SPEED = 0,
 	DEC_SPEED,
 	INC_BOMB,
 	INC_RANGE,

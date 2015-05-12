@@ -10,7 +10,7 @@ BUFFDIR		= $(GAMEDIR)/buffs/
 
 CORESRCS	= main.cpp
 
-GAMESRCS	= # Player.cpp \
+GAMESRCS	= Player.cpp \
 		  BuffTimer.cpp
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
