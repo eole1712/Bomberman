@@ -13,7 +13,7 @@ CORESRCS	= main.cpp
 
 GAMESRCS	= #Player.cpp # tea to grisha -> ton player compile pas :p
 
-BUFFSRCS	= BuffDecSpeed.cpp	\
+BUFFSRCS	=  BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
 		  BuffIncBomb.cpp	\
 		  BuffIncSpeed.cpp	\

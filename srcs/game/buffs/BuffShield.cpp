@@ -18,34 +18,39 @@ namespace Buff
   /*
   ** Public member functions
   */
-  int		Shield::getDuration() const
+  int			Shield::getDuration() const
   {
     return (5);
   }
 
-  IBuff::Type	Shield::getType() const
+  IBuff::Type		Shield::getBuffType() const
   {
     return (SHIELD);
   }
 
-  bool		Shield::isBonus() const
+  bool			Shield::isBonus() const
   {
     return (true);
   }
 
-  bool		Shield::isMalus() const
+  bool			Shield::isMalus() const
   {
     return (false);
   }
 
-  IBuff*	Shield::clone() const
+  IBuff*		Shield::clone() const
   {
     return (new Shield());
   }
 
-  std::string	Shield::getClassName() const
+  std::string		Shield::getClassName() const
   {
     return ("Shield");
+  }
+
+  Map::IObject::Type	Shield::getObjectType() const
+  {
+    return (Map::IObject::BONUS);
   }
 }
 }

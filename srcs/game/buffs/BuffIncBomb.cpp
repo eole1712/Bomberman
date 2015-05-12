@@ -18,34 +18,39 @@ namespace Buff
   /*
   ** Public member functions
   */
-  int		IncBomb::getDuration() const
+  int			IncBomb::getDuration() const
   {
     return (IBuff::infinite);
   }
 
-  IBuff::Type	IncBomb::getType() const
+  IBuff::Type		IncBomb::getBuffType() const
   {
     return (INC_BOMB);
   }
 
-  bool		IncBomb::isBonus() const
+  bool			IncBomb::isBonus() const
   {
     return (true);
   }
 
-  bool		IncBomb::isMalus() const
+  bool			IncBomb::isMalus() const
   {
     return (false);
   }
 
-  IBuff*	IncBomb::clone() const
+  IBuff*		IncBomb::clone() const
   {
     return (new IncBomb());
   }
 
-  std::string	IncBomb::getClassName() const
+  std::string		IncBomb::getClassName() const
   {
     return ("IncBomb");
+  }
+
+  Map::IObject::Type	IncBomb::getObjectType() const
+  {
+    return (Map::IObject::BONUS);
   }
 }
 }

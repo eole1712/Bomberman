@@ -26,7 +26,7 @@ namespace Bomberman
     ** if duration is equals to IBuff::infinite, the buff never disappears
     */
     virtual int		getDuration() const = 0;
-    virtual Type	getType() const = 0;
+    virtual Type	getBuffType() const = 0;
     virtual bool	isBonus() const = 0;
     virtual bool	isMalus() const = 0;
 

@@ -18,34 +18,39 @@ namespace Buff
   /*
   ** Public member functions
   */
-  int		DecSpeed::getDuration() const
+  int			DecSpeed::getDuration() const
   {
     return (15);
   }
 
-  IBuff::Type	DecSpeed::getType() const
+  IBuff::Type		DecSpeed::getBuffType() const
   {
     return (DEC_SPEED);
   }
 
-  bool		DecSpeed::isBonus() const
+  bool			DecSpeed::isBonus() const
   {
     return (false);
   }
 
-  bool		DecSpeed::isMalus() const
+  bool			DecSpeed::isMalus() const
   {
     return (true);
   }
 
-  IBuff*	DecSpeed::clone() const
+  IBuff*		DecSpeed::clone() const
   {
     return (new DecSpeed());
   }
 
-  std::string	DecSpeed::getClassName() const
+  std::string		DecSpeed::getClassName() const
   {
     return ("DecSpeed");
+  }
+
+  Map::IObject::Type	DecSpeed::getObjectType() const
+  {
+    return (Map::IObject::BONUS);
   }
 }
 }

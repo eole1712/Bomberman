@@ -17,22 +17,23 @@ namespace Bomberman
 namespace Map
 {
 
-  enum ObjectType 
-    {
-      Bomb, 
-      Player, 
-      Bonus, 
-      Wall, 
-      DestroyableWall
-    };
-
 class IObject
 {
 public:
-  virtual		~IObject() {}
+  enum Type 
+    {
+      BOMB, 
+      PLAYER, 
+      BONUS, 
+      WALL, 
+      DESTROYABLEWALL
+    };
 
 public:
-  virtual ObjectType	getType() const = 0;
+  virtual	~IObject() {}
+
+public:
+  virtual Type	getObjectType() const = 0;
 };
 
 }

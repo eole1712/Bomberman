@@ -16,5 +16,7 @@ int	main()
   lal = Bomberman::Buff::Factory::getInstance()->generate("Paralyzed");
   std::cout << lol->getClassName() << std::endl;
   std::cout << lal->getClassName() << std::endl;
+  delete lol;
+  delete lal;
   return (EXIT_SUCCESS);
 }

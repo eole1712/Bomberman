@@ -2,12 +2,13 @@
 # define __BUFFINCBOMB_HPP__
 
 # include "IBuff.hpp"
+# include "IObject.hpp"
 
 namespace Bomberman
 {
 namespace Buff
 {
-  class IncBomb : public IBuff
+  class IncBomb : public IBuff, public Map::IObject
   {
   public:
     IncBomb();
@@ -18,14 +19,17 @@ namespace Buff
     IncBomb&		operator=(IncBomb const& other);
 
   public:
-    virtual int		getDuration() const;
-    virtual Type	getType() const;
-    virtual bool	isBonus() const;
-    virtual bool	isMalus() const;
+    virtual int			getDuration() const;
+    virtual IBuff::Type		getBuffType() const;
+    virtual bool		isBonus() const;
+    virtual bool		isMalus() const;
 
   public:
-    virtual IBuff*	clone() const;
-    virtual std::string	getClassName() const;
+    virtual IBuff*		clone() const;
+    virtual std::string		getClassName() const;
+
+  public:
+    virtual Map::IObject::Type	getObjectType() const;
   };
 }
 }
