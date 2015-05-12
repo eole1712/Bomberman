@@ -2,7 +2,7 @@ CC		= g++
 
 NAME		= bomberman
 
-SRCSDIR		= srcs/
+SRCSDIR		= srcs
 GAMEDIR		= $(SRCSDIR)/game/
 MISCDIR		= $(SRCSDIR)/misc/
 COREDIR		= $(SRCSDIR)/core/
@@ -10,7 +10,7 @@ BUFFDIR		= $(GAMEDIR)/buffs/
 
 CORESRCS	= main.cpp
 
-GAMESRCS	= Player.cpp \
+GAMESRCS	= # Player.cpp \
 		  BuffTimer.cpp
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
@@ -20,6 +20,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffNoBomb.cpp	\
 		  BuffParalyzed.cpp	\
 		  BuffShield.cpp	\
+		  BuffIncRange.cpp	\
 		  IBuff.cpp		\
 
 MISCSRCS	= Timer.cpp		\

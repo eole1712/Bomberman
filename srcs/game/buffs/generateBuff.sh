@@ -17,7 +17,7 @@ fi
 cp "$baseFile.cpp" "Buff$1.cpp"
 cp "$baseFile.hpp" "Buff$1.hpp"
 
-sed -i s/"IncSpeed"/"$1"/g "Buff$1.cpp"
-sed -i s/"IncSpeed"/"$1"/g "Buff$1.hpp"
+sed -i "" s/"IncSpeed"/"$1"/g "Buff$1.cpp"
+sed -i "" s/"IncSpeed"/"$1"/g "Buff$1.hpp"
 
-sed -i s/"INCSPEED"/$(echo $1 | tr 'a-z' 'A-Z')/g "Buff$1.hpp"
+sed -i "" s/"INCSPEED"/$(echo $1 | tr 'a-z' 'A-Z')/g "Buff$1.hpp"

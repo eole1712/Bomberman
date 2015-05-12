@@ -59,8 +59,8 @@ private:
   bool			_isAlive;
 
 public:
-  void			addBuff(IBuff *);
-  void			delBuff(IBuff *);
+  void			addBuff(IBuff*);
+  void			delBuff(IBuff*);
   void			checkBuffList();
 
 private:

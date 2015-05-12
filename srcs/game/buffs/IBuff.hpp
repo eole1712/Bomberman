@@ -13,6 +13,7 @@ namespace Bomberman
 	INC_SPEED,
 	DEC_SPEED,
 	INC_BOMB,
+	INC_RANGE,
 	NO_BOMB,
 	PARALYZED,
 	SHIELD

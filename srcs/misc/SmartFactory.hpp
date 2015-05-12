@@ -25,7 +25,7 @@ protected:
   }
 
   ~SmartFactory()
-  {    
+  {
     for (typename SmartBook::iterator it = _book.begin() ;
          it != _book.end() ;
          ++it)
