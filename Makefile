@@ -6,6 +6,7 @@ SRCSDIR		= srcs
 GAMEDIR		= $(SRCSDIR)/game/
 MISCDIR		= $(SRCSDIR)/misc/
 COREDIR		= $(SRCSDIR)/core/
+EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
 
 CORESRCS	= main.cpp
@@ -25,15 +26,20 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 
 MISCSRCS	= Timer.cpp		\
 
+EXCEPTSRCS	= ResourceUnavailable.cpp	\
+		  LuaError.cpp			\
+
 SRCS		+= $(addprefix $(COREDIR), $(CORESRCS))
 SRCS		+= $(addprefix $(GAMEDIR), $(GAMESRCS))
 SRCS		+= $(addprefix $(MISCDIR), $(MISCSRCS))
 SRCS		+= $(addprefix $(BUFFDIR), $(BUFFSRCS))
+SRCS		+= $(addprefix $(EXCEPTDIR), $(EXCEPTSRCS))
 
 OBJS		= $(SRCS:.cpp=.o)
 
 CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
-CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(MISCDIR) -I./$(BUFFDIR)
+CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR)
+CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR)
 
 LDFLAGS		+= -pthread
 
