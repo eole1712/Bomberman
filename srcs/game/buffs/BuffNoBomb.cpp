@@ -48,9 +48,9 @@ namespace Buff
     return ("NoBomb");
   }
 
-  Map::IObject::Type	NoBomb::getObjectType() const
+  IObject::Type	NoBomb::getObjectType() const
   {
-    return (Map::IObject::BONUS);
+    return (IObject::BONUS);
   }
 }
 }

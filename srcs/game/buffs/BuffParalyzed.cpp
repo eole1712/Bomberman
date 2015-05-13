@@ -48,9 +48,9 @@ namespace Buff
     return ("Paralyzed");
   }
 
-  Map::IObject::Type	Paralyzed::getObjectType() const
+  IObject::Type	Paralyzed::getObjectType() const
   {
-    return (Map::IObject::BONUS);
+    return (IObject::BONUS);
   }
 }
 }

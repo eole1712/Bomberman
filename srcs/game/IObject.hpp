@@ -4,9 +4,6 @@
 namespace Bomberman
 {
 
-namespace Map
-{
-
 class IObject
 {
 public:
@@ -26,7 +23,6 @@ public:
   virtual Type	getObjectType() const = 0;
 };
 
-}
 }
 
 #endif /* !IOBJECT_H_ */

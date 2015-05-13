@@ -8,7 +8,7 @@ namespace Bomberman
 {
 namespace Buff
 {
-  class IncBomb : public IBuff, public Map::IObject
+  class IncBomb : public IBuff, public IObject
   {
   public:
     IncBomb();
@@ -29,7 +29,7 @@ namespace Buff
     virtual std::string		getClassName() const;
 
   public:
-    virtual Map::IObject::Type	getObjectType() const;
+    virtual IObject::Type	getObjectType() const;
   };
 }
 }

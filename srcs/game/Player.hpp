@@ -12,10 +12,10 @@ namespace Bomberman
 {
 
 class Player
-  : public Map::IObject
+  : public IObject
 {
 public:
-  Player(std::string const &);
+  Player(std::string const &, unsigned int, unsigned int);
   virtual ~Player();
 
 private:

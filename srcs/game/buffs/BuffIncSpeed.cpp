@@ -48,9 +48,9 @@ namespace Buff
     return ("IncSpeed");
   }
 
-  Map::IObject::Type	IncSpeed::getObjectType() const
+  IObject::Type	IncSpeed::getObjectType() const
   {
-    return (Map::IObject::BONUS);
+    return (IObject::BONUS);
   }
 }
 }

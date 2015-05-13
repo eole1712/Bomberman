@@ -48,9 +48,9 @@ namespace Buff
     return ("DecSpeed");
   }
 
-  Map::IObject::Type	DecSpeed::getObjectType() const
+  IObject::Type	DecSpeed::getObjectType() const
   {
-    return (Map::IObject::BONUS);
+    return (IObject::BONUS);
   }
 }
 }

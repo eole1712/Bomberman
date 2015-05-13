@@ -10,8 +10,8 @@ unsigned int const	Player::dftSpeed = 0;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 0;
 
-Player::Player(std::string const &name)
-  : _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb)
+Player::Player(std::string const &name, unsigned int x, unsigned int y)
+  : _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _x(x), _y(y)
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;

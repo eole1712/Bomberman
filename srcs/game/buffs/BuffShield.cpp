@@ -48,9 +48,9 @@ namespace Buff
     return ("Shield");
   }
 
-  Map::IObject::Type	Shield::getObjectType() const
+  IObject::Type	Shield::getObjectType() const
   {
-    return (Map::IObject::BONUS);
+    return (IObject::BONUS);
   }
 }
 }

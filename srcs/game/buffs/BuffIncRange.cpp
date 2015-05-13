@@ -48,9 +48,9 @@ namespace Buff
     return ("IncRange");
   }
 
-  Map::IObject::Type	IncRange::getObjectType() const
+  IObject::Type	IncRange::getObjectType() const
   {
-    return (Map::IObject::BONUS);
+    return (IObject::BONUS);
   }
 }
 }
