@@ -2,33 +2,30 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <string.h>
 #include "BasicShader.hh"
 #include "Model.hh"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#ifndef MARVIN_HPP_
-# define MARVIN_HPP_
+#ifndef 3DMOVE_HPP_
+# define 3DMOVE_HPP_
 
-class Marvin
+class 3dObject
 {
-private:
+protected:
   glm::vec3	_position;
   glm::vec3	_rotation;
   glm::vec3	_scale;
-  gdl::Model	_asset;
 
 public:
-  Marvin();
-  ~Marvin();
+  3dObject();
+  virtual ~3dObject();
 
-  bool initialize();
-  void update(gdl::Clock const &clock, gdl::Input &input);
-  void draw(gdl::BasicShader &shader, gdl::Clock const &clock);
   void translate(glm::vec3 const &v);
   void rotate(glm::vec3 const& axis, float angle);
   void scale(glm::vec3 const& scale);
   glm::mat4 getTransformation();
 };
 
-#endif /* !MARVIN_HPP_ */
+#endif /* !3DMOVE_HPP_ */

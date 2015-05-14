@@ -5,7 +5,7 @@
 // Login   <gamain_j@epitech.net>
 //
 // Started on  Tue May 12 18:13:03 2015 gamain_j gamain_j
-// Last update Tue May 12 18:51:19 2015 gamain_j gamain_j
+// Last update Thu May 14 12:53:39 2015 gamain_j gamain_j
 //
 
 #include <SdlContext.hh>
@@ -17,49 +17,45 @@
 #include "Clock.hh"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Marvin.hpp"
+#include "3dObject.hpp"
 
-
-Marvin::Marvin() :
+3dObject::3dObject(std::string const &filename) :
   _position(0, 0, 0),
   _rotation(0, 0, 0),
   _scale(1, 1, 1)
 {
+  _visibility = _asset.load(filename.c_str());
 }
 
-Marvin::~Marvin(){}
+3dObject::~3dObject(){}
 
-bool Marvin::initialize()
-{
-  return (_asset.load("../assets/marvin.fbx"));
-}
-
-void Marvin::update(gdl::Clock const &, gdl::Input &)
+void 3dObject::update(gdl::Clock const &, gdl::Input &)
 {
 
 }
 
-void Marvin::draw(gdl::BasicShader &shader, gdl::Clock const &clock)
+void 3dObject::draw(gdl::BasicShader &shader, gdl::Clock const &clock)
 {
-  _asset.draw(shader, getTransformation(), clock.getElapsed());
+  if (_visibility)
+    _asset.draw(shader, getTransformation(), clock.getElapsed());
 }
 
-void Marvin::translate(glm::vec3 const &v)
+void 3dObject::translate(glm::vec3 const &v)
 {
   _position += v;
 }
 
-void Marvin::rotate(glm::vec3 const& axis, float angle)
+void 3dObject::rotate(glm::vec3 const& axis, float angle)
 {
   _rotation += axis * angle;
 }
 
-void Marvin::scale(glm::vec3 const& scale)
+void 3dObject::scale(glm::vec3 const& scale)
 {
     _scale *= scale;
 }
 
-glm::mat4 Marvin::getTransformation()
+glm::mat4 3dObject::getTransformation()
 {
   glm::mat4 transform(1); // On cree une matrice identite
     // On applique ensuite les rotations selon les axes x, y et z

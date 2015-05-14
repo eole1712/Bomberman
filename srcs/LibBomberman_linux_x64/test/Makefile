@@ -1,7 +1,7 @@
 
 NAME = test
 
-SRC = Marvin.cpp bra.cpp
+SRC = Object.cpp MyGame.cpp bra.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
