@@ -6,7 +6,7 @@
 
 MyGame::MyGame()
   : _fov(90.0), _height(1000), _width(1000),
-    _position(0.0, 200.0, 100.0),
+    _position(0.0, 4.0, 4.0),
     _rotation(0.0, 0.0, 0.0),
     _speed(70)
 {
@@ -55,11 +55,11 @@ bool		MyGame::update()
     return false;
   if (_input.getKey(SDLK_UP))
     translate(glm::vec3(0, 0, -1) * movefactor);
-  else if (_input.getKey(SDLK_DOWN))
+  if (_input.getKey(SDLK_DOWN))
     translate(glm::vec3(0, 0, 1) * movefactor);
   if (_input.getKey(SDLK_LEFT))
     translate(glm::vec3(-1, 0, 0) * movefactor);
-  else if (_input.getKey(SDLK_RIGHT))
+  if (_input.getKey(SDLK_RIGHT))
     translate(glm::vec3(1, 0, 0) * movefactor);
   _transformation = glm::lookAt(_position, _rotation, glm::vec3(0, 1, 0));
   // Update inputs an clock

@@ -16,7 +16,7 @@ CC = g++
 CXXFLAGS = -Wall -Wextra  -I $(INCLUDESPATH)
 
 all: $(NAME)
-	export LD_LIBRARY_PATH=~/rendu/cpp_bomberman/LibBomberman_linux_x64/libs/
+	export LD_LIBRARY_PATH=~/rendu/cpp_bomberman/srcs/LibBomberman_linux_x64/libs/
 
 $(NAME): $(OBJ)
 	$(CC) -o $(NAME) $(OBJ) -L $(LIBPATH) $(LIBS)

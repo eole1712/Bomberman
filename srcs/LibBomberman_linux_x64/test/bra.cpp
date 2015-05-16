@@ -13,7 +13,8 @@ int main(int argc, char **argv)
   for (int i = 1; i < argc; i++)
     {
       tmp = new Object(argv[i++]);
-      tmp->scale(glm::vec3(atoi(argv[i])));
+      tmp->scale(glm::vec3(strtof(argv[i], NULL)));
+      tmp->translate(glm::vec3(i, 0, 0));
       engine.attachObject(tmp);
     }
   while (engine.update() == true)

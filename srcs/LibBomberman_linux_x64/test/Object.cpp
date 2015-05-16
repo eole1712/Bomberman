@@ -5,7 +5,7 @@
 // Login   <gamain_j@epitech.net>
 //
 // Started on  Tue May 12 18:13:03 2015 gamain_j gamain_j
-// Last update Thu May 14 13:20:55 2015 gamain_j gamain_j
+// Last update Thu May 14 16:54:20 2015 gamain_j gamain_j
 //
 
 #include <SdlContext.hh>
@@ -25,6 +25,7 @@ Object::Object(std::string const &filename) :
   _scale(1, 1, 1)
 {
   _visibility = _asset.load(filename.c_str());
+  _asset.setCurrentAnim(0);
 }
 
 Object::~Object(){}

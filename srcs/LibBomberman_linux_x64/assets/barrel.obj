@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib oil barrel.mtl
+mtllib barrel.mtl
 g default
 v 2.801368 -1.059026 -2.143023
 v 2.414988 -1.059026 -3.204593
