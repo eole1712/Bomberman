@@ -6,13 +6,13 @@
 int main(int argc, char **argv)
 {
   MyGame	engine;
-  Object	*tmp;
+  VisibleObject	*tmp;
 
   if (engine.initialize() == false)
     return (EXIT_FAILURE);
   for (int i = 1; i < argc; i++)
     {
-      tmp = new Object(argv[i++]);
+      tmp = new VisibleObject(argv[i++]);
       tmp->scale(glm::vec3(strtof(argv[i], NULL)));
       tmp->translate(glm::vec3(i, 0, 0));
       engine.attachObject(tmp);

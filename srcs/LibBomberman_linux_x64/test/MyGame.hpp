@@ -11,7 +11,8 @@
 #include "OpenGL.hh"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Object.hpp"
+#include "VisibleObject.hpp"
+#include "CameraObject.hpp"
 
 #ifndef MYGAME_H_
 # define MYGAME_H_
@@ -25,26 +26,20 @@ public:
   virtual bool		initialize();
   virtual bool		update();
   virtual void		draw();
-  void			attachObject(Object *);
+  void			attachObject(VisibleObject *);
   void			translate(glm::vec3 const &v);
 
 private:
   MyGame(const MyGame &);
   MyGame &operator=(const MyGame &);
 
-  std::list<Object *>	_objects;
-  float			_fov;
-  float			_height;
-  float			_width;
-  glm::vec3		_position;
-  glm::vec3		_rotation;
+  std::list<VisibleObject *>	_objects;
+  CameraObject		_camera;
   gdl::SdlContext	_context;
   gdl::Clock		_clock;
   gdl::Input		_input;
   gdl::BasicShader	_shader;
   float			_speed;
-  glm::mat4		_projection;
-  glm::mat4		_transformation;
 
 protected:
 

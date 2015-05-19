@@ -4,23 +4,26 @@
 #include "MyGame.hpp"
 #include "Object.hpp"
 
+#define CAMERA_HEIGTH 1000
+#define CAMERA_WIDTH 1000
+
 MyGame::MyGame()
-  : _fov(90.0), _height(1000), _width(1000),
-    _position(0.0, 4.0, 4.0),
-    _rotation(0.0, 0.0, 0.0),
+  : _camera(90.0, CAMERA_HEIGTH, CAMERA_WIDTH),
     _speed(70)
 {
+  _camera.translate(glm::vec3(0.0, 4.0, 4.0));
+  _camera.updateView();
 }
 
 MyGame::~MyGame()
 {
-  for (std::list<Object *>::iterator i = _objects.begin(); i != _objects.end(); i++)
+  for (std::list<VisibleObject *>::iterator i = _objects.begin(); i != _objects.end(); i++)
     delete (*i);
 }
 
 bool		MyGame::initialize()
 {
-  if (!_context.start(_height, _width, "My bomberman!"))
+  if (!_context.start(CAMERA_HEIGTH, CAMERA_WIDTH, "My bomberman!"))
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
@@ -30,17 +33,14 @@ bool		MyGame::initialize()
       || !_shader.build())
     return false;
 
-  // We set the camera
-  _projection = glm::perspective(_fov, _height / _width, 0.1f, 1000.0f);
-  _transformation = glm::lookAt(_position, _rotation, glm::vec3(0, 1, 0));
   // We have the bind the shader before calling the setUniform method
   _shader.bind();
-  _shader.setUniform("view", _transformation);
-  _shader.setUniform("projection", _projection);
+  _shader.setUniform("view", _camera.viewTransform());
+  _shader.setUniform("projection", _camera.getProjection());
   return true;
 }
 
-void		MyGame::attachObject(Object *obj)
+void		MyGame::attachObject(VisibleObject *obj)
 {
   _objects.push_front(obj);
 }
@@ -53,15 +53,16 @@ bool		MyGame::update()
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
+
   if (_input.getKey(SDLK_UP))
-    translate(glm::vec3(0, 0, -1) * movefactor);
+    _camera.translate(glm::vec3(0.0, 0.0, -1.0) * movefactor);
   if (_input.getKey(SDLK_DOWN))
-    translate(glm::vec3(0, 0, 1) * movefactor);
+    _camera.translate(glm::vec3(0.0, 0.0, 1.0) * movefactor);
   if (_input.getKey(SDLK_LEFT))
-    translate(glm::vec3(-1, 0, 0) * movefactor);
+    _camera.translate(glm::vec3(-1.0, 0.0, 0.0) * movefactor);
   if (_input.getKey(SDLK_RIGHT))
-    translate(glm::vec3(1, 0, 0) * movefactor);
-  _transformation = glm::lookAt(_position, _rotation, glm::vec3(0, 1, 0));
+    _camera.translate(glm::vec3(1.0, 0.0, 0.0) * movefactor);
+  _camera.updateView();
   // Update inputs an clock
   _context.updateClock(_clock);
   _context.updateInputs(_input);
@@ -69,20 +70,15 @@ bool		MyGame::update()
   return true;
 }
 
-void		MyGame::translate(glm::vec3 const &v)
-{
-  _position += v;
-}
-
 void		MyGame::draw()
 {
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   _shader.bind();
-  _shader.setUniform("view", _transformation);
-  _shader.setUniform("projection", _projection);
+  _shader.setUniform("view", _camera.viewTransform());
+  _shader.setUniform("projection", _camera.getProjection());
   // We draw all objects
-  for (std::list<Object *>::iterator i = _objects.begin(); i != _objects.end(); i++)
+  for (std::list<VisibleObject *>::iterator i = _objects.begin(); i != _objects.end(); i++)
     (*i)->draw(_shader, _clock);
   _context.flush();
 }
