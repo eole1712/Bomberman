@@ -2,7 +2,7 @@
 #ifndef MYGAME_H_
 # define MYGAME_H_
 
-# include <list>
+# include <vector>
 # include "Game.hh"
 # include "Clock.hh"
 # include "Input.hh"
@@ -28,7 +28,8 @@ private:
   MyGame(const MyGame &);
   MyGame &operator=(const MyGame &);
 
-  std::list<Asset3d *>	_objects;
+  enum			mapAsset {FLOOR, WALL, IDST_BLOCK, DST_BLOCK, FIRE, PLAYER, BOMB};
+  std::vector<Asset3d *>	_assets;
   CameraObject		_camera;
   gdl::SdlContext	_context;
   gdl::Clock		_clock;
@@ -36,8 +37,7 @@ private:
   gdl::BasicShader	_shader;
   float			_speed;
 
-protected:
-
+  Object3d		_player;
 };
 
 #endif /* !MYGAME_H_ */
