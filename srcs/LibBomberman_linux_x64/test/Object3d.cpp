@@ -1,7 +1,7 @@
 
-#include "Object.hpp"
+#include "Object3d.hpp"
 
-Object::Object()
+Object3d::Object3d()
   :
   _position(0, 0, 0),
   _rotation(0, 0, 0),
@@ -10,41 +10,50 @@ Object::Object()
   ;
 }
 
-Object::~Object()
+Object3d::~Object3d()
 {
   ;
 }
 
-glm::vec3	Object::getPosition()
+void		Object3d::translate(glm::vec3 const &v)
+{
+  _position += v;
+}
+
+void		Object3d::rotate(glm::vec3 const& axis,
+			       float angle)
+{
+  _rotation += axis * angle;
+}
+
+void		Object3d::scale(glm::vec3 const& scale)
+{
+  _scale *= scale;
+}
+
+glm::vec3	Object3d::getPosition() const
 {
   return _position;
 }
 
-glm::vec3	Object::getRotation()
+glm::vec3	Object3d::getRotation() const
 {
   return _rotation;
 }
 
-glm::vec3	Object::getScale()
+glm::vec3	Object3d::getScale() const
 {
   return _scale;
 }
 
-glm::mat4	Object::getTransformation()
+glm::mat4	Object3d::getTransformation() const
 {
-  // On cree une matrice identite
   glm::mat4	transform(1);
 
-  // On applique ensuite les rotations selon les axes x, y et z
   transform = glm::rotate(transform, _rotation.x, glm::vec3(1, 0, 0));
   transform = glm::rotate(transform, _rotation.y, glm::vec3(0, 1, 0));
   transform = glm::rotate(transform, _rotation.z, glm::vec3(0, 0, 1));
-
-  // On effectue ensuite la translation
   transform = glm::translate(transform, _position);
-
-  // Et pour finir, on fait la mise a l'echelle
   transform = glm::scale(transform, _scale);
-
   return (transform);
 }

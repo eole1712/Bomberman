@@ -1,8 +1,16 @@
 #include <list>
 #include <string>
 #include <algorithm>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "Game.hh"
+#include "Clock.hh"
+#include "Input.hh"
+#include "SdlContext.hh"
+#include "BasicShader.hh"
+#include "OpenGL.hh"
 #include "MyGame.hpp"
-#include "Object.hpp"
+#include "Asset3d.hpp"
 
 #define CAMERA_HEIGTH 1000
 #define CAMERA_WIDTH 1000
@@ -17,7 +25,7 @@ MyGame::MyGame()
 
 MyGame::~MyGame()
 {
-  for (std::list<VisibleObject *>::iterator i = _objects.begin(); i != _objects.end(); i++)
+  for (std::list<Asset3d *>::iterator i = _objects.begin(); i != _objects.end(); i++)
     delete (*i);
 }
 
@@ -35,12 +43,10 @@ bool		MyGame::initialize()
 
   // We have the bind the shader before calling the setUniform method
   _shader.bind();
-  _shader.setUniform("view", _camera.viewTransform());
-  _shader.setUniform("projection", _camera.getProjection());
   return true;
 }
 
-void		MyGame::attachObject(VisibleObject *obj)
+void		MyGame::attachObject(Asset3d *obj)
 {
   _objects.push_front(obj);
 }
@@ -75,10 +81,10 @@ void		MyGame::draw()
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   _shader.bind();
-  _shader.setUniform("view", _camera.viewTransform());
+  _shader.setUniform("view", _camera.getView());
   _shader.setUniform("projection", _camera.getProjection());
   // We draw all objects
-  for (std::list<VisibleObject *>::iterator i = _objects.begin(); i != _objects.end(); i++)
+  for (std::list<Asset3d *>::iterator i = _objects.begin(); i != _objects.end(); i++)
     (*i)->draw(_shader, _clock);
   _context.flush();
 }

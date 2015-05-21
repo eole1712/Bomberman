@@ -17,7 +17,7 @@ const struct light {
   float pow;
 } mylight = light(vec4(10000.0), vec4(1.0), 1.0);
 
-const float gAmbient = 0.07;
+const float gAmbient = 0.7;
 vec4 Color = texture2D(fTexture0, fUv) * fColor;
 const float Spec = 16.0;
 
