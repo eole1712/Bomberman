@@ -80,6 +80,11 @@ public:
   T			getCellValue(const unsigned int x,
 				     const unsigned int y) const
   {
+    if (x > _width - 1 || y > _height - 1)
+      throw std::out_of_range("Coordinates (" +
+			      Conversion::typeToString<unsigned int>(x) + "," +
+			      Conversion::typeToString<unsigned int>(y) +
+			      ") are out of range.");
     return (_map[(y * _width) + x]);
   }
 

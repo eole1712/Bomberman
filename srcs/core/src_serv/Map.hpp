@@ -18,7 +18,6 @@ private:
   std::unordered_map<std::pair<unsigned int, unsigned int>, IObject*> _map;
   std::string _name;
   std::pair<unsigned int, unsigned int> _dimensions;
-
 };
 
 }
