@@ -105,6 +105,9 @@ private:
   unsigned int		_x;
   unsigned int		_y;
 
+public:
+  virtual Type		getObjectType() const;
+  virtual bool		isNull() const;
 };
 
 }

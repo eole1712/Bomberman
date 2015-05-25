@@ -30,6 +30,7 @@ namespace Buff
 
   public:
     virtual IObject::Type	getObjectType() const;
+    virtual bool		isNull() const;
   };
 }
 }

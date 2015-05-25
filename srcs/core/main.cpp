@@ -3,6 +3,7 @@
 #include "BuffFactory.hpp"
 #include "BuffIncSpeed.hpp"
 #include "BuffParalyzed.hpp"
+#include "Player.hpp"
 
 int	main()
 {
@@ -13,6 +14,9 @@ int	main()
   Bomberman::Buff::Factory::getInstance()->learn(new Bomberman::Buff::IncSpeed());
   Bomberman::Buff::Factory::getInstance()->learn(new Bomberman::Buff::Paralyzed());
 
+  Bomberman::IObject *p;
+  p = new Bomberman::Player("Hello", 0, 0);
+
   lol = Bomberman::Buff::Factory::getInstance()->generate("IncSpeed");
   lal = Bomberman::Buff::Factory::getInstance()->generate("Paralyzed");
   lul = Bomberman::Buff::Factory::getInstance()->getObject("Paralyzed");
@@ -21,5 +25,6 @@ int	main()
   std::cout << lul->getClassName() << std::endl;
   delete lol;
   delete lal;
+  delete p;
   return (EXIT_SUCCESS);
 }

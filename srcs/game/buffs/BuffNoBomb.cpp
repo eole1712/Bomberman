@@ -52,5 +52,10 @@ namespace Buff
   {
     return (IObject::BONUS);
   }
+
+bool			NoBomb::isNull() const
+{
+  return false;
+}
 }
 }

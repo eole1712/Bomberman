@@ -13,7 +13,8 @@ public:
       PLAYER,
       BONUS,
       WALL,
-      DESTROYABLEWALL
+      DESTROYABLEWALL,
+      EMPTY
     };
 
 public:
@@ -21,6 +22,7 @@ public:
 
 public:
   virtual Type	getObjectType() const = 0;
+  virtual bool	isNull() const = 0;
 };
 
 }

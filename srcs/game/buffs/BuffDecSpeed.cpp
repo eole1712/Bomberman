@@ -52,5 +52,10 @@ namespace Buff
   {
     return (IObject::BONUS);
   }
+
+bool			DecSpeed::isNull() const
+{
+  return false;
+}
 }
 }

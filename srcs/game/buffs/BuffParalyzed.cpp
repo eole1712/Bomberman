@@ -52,5 +52,10 @@ namespace Buff
   {
     return (IObject::BONUS);
   }
+
+bool		Paralyzed::isNull() const
+{
+  return false;
+}
 }
 }
