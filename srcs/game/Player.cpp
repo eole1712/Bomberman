@@ -224,4 +224,3 @@ bool			Player::isNull() const
 }
 
 }
-0
