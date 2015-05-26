@@ -13,7 +13,6 @@ void	Map::randomize(RessourceStock const& objects)
   unsigned int	y = 0;
   unsigned int	numJoueur = 1;
   unsigned int	ratio = this->_width * this->_height / this->_nbJoueurs;
-  unsigned int	save;
 
   while (y != this->_height)
     {
@@ -30,9 +29,12 @@ void	Map::randomize(RessourceStock const& objects)
     }
   while (numJoueur >= this->_nbJoueurs)
     {
-      save = numJoueur * ratio + my_random(0, 2);
-      x = save % this->_height;
-      y = save / this->_height;
+      x = numJoueur * ratio % this->_width;
+      y = numJoueur * ratio / this->_width;
+	  #include <iostream>
+	  std::cout << numJoueur << std::endl;
+	  std::cout << x << std::endl;
+	  std::cout << y << std::endl;
       this->setCellValue(x, y, objects.getObject(IObject::SPAWN));
       this->setCellValue(x + ((my_random(0, 1) == 0) ? (1) : (-1)), y,
 			 objects.getObject(IObject::EMPTY));
