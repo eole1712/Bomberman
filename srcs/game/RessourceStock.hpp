@@ -6,6 +6,7 @@
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "Player.hpp"
+# include "IBomb.hpp"
 
 namespace Bomberman
 {
@@ -23,6 +24,7 @@ private:
 public:
   IObject	*getObject(IObject::Type) const;
   IObject	*getBuff(IBuff::Type) const;
+  IObject	*getBomb(IBomb::Type) const;
   IObject	*getPlayer(std::string const &) const;
   IObject	*getPlayer(unsigned int) const;
 

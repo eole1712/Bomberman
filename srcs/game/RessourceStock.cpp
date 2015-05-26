@@ -67,6 +67,11 @@ IObject		*RessourceStock::getBuff(IBuff::Type type) const
   return _buffs[type];
 }
 
+IObject		*RessourceStock::getBomb(IBomb::Type type) const
+{
+  return _bombs[type];
+}
+
 IObject		*RessourceStock::getPlayer(std::string const &name) const
 {
   for (unsigned int i = 0; i < _players.size(); ++i)
