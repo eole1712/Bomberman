@@ -23,9 +23,6 @@ MyGame::MyGame()
   : _camera(90.0, CAMERA_HEIGTH, CAMERA_WIDTH),
     _speed(70), _player()
 {
-  _camera.translate(glm::vec3(0.0, 2.0, 2.0));
-  _camera.setRotation(glm::vec3(12.5, 0.0, 12.5));
-  _camera.updateView();
 }
 
 MyGame::~MyGame()
@@ -52,10 +49,16 @@ bool		MyGame::initialize()
   attachObject(new Asset3d("../assets/fire.obj"));
   attachObject(new Asset3d("../assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
-  _assets[PLAYER]->translate(glm::vec3(3.1, 0, 3.1));
+  _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
+  _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
+  _assets[PLAYER]->createSubAnim(0, "run", 34, 55);
+  _assets[PLAYER]->createSubAnim(0, "end", 55, 100);
+  _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("../assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
-
+  attachObject(new Asset3d("../assets/sky.obj"));
+  _assets[SKYBOX]->scale(glm::vec3(10.5 * 24));
+  _assets[SKYBOX]->setPosition(glm::vec3(24 / 2, -30, 24 / 2));
   _camera.setRotation(_assets[PLAYER]->getPosition());
   _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
   _camera.updateView();
@@ -74,6 +77,7 @@ bool		MyGame::update()
   float		movefactor;
   glm::vec3	move;
   glm::vec3	newPos;
+  static int	change = 0;
 
   movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
   // If the escape key is pressed or if the window has been closed we stop the program
@@ -82,18 +86,29 @@ bool		MyGame::update()
 
   if (_input.getKey(SDLK_UP) || _input.getKey(SDLK_DOWN))
     {
+      if (change == 0)
+	{
+	  _assets[PLAYER]->setCurrentSubAnim("start", false);
+	  _assets[PLAYER]->setCurrentSubAnim("run", true);
+	}
+      change = 1;
       move = (_input.getKey(SDLK_UP)) ? glm::vec3(0, 0, 0.06) : glm::vec3(0, 0, -0.06);
       move = glm::rotate(move, _assets[PLAYER]->getRotation().y,
 			 glm::vec3(0, 1, 0)) * movefactor;
       newPos = _assets[PLAYER]->getPosition() + move;
-      if (newPos.x > 0 && newPos.x < 24 &&
-	  newPos.z > 0 && newPos.z < 24 &&
-	  (1.25 < fmod(newPos.x, 2) || fmod(newPos.z, 2) > 1))
-	{
-	  _assets[PLAYER]->translate(move);
-	  _camera.setRotation(newPos);
-	  _camera.updateView();
-	}
+      if (newPos.x < 1 || newPos.x > 24)
+	newPos = glm::vec3(_assets[PLAYER]->getPosition().x, newPos.y, newPos.z);
+      if (newPos.z < 1 || newPos.z > 24)
+	newPos = glm::vec3(newPos.x, newPos.y, _assets[PLAYER]->getPosition().z);
+      _assets[PLAYER]->setPosition(newPos);
+      _camera.setRotation(newPos);
+      _camera.updateView();
+    }
+  else if (change == 1)
+    {
+      change = 0;
+      _assets[PLAYER]->setCurrentSubAnim("end", false);
+      // _assets[PLAYER]->setCurrentSubAnim("end2", true);
     }
   if (_input.getKey(SDLK_LEFT))
     _assets[PLAYER]->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
@@ -148,5 +163,10 @@ void		MyGame::draw()
   _assets[DST_BLOCK]->setPosition(glm::vec3(rand() % 12 * 2, 0, rand() % 12 * 2));
   _assets[DST_BLOCK]->draw(_shader, _clock);
   _assets[PLAYER]->draw(_shader, _clock);
+  _assets[SKYBOX]->draw(_shader, _clock);
+  _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
+  _assets[SKYBOX]->scale(glm::vec3(-1));
+  _assets[SKYBOX]->draw(_shader, _clock);
+  _assets[SKYBOX]->scale(glm::vec3(1));
   _context.flush();
 }
