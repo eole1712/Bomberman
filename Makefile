@@ -11,9 +11,11 @@ BUFFDIR		= $(GAMEDIR)/buffs/
 
 CORESRCS	= main.cpp
 
-GAMESRCS	= Player.cpp \
-		  BuffTimer.cpp \
-		  Empty.cpp
+GAMESRCS	= Player.cpp 		\
+		  BuffTimer.cpp		\
+		  Empty.cpp		\
+		  ../server/Map.cpp	\
+		  RessourceStock.cpp	\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
@@ -43,7 +45,7 @@ OBJS		= $(SRCS:.cpp=.o)
 
 CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR)
-CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR)
+CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
 
 LDFLAGS		+= -pthread
 
