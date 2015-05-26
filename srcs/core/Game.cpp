@@ -27,14 +27,14 @@
 using namespace Bomberman;
 
 Game::Game()
-  : _width(1024), _height(480), _camera(90.0, 1024, 480), _speed(70),
+  : _width(10), _height(10), _camera(90.0, 1000, 1000), _speed(70),
     _stock(std::vector<std::string> {"Adrien"}),
     _map("blibi", _width, _height, 1, Bomberman::Map::EASY, &_stock)
 {
 }
 
 Game::Game(const unsigned int & width, const unsigned int & height)
-  : _width(width), _height(height), _camera(90.0, width, height), _speed(70),
+  : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
     _stock(std::vector<std::string> {"Adrien"}),
     _map("blibi", _width, _height, 1, Bomberman::Map::EASY, &_stock)
 {
@@ -50,7 +50,7 @@ bool				Game::initialize()
 {
   std::vector<std::string>	vec;
 
-  if (!_context.start(_width, _height, "My bomberman!"))
+  if (!_context.start(_camera._width, _camera._height, "My bomberman!"))
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
@@ -71,7 +71,7 @@ bool				Game::initialize()
   attachObject(new Asset3d("srcs/assets/idst_block.obj"));
   attachObject(new Asset3d("srcs/assets/dst_block.obj"));
   attachObject(new Asset3d("srcs/assets/fire.obj"));
-  attachObject(new Asset3d("scrs/assets/marvin.fbx"));
+  attachObject(new Asset3d("srcs/assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
@@ -80,9 +80,9 @@ bool				Game::initialize()
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("srcs/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
-  attachObject(new Asset3d("srcs</assets/sky.obj"));
-  _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
-  _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, -30, _height / 2));
+  attachObject(new Asset3d("srcs/assets/sky.obj"));
+  _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2 * -1));
+  _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
   _camera.setRotation(_assets[PLAYER]->getPosition());
   _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
   _camera.updateView();
@@ -160,17 +160,17 @@ void		Game::draw()
   _shader.setUniform("projection", _camera.getProjection());
   // We draw all objects
   i[0] = 0;
-  while (i[0] < _width)
+  while (i[0] <= _width)
     {
       i[1] = 0;
-      while (i[1] < _height)
+      while (i[1] <= _height)
 	{
 	  if (i[0] == 0 || i[1] == 0 || i[0] == _width || i[1] == _height)
 	    {
 	      _assets[WALL]->setPosition(glm::vec3(i[0], 0, i[1]));
 	      _assets[WALL]->draw(_shader, _clock);
 	    }
-	  else if (1)
+	  else if (0)
 	    {
 	      _assets[IDST_BLOCK]->setPosition(glm::vec3(i[0], 0, i[1]));
 	      _assets[IDST_BLOCK]->draw(_shader, _clock);

@@ -33,12 +33,11 @@ void	Map::randomize(RessourceStock const& objects)
       save = numJoueur * playerspace + playerspace / 2;
       x = save % this->_width;
       y = save / this->_width;
-      std::cout << "x:" << x << " y:" << y << " save" << save << std::endl;
       this->setCellValue(x, y, objects.getObject(IObject::SPAWN));
-      this->setCellValue(x + ((my_random(0, 1) == 0) ? (1) : (-1)), y,
-			 objects.getObject(IObject::EMPTY));
-      this->setCellValue(x, y + ((my_random(0, 1) == 0) ? (1) : (-1)),
-			 objects.getObject(IObject::EMPTY));
+      setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1))
+		   , y, objects.getObject(IObject::EMPTY));
+      setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1))
+		   , objects.getObject(IObject::EMPTY));
       numJoueur++;
     }
 }

@@ -4,10 +4,10 @@
 
 #include "CameraObject.hpp"
 
-CameraObject::CameraObject(float fov, float heigth, float width)
-  :Object3d(), _depth(1000.0f), _fov(fov), _heigth(heigth), _width(width)
+CameraObject::CameraObject(float fov, float height, float width)
+  :Object3d(), _depth(1000.0f), _fov(fov), _height(height), _width(width)
 {
-  _projection = glm::perspective(_fov, _heigth / _width, 0.1f, _depth);
+  _projection = glm::perspective(_fov, _height / _width, 0.1f, _depth);
 }
 
 CameraObject::~CameraObject()

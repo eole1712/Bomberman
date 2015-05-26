@@ -14,10 +14,10 @@ public:
   glm::mat4		getView() const;
 
   void			updateView();
-private:
+public:
   float			_depth;
   float			_fov;
-  float			_heigth;
+  float			_height;
   float			_width;
   glm::mat4		_projection;
   glm::mat4		_view;
