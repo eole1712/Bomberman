@@ -1,33 +1,24 @@
 #ifndef MAP_H_
 # define MAP_H_
 
-#include <unordered_map>
+# include "GenericMap.hpp"
+# include "IObject.hpp"
 
 namespace Bomberman
 {
 
-class IObject;
-
-class Map
+class Map : public GenericMap<IObject*>
 {
 public:
-  Map(std::string, std::pair<unsigned int, unsigned int>);
-  Map(std::string, unsigned int, unsigned int);
-  virtual ~Map();
+  enum e_difficulty	{ EASY = 1, MEDIUM, DIFFICULT };
 
-  std::string	getName() const;
-  std::pair<unsigned int, unsigned int>	getDimensions() const;
-  IObject*	getCell(std::pair<unsigned int, unsigned int>) const;
-  IObject*	getCell(unsigned int, unsigned int) const;
-
-  void	setName(std::string);
-  void	setCell(std::pair<unsigned int, unsigned int>, IObject*);
-  void	setCell(unsigned int, unsigned int, IObject*);
+  Map(std::string, unsigned int, unsigned int, e_difficulty);
+  virtual ~Map() {};
 
 private:
   std::string	_name;
-  std::pair<unsigned int, unsigned int> const	_dimensions;
-  std::unordered_map<std::pair<unsigned int, unsigned int>, IObject*>	_map;
+  unsigned int	_nbJoueurs;
+  e_difficulty	_difficulty;
 };
 
 }

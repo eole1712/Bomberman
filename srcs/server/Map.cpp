@@ -1,49 +1,50 @@
-#include <utility>
 #include <string>
+#include "RessourceStock.hpp"
 #include "Map.hpp"
 
-Map::Map(std::string name, std::pair<unsigned int, unsigned int> dimensions)
-  : _name(name), _dimensions(dimensions)
-{}
-
-Map::Map(std::string name, unsigned int width, unsigned int height)
-  : _name(name), _dimensions(std::make_pair(width, height))
-{}
-
-Map::~Map()
-{}
-
-std::string	Map::getName() const
+void	Map::randomize(RessourceStock const& objects)
 {
-  return (this->_name);
+  unsigned int	x;
+  unsigned int	y = 0;
+  unsigned int	numJoueur = 1;
+  unsigned int	ratio = this->_width * this->_height / this->_nbJoueurs;
+  unsigned int	save;
+
+  while (y != this->_height)
+    {
+      x = 0;
+      while (x != this->_width)
+	{
+	  if (my_random(1, 10) <= this->_difficulty)
+	    this->setCellValue(x, y, objects.getUndestroyableWall());
+	  else
+	    this->setCellValue(x, y, objects.getWall());
+	  ++x;
+	}
+      ++y;
+    }
+  while (numJoueur >= this->_nbJoueurs)
+    {
+      save = numJoueur * ratio + my_random(0, 2);
+      x = save % this->_height;
+      y = save / this->_height;
+      this->setCellValue(x, y, objects.getEmpty());
+      this->setCellValue(x + ((my_random(0, 1) == 0) ? (1) : (-1)), y, objects.getEmpty());
+      this->setCellValue(x, y + ((my_random(0, 1) == 0) ? (1) : (-1)), objects.getEmpty());
+    }
 }
 
-std::pair<unsigned int, unsigned int>	Map::getDimensions() const
+Map::Map(std::string name, unsigned int width, unsigned int height,
+	 unsigned int nbJoueurs, e_difficulty difficulty,
+	 RessourceStock const& objects)
+  : _name(name), _width(width), _height(height), _nbJoueurs(nbJoueurs),
+    _difficulty(difficulty)
 {
-  return (this->_dimensions);
-}
-
-IObject*	getCell(std::pair<unsigned int, unsigned int> dimensions) const
-{
-  return (this->_map[dimensions]);
-}
-
-IObject*	getCell(unsigned int width, unsigned int height) const
-{
-  return (this->_map[std::make_pair(width, pair)]);
-}
-
-void	Map::setName(std::string name)
-{
-  this->_name = name;
-}
-
-void	Map::setCell(std::pair<unsigned int, unsigned int> dimensions, IObject* obj)
-{
-  this->_map[dimensions] = obj;
-}
-
-void	Map::setCell(unsigned int width, unsigned int height, IObject* obj)
-{
-  this->_map[std::make_pair(width, height)] = obj;
+  if (this->_nbJoueurs == 0
+      || this->_width * this->_height / this->_nbJoueurs < 4)
+    throw new InvalidNbPlayers();
+  if (this->_height < 5 || this->_width < 5)
+    throw new InvalidDimensions();
+  this->randomize(objects);
+  // check aucun endroit inaccessible
 }
