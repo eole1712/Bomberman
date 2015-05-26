@@ -12,6 +12,7 @@
 #include "IBomb.hpp"
 #include "BombClassic.hpp"
 #include "BombTimer.hpp"
+#include "Spawn.hpp"
 
 namespace Bomberman
 {
@@ -34,6 +35,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _objects[IObject::BONUS] = NULL;
   _objects[IObject::WALL] = NULL;
   _objects[IObject::DESTROYABLEWALL] = NULL;
+  _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
 }
 

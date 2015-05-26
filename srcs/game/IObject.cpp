@@ -3,6 +3,6 @@
 namespace Bomberman
 {
 
-const int	IObject::nbObject = 6;
+const int	IObject::nbObject = 7;
 
 }

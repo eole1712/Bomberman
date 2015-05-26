@@ -14,6 +14,7 @@ public:
       BONUS,
       WALL,
       DESTROYABLEWALL,
+      SPAWN,
       EMPTY
     };
 

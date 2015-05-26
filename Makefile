@@ -18,6 +18,7 @@ GAMESRCS	= Player.cpp 		\
 		  ../server/Map.cpp	\
 		  RessourceStock.cpp	\
 		  BombTimer.cpp		\
+		  Spawn.cpp		\
 		  IObject.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
