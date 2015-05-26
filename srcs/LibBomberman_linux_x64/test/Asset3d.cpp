@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <string>
 #include "Model.hh"
 #include "Clock.hh"
@@ -6,21 +7,16 @@
 #include "Asset3d.hpp"
 
 Asset3d::Asset3d(std::string const &filename)
-  :Object3d()
+  :Object3d(), gdl::Model()
 {
-  _visibility = _asset.load(filename.c_str());
-  _asset.setCurrentAnim(0);
+  _visibility = load(filename.c_str());
+  setCurrentAnim(1);
 }
 
 Asset3d::~Asset3d(){}
 
-void	Asset3d::update(gdl::Clock const &, gdl::Input &)
-{
-
-}
-
 void	Asset3d::draw(gdl::BasicShader &shader, gdl::Clock const &clock)
 {
   if (_visibility)
-    _asset.draw(shader, getTransformation(), clock.getElapsed());
+    gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
 }

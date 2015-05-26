@@ -28,7 +28,9 @@ private:
   MyGame(const MyGame &);
   MyGame &operator=(const MyGame &);
 
-  enum			mapAsset {FLOOR, WALL, IDST_BLOCK, DST_BLOCK, FIRE, PLAYER, BOMB};
+  enum			mapAsset
+    {FLOOR, WALL, IDST_BLOCK
+     ,DST_BLOCK, FIRE, PLAYER, BOMB, SKYBOX};
   std::vector<Asset3d *>	_assets;
   CameraObject		_camera;
   gdl::SdlContext	_context;

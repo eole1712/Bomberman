@@ -7,7 +7,7 @@
 # include "Input.hh"
 # include "Object3d.hpp"
 
-class Asset3d : public Object3d
+class Asset3d : public Object3d, public gdl::Model
 {
 public:
   Asset3d(std::string const &filename);
@@ -15,9 +15,9 @@ public:
 
   void	update(gdl::Clock const &, gdl::Input &);
   void  draw(gdl::BasicShader &shader, gdl::Clock const &clock);
+  void	cutAnim();
 
 private:
-  gdl::Model	_asset;
   bool		_visibility;
 };
 
