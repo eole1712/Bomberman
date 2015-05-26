@@ -1,5 +1,4 @@
 #include <string>
-#include "RessourceStock.hpp"
 #include "my_random.hpp"
 #include "InvalidNbPlayers.hpp"
 #include "InvalidDimensions.hpp"
@@ -44,9 +43,9 @@ void	Map::randomize(RessourceStock const& objects)
 
 Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty,
-	 RessourceStock const& objects)
+	 RessourceStock * objects)
   : GenericMap<IObject*>(width, height), _name(name),
-  _nbJoueurs(nbJoueurs), _difficulty(difficulty)
+    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects)
 {
   this->_width = width;
   this->_height = height;
@@ -55,8 +54,21 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 5 || this->_width < 5)
     throw new Exception::InvalidDimensions("Map Constructor");
-  this->randomize(objects);
+  this->randomize(*objects);
   // check aucun endroit inaccessible
+}
+
+void		Map::swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny)
+{
+  IObject	*obj = getCellValue(x, y);
+
+  setCellValue(x, y, getCellValue(nx, ny));
+  setCellValue(nx, ny, obj);
+}
+
+void		Map::killObject(unsigned int x, unsigned int y)
+{
+  setCellValue(x, y, _rcs->getObject(IObject::EMPTY));
 }
 
 }

@@ -1,6 +1,7 @@
 #include <string>
 #include <list>
 #include "Player.hpp"
+#include "Map.hpp"
 
 namespace Bomberman
 {
@@ -194,11 +195,69 @@ void			 Player::checkBuffList()
 
 // position methods
 
-void			Player::initPos(unsigned int x, unsigned int y)
+void			Player::initGame(unsigned int x, unsigned int y, Map *map)
 {
-  //CHECK WITH THE MAP
-  _x = x;
-  _y = y;
+  if (map)
+    {
+      map = _map;
+      if (_map->getWidth() > x && _map->getHeight() > y)
+	{
+	  _x = x;
+	  _y = y;
+	}
+    }
+}
+
+void			Player::moveUp()
+{
+  if (_map && _y > 0)
+    {
+      IObject::Type t = _map->getCellValue(_x, _y - 1)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x, _y - 1);
+	  _y = _y - 1;
+	}
+    }
+}
+
+void			Player::moveDown()
+{
+  if (_map && _y < _map->getHeight() - 1)
+    {
+      IObject::Type t = _map->getCellValue(_x, _y + 1)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x, _y + 1);
+	  _y = _y + 1;
+	}
+    }
+}
+
+void			Player::moveLeft()
+{
+  if (_map && _x > 0)
+    {
+      IObject::Type t = _map->getCellValue(_x - 1, _y)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x - 1, _y);
+	  _x = _x - 1;
+	}
+    }
+}
+
+void			Player::moveRight()
+{
+  if (_map && _x < _map->getWidth() - 1)
+    {
+      IObject::Type t = _map->getCellValue(_x + 1, _y)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x + 1, _y);
+	  _x = _x + 1;
+	}
+    }
 }
 
 unsigned int		Player::getX() const

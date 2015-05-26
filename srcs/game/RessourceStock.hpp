@@ -5,7 +5,6 @@
 # include <string>
 # include "IObject.hpp"
 # include "IBuff.hpp"
-# include "Player.hpp"
 # include "IBomb.hpp"
 
 namespace Bomberman

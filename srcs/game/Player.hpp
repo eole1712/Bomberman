@@ -4,12 +4,15 @@
 # include <string>
 # include <list>
 # include "IObject.hpp"
-# include "buffs/IBuff.hpp"
+# include "IBuff.hpp"
 # include "BuffTimer.hpp"
+# include "Map.hpp"
 
 
 namespace Bomberman
 {
+
+class Map;
 
 class Player
   : public IObject
@@ -98,9 +101,15 @@ private:
   Buff_exec		_buffOff[7];
 
 public:
-  void			initPos(unsigned int, unsigned int);
+  void			initGame(unsigned int, unsigned int, Map *);
   unsigned int		getX() const;
   unsigned int		getY() const;
+
+public:
+  void			moveUp();
+  void			moveDown();
+  void			moveLeft();
+  void			moveRight();
 
 private:
   unsigned int		_x;
@@ -109,6 +118,9 @@ private:
 public:
   virtual Type		getObjectType() const;
   virtual bool		isNull() const;
+
+private:
+  Map			*_map;
 };
 
 }

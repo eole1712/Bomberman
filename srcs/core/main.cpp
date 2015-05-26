@@ -20,7 +20,7 @@ int	main()
   vec.push_back("Léon");
 
   Bomberman::RessourceStock	stock(vec);
-  Bomberman::Map	yooooo("blibi", 10, 10, 2, Bomberman::Map::EASY, stock);
+  Bomberman::Map	yooooo("blibi", 10, 10, 2, Bomberman::Map::EASY, &stock);
 
   Bomberman::Buff::Factory::getInstance()->learn(new Bomberman::Buff::IncSpeed());
   Bomberman::Buff::Factory::getInstance()->learn(new Bomberman::Buff::Paralyzed());

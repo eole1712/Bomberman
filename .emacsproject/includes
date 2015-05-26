@@ -3,3 +3,5 @@
 ./srcs/core
 ./srcs/game/buffs
 ./srcs/game/bombs
+./srcs/server
+./srcs/exceptions
