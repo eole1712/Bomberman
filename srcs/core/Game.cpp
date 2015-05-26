@@ -29,14 +29,14 @@ using namespace Bomberman;
 Game::Game()
   : _width(1024), _height(480), _camera(90.0, 1024, 480), _speed(70),
     _stock(std::vector<std::string> {"Adrien"}),
-    _map("blibi", _width, _height, 1, Map::EASY, _stock)
+    _map("blibi", _width, _height, 1, Bomberman::Map::EASY, &_stock)
 {
 }
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, width, height), _speed(70),
     _stock(std::vector<std::string> {"Adrien"}),
-    _map("blibi", _width, _height, 1, Map::EASY, _stock)
+    _map("blibi", _width, _height, 1, Bomberman::Map::EASY, &_stock)
 {
 }
 
@@ -62,25 +62,25 @@ bool				Game::initialize()
 
 
   // We create a shader
-  if (!_shader.load("../shaders/basic.fp", GL_FRAGMENT_SHADER)
-      || !_shader.load("../shaders/basic.vp", GL_VERTEX_SHADER)
+  if (!_shader.load("srcs/shaders/basic.fp", GL_FRAGMENT_SHADER)
+      || !_shader.load("srcs/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
     return false;
-  attachObject(new Asset3d("../assets/floor.obj"));
-  attachObject(new Asset3d("../assets/idst_block.obj"));
-  attachObject(new Asset3d("../assets/idst_block.obj"));
-  attachObject(new Asset3d("../assets/dst_block.obj"));
-  attachObject(new Asset3d("../assets/fire.obj"));
-  attachObject(new Asset3d("../assets/marvin.fbx"));
+  attachObject(new Asset3d("srcs/assets/floor.obj"));
+  attachObject(new Asset3d("srcs/assets/idst_block.obj"));
+  attachObject(new Asset3d("srcs/assets/idst_block.obj"));
+  attachObject(new Asset3d("srcs/assets/dst_block.obj"));
+  attachObject(new Asset3d("srcs/assets/fire.obj"));
+  attachObject(new Asset3d("scrs/assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
   _assets[PLAYER]->createSubAnim(0, "run", 34, 55);
   _assets[PLAYER]->createSubAnim(0, "end", 55, 100);
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
-  attachObject(new Asset3d("../assets/barrel.obj"));
+  attachObject(new Asset3d("srcs/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
-  attachObject(new Asset3d("../assets/sky.obj"));
+  attachObject(new Asset3d("srcs</assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, -30, _height / 2));
   _camera.setRotation(_assets[PLAYER]->getPosition());
