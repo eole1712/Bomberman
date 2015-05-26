@@ -194,6 +194,13 @@ void			 Player::checkBuffList()
 
 // position methods
 
+void			Player::initPos(unsigned int x, unsigned int y)
+{
+  //CHECK WITH THE MAP
+  _x = x;
+  _y = y;
+}
+
 unsigned int		Player::getX() const
 {
   return _x;
@@ -217,3 +224,4 @@ bool			Player::isNull() const
 }
 
 }
+0

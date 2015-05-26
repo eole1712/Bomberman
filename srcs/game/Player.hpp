@@ -98,6 +98,7 @@ private:
   Buff_exec		_buffOff[7];
 
 public:
+  void			initPos(unsigned int, unsigned int);
   unsigned int		getX() const;
   unsigned int		getY() const;
 
