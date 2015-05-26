@@ -8,6 +8,7 @@ MISCDIR		= $(SRCSDIR)/misc/
 COREDIR		= $(SRCSDIR)/core/
 EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
+BOMBDIR		= $(GAMEDIR)/bombs/
 
 CORESRCS	= main.cpp
 
@@ -16,6 +17,8 @@ GAMESRCS	= Player.cpp 		\
 		  Empty.cpp		\
 		  ../server/Map.cpp	\
 		  RessourceStock.cpp	\
+		  BombTimer.cpp		\
+		  IObject.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
@@ -26,6 +29,10 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffShield.cpp	\
 		  BuffIncRange.cpp	\
 		  IBuff.cpp		\
+
+BOMBSRCS	= BombClassic.cpp	\
+		  IBomb.cpp		\
+
 
 MISCSRCS	= Timer.cpp		\
 		  my_random.cpp		\
@@ -39,12 +46,13 @@ SRCS		+= $(addprefix $(COREDIR), $(CORESRCS))
 SRCS		+= $(addprefix $(GAMEDIR), $(GAMESRCS))
 SRCS		+= $(addprefix $(MISCDIR), $(MISCSRCS))
 SRCS		+= $(addprefix $(BUFFDIR), $(BUFFSRCS))
+SRCS		+= $(addprefix $(BOMBDIR), $(BOMBSRCS))
 SRCS		+= $(addprefix $(EXCEPTDIR), $(EXCEPTSRCS))
 
 OBJS		= $(SRCS:.cpp=.o)
 
 CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
-CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR)
+CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
 
 LDFLAGS		+= -pthread

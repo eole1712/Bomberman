@@ -15,11 +15,14 @@ public:
     };
 
 public:
-  virtual ~IBomb();
+  virtual ~IBomb() {}
 
 public:
-  virtual int	getDuration() const = 0;
-  virtual Type	getBombType() const = 0;
+  virtual int		getDuration() const = 0;
+  virtual Type		getBombType() const = 0;
+
+public:
+  static const int	nbBomb;
 };
 
 }

@@ -18,11 +18,14 @@ public:
     };
 
 public:
-  virtual	~IObject() {}
+  virtual ~IObject() {}
 
 public:
-  virtual Type	getObjectType() const = 0;
-  virtual bool	isNull() const = 0;
+  virtual Type		getObjectType() const = 0;
+  virtual bool		isNull() const = 0;
+
+public:
+  static const int	nbObject;
 };
 
 }

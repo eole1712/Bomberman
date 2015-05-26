@@ -17,7 +17,7 @@ namespace Bomberman
 {
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names)
-  : _players(names.size(), NULL), _buffs(7, NULL), _objects(6, NULL)
+  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(IBomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
 {
   for (unsigned int i = 0; i < names.size(); ++i)
     _players[i] = new Player(names[i], 0, 0);

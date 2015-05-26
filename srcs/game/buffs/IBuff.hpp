@@ -33,6 +33,7 @@ namespace Bomberman
 
   public:
     static const int	infinite;
+    static const int	nbBuff;
   };
 }
 
