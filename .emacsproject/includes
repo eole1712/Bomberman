@@ -2,3 +2,4 @@
 ./srcs/misc
 ./srcs/core
 ./srcs/game/buffs
+./srcs/game/bombs

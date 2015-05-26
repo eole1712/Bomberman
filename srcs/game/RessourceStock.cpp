@@ -9,6 +9,9 @@
 #include "BuffParalyzed.hpp"
 #include "BuffShield.hpp"
 #include "Empty.hpp"
+#include "IBomb.hpp"
+#include "BombClassic.hpp"
+#include "BombTimer.hpp"
 
 namespace Bomberman
 {
@@ -25,6 +28,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _buffs[IBuff::NO_BOMB] = new Buff::NoBomb;
   _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
   _buffs[IBuff::SHIELD] = new Buff::Shield;
+  _bombs[IBomb::CLASSIC] = new Bomb::Classic;
   _objects[IObject::BOMB] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;

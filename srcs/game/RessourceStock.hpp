@@ -29,6 +29,7 @@ public:
 private:
   std::vector<IObject *>	_players;
   std::vector<IObject *>	_buffs;
+  std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
 };
 
