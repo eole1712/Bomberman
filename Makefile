@@ -29,6 +29,8 @@ MISCSRCS	= Timer.cpp		\
 
 EXCEPTSRCS	= ResourceUnavailable.cpp	\
 		  LuaError.cpp			\
+		  InvalidNbPlayers.cpp		\
+		  InvalidDimensions.cpp		\
 
 SRCS		+= $(addprefix $(COREDIR), $(CORESRCS))
 SRCS		+= $(addprefix $(GAMEDIR), $(GAMESRCS))
