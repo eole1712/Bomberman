@@ -1,5 +1,9 @@
 #include <cstdlib>
 #include <iostream>
+#include <string>
+#include <vector>
+#include "RessourceStock.hpp"
+#include "Map.hpp"
 #include "BuffFactory.hpp"
 #include "BuffIncSpeed.hpp"
 #include "BuffParalyzed.hpp"
@@ -10,6 +14,13 @@ int	main()
   Bomberman::IBuff* lol;
   Bomberman::IBuff* lal;
   Bomberman::IBuff const* lul;
+  std::vector<std::string>	vec;
+
+  vec.push_back("Adrien");
+  vec.push_back("Léon");
+
+  Bomberman::RessourceStock	stock(vec);
+  Bomberman::Map	yooooo("blibi", 10, 10, 2, Bomberman::Map::EASY, stock);
 
   Bomberman::Buff::Factory::getInstance()->learn(new Bomberman::Buff::IncSpeed());
   Bomberman::Buff::Factory::getInstance()->learn(new Bomberman::Buff::Paralyzed());

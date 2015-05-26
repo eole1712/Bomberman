@@ -45,7 +45,8 @@ void	Map::randomize(RessourceStock const& objects)
 Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty,
 	 RessourceStock const& objects)
-  : _name(name), _nbJoueurs(nbJoueurs), _difficulty(difficulty)
+  : GenericMap<IObject*>(width, height), _name(name),
+  _nbJoueurs(nbJoueurs), _difficulty(difficulty)
 {
   this->_width = width;
   this->_height = height;
