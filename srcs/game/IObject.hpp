@@ -9,7 +9,7 @@ class IObject
 public:
   enum Type
     {
-      BOMB,
+      BOMB = 0,
       PLAYER,
       BONUS,
       WALL,

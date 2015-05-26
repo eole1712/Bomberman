@@ -13,7 +13,6 @@ CORESRCS	= main.cpp
 
 GAMESRCS	= Player.cpp \
 		  BuffTimer.cpp \
-		  Map.cpp \
 		  Empty.cpp
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
