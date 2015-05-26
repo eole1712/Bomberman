@@ -1,6 +1,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "my_random.hpp"
+
+namespace Bomberman
+{
 
 unsigned int		my_random(int const min, int max)
 {
@@ -13,4 +17,6 @@ unsigned int		my_random(int const min, int max)
   max++;
   read(fd, &result, 4);
   return (result % (max - min) + min);
+}
+
 }
