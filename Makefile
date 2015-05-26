@@ -19,6 +19,8 @@ GAMESRCS	= Player.cpp 		\
 		  RessourceStock.cpp	\
 		  BombTimer.cpp		\
 		  Spawn.cpp		\
+		  Wall.cpp		\
+		  DestroyableWall.cpp	\
 		  IObject.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\

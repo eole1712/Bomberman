@@ -13,6 +13,8 @@
 #include "BombClassic.hpp"
 #include "BombTimer.hpp"
 #include "Spawn.hpp"
+#include "Wall.hpp"
+#include "DestroyableWall.hpp"
 
 namespace Bomberman
 {
@@ -33,8 +35,8 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _objects[IObject::BOMB] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
-  _objects[IObject::WALL] = NULL;
-  _objects[IObject::DESTROYABLEWALL] = NULL;
+  _objects[IObject::WALL] = new Wall;
+  _objects[IObject::DESTROYABLEWALL] = new DestroyableWall;
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
 }
