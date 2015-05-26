@@ -26,6 +26,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 		  IBuff.cpp		\
 
 MISCSRCS	= Timer.cpp		\
+		  my_random.cpp		\
 
 EXCEPTSRCS	= ResourceUnavailable.cpp	\
 		  LuaError.cpp			\
