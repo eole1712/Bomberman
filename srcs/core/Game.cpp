@@ -13,30 +13,54 @@
 #include "SdlContext.hh"
 #include "BasicShader.hh"
 #include "OpenGL.hh"
-#include "MyGame.hpp"
+#include "Game.hpp"
 #include "Asset3d.hpp"
 
-#define CAMERA_HEIGTH 1000
-#define CAMERA_WIDTH 1000
+#include "RessourceStock.hpp"
+#include "Map.hpp"
+#include "BuffFactory.hpp"
+#include "BuffIncSpeed.hpp"
+#include "BuffParalyzed.hpp"
+#include "Player.hpp"
+#include "Game.hpp"
 
-MyGame::MyGame()
-  : _camera(90.0, CAMERA_HEIGTH, CAMERA_WIDTH),
-    _speed(70), _player()
+using namespace Bomberman;
+
+Game::Game()
+  : _width(1024), _height(480), _camera(90.0, 1024, 480), _speed(70),
+    _stock(std::vector<std::string> {"Adrien"}),
+    _map("blibi", _width, _height, 1, Map::EASY, _stock)
 {
 }
 
-MyGame::~MyGame()
+Game::Game(const unsigned int & width, const unsigned int & height)
+  : _width(width), _height(height), _camera(90.0, width, height), _speed(70),
+    _stock(std::vector<std::string> {"Adrien"}),
+    _map("blibi", _width, _height, 1, Map::EASY, _stock)
+{
+}
+
+Game::~Game()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
 }
 
-bool		MyGame::initialize()
+bool				Game::initialize()
 {
-  if (!_context.start(CAMERA_HEIGTH, CAMERA_WIDTH, "My bomberman!"))
+  std::vector<std::string>	vec;
+
+  if (!_context.start(_width, _height, "My bomberman!"))
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+
+  // vec.push_back("Adrien");
+  // vec.push_back("Léon");
+  // Bomberman::RessourceStockstock(vec);
+  // -  Bomberman::Mapyooooo("blibi", 10, 10, 2, Bomberman::Map::EASY, stock);
+
+
   // We create a shader
   if (!_shader.load("../shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("../shaders/basic.vp", GL_VERTEX_SHADER)
@@ -47,7 +71,7 @@ bool		MyGame::initialize()
   attachObject(new Asset3d("../assets/idst_block.obj"));
   attachObject(new Asset3d("../assets/dst_block.obj"));
   attachObject(new Asset3d("../assets/fire.obj"));
-  attachObject(new Asset3d("../assets/poney.fbx"));
+  attachObject(new Asset3d("../assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
@@ -57,8 +81,8 @@ bool		MyGame::initialize()
   attachObject(new Asset3d("../assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
   attachObject(new Asset3d("../assets/sky.obj"));
-  _assets[SKYBOX]->scale(glm::vec3(10.5 * 24));
-  _assets[SKYBOX]->setPosition(glm::vec3(24 / 2, -30, 24 / 2));
+  _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
+  _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, -30, _height / 2));
   _camera.setRotation(_assets[PLAYER]->getPosition());
   _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
   _camera.updateView();
@@ -67,12 +91,12 @@ bool		MyGame::initialize()
   return true;
 }
 
-void		MyGame::attachObject(Asset3d *obj)
+void		Game::attachObject(Asset3d *obj)
 {
   _assets.push_back(obj);
 }
 
-bool		MyGame::update()
+bool		Game::update()
 {
   float		movefactor;
   glm::vec3	move;
@@ -96,9 +120,9 @@ bool		MyGame::update()
       move = glm::rotate(move, _assets[PLAYER]->getRotation().y,
 			 glm::vec3(0, 1, 0)) * movefactor;
       newPos = _assets[PLAYER]->getPosition() + move;
-      if (newPos.x < 1 || newPos.x > 24)
+      if (newPos.x < 1 || newPos.x > _width)
 	newPos = glm::vec3(_assets[PLAYER]->getPosition().x, newPos.y, newPos.z);
-      if (newPos.z < 1 || newPos.z > 24)
+      if (newPos.z < 1 || newPos.z > _height)
 	newPos = glm::vec3(newPos.x, newPos.y, _assets[PLAYER]->getPosition().z);
       _assets[PLAYER]->setPosition(newPos);
       _camera.setRotation(newPos);
@@ -125,9 +149,9 @@ bool		MyGame::update()
   return true;
 }
 
-void		MyGame::draw()
+void		Game::draw()
 {
-  int		i[2];
+  unsigned int	i[2];
 
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -136,17 +160,17 @@ void		MyGame::draw()
   _shader.setUniform("projection", _camera.getProjection());
   // We draw all objects
   i[0] = 0;
-  while (i[0] < 25)
+  while (i[0] < _width)
     {
       i[1] = 0;
-      while (i[1] < 25)
+      while (i[1] < _height)
 	{
-	  if (i[0] == 0 || i[1] == 0 || i[0] == 24 || i[1] == 24)
+	  if (i[0] == 0 || i[1] == 0 || i[0] == _width || i[1] == _height)
 	    {
 	      _assets[WALL]->setPosition(glm::vec3(i[0], 0, i[1]));
 	      _assets[WALL]->draw(_shader, _clock);
 	    }
-	  else if (i[0] % 2 == 0 && i[1] % 2 == 0)
+	  else if (1)
 	    {
 	      _assets[IDST_BLOCK]->setPosition(glm::vec3(i[0], 0, i[1]));
 	      _assets[IDST_BLOCK]->draw(_shader, _clock);
