@@ -34,7 +34,7 @@ void	Map::randomize(RessourceStock const& objects)
       save = numJoueur * ratio + my_random(0, 2);
       x = save % this->_height;
       y = save / this->_height;
-      this->setCellValue(x, y, objects.getObject(IObject::EMPTY));
+      this->setCellValue(x, y, objects.getObject(IObject::SPAWN));
       this->setCellValue(x + ((my_random(0, 1) == 0) ? (1) : (-1)), y,
 			 objects.getObject(IObject::EMPTY));
       this->setCellValue(x, y + ((my_random(0, 1) == 0) ? (1) : (-1)),
