@@ -16,7 +16,8 @@ public:
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
   virtual ~Map() {};
 
-  void			randomize(RessourceStock const&);
+  void	randomize(RessourceStock const&);
+  RessourceStock	*getRcs() const;
 
 public:
   void			swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny);

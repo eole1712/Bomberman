@@ -72,6 +72,11 @@ void		Map::killObject(unsigned int x, unsigned int y)
   setCellValue(x, y, _rcs->getObject(IObject::EMPTY));
 }
 
+RessourceStock	*Map::getRcs() const
+{
+  return _rcs;
+}
+
 std::string const&	Map::getName() const
 {
   return _name;

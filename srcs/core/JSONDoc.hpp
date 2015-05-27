@@ -45,6 +45,6 @@ template<>
 Bomberman::Player*	JSONDoc::unserialize<Bomberman::Player*>(std::string const& name) const;
 
 template<>
-Bomberman::Map		JSONDoc::serialize<Bomberman::Map>(const Bomberman::Map& obj);
+void		JSONDoc::serialize<Bomberman::Map>(const Bomberman::Map& obj);
 
 #endif /* !JSONDOC_H_ */

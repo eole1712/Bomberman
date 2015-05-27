@@ -7,6 +7,7 @@
 #include "JSONDoc.hpp"
 #include "Score.hpp"
 #include "Player.hpp"
+#include "Map.hpp"
 
 int	main()
 {
@@ -15,6 +16,13 @@ int	main()
   Bomberman::Player player("Grisha", 42, 21);
   Bomberman::Player griGri("Putin", 75, 42);
   SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
+  std::vector<std::string> players;
+  players.push_back("GriGri");
+  players.push_back("Putin");
+  players.push_back("John");
+  players.push_back("Jean");
+  players.push_back("Milow");
+  Bomberman::Map map("testMap", 10, 10, 5, Bomberman::Map::EASY, new Bomberman::RessourceStock(players));
 
   fac->learn(new Bomberman::Buff::NoBomb);
   fac->learn(new Bomberman::Buff::Shield);
@@ -61,5 +69,7 @@ int	main()
   if (player.getBuffList().size() == player2->getBuffList().size())
     std::cout << "Les deux listes ont la même taille" << std::endl;
   doc.serialize<Bomberman::Player>(griGri);
+  doc.serialize<Bomberman::Map>(map);
   doc.writeDown("Test1.json");
+
 }

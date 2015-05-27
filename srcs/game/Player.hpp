@@ -6,6 +6,7 @@
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "BuffTimer.hpp"
+# include "IBomb.hpp"
 
 
 namespace Bomberman
@@ -93,6 +94,8 @@ public:
   void			addBuff(IBuff*);
   void			delBuff(IBuff*);
   void			checkBuffList();
+  void			addTimedBuff(BuffTimer*);
+  std::list<BuffTimer*> const& getBuffList() const;
 
 private:
   std::list<BuffTimer*>	_buff;
@@ -100,13 +103,34 @@ private:
   Buff_exec		_buffOff[7];
 
 public:
+  void			initGame(unsigned int, unsigned int, Map*);
   unsigned int		getX() const;
   unsigned int		getY() const;
+
+  void			moveUp();
+  void			moveDown();
+  void			moveLeft();
+  void			moveRight();
 
 private:
   unsigned int		_x;
   unsigned int		_y;
 
+public:
+  void			setBombType(IBomb::Type);
+  IBomb::Type		getBombType() const;
+  void			putBomb();
+  bool			tryToKill();
+
+private:
+  IBomb::Type		_bombType;
+
+public:
+  virtual Type		getObjectType() const;
+  virtual bool		isNull() const;
+
+private:
+  Map			*_map;
 };
 
 }

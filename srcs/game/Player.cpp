@@ -1,6 +1,8 @@
 #include <string>
 #include <list>
 #include "Player.hpp"
+#include "Map.hpp"
+#include "BombTimer.hpp"
 
 namespace Bomberman
 {
@@ -199,6 +201,14 @@ void			Player::addBuff(IBuff *n)
   buff->start();
 }
 
+void			Player::addTimedBuff(Bomberman::BuffTimer *buff)
+{
+  (this->*_buffOn[buff->getBuff()->getBuffType()])();
+  _buff.push_back(buff);
+  buff->start();
+}
+
+
 void			 Player::checkBuffList()
 {
   for (std::list<BuffTimer*>::iterator it = _buff.begin(); it != _buff.end(); it++)
@@ -212,7 +222,25 @@ void			 Player::checkBuffList()
     }
 }
 
+std::list<BuffTimer*> const& Player::getBuffList() const
+{
+  return _buff;
+}
+
 // position methods
+
+void			Player::initGame(unsigned int x, unsigned int y, Map *map)
+{
+  if (map)
+    {
+      map = _map;
+      if (_map->getWidth() > x && _map->getHeight() > y)
+	{
+	  _x = x;
+	  _y = y;
+	}
+    }
+}
 
 unsigned int		Player::getX() const
 {
@@ -224,4 +252,105 @@ unsigned int		Player::getY() const
   return _y;
 }
 
+void			Player::moveUp()
+{
+  if (isAlive() && !isParalyzed() && _map && _y > 0)
+    {
+      IObject::Type t = _map->getCellValue(_x, _y - 1)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x, _y - 1);
+	  _y = _y - 1;
+	}
+    }
+}
+
+void			Player::moveDown()
+{
+  if (isAlive() && !isParalyzed() && _map && _y < _map->getHeight() - 1)
+    {
+      IObject::Type t = _map->getCellValue(_x, _y + 1)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x, _y + 1);
+	  _y = _y + 1;
+	}
+    }
+}
+
+void			Player::moveLeft()
+{
+  if (isAlive() && !isParalyzed() && _map && _x > 0)
+    {
+      IObject::Type t = _map->getCellValue(_x - 1, _y)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x - 1, _y);
+	  _x = _x - 1;
+	}
+    }
+}
+
+void			Player::moveRight()
+{
+  if (isAlive() && !isParalyzed() && _map && _x < _map->getWidth() - 1)
+    {
+      IObject::Type t = _map->getCellValue(_x + 1, _y)->getObjectType();
+      if (t != WALL && t != DESTROYABLEWALL)
+	{
+	  _map->swapObjects(_x, _y, _x + 1, _y);
+	  _x = _x + 1;
+	}
+    }
+}
+
+//attacks
+
+void			Player::setBombType(IBomb::Type type)
+{
+  _bombType = type;
+}
+
+IBomb::Type		Player::getBombType() const
+{
+  return _bombType;
+}
+
+void			Player::putBomb()
+{
+  if (_map && isAlive() && !isParalyzed() && !zeroBomb())
+    {
+      IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
+      BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
+      _map->setCellValue(_x, _y, bombT);
+    }
+}
+
+bool			Player::tryToKill()
+{
+  if (isAlive())
+    {
+      if (canAbsorb())
+	decShield();
+      else
+	{
+	  _isAlive = false;
+	  return true;
+	}
+    }
+  return false;
+}
+
+
+// type
+
+IObject::Type		Player::getObjectType() const
+{
+  return IObject::PLAYER;
+}
+
+bool			Player::isNull() const
+{
+  return false;
+}
 }
