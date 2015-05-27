@@ -116,6 +116,15 @@ private:
   unsigned int		_y;
 
 public:
+  void			setBombType(IBomb::Type);
+  IBomb::Type		getBombType() const;
+  void			putBomb();
+  bool			tryToKill();
+
+private:
+  IBomb::Type		_bombType;
+
+public:
   virtual Type		getObjectType() const;
   virtual bool		isNull() const;
 

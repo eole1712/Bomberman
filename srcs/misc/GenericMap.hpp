@@ -98,6 +98,8 @@ public:
     return (_height);
   }
 
+
+
 protected:
   T*		_map;
   unsigned int	_width;
