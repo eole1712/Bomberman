@@ -1,5 +1,6 @@
 #include <string>
 #include <list>
+#include <cmath>
 #include "Player.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
@@ -223,72 +224,58 @@ void			Player::initGame(unsigned int x, unsigned int y, Map *map)
       map = _map;
       if (_map->getWidth() > x && _map->getHeight() > y)
 	{
-	  _x = x;
-	  _y = y;
+	  setPosition(glm::vec3(x, 0, y));
 	}
     }
 }
 
 unsigned int		Player::getX() const
 {
-  return _x;
+  return floor(getPosition().x);
+}
+
+float			Player::getfX() const
+{
+  return getPosition().x;
 }
 
 unsigned int		Player::getY() const
 {
-  return _y;
+  return floor(getPosition().z);
 }
 
-void			Player::moveUp()
+float			Player::getfY() const
 {
-  if (isAlive() && !isParalyzed() && _map && _y > 0)
-    {
-      IObject::Type t = _map->getCellValue(_x, _y - 1)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x, _y - 1);
-	  _y = _y - 1;
-	}
-    }
+  return getPosition().z;
 }
 
-void			Player::moveDown()
+void			Player::setX(float x)
 {
-  if (isAlive() && !isParalyzed() && _map && _y < _map->getHeight() - 1)
-    {
-      IObject::Type t = _map->getCellValue(_x, _y + 1)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x, _y + 1);
-	  _y = _y + 1;
-	}
-    }
+  setPosition(glm::vec3(x, 0, getPosition().z));
 }
 
-void			Player::moveLeft()
+void			Player::setY(float y)
 {
-  if (isAlive() && !isParalyzed() && _map && _x > 0)
-    {
-      IObject::Type t = _map->getCellValue(_x - 1, _y)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x - 1, _y);
-	  _x = _x - 1;
-	}
-    }
+  setPosition(glm::vec3(getPosition().x, 0, y));
 }
 
-void			Player::moveRight()
+void			Player::move(glm::vec3 pos)
 {
-  if (isAlive() && !isParalyzed() && _map && _x < _map->getWidth() - 1)
-    {
-      IObject::Type t = _map->getCellValue(_x + 1, _y)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x + 1, _y);
-	  _x = _x + 1;
-	}
-    }
+  glm::vec3		npos;
+  IObject::Type		type;
+
+  if (!isAlive() && isParalyzed())
+    return;
+  npos = getPosition() + pos;
+  type = _map->getCellValue(floor(npos.x), floor(npos.z))->getObjectType();
+  if (npos.x < 1 || npos.x > _map->getWidth() ||
+      type == IObject::DESTROYABLEWALL || type == IObject::WALL)
+    npos = glm::vec3(getPosition().x, npos.y, npos.z);
+  type = _map->getCellValue(floor(npos.x), floor(npos.z))->getObjectType();
+  if (npos.y < 1 || npos.y > _map->getHeight() ||
+      type == IObject::DESTROYABLEWALL || type == IObject::WALL)
+    npos = glm::vec3(npos.x, npos.y, getPosition().z);
+  setPosition(npos);
 }
 
 //attacks
@@ -309,7 +296,7 @@ void			Player::putBomb()
     {
       IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
-      _map->setCellValue(_x, _y, bombT);
+      _map->setCellValue(getX(), getY(), bombT);
     }
 }
 
