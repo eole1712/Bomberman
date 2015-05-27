@@ -56,17 +56,12 @@ bool				Game::initialize()
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
-  // vec.push_back("Adrien");
-  // vec.push_back("Léon");
-  // Bomberman::RessourceStockstock(vec);
-  // -  Bomberman::Mapyooooo("blibi", 10, 10, 2, Bomberman::Map::EASY, stock);
-
-
   // We create a shader
   if (!_shader.load("srcs/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("srcs/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
     return false;
+
   attachObject(new Asset3d("srcs/assets/floor.obj"));
   attachObject(new Asset3d("srcs/assets/idst_block.obj"));
   attachObject(new Asset3d("srcs/assets/idst_block.obj"));
@@ -109,8 +104,8 @@ bool		Game::update()
 {
   float		movefactor;
   glm::vec3	move;
-  glm::vec3	newPos;
   static int	change = 0;
+  Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
 
   movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
   // If the escape key is pressed or if the window has been closed we stop the program
@@ -125,16 +120,11 @@ bool		Game::update()
 	  _assets[PLAYER]->setCurrentSubAnim("run", true);
 	}
       change = 1;
+
       move = (_input.getKey(SDLK_UP)) ? glm::vec3(0, 0, 0.06) : glm::vec3(0, 0, -0.06);
-      move = glm::rotate(move, _assets[PLAYER]->getRotation().y,
-			 glm::vec3(0, 1, 0)) * movefactor;
-      newPos = _assets[PLAYER]->getPosition() + move;
-      if (newPos.x < 1 || newPos.x > _width)
-	newPos = glm::vec3(_assets[PLAYER]->getPosition().x, newPos.y, newPos.z);
-      if (newPos.z < 1 || newPos.z > _height)
-	newPos = glm::vec3(newPos.x, newPos.y, _assets[PLAYER]->getPosition().z);
-      _assets[PLAYER]->setPosition(newPos);
-      _camera.setRotation(newPos);
+      move = glm::rotate(move, player->getRotation().y, glm::vec3(0, 1, 0)) * movefactor;
+      player->move(move);
+      _camera.setRotation(player->getPosition());
       _camera.updateView();
     }
   else if (change == 1)
@@ -144,12 +134,12 @@ bool		Game::update()
       // _assets[PLAYER]->setCurrentSubAnim("end2", true);
     }
   if (_input.getKey(SDLK_LEFT))
-    _assets[PLAYER]->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
+    player->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
   else if (_input.getKey(SDLK_RIGHT))
-    _assets[PLAYER]->rotate(glm::vec3(0, 1, 0), -3 * movefactor);
-  _camera.setPosition(_assets[PLAYER]->getPosition()
+    player->rotate(glm::vec3(0, 1, 0), -3 * movefactor);
+  _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
-				    _assets[PLAYER]->getRotation().y + 90,
+				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.updateView();
   // Update inputs an clock
@@ -161,7 +151,7 @@ bool		Game::update()
 void		Game::draw()
 {
   unsigned int	i[2];
-
+  Player	*player;
 
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -191,9 +181,18 @@ void		Game::draw()
 	}
       i[0]++;
     }
-  _assets[DST_BLOCK]->setPosition(glm::vec3(rand() % 12 * 2, 0, rand() % 12 * 2));
-  _assets[DST_BLOCK]->draw(_shader, _clock);
-  _assets[PLAYER]->draw(_shader, _clock);
+  i[0] = 0;
+  while (i[0] < _stock.getNbPlayer())
+    {
+      player = dynamic_cast<Player *>(_stock.getPlayer(i[0]));
+      if (player->isAlive())
+	{
+	  _assets[PLAYER]->setPosition(player->getPosition());
+	  _assets[PLAYER]->setRotation(player->getRotation());
+	  _assets[PLAYER]->draw(_shader, _clock);
+	}
+      i[0]++;
+    }
   _assets[SKYBOX]->draw(_shader, _clock);
   _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   _assets[SKYBOX]->scale(glm::vec3(-1));

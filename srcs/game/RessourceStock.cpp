@@ -89,4 +89,9 @@ IObject		*RessourceStock::getPlayer(unsigned int id) const
   return _players[id];
 }
 
+  unsigned int	RessourceStock::getNbPlayer() const
+  {
+    return _players.size();
+  }
+
 }

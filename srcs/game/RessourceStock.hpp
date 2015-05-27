@@ -26,6 +26,7 @@ public:
   IObject	*getBomb(IBomb::Type) const;
   IObject	*getPlayer(std::string const &) const;
   IObject	*getPlayer(unsigned int) const;
+  unsigned int	getNbPlayer() const;
 
 private:
   std::vector<IObject *>	_players;
