@@ -72,4 +72,19 @@ void		Map::killObject(unsigned int x, unsigned int y)
   setCellValue(x, y, _rcs->getObject(IObject::EMPTY));
 }
 
+std::string const&	Map::getName() const
+{
+  return _name;
+}
+
+unsigned int		Map::getNumberPlayers() const
+{
+  return _nbJoueurs;
+}
+
+Map::e_difficulty		Map::getDiff() const
+{
+  return _difficulty;
+}
+
 }
