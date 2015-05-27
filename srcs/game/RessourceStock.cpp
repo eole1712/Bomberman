@@ -23,7 +23,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(IBomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
 {
   for (unsigned int i = 0; i < names.size(); ++i)
-    _players[i] = new Player(names[i], 0, 0);
+    _players[i] = new Player(names[i]);
   _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
   _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
   _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;

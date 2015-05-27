@@ -18,7 +18,7 @@ class Player
   : public IObject, public Object3d
 {
 public:
-  Player(std::string const &, unsigned int, unsigned int);
+  Player(std::string const &);
   Player();
   virtual ~Player();
 
@@ -113,10 +113,6 @@ protected:
 
 public:
   void			move(glm::vec3 pos);
-
-private:
-  float			_x;
-  float			_y;
 
 public:
   void			setBombType(IBomb::Type);

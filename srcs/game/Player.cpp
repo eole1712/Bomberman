@@ -13,8 +13,8 @@ unsigned int const	Player::dftSpeed = 0;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 0;
 
-Player::Player(std::string const &name, unsigned int x, unsigned int y)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _x(x), _y(y)
+Player::Player(std::string const &name)
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb)
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -34,7 +34,7 @@ Player::Player(std::string const &name, unsigned int x, unsigned int y)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _x(0), _y(0)
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb)
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
