@@ -16,9 +16,6 @@ void	Map::randomize(RessourceStock const& objects)
   unsigned int	playerspace = this->_width * this->_height / this->_nbJoueurs;
   unsigned int	save;
 
-  #include <iostream>
-  std::cout << "height : " << this->_height << std::endl;
-  std::cout << "width : " << this->_width << std::endl;
   while (y < this->_height)
     {
       x = 0;
@@ -38,10 +35,8 @@ void	Map::randomize(RessourceStock const& objects)
 	}
       ++y;
     }
-  std::cout << "-->" << _nbJoueurs << std::endl;
   while (numJoueur < this->_nbJoueurs)
     {
-      std::cout << "Player " << numJoueur << " from " << _nbJoueurs << std::endl;
       save = numJoueur * playerspace + playerspace / 2;
       x = save % this->_width;
       y = save / this->_width;
