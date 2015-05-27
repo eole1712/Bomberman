@@ -44,8 +44,8 @@ private:
     {FLOOR, WALL, IDST_BLOCK
      ,DST_BLOCK, FIRE, PLAYER, BOMB, SKYBOX};
 
-  unsigned int			_width;
-  unsigned int			_height;
+  int				_width;
+  int				_height;
   std::vector<Asset3d *>	_assets;
   CameraObject			_camera;
   gdl::SdlContext		_context;

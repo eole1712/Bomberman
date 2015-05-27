@@ -1,6 +1,7 @@
 #include <string>
 #include <list>
 #include <cmath>
+#include <iostream>
 #include "Player.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
@@ -240,12 +241,14 @@ void			Player::initGame(Map *map)
 	    {
 	      if (_map->getCellValue(x, y)->getObjectType() == IObject::SPAWN)
 		{
-		  setPosition(glm::vec3(x, 0, y));
+		  setPosition(glm::vec3(x + 0.5, 0, y + 0.5));
 		  _map->setCellValue(x, y, _map->getRcs()->getObject(IObject::EMPTY));
+		  return;
 		}
 	    }
 	}
     }
+  std::cout << "Pas de spawn" << std::endl;
 }
 
 unsigned int		Player::getX() const
@@ -286,13 +289,21 @@ void			Player::move(glm::vec3 pos)
   if (!isAlive() && isParalyzed())
     return;
   npos = getPosition() + pos;
-  if (npos.x < 1 || npos.x > _map->getWidth())
+  if (npos.x < 0 || npos.x >= _map->getWidth())
+    {
+      npos = glm::vec3(getPosition().x, npos.y, npos.z);
+    }
+  else
     {
       type = _map->getCellValue(floor(npos.x), floor(npos.z))->getObjectType();
       if (type == IObject::DESTROYABLEWALL || type == IObject::WALL)
 	npos = glm::vec3(getPosition().x, npos.y, npos.z);
     }
-  if (npos.y < 1 || npos.y > _map->getHeight())
+  if (npos.y < 0 || npos.y >= _map->getHeight())
+    {
+      npos = glm::vec3(npos.x, npos.y, getPosition().z);
+    }
+  else
     {
       type = _map->getCellValue(floor(npos.x), floor(npos.z))->getObjectType();
       if (type == IObject::DESTROYABLEWALL || type == IObject::WALL)

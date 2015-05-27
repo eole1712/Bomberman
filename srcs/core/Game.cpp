@@ -168,7 +168,8 @@ bool		Game::update()
 
 void		Game::draw()
 {
-  unsigned int	i[2];
+  int		i[2];
+  unsigned int	y;
   Player	*player;
 
   // Clear the screen
@@ -177,13 +178,13 @@ void		Game::draw()
   _shader.setUniform("view", _camera.getView());
   _shader.setUniform("projection", _camera.getProjection());
   // We draw all objects
-  i[0] = 0;
+  i[0] = -1;
   while (i[0] <= _width)
     {
-      i[1] = 0;
+      i[1] = -1;
       while (i[1] <= _height)
 	{
-	  if (i[0] == 0 || i[1] == 0 || i[0] == _width || i[1] == _height)
+	  if (i[0] == -1 || i[1] == -1 || i[0] == _width || i[1] == _height)
 	    {
 	      _assets[WALL]->setPosition(glm::vec3(i[0], 0, i[1]));
 	      _assets[WALL]->draw(_shader, _clock);
@@ -199,17 +200,17 @@ void		Game::draw()
 	}
       i[0]++;
     }
-  i[0] = 0;
-  while (i[0] < _stock.getNbPlayer())
+  y = 0;
+  while (y < _stock.getNbPlayer())
     {
-      player = dynamic_cast<Player *>(_stock.getPlayer(i[0]));
+      player = dynamic_cast<Player *>(_stock.getPlayer(y));
       if (player->isAlive())
 	{
 	  _assets[PLAYER]->setPosition(player->getPosition());
 	  _assets[PLAYER]->setRotation(player->getRotation());
 	  _assets[PLAYER]->draw(_shader, _clock);
 	}
-      i[0]++;
+      y++;
     }
   _assets[SKYBOX]->draw(_shader, _clock);
   _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
