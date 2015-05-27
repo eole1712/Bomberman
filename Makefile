@@ -9,8 +9,13 @@ COREDIR		= $(SRCSDIR)/core/
 EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
 BOMBDIR		= $(GAMEDIR)/bombs/
+GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
 
-CORESRCS	= main.cpp
+CORESRCS	= main.cpp		\
+		  Game.cpp		\
+		  Asset3d.cpp		\
+		  Object3d.cpp		\
+		  CameraObject.cpp	\
 
 GAMESRCS	= Player.cpp 		\
 		  BuffTimer.cpp		\
@@ -57,13 +62,16 @@ OBJS		= $(SRCS:.cpp=.o)
 CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
+CXXFLAGS	+= -I./$(GDLDIR)/includes/
 
-LDFLAGS		+= -pthread
+LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -ldl -lrt -lfbxsdk -lSDL2
 
 all: $(NAME)
+     export LD_LIBRARY_PATH=~/rendu/cpp_bomberman/srcs/LibBomberman_linux_x64/libs/
+
 
 $(NAME): $(OBJS)
-	$(CC) $(LDFLAGS) -o $(NAME) $(OBJS)
+	 $(CC) -o $(NAME) $(OBJS) -L $(GDLDIR)/libs/ $(LDFLAGS)
 
 clean:
 	rm -f $(OBJS)

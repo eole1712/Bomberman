@@ -47,7 +47,7 @@ bool		MyGame::initialize()
   attachObject(new Asset3d("../assets/idst_block.obj"));
   attachObject(new Asset3d("../assets/dst_block.obj"));
   attachObject(new Asset3d("../assets/fire.obj"));
-  attachObject(new Asset3d("../assets/marvin.fbx"));
+  attachObject(new Asset3d("../assets/poney.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[PLAYER]->createSubAnim(0, "start", 0, 34);

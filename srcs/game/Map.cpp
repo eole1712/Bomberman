@@ -11,8 +11,8 @@ void	Map::randomize(RessourceStock const& objects)
 {
   unsigned int	x;
   unsigned int	y = 0;
-  unsigned int	numJoueur = 1;
-  unsigned int	ratio = this->_width * this->_height / this->_nbJoueurs;
+  unsigned int	numJoueur = 0;
+  unsigned int	playerspace = this->_width * this->_height / this->_nbJoueurs;
   unsigned int	save;
 
   while (y != this->_height)
@@ -28,16 +28,17 @@ void	Map::randomize(RessourceStock const& objects)
 	}
       ++y;
     }
-  while (numJoueur >= this->_nbJoueurs)
+  while (numJoueur < this->_nbJoueurs)
     {
-      save = numJoueur * ratio + my_random(0, 2);
-      x = save % this->_height;
-      y = save / this->_height;
+      save = numJoueur * playerspace + playerspace / 2;
+      x = save % this->_width;
+      y = save / this->_width;
       this->setCellValue(x, y, objects.getObject(IObject::SPAWN));
-      this->setCellValue(x + ((my_random(0, 1) == 0) ? (1) : (-1)), y,
-			 objects.getObject(IObject::EMPTY));
-      this->setCellValue(x, y + ((my_random(0, 1) == 0) ? (1) : (-1)),
-			 objects.getObject(IObject::EMPTY));
+      setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1))
+		   , y, objects.getObject(IObject::EMPTY));
+      setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1))
+		   , objects.getObject(IObject::EMPTY));
+      numJoueur++;
     }
 }
 
