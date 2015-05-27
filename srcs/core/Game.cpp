@@ -29,16 +29,31 @@ using namespace Bomberman;
 
 Game::Game()
   : _width(10), _height(10), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean"}),
     _map("blibi", _width, _height, 1, Bomberman::Map::EASY, &_stock)
 {
+  Player	*player;
+
+  for (unsigned int i = 0; i < _stock.getNbPlayer(); ++i)
+    {
+      player = dynamic_cast<Player *>(_stock.getPlayer(i));
+      player->initGame(&_map);
+    }
 }
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean"}),
     _map("blibi", _width, _height, 1, Bomberman::Map::EASY, &_stock)
 {
+
+  Player	*player;
+
+  for (unsigned int i = 0; i < _stock.getNbPlayer(); ++i)
+    {
+      player = dynamic_cast<Player *>(_stock.getPlayer(i));
+      player->initGame(&_map);
+    }
 }
 
 Game::~Game()
@@ -50,6 +65,7 @@ Game::~Game()
 bool				Game::initialize()
 {
   std::vector<std::string>	vec;
+  Player			*player = dynamic_cast<Player *>(_stock.getPlayer(0));
 
   if (!_context.start(_camera._width, _camera._height, "My bomberman!"))
     return false;
@@ -79,11 +95,13 @@ bool				Game::initialize()
   attachObject(new Asset3d("srcs/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
-  _camera.setRotation(_assets[PLAYER]->getPosition());
-  _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
-  _camera.updateView();
   // We have the bind the shader before calling the setUniform method
 
+  _camera.setPosition(player->getPosition()
+		      + glm::rotate(glm::vec3(3.5, 4, 0),
+				    player->getRotation().y + 90,
+				    glm::vec3(0, 1, 0)));
+  _camera.setRotation(player->getPosition());
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
   _ObjectToAsset[IObject::BONUS] = FIRE;
