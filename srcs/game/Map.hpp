@@ -17,6 +17,7 @@ public:
   virtual ~Map() {};
 
   void	randomize(RessourceStock const&);
+  RessourceStock	*getRcs() const;
 
 public:
   void		swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny);

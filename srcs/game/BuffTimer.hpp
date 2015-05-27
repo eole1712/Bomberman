@@ -12,6 +12,7 @@ class BuffTimer
 {
 public:
   BuffTimer(IBuff *);
+  BuffTimer(IBuff *, unsigned int time);
   virtual ~BuffTimer();
 
 private:
