@@ -3,6 +3,7 @@
 
 # include "IBomb.hpp"
 # include "IObject.hpp"
+# include "Map.hpp"
 
 namespace Bomberman
 {
@@ -24,6 +25,9 @@ private:
 public:
   virtual int		getDuration() const;
   virtual IBomb::Type	getBombType() const;
+
+public:
+  virtual void		explose(unsigned int, unsigned int, Map *) const;
 
 public:
   virtual IObject::Type	getObjectType() const;

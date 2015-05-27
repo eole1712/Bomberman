@@ -32,6 +32,55 @@ bool		Classic::isNull() const
   return false;
 }
 
+void		Classic::explose(unsigned int x, unsigned int y, Map *map) const
+{
+  for (int i = x; i >= 0; --i)
+    {
+      if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  map->getCellValue(i, y)->getObjectType() == IObject::WALL)
+	{
+	  if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL)
+	    map->killObject(i, y);
+	  break;
+	}
+      map->killPlayers(i, y);
+    }
+  for (unsigned int i = x; i < map->getWidth(); ++i)
+    {
+      if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  map->getCellValue(i, y)->getObjectType() == IObject::WALL)
+	{
+	  if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL)
+	    map->killObject(i, y);
+	  break;
+	}
+      map->killPlayers(i, y);
+    }
+  for (int i = y; i >= 0; --i)
+    {
+      if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  map->getCellValue(x, i)->getObjectType() == IObject::WALL)
+	{
+	  if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL)
+	    map->killObject(x, i);
+	  break;
+	}
+      map->killPlayers(x, i);
+    }
+  for (unsigned int i = y; i < map->getHeight(); ++i)
+    {
+      if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  map->getCellValue(x, i)->getObjectType() == IObject::WALL)
+	{
+	  if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL)
+	    map->killObject(x, i);
+	  break;
+	}
+      map->killPlayers(x, i);
+    }
+}
+
+
 }
 
 }

@@ -6,6 +6,8 @@
 namespace Bomberman
 {
 
+class Map;
+
 class IBomb
 {
 public:
@@ -20,6 +22,7 @@ public:
 public:
   virtual int		getDuration() const = 0;
   virtual Type		getBombType() const = 0;
+  virtual void		explose(unsigned int, unsigned int, Map *) const = 0;
 
 public:
   static const int	nbBomb;

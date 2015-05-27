@@ -3,6 +3,7 @@
 #include "InvalidNbPlayers.hpp"
 #include "InvalidDimensions.hpp"
 #include "Map.hpp"
+#include "BombTimer.hpp"
 
 namespace Bomberman
 {
@@ -28,8 +29,10 @@ void	Map::randomize(RessourceStock const& objects)
 	}
       ++y;
     }
+  std::cout << "-->" << _nbJoueurs << std::endl;
   while (numJoueur < this->_nbJoueurs)
     {
+      std::cout << "Player " << numJoueur << " from " << _nbJoueurs << std::endl;
       save = numJoueur * playerspace + playerspace / 2;
       x = save % this->_width;
       y = save / this->_width;
@@ -55,6 +58,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 5 || this->_width < 5)
     throw new Exception::InvalidDimensions("Map Constructor");
+  std::cout << "-->" << _rcs->getNbPlayer() << std::endl;
   this->randomize(*objects);
   // check aucun endroit inaccessible
 }
@@ -75,6 +79,40 @@ void		Map::killObject(unsigned int x, unsigned int y)
 RessourceStock	*Map::getRcs() const
 {
   return _rcs;
+}
+
+bool		Map::isIn(unsigned int x, unsigned int y)
+{
+  return (x < getHeight() && y < getWidth());
+}
+
+void		Map::killPlayers(unsigned int x, unsigned int y)
+{
+  for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
+    {
+      if (dynamic_cast<Player*>(_rcs->getPlayer(i))->getX() == x &&
+	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y)
+	dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill();
+    }
+}
+
+void		Map::checkBombsOnMap()
+{
+  BombTimer	*bomb;
+
+  for (unsigned int y = 0; y < getHeight(); ++y)
+    {
+      for (unsigned int x; x < getWidth(); ++x)
+	{
+	  if (getCellValue(x, y)->getObjectType() == IObject::BOMB)
+	    {
+	      bomb = dynamic_cast<BombTimer*>(getCellValue(x, y));
+	      bomb->finish(x, y, this);
+	      killObject(x, y);
+	      delete bomb;
+	    }
+	}
+    }
 }
 
 }

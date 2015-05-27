@@ -23,6 +23,12 @@ public:
   void		swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny);
   void		killObject(unsigned int x, unsigned int y);
 
+public:
+  bool		isIn(unsigned int x, unsigned int y);
+  void		checkBomb(unsigned int x, unsigned int y);
+  void		killPlayers(unsigned int x, unsigned int y);
+  void		checkBombsOnMap();
+
 private:
   std::string	_name;
   unsigned int	_nbJoueurs;
