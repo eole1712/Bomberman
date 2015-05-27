@@ -6,7 +6,7 @@
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "BuffTimer.hpp"
-# include "Map.hpp"
+# include "IBomb.hpp"
 
 
 namespace Bomberman
@@ -19,10 +19,10 @@ class Player
 {
 public:
   Player(std::string const &, unsigned int, unsigned int);
+  Player();
   virtual ~Player();
 
 private:
-  Player(const Player &);
   Player&		operator=(const Player &);
 
 public:
@@ -101,11 +101,10 @@ private:
   Buff_exec		_buffOff[7];
 
 public:
-  void			initGame(unsigned int, unsigned int, Map *);
+  void			initGame(unsigned int, unsigned int, Map*);
   unsigned int		getX() const;
   unsigned int		getY() const;
 
-public:
   void			moveUp();
   void			moveDown();
   void			moveLeft();

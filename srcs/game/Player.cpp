@@ -32,6 +32,26 @@ Player::Player(std::string const &name, unsigned int x, unsigned int y)
   _buffOff[IBuff::SHIELD] = &Player::decShield;
 }
 
+Player::Player()
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _x(0), _y(0)
+{
+  _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
+  _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
+  _buffOn[IBuff::INC_BOMB] = &Player::incBomb;
+  _buffOn[IBuff::INC_RANGE] = &Player::incRange;
+  _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
+  _buffOn[IBuff::PARALYZED] = &Player::paralyze;
+  _buffOn[IBuff::SHIELD] = &Player::incShield;
+
+  _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
+  _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
+  _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
+  _buffOn[IBuff::INC_RANGE] = &Player::decRange;
+  _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
+  _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
+  _buffOff[IBuff::SHIELD] = &Player::decShield;
+}
+
 Player::~Player()
 {
   for (std::list<BuffTimer*>::iterator it = _buff.begin(); it != _buff.end(); it++)
@@ -320,5 +340,4 @@ bool			Player::isNull() const
 {
   return false;
 }
-
 }

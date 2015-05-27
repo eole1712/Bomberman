@@ -20,7 +20,7 @@ CORESRCS	= main.cpp		\
 GAMESRCS	= Player.cpp 		\
 		  BuffTimer.cpp		\
 		  Empty.cpp		\
-		  ../server/Map.cpp	\
+		  Map.cpp		\
 		  RessourceStock.cpp	\
 		  BombTimer.cpp		\
 		  Spawn.cpp		\

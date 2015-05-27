@@ -5,3 +5,5 @@
 ./srcs/game/bombs
 ./srcs/server
 ./srcs/exceptions
+./srcs/core/rapidjson
+./srcs/core/src_serv
