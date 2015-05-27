@@ -289,27 +289,18 @@ void			Player::move(glm::vec3 pos)
   if (!isAlive() && isParalyzed())
     return;
   npos = getPosition() + pos;
-  if (npos.x < 0 || npos.x >= _map->getWidth())
+  if (npos.x > 0 && npos.x < _map->getWidth() - 1)
     {
-      npos = glm::vec3(getPosition().x, npos.y, npos.z);
+      type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
+      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+	translate(glm::vec3(pos.x, 0, 0));
     }
-  else
+  if (npos.z > 0 && npos.z < _map->getHeight() - 1)
     {
-      type = _map->getCellValue(floor(npos.x), floor(npos.z))->getObjectType();
-      if (type == IObject::DESTROYABLEWALL || type == IObject::WALL)
-	npos = glm::vec3(getPosition().x, npos.y, npos.z);
+      type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
+      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+	translate(glm::vec3(0, 0, pos.z));
     }
-  if (npos.y < 0 || npos.y >= _map->getHeight())
-    {
-      npos = glm::vec3(npos.x, npos.y, getPosition().z);
-    }
-  else
-    {
-      type = _map->getCellValue(floor(npos.x), floor(npos.z))->getObjectType();
-      if (type == IObject::DESTROYABLEWALL || type == IObject::WALL)
-	npos = glm::vec3(npos.x, npos.y, getPosition().z);
-    }
-  setPosition(npos);
 }
 
 //attacks
