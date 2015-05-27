@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <map>
 #include <math.h>
 #include <iostream>
 #include "glm/glm.hpp"
@@ -81,12 +82,20 @@ bool				Game::initialize()
   attachObject(new Asset3d("srcs/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
   attachObject(new Asset3d("srcs/assets/sky.obj"));
-  _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2 * -1));
+  _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
   _camera.setRotation(_assets[PLAYER]->getPosition());
   _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
   _camera.updateView();
   // We have the bind the shader before calling the setUniform method
+
+  _ObjectToAsset[IObject::BOMB] = BOMB;
+  _ObjectToAsset[IObject::PLAYER] = PLAYER;
+  _ObjectToAsset[IObject::BONUS] = FIRE;
+  _ObjectToAsset[IObject::WALL] = IDST_BLOCK;
+  _ObjectToAsset[IObject::DESTROYABLEWALL] = DST_BLOCK;
+  _ObjectToAsset[IObject::SPAWN] = FLOOR;
+  _ObjectToAsset[IObject::EMPTY] = FLOOR;
   _shader.bind();
   return true;
 }
@@ -153,6 +162,7 @@ void		Game::draw()
 {
   unsigned int	i[2];
 
+
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   _shader.bind();
@@ -170,15 +180,12 @@ void		Game::draw()
 	      _assets[WALL]->setPosition(glm::vec3(i[0], 0, i[1]));
 	      _assets[WALL]->draw(_shader, _clock);
 	    }
-	  else if (0)
-	    {
-	      _assets[IDST_BLOCK]->setPosition(glm::vec3(i[0], 0, i[1]));
-	      _assets[IDST_BLOCK]->draw(_shader, _clock);
-	    }
 	  else
 	    {
-	      _assets[FLOOR]->setPosition(glm::vec3(i[0], 0, i[1]));
-	      _assets[FLOOR]->draw(_shader, _clock);
+	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]
+		->setPosition(glm::vec3(i[0], 0, i[1]));
+	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]->draw(_shader
+									  , _clock);
 	    }
 	  i[1]++;
 	}
