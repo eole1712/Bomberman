@@ -11,7 +11,7 @@ namespace Bomberman
 class Map : public GenericMap<IObject*>
 {
 public:
-  enum e_difficulty	{ EASY = 1, MEDIUM, DIFFICULT };
+  enum e_difficulty	{ EASY = 5, MEDIUM, DIFFICULT };
 
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
   virtual ~Map() {};

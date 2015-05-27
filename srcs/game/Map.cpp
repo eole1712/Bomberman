@@ -15,15 +15,24 @@ void	Map::randomize(RessourceStock const& objects)
   unsigned int	playerspace = this->_width * this->_height / this->_nbJoueurs;
   unsigned int	save;
 
-  while (y != this->_height)
+  #include <iostream>
+  std::cout << "height : " << this->_height << std::endl;
+  std::cout << "width : " << this->_width << std::endl;
+  while (y < this->_height)
     {
       x = 0;
-      while (x != this->_width)
+      while (x < this->_width)
 	{
-	  if (my_random(1, 10) <= this->_difficulty)
-	    this->setCellValue(x, y, objects.getObject(IObject::WALL));
-	  else
+	  if (y == 0 || y == (this->_height - 1)
+	      || x == 0 || x == (this->_width - 1)
+	      || my_random(1, 10) > this->_difficulty)
 	    this->setCellValue(x, y, objects.getObject(IObject::DESTROYABLEWALL));
+	  else
+	    {
+	      this->setCellValue(x, y, objects.getObject(IObject::WALL));
+	      if (++x != this->_width)
+		this->setCellValue(x, y, objects.getObject(IObject::DESTROYABLEWALL));
+	    }
 	  ++x;
 	}
       ++y;
@@ -34,11 +43,11 @@ void	Map::randomize(RessourceStock const& objects)
       x = save % this->_width;
       y = save / this->_width;
       this->setCellValue(x, y, objects.getObject(IObject::SPAWN));
-      setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1))
-		   , y, objects.getObject(IObject::EMPTY));
-      setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1))
-		   , objects.getObject(IObject::EMPTY));
-      numJoueur++;
+      setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
+		   objects.getObject(IObject::EMPTY));
+      setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
+		   objects.getObject(IObject::EMPTY));
+      ++numJoueur;
     }
 }
 
