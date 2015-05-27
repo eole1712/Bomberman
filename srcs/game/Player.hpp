@@ -102,6 +102,7 @@ private:
 
 public:
   void			initGame(unsigned int, unsigned int, Map*);
+  void			initGame(Map*);
   unsigned int		getX() const;
   unsigned int		getY() const;
   float			getfX() const;

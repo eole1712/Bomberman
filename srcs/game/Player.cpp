@@ -221,10 +221,29 @@ void			Player::initGame(unsigned int x, unsigned int y, Map *map)
 {
   if (map)
     {
-      map = _map;
+      _map = map;
       if (_map->getWidth() > x && _map->getHeight() > y)
 	{
 	  setPosition(glm::vec3(x, 0, y));
+	}
+    }
+}
+
+void			Player::initGame(Map *map)
+{
+  if (map)
+    {
+      _map = map;
+      for (unsigned int y = 0; y < _map->getHeight(); ++y)
+	{
+	  for (unsigned int x = 0; x < _map->getWidth(); ++x)
+	    {
+	      if (_map->getCellValue(x, y)->getObjectType() == IObject::SPAWN)
+		{
+		  setPosition(glm::vec3(x, 0, y));
+		  _map->setCellValue(x, y, _map->getRcs()->getObject(IObject::EMPTY));
+		}
+	    }
 	}
     }
 }
