@@ -16,6 +16,7 @@
 #include "OpenGL.hh"
 #include "Game.hpp"
 #include "Asset3d.hpp"
+#include "Color.hpp"
 
 #include "RessourceStock.hpp"
 #include "Map.hpp"
@@ -25,12 +26,13 @@
 #include "Player.hpp"
 #include "Game.hpp"
 
-using namespace Bomberman;
+namespace Bomberman
+{
 
 Game::Game()
   : _width(10), _height(10), _camera(90.0, 1000, 1000), _speed(70),
     _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
-    _map("blibi", _width, _height, _stock.getNbPlayer(), Bomberman::Map::EASY, &_stock)
+    _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
   Player	*player;
 
@@ -43,8 +45,9 @@ Game::Game()
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
-    _map("blibi", _width, _height, _stock.getNbPlayer(), Bomberman::Map::EASY, &_stock)
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"
+	  ,"","",""}),
+    _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
 
   Player	*player;
@@ -92,6 +95,7 @@ bool				Game::initialize()
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("srcs/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
+  _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
   attachObject(new Asset3d("srcs/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
@@ -187,6 +191,7 @@ void		Game::draw()
   _shader.bind();
   _shader.setUniform("view", _camera.getView());
   _shader.setUniform("projection", _camera.getProjection());
+  _shader.setUniform("color", glm::vec4(1.0));
   // We draw all objects
   i[0] = -1;
   while (i[0] <= _width)
@@ -203,13 +208,19 @@ void		Game::draw()
 	    {
 	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]
 		->setPosition(glm::vec3(i[0], 0, i[1]));
-	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]->draw(_shader
-									  , _clock);
+	      if (IObject::BOMB == _map.getCellValue(i[0], i[1])->getObjectType())
+		{
+		  _assets[FLOOR]->setPosition(glm::vec3(i[0], 0, i[1]));
+		  _assets[FLOOR]->draw(_shader, _clock);
+		}
+	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]
+		->draw(_shader, _clock);
 	    }
 	  i[1]++;
 	}
       i[0]++;
     }
+
   y = 0;
   while (y < _stock.getNbPlayer())
     {
@@ -219,13 +230,17 @@ void		Game::draw()
 	  _assets[PLAYER]->setPosition(player->getPosition());
 	  _assets[PLAYER]->setRotation(player->getRotation());
 	  _assets[PLAYER]->draw(_shader, _clock);
+	  _shader.setUniform("color", glm::vec4(1.0, 0, 0, 0));
 	}
       y++;
     }
+  _shader.setUniform("color", glm::vec4(1.0));
   _assets[SKYBOX]->draw(_shader, _clock);
   _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   _assets[SKYBOX]->scale(glm::vec3(-1));
   _assets[SKYBOX]->draw(_shader, _clock);
   _assets[SKYBOX]->scale(glm::vec3(1));
   _context.flush();
+}
+
 }
