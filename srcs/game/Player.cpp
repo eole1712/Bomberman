@@ -321,6 +321,7 @@ void			Player::putBomb()
     {
       IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
+
       _map->setCellValue(getX(), getY(), bombT);
     }
 }

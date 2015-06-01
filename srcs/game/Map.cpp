@@ -166,14 +166,16 @@ void		Map::checkBombsOnMap()
 
   for (unsigned int y = 0; y < getHeight(); ++y)
     {
-      for (unsigned int x; x < getWidth(); ++x)
+      for (unsigned int x = 0; x < getWidth(); ++x)
 	{
 	  if (getCellValue(x, y)->getObjectType() == IObject::BOMB)
 	    {
 	      bomb = dynamic_cast<BombTimer*>(getCellValue(x, y));
-	      bomb->finish(x, y, this);
-	      killObject(x, y);
-	      delete bomb;
+	      if (bomb->finish(x, y, this))
+		{
+		  killObject(x, y);
+		  delete bomb;
+		}
 	    }
 	}
     }

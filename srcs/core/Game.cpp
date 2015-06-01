@@ -130,6 +130,15 @@ bool		Game::update()
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
 
+  static bool	space = false;
+  if (_input.getKey(SDLK_SPACE))
+    {
+      if (space)
+	{
+	  player->putBomb();
+	}
+      space = !space;
+    }
   if (_input.getKey(SDLK_UP) || _input.getKey(SDLK_DOWN))
     {
       if (change == 0)
@@ -155,6 +164,7 @@ bool		Game::update()
     player->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
   else if (_input.getKey(SDLK_RIGHT))
     player->rotate(glm::vec3(0, 1, 0), -3 * movefactor);
+  _map.checkBombsOnMap();
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
