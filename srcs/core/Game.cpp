@@ -16,8 +16,6 @@
 #include "OpenGL.hh"
 #include "Game.hpp"
 #include "Asset3d.hpp"
-#include "Color.hpp"
-
 #include "RessourceStock.hpp"
 #include "Map.hpp"
 #include "BuffFactory.hpp"
@@ -30,7 +28,7 @@ namespace Bomberman
 {
 
 Game::Game()
-  : _width(10), _height(10), _camera(90.0, 1000, 1000), _speed(70),
+  : _width(20), _height(20), _camera(90.0, 1000, 1000), _speed(70),
     _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
@@ -45,8 +43,7 @@ Game::Game()
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"
-	  ,"","",""}),
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
 
@@ -227,10 +224,10 @@ void		Game::draw()
       player = dynamic_cast<Player *>(_stock.getPlayer(y));
       if (player->isAlive())
 	{
+	  _shader.setUniform("color", player->getColor());
 	  _assets[PLAYER]->setPosition(player->getPosition());
 	  _assets[PLAYER]->setRotation(player->getRotation());
 	  _assets[PLAYER]->draw(_shader, _clock);
-	  _shader.setUniform("color", glm::vec4(1.0, 0, 0, 0));
 	}
       y++;
     }

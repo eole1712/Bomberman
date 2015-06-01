@@ -3,6 +3,7 @@
 uniform	mat4 projection;
 uniform	mat4 view;
 uniform	mat4 model;
+uniform vec4 color;
 
 uniform sampler2D fTexture0;
 
@@ -13,13 +14,11 @@ attribute vec2 vTexCoord;
 
 varying vec4 fColor;
 varying vec4 fNormal;
-varying vec4 fPosition;
 varying vec2 fUv;
 
 void main(void)
 {
-  fPosition = vPosition;
-  fColor = vColor;
+  fColor = (vColor + color) / 2;
   fNormal = vNormal;
   fUv = vTexCoord;
   gl_Position = projection * view * model * vPosition;

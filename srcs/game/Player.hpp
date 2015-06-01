@@ -8,6 +8,7 @@
 # include "BuffTimer.hpp"
 # include "IBomb.hpp"
 # include "Object3d.hpp"
+# include "glm/glm.hpp"
 
 namespace Bomberman
 {
@@ -18,7 +19,7 @@ class Player
   : public IObject, public Object3d
 {
 public:
-  Player(std::string const &);
+  Player(std::string const &, glm::vec4 color);
   Player();
   virtual ~Player();
 
@@ -124,6 +125,13 @@ public:
 
 private:
   IBomb::Type		_bombType;
+
+public:
+  glm::vec4		_color;
+
+public:
+  void			setColor(glm::vec4 color);
+  glm::vec4		getColor() const;
 
 public:
   virtual Type		getObjectType() const;

@@ -27,6 +27,7 @@ GAMESRCS	= Player.cpp 		\
 		  Wall.cpp		\
 		  DestroyableWall.cpp	\
 		  IObject.cpp		\
+		  Color.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
