@@ -9,6 +9,8 @@
 #include "glm/gtx/string_cast.hpp"
 #include "Game.hh"
 #include "Clock.hh"
+#include "Geometry.hh"
+#include "Texture.hh"
 #include "Input.hh"
 #include "SdlContext.hh"
 #include "BasicShader.hh"
@@ -47,7 +49,7 @@ bool		MyGame::initialize()
   attachObject(new Asset3d("../assets/idst_block.obj"));
   attachObject(new Asset3d("../assets/dst_block.obj"));
   attachObject(new Asset3d("../assets/fire.obj"));
-  attachObject(new Asset3d("../assets/poney.fbx"));
+  attachObject(new Asset3d("../assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
@@ -98,7 +100,7 @@ bool		MyGame::update()
       newPos = _assets[PLAYER]->getPosition() + move;
       if (newPos.x < 1 || newPos.x > 24)
 	newPos = glm::vec3(_assets[PLAYER]->getPosition().x, newPos.y, newPos.z);
-      if (newPos.z < 1 || newPos.z > 24)
+       if (newPos.z < 1 || newPos.z > 24)
 	newPos = glm::vec3(newPos.x, newPos.y, _assets[PLAYER]->getPosition().z);
       _assets[PLAYER]->setPosition(newPos);
       _camera.setRotation(newPos);
@@ -140,24 +142,24 @@ void		MyGame::draw()
     {
       i[1] = 0;
       while (i[1] < 25)
-	{
-	  if (i[0] == 0 || i[1] == 0 || i[0] == 24 || i[1] == 24)
-	    {
-	      _assets[WALL]->setPosition(glm::vec3(i[0], 0, i[1]));
-	      _assets[WALL]->draw(_shader, _clock);
-	    }
-	  else if (i[0] % 2 == 0 && i[1] % 2 == 0)
-	    {
-	      _assets[IDST_BLOCK]->setPosition(glm::vec3(i[0], 0, i[1]));
-	      _assets[IDST_BLOCK]->draw(_shader, _clock);
-	    }
-	  else
-	    {
-	      _assets[FLOOR]->setPosition(glm::vec3(i[0], 0, i[1]));
-	      _assets[FLOOR]->draw(_shader, _clock);
-	    }
-	  i[1]++;
-	}
+  	{
+  	  if (i[0] == 0 || i[1] == 0 || i[0] == 24 || i[1] == 24)
+  	    {
+  	      _assets[WALL]->setPosition(glm::vec3(i[0], 0, i[1]));
+  	      _assets[WALL]->draw(_shader, _clock);
+  	    }
+  	  else if (i[0] % 2 == 0 && i[1] % 2 == 0)
+  	    {
+  	      _assets[IDST_BLOCK]->setPosition(glm::vec3(i[0], 0, i[1]));
+  	      _assets[IDST_BLOCK]->draw(_shader, _clock);
+  	    }
+  	  else
+  	    {
+  	      _assets[FLOOR]->setPosition(glm::vec3(i[0], 0, i[1]));
+  	      _assets[FLOOR]->draw(_shader, _clock);
+  	    }
+  	  i[1]++;
+  	}
       i[0]++;
     }
   _assets[DST_BLOCK]->setPosition(glm::vec3(rand() % 12 * 2, 0, rand() % 12 * 2));
@@ -168,5 +170,33 @@ void		MyGame::draw()
   _assets[SKYBOX]->scale(glm::vec3(-1));
   _assets[SKYBOX]->draw(_shader, _clock);
   _assets[SKYBOX]->scale(glm::vec3(1));
+
+  // 2D TESTS
+
+  // _shader.setUniform("view", glm::mat4());
+  // _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+
+  // gdl::Geometry		poney;
+  // gdl::Texture		texture;
+
+  // texture.load("../assets/textures/normal.tga");
+  // // poney.setColor(glm::vec4(1, 0, 0, 1));
+
+  // poney.pushVertex(glm::vec3(400, 400, 0));
+  // poney.pushVertex(glm::vec3(600, 400, 0));
+  // poney.pushVertex(glm::vec3(600, 600, 0));
+  // poney.pushVertex(glm::vec3(400, 600, 0));
+
+  // poney.pushUv(glm::vec2(0.0f, 0.0f));
+  // poney.pushUv(glm::vec2(1.0f, 0.0f));
+  // poney.pushUv(glm::vec2(1.0f, 1.0f));
+  // poney.pushUv(glm::vec2(0.0f, 1.0f));
+
+  // poney.build();
+
+  // texture.bind();
+
+  // poney.draw(_shader, glm::mat4(), GL_QUADS);
+
   _context.flush();
 }
