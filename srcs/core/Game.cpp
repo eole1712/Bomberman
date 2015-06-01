@@ -161,9 +161,9 @@ bool		Game::update()
       // _assets[PLAYER]->setCurrentSubAnim("end2", true);
     }
   if (_input.getKey(SDLK_LEFT))
-    player->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
+    player->Player::rotate(glm::vec3(0, 1, 0), 3 * movefactor);
   else if (_input.getKey(SDLK_RIGHT))
-    player->rotate(glm::vec3(0, 1, 0), -3 * movefactor);
+    player->Player::rotate(glm::vec3(0, 1, 0), -3 * movefactor);
   _map.checkBombsOnMap();
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),

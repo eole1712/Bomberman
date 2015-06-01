@@ -114,6 +114,7 @@ protected:
 
 public:
   void			move(glm::vec3 pos);
+  void			rotate(const glm::vec3 &axis, float angle);
 
 public:
   void			setBombType(IBomb::Type);

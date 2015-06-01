@@ -94,7 +94,7 @@ bool			Player::isParalyzed() const
 
 bool			Player::zeroBomb() const
 {
-  return _zeroBomb || (_bomb !  = 0);
+  return _zeroBomb || (_bomb != 0);
 }
 
 bool			Player::canAbsorb() const
@@ -286,7 +286,7 @@ void			Player::move(glm::vec3 pos)
   glm::vec3		npos;
   IObject::Type		type;
 
-  if (!isAlive() && isParalyzed())
+  if (!isAlive() || isParalyzed())
     return;
   npos = getPosition() + pos;
   if (npos.x > 0 && npos.x < _map->getWidth())
@@ -301,6 +301,13 @@ void			Player::move(glm::vec3 pos)
       if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
 	translate(glm::vec3(0, 0, pos.z));
     }
+}
+
+void			Player::rotate(const glm::vec3 &axis, float angle)
+{
+  if (!isAlive() || isParalyzed())
+    return;
+  Object3d::rotate(axis, angle);
 }
 
 //attacks
@@ -338,8 +345,9 @@ bool			Player::tryToKill()
 	  _isAlive = false;
 	  return true;
 	}
+      return false;
     }
-  return false;
+  return true;
 }
 
 
