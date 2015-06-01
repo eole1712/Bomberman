@@ -94,7 +94,7 @@ bool			Player::isParalyzed() const
 
 bool			Player::zeroBomb() const
 {
-  return _zeroBomb;
+  return _zeroBomb || (_bomb !  = 0);
 }
 
 bool			Player::canAbsorb() const
@@ -323,6 +323,7 @@ void			Player::putBomb()
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
 
       _map->setCellValue(getX(), getY(), bombT);
+      decBomb();
     }
 }
 
