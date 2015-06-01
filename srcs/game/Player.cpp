@@ -289,13 +289,13 @@ void			Player::move(glm::vec3 pos)
   if (!isAlive() && isParalyzed())
     return;
   npos = getPosition() + pos;
-  if (npos.x > 0 && npos.x < _map->getWidth() - 1)
+  if (npos.x > 0 && npos.x < _map->getWidth())
     {
       type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
       if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
 	translate(glm::vec3(pos.x, 0, 0));
     }
-  if (npos.z > 0 && npos.z < _map->getHeight() - 1)
+  if (npos.z > 0 && npos.z < _map->getHeight())
     {
       type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
       if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
