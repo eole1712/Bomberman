@@ -16,7 +16,6 @@
 #include "OpenGL.hh"
 #include "Game.hpp"
 #include "Asset3d.hpp"
-
 #include "RessourceStock.hpp"
 #include "Map.hpp"
 #include "BuffFactory.hpp"
@@ -25,12 +24,13 @@
 #include "Player.hpp"
 #include "Game.hpp"
 
-using namespace Bomberman;
+namespace Bomberman
+{
 
 Game::Game()
-  : _width(10), _height(10), _camera(90.0, 1000, 1000), _speed(70),
+  : _width(20), _height(20), _camera(90.0, 1000, 1000), _speed(70),
     _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
-    _map("blibi", _width, _height, _stock.getNbPlayer(), Bomberman::Map::EASY, &_stock)
+    _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
   Player	*player;
 
@@ -44,7 +44,7 @@ Game::Game()
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
     _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
-    _map("blibi", _width, _height, _stock.getNbPlayer(), Bomberman::Map::EASY, &_stock)
+    _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
 
   Player	*player;
@@ -92,6 +92,7 @@ bool				Game::initialize()
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("srcs/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
+  _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
   attachObject(new Asset3d("srcs/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
@@ -130,6 +131,15 @@ bool		Game::update()
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
 
+  static bool	space = false;
+  if (_input.getKey(SDLK_SPACE))
+    {
+      if (space)
+	{
+	  player->putBomb();
+	}
+      space = !space;
+    }
   if (_input.getKey(SDLK_UP) || _input.getKey(SDLK_DOWN))
     {
       if (change == 0)
@@ -152,9 +162,10 @@ bool		Game::update()
       // _assets[PLAYER]->setCurrentSubAnim("end2", true);
     }
   if (_input.getKey(SDLK_LEFT))
-    player->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
+    player->Player::rotate(glm::vec3(0, 1, 0), 3 * movefactor);
   else if (_input.getKey(SDLK_RIGHT))
-    player->rotate(glm::vec3(0, 1, 0), -3 * movefactor);
+    player->Player::rotate(glm::vec3(0, 1, 0), -3 * movefactor);
+  _map.checkBombsOnMap();
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
@@ -177,6 +188,7 @@ void		Game::draw()
   _shader.bind();
   _shader.setUniform("view", _camera.getView());
   _shader.setUniform("projection", _camera.getProjection());
+  _shader.setUniform("color", glm::vec4(1.0));
   // We draw all objects
   i[0] = -1;
   while (i[0] <= _width)
@@ -193,29 +205,39 @@ void		Game::draw()
 	    {
 	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]
 		->setPosition(glm::vec3(i[0], 0, i[1]));
-	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]->draw(_shader
-									  , _clock);
+	      if (IObject::BOMB == _map.getCellValue(i[0], i[1])->getObjectType())
+		{
+		  _assets[FLOOR]->setPosition(glm::vec3(i[0], 0, i[1]));
+		  _assets[FLOOR]->draw(_shader, _clock);
+		}
+	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]
+		->draw(_shader, _clock);
 	    }
 	  i[1]++;
 	}
       i[0]++;
     }
+
   y = 0;
   while (y < _stock.getNbPlayer())
     {
       player = dynamic_cast<Player *>(_stock.getPlayer(y));
       if (player->isAlive())
 	{
+	  _shader.setUniform("color", player->getColor());
 	  _assets[PLAYER]->setPosition(player->getPosition());
 	  _assets[PLAYER]->setRotation(player->getRotation());
 	  _assets[PLAYER]->draw(_shader, _clock);
 	}
       y++;
     }
+  _shader.setUniform("color", glm::vec4(1.0));
   _assets[SKYBOX]->draw(_shader, _clock);
   _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   _assets[SKYBOX]->scale(glm::vec3(-1));
   _assets[SKYBOX]->draw(_shader, _clock);
   _assets[SKYBOX]->scale(glm::vec3(1));
   _context.flush();
+}
+
 }

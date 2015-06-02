@@ -8,7 +8,7 @@ namespace Bomberman
 {
 namespace Buff
 {
-  class IncSpeed : public IBuff, public IObject
+  class IncSpeed : public IBuff
   {
   public:
     IncSpeed();

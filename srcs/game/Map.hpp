@@ -10,15 +10,20 @@ namespace Bomberman
 
 class Map : public GenericMap<IObject*>
 {
+private:
+
+  void	randomize();
+  bool	checkDensity(unsigned int, unsigned int);
+  void	equalize();
+  void	spawnize();
+
 public:
-  enum e_difficulty	{ EASY = 5, MEDIUM, DIFFICULT };
+  enum e_difficulty	{ EASY = 4, MEDIUM, DIFFICULT };
 
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty);
   virtual ~Map() {};
 
-  void	randomize(RessourceStock const&);
-  void			setRcs(RessourceStock *);
   RessourceStock	*getRcs() const;
 
 public:
@@ -40,7 +45,7 @@ private:
   std::string		_name;
   unsigned int		_nbJoueurs;
   e_difficulty		_difficulty;
-  RessourceStock	*_rcs;
+  RessourceStock*	_rcs;
 };
 
 }

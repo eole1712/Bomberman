@@ -5,6 +5,7 @@
 #include "Player.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
+#include "glm/glm.hpp"
 
 namespace Bomberman
 {
@@ -14,8 +15,8 @@ unsigned int const	Player::dftSpeed = 0;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 0;
 
-Player::Player(std::string const &name)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb)
+Player::Player(std::string const &name, glm::vec4 color)
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _color(color)
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -35,7 +36,7 @@ Player::Player(std::string const &name)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb)
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -94,7 +95,7 @@ bool			Player::isParalyzed() const
 
 bool			Player::zeroBomb() const
 {
-  return _zeroBomb;
+  return _zeroBomb || (_bomb != 0);
 }
 
 bool			Player::canAbsorb() const
@@ -299,21 +300,28 @@ void			Player::move(glm::vec3 pos)
   glm::vec3		npos;
   IObject::Type		type;
 
-  if (!isAlive() && isParalyzed())
+  if (!isAlive() || isParalyzed())
     return;
   npos = getPosition() + pos;
-  if (npos.x > 0 && npos.x < _map->getWidth() - 1)
+  if (npos.x > 0 && npos.x < _map->getWidth())
     {
       type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
       if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
 	translate(glm::vec3(pos.x, 0, 0));
     }
-  if (npos.z > 0 && npos.z < _map->getHeight() - 1)
+  if (npos.z > 0 && npos.z < _map->getHeight())
     {
       type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
       if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
 	translate(glm::vec3(0, 0, pos.z));
     }
+}
+
+void			Player::rotate(const glm::vec3 &axis, float angle)
+{
+  if (!isAlive() || isParalyzed())
+    return;
+  Object3d::rotate(axis, angle);
 }
 
 //attacks
@@ -334,7 +342,9 @@ void			Player::putBomb()
     {
       IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
+
       _map->setCellValue(getX(), getY(), bombT);
+      decBomb();
     }
 }
 
@@ -349,10 +359,21 @@ bool			Player::tryToKill()
 	  _isAlive = false;
 	  return true;
 	}
+      return false;
     }
-  return false;
+  return true;
 }
 
+// color
+void			Player::setColor(glm::vec4 color)
+{
+  _color = color;
+}
+
+glm::vec4		Player::getColor() const
+{
+  return _color;
+}
 
 // type
 

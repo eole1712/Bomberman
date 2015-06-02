@@ -29,6 +29,7 @@ GAMESRCS	= Player.cpp 		\
 		  Wall.cpp		\
 		  DestroyableWall.cpp	\
 		  IObject.cpp		\
+		  Color.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
@@ -69,10 +70,10 @@ CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson
 LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -ldl -lrt -lfbxsdk -lSDL2
 
 all: $(NAME)
-     export LD_LIBRARY_PATH=~/rendu/cpp_bomberman/srcs/LibBomberman_linux_x64/libs/
 
 $(NAME): $(OBJS)
 	 $(CC) -o $(NAME) $(OBJS) -L $(GDLDIR)/libs/ $(LDFLAGS)
+	 echo "export LD_LIBRARY_PATH=~/rendu/cpp_bomberman/srcs/LibBomberman_linux_x64/libs/"
 
 clean:
 	rm -f $(OBJS)

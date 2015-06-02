@@ -29,6 +29,7 @@ GAMESRCS	= Player.cpp 		\
 		  Wall.cpp		\
 		  DestroyableWall.cpp	\
 		  IObject.cpp		\
+		  Color.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
@@ -42,7 +43,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 
 BOMBSRCS	= BombClassic.cpp	\
 		  IBomb.cpp		\
-
+		  BombFactory.cpp	\
 
 MISCSRCS	= Timer.cpp		\
 		  my_random.cpp		\

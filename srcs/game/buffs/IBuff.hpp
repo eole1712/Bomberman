@@ -2,10 +2,11 @@
 # define __IBUFF_HPP__
 
 # include "IClonable.hpp"
+# include "IObject.hpp"
 
 namespace Bomberman
 {
-  class IBuff : public IClonable<IBuff>
+class IBuff : public IClonable<IBuff>, public IObject
   {
   public:
     enum Type

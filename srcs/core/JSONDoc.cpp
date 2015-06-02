@@ -154,7 +154,7 @@ Bomberman::Player*				JSONDoc::unserialize<Bomberman::Player*>(std::string const
 	  {
 	    std::cout << "Name ok" << std::endl;
 	    try {
-	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString());
+	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString(), glm::vec4(1));
 	      ret->setPosition(glm::vec3(player["xPos"].GetDouble(), 0, player["yPos"].GetDouble()));
 	      SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
 	      std::for_each(player["buffs"].Begin(), player["buffs"].End(), [&ret, &fac] (rapidjson::Value const& obj) {

@@ -8,7 +8,7 @@ namespace Bomberman
 {
 namespace Buff
 {
-  class IncRange : public IBuff, public IObject
+  class IncRange : public IBuff
   {
   public:
     IncRange();

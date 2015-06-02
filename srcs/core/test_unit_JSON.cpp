@@ -9,12 +9,13 @@
 #include "Player.hpp"
 #include "Map.hpp"
 
+
 int	main()
 {
   Bomberman::Score score;
   JSONDoc doc;
-  Bomberman::Player player("Grisha");
-  Bomberman::Player griGri("Putin");
+  Bomberman::Player player("Grisha", glm::vec4(1));
+  Bomberman::Player griGri("Putin", glm::vec4(1));
   SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
   std::vector<std::string> players;
   players.push_back("GriGri");

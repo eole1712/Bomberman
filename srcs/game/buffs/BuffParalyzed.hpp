@@ -8,7 +8,7 @@ namespace Bomberman
 {
 namespace Buff
 {
-  class Paralyzed : public IBuff, public IObject
+  class Paralyzed : public IBuff
   {
   public:
     Paralyzed();

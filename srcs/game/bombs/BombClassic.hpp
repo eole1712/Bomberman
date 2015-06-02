@@ -12,7 +12,7 @@ namespace Bomb
 {
 
 class Classic
-  : public IBomb, public IObject
+  : public IBomb
 {
 public:
   Classic();

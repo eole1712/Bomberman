@@ -9,7 +9,7 @@ namespace Bomberman
 
 class Map;
 
-class IBomb : public IClonable<IBomb>
+class IBomb : public IClonable<IBomb>, public IObject
 {
 public:
   enum Type

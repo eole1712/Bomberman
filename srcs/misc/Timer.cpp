@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <iostream>
 #include "Timer.hpp"
 
 Timer::Timer(uintmax_t time)
@@ -6,7 +7,6 @@ Timer::Timer(uintmax_t time)
    _saveTime(0),
    _clock(std::chrono::system_clock::now())
 {
-
 }
 
 Timer::~Timer()

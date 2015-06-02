@@ -8,7 +8,7 @@ namespace Bomberman
 {
 namespace Buff
 {
-  class Shield : public IBuff, public IObject
+  class Shield : public IBuff
   {
   public:
     Shield();
