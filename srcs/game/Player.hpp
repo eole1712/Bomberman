@@ -7,7 +7,7 @@
 # include "IBuff.hpp"
 # include "BuffTimer.hpp"
 # include "IBomb.hpp"
-
+# include "Object3d.hpp"
 
 namespace Bomberman
 {
@@ -15,10 +15,10 @@ namespace Bomberman
 class Map;
 
 class Player
-  : public IObject
+  : public IObject, public Object3d
 {
 public:
-  Player(std::string const &, unsigned int, unsigned int);
+  Player(std::string const &);
   Player();
   virtual ~Player();
 
@@ -104,17 +104,18 @@ private:
 
 public:
   void			initGame(unsigned int, unsigned int, Map*);
+  void			initGame(Map*);
   unsigned int		getX() const;
   unsigned int		getY() const;
+  float			getfX() const;
+  float			getfY() const;
 
-  void			moveUp();
-  void			moveDown();
-  void			moveLeft();
-  void			moveRight();
+protected:
+  void			setX(float);
+  void			setY(float);
 
-private:
-  unsigned int		_x;
-  unsigned int		_y;
+public:
+  void			move(glm::vec3 pos);
 
 public:
   void			setBombType(IBomb::Type);

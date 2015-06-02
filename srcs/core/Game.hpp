@@ -3,6 +3,7 @@
 # define GAME_H_
 
 # include <vector>
+# include <map>
 # include "Game.hh"
 # include "Clock.hh"
 # include "Input.hh"
@@ -43,8 +44,8 @@ private:
     {FLOOR, WALL, IDST_BLOCK
      ,DST_BLOCK, FIRE, PLAYER, BOMB, SKYBOX};
 
-  unsigned int			_width;
-  unsigned int			_height;
+  int				_width;
+  int				_height;
   std::vector<Asset3d *>	_assets;
   CameraObject			_camera;
   gdl::SdlContext		_context;
@@ -52,6 +53,8 @@ private:
   gdl::Input			_input;
   gdl::BasicShader		_shader;
   float				_speed;
+
+  std::map<Bomberman::IObject::Type, mapAsset>	_ObjectToAsset;
 
   Bomberman::RessourceStock	_stock;
   Bomberman::Map		_map;

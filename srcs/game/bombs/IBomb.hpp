@@ -2,11 +2,14 @@
 # define IBOMB_H_
 
 # include "IObject.hpp"
+# include "IClonable.hpp"
 
 namespace Bomberman
 {
 
-class IBomb
+class Map;
+
+class IBomb : public IClonable<IBomb>
 {
 public:
   enum Type
@@ -20,7 +23,7 @@ public:
 public:
   virtual int		getDuration() const = 0;
   virtual Type		getBombType() const = 0;
-
+  virtual void		explose(unsigned int, unsigned int, Map *) const = 0;
 public:
   static const int	nbBomb;
 };

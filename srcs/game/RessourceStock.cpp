@@ -16,6 +16,7 @@
 #include "Wall.hpp"
 #include "DestroyableWall.hpp"
 
+
 namespace Bomberman
 {
 
@@ -23,7 +24,29 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(IBomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
 {
   for (unsigned int i = 0; i < names.size(); ++i)
-    _players[i] = new Player(names[i], 0, 0);
+    _players[i] = new Player(names[i]);
+  _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
+  _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
+  _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;
+  _buffs[IBuff::INC_RANGE] = new Buff::IncRange;
+  _buffs[IBuff::NO_BOMB] = new Buff::NoBomb;
+  _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
+  _buffs[IBuff::SHIELD] = new Buff::Shield;
+  _bombs[IBomb::CLASSIC] = new Bomb::Classic;
+  _objects[IObject::BOMB] = NULL;
+  _objects[IObject::PLAYER] = NULL;
+  _objects[IObject::BONUS] = NULL;
+  _objects[IObject::WALL] = new Wall;
+  _objects[IObject::DESTROYABLEWALL] = new DestroyableWall;
+  _objects[IObject::SPAWN] = new Spawn;
+  _objects[IObject::EMPTY] = new Empty;
+}
+
+RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(IBomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
+{
+  for (unsigned int i = 0; i < players.size(); ++i)
+    _players[i] = players[i];
   _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
   _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
   _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;
@@ -87,6 +110,11 @@ IObject		*RessourceStock::getPlayer(unsigned int id) const
   if (id >= _players.size())
     return NULL; //EXCEPTION???
   return _players[id];
+}
+
+unsigned int	RessourceStock::getNbPlayer() const
+{
+  return _players.size();
 }
 
 }

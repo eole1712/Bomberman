@@ -1,3 +1,4 @@
+#include "Map.hpp"
 #include "BombTimer.hpp"
 
 namespace Bomberman
@@ -37,6 +38,14 @@ IObject::Type	BombTimer::getObjectType() const
 bool		BombTimer::isNull() const
 {
   return false;
+}
+
+void		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
+{
+  if (isFinished())
+    {
+      _bomb->explose(x, y, map);
+    }
 }
 
 }

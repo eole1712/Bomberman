@@ -11,12 +11,14 @@ namespace Bomberman
 class Map : public GenericMap<IObject*>
 {
 public:
-  enum e_difficulty	{ EASY = 1, MEDIUM, DIFFICULT };
+  enum e_difficulty	{ EASY = 5, MEDIUM, DIFFICULT };
 
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
+  Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty);
   virtual ~Map() {};
 
   void	randomize(RessourceStock const&);
+  void			setRcs(RessourceStock *);
   RessourceStock	*getRcs() const;
 
 public:
@@ -27,6 +29,12 @@ public:
   std::string const&	getName() const;
   unsigned int		getNumberPlayers() const;
   e_difficulty		getDiff() const;
+
+public:
+  bool		isIn(unsigned int x, unsigned int y);
+  void		checkBomb(unsigned int x, unsigned int y);
+  void		killPlayers(unsigned int x, unsigned int y);
+  void		checkBombsOnMap();
 
 private:
   std::string		_name;

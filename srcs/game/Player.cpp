@@ -1,5 +1,7 @@
 #include <string>
 #include <list>
+#include <cmath>
+#include <iostream>
 #include "Player.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
@@ -12,8 +14,8 @@ unsigned int const	Player::dftSpeed = 0;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 0;
 
-Player::Player(std::string const &name, unsigned int x, unsigned int y)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _x(x), _y(y)
+Player::Player(std::string const &name)
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb)
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -33,7 +35,7 @@ Player::Player(std::string const &name, unsigned int x, unsigned int y)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _x(0), _y(0)
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb)
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -233,74 +235,84 @@ void			Player::initGame(unsigned int x, unsigned int y, Map *map)
 {
   if (map)
     {
-      map = _map;
+      _map = map;
       if (_map->getWidth() > x && _map->getHeight() > y)
 	{
-	  _x = x;
-	  _y = y;
+	  setPosition(glm::vec3(x, 0, y));
 	}
     }
+}
+
+void			Player::initGame(Map *map)
+{
+  if (map)
+    {
+      _map = map;
+      for (unsigned int y = 0; y < _map->getHeight(); ++y)
+	{
+	  for (unsigned int x = 0; x < _map->getWidth(); ++x)
+	    {
+	      if (_map->getCellValue(x, y)->getObjectType() == IObject::SPAWN)
+		{
+		  setPosition(glm::vec3(x + 0.5, 0, y + 0.5));
+		  _map->setCellValue(x, y, _map->getRcs()->getObject(IObject::EMPTY));
+		  return;
+		}
+	    }
+	}
+    }
+  std::cout << "Pas de spawn" << std::endl;
 }
 
 unsigned int		Player::getX() const
 {
-  return _x;
+  return floor(getPosition().x);
+}
+
+float			Player::getfX() const
+{
+  return getPosition().x;
 }
 
 unsigned int		Player::getY() const
 {
-  return _y;
+  return floor(getPosition().z);
 }
 
-void			Player::moveUp()
+float			Player::getfY() const
 {
-  if (isAlive() && !isParalyzed() && _map && _y > 0)
+  return getPosition().z;
+}
+
+void			Player::setX(float x)
+{
+  setPosition(glm::vec3(x, 0, getPosition().z));
+}
+
+void			Player::setY(float y)
+{
+  setPosition(glm::vec3(getPosition().x, 0, y));
+}
+
+void			Player::move(glm::vec3 pos)
+{
+  glm::vec3		npos;
+  IObject::Type		type;
+
+  if (!isAlive() && isParalyzed())
+    return;
+  npos = getPosition() + pos;
+  if (npos.x > 0 && npos.x < _map->getWidth() - 1)
     {
-      IObject::Type t = _map->getCellValue(_x, _y - 1)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x, _y - 1);
-	  _y = _y - 1;
-	}
+      type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
+      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+	translate(glm::vec3(pos.x, 0, 0));
     }
-}
-
-void			Player::moveDown()
-{
-  if (isAlive() && !isParalyzed() && _map && _y < _map->getHeight() - 1)
+  if (npos.z > 0 && npos.z < _map->getHeight() - 1)
     {
-      IObject::Type t = _map->getCellValue(_x, _y + 1)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x, _y + 1);
-	  _y = _y + 1;
-	}
-    }
-}
-
-void			Player::moveLeft()
-{
-  if (isAlive() && !isParalyzed() && _map && _x > 0)
-    {
-      IObject::Type t = _map->getCellValue(_x - 1, _y)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x - 1, _y);
-	  _x = _x - 1;
-	}
-    }
-}
-
-void			Player::moveRight()
-{
-  if (isAlive() && !isParalyzed() && _map && _x < _map->getWidth() - 1)
-    {
-      IObject::Type t = _map->getCellValue(_x + 1, _y)->getObjectType();
-      if (t != WALL && t != DESTROYABLEWALL)
-	{
-	  _map->swapObjects(_x, _y, _x + 1, _y);
-	  _x = _x + 1;
-	}
+      type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
+      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+	translate(glm::vec3(0, 0, pos.z));
     }
 }
 
@@ -322,7 +334,7 @@ void			Player::putBomb()
     {
       IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
-      _map->setCellValue(_x, _y, bombT);
+      _map->setCellValue(getX(), getY(), bombT);
     }
 }
 

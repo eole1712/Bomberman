@@ -1,6 +1,6 @@
 CC		= clang++
 
-NAME		= bomberman
+NAME		= bombermanTestJson
 
 SRCSDIR		= srcs
 GAMEDIR		= $(SRCSDIR)/game/
@@ -11,7 +11,7 @@ BUFFDIR		= $(GAMEDIR)/buffs/
 BOMBDIR		= $(GAMEDIR)/bombs/
 GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
 
-CORESRCS	= main.cpp		\
+CORESRCS	= test_unit_JSON.cpp	\
 		  Game.cpp		\
 		  Asset3d.cpp		\
 		  Object3d.cpp		\
@@ -42,7 +42,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 
 BOMBSRCS	= BombClassic.cpp	\
 		  IBomb.cpp		\
-		  BombFactory.cpp	\
+
 
 MISCSRCS	= Timer.cpp		\
 		  my_random.cpp		\

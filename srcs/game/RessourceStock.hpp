@@ -6,6 +6,7 @@
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "IBomb.hpp"
+# include "Player.hpp"
 
 namespace Bomberman
 {
@@ -14,6 +15,7 @@ class RessourceStock
 {
 public:
   RessourceStock(std::vector<std::string> const &);
+  RessourceStock(std::vector<Bomberman::Player*> const& players);
   virtual ~RessourceStock();
 
 private:
@@ -26,6 +28,7 @@ public:
   IObject	*getBomb(IBomb::Type) const;
   IObject	*getPlayer(std::string const &) const;
   IObject	*getPlayer(unsigned int) const;
+  unsigned int	getNbPlayer() const;
 
 private:
   std::vector<IObject *>	_players;

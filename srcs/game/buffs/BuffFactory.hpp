@@ -13,7 +13,7 @@ namespace Buff
   public:
     Factory();
     ~Factory();
-    
+    static SmartFactory<IBuff>*	getInstance();
   private:
     Factory(Factory const& other);
     Factory&	operator=(Factory const& other);

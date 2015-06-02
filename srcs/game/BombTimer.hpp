@@ -24,6 +24,7 @@ public:
   unsigned int	getRange() const;
   IObject*	getPlayer() const;
   IBomb*	getBombType() const;
+  void		finish(unsigned int x, unsigned int y, Map *map);
 
 private:
   IObject*	_player;

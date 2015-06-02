@@ -11,6 +11,11 @@
 #include "IBuff.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
+#include "BombFactory.hpp"
+#include "Wall.hpp"
+#include "DestroyableWall.hpp"
+#include "Spawn.hpp"
+#include "Empty.hpp"
 
 JSONDoc::JSONDoc()
 {
@@ -117,8 +122,8 @@ void						JSONDoc::serialize<Bomberman::Player>(const Bomberman::Player &obj)
     }
   rapidjson::Value player(rapidjson::kObjectType);
   player.AddMember("name", obj.getName().c_str(), _doc.GetAllocator());
-  player.AddMember("xPos", obj.getX(), _doc.GetAllocator());
-  player.AddMember("yPos", obj.getY(), _doc.GetAllocator());
+  player.AddMember("xPos", obj.getfX(), _doc.GetAllocator());
+  player.AddMember("yPos", obj.getfY(), _doc.GetAllocator());
   if (!buffList.empty())
     {
       rapidjson::Value buffArray(rapidjson::kArrayType);
@@ -149,7 +154,8 @@ Bomberman::Player*				JSONDoc::unserialize<Bomberman::Player*>(std::string const
 	  {
 	    std::cout << "Name ok" << std::endl;
 	    try {
-	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString(), player["xPos"].GetUint(), player["yPos"].GetUint());
+	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString());
+	      ret->setPosition(glm::vec3(player["xPos"].GetDouble(), 0, player["yPos"].GetDouble()));
 	      SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
 	      std::for_each(player["buffs"].Begin(), player["buffs"].End(), [&ret, &fac] (rapidjson::Value const& obj) {
 		Bomberman::IBuff* buff = fac->generate(obj["type"].GetString());
@@ -184,8 +190,9 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
 	cube.AddMember("type", "bomb", _doc.GetAllocator());
 	cube.AddMember("typeId", 0, _doc.GetAllocator());
 	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
+	cube.AddMember("range", bomb->getRange(), _doc.GetAllocator());
 	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
-	cube.AddMember("bombType", bomb->getBombType(), _doc.GetAllocator());
+	cube.AddMember("bombType", bomb->getBombType()->getClassName().c_str(), _doc.GetAllocator());
 	map.PushBack(cube, _doc.GetAllocator());
       },
       [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
@@ -203,7 +210,7 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
 	cube.AddMember("posY", y, _doc.GetAllocator());
 	cube.AddMember("type", "bonus", _doc.GetAllocator());
 	cube.AddMember("typeId", 2, _doc.GetAllocator());
-	cube.AddMember("bonusType", dynamic_cast<Bomberman::IBuff*>(obj)->getBuffType(), _doc.GetAllocator());
+	cube.AddMember("bonusType", dynamic_cast<Bomberman::IBuff*>(obj)->getClassName().c_str(), _doc.GetAllocator());
 	map.PushBack(cube, _doc.GetAllocator());
       },
       [this] (unsigned int x, unsigned int y, Bomberman::IObject*, rapidjson::Value& map) -> void {
@@ -242,6 +249,7 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
 
   rapidjson::Value			object(rapidjson::kObjectType);
   rapidjson::Value			array(rapidjson::kArrayType);
+    rapidjson::Value			mapArray(rapidjson::kArrayType);
   Bomberman::IObject*			cellValue;
 
   if (!_doc.IsObject())
@@ -259,5 +267,78 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
       }
   }
   object.AddMember("cases", array, _doc.GetAllocator());
-  _doc.AddMember("map", object, _doc.GetAllocator());
+  mapArray.PushBack(object, _doc.GetAllocator());
+  _doc.AddMember("map", mapArray, _doc.GetAllocator());
+
+}
+
+template<>
+Bomberman::Map*				JSONDoc::unserialize<Bomberman::Map*>(std::string const& name) const
+{
+  std::vector<Bomberman::Player*>	players;
+  static const std::function<Bomberman::IObject*(rapidjson::Value const&)> func_tab[] =
+    {
+      [this, &players] (rapidjson::Value const& obj) -> Bomberman::IObject* {
+	Bomberman::Player* player = NULL;
+	SmartFactory<Bomberman::IBomb>*	fac = Bomberman::Bomb::Factory::getInstance();
+	for (std::vector<Bomberman::Player*>::iterator it =  players.begin(); it != players.end(); ++it)
+	  {
+	    if (obj["owner"].GetString() == (*it)->getName())
+	      player = (*it);
+	  }
+	if (player == NULL)
+	  {
+	    player = unserialize<Bomberman::Player*>(obj["owner"].GetString());
+	    players.push_back(player);
+	  }
+	return new Bomberman::BombTimer(player, obj["range"].GetUint(), fac->generate(obj["bombType"].GetString()));
+      },
+      [this, &players] (rapidjson::Value const& obj) -> Bomberman::IObject* {
+	Bomberman::Player* ret;
+	for (std::vector<Bomberman::Player*>::iterator it =  players.begin(); it != players.end(); ++it)
+	  {
+	    if (obj["name"].GetString() == (*it)->getName())
+	      return (*it);
+	  }
+	ret = unserialize<Bomberman::Player*>(obj["name"].GetString());
+	players.push_back(ret);
+	return ret;
+      },
+      [] (rapidjson::Value const& obj) -> Bomberman::IObject* {
+      	SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
+	return fac->generate(obj["bonusType"].GetString());
+      },
+      [] (rapidjson::Value const&) -> Bomberman::IObject* {
+	return new Bomberman::Wall();
+      },
+      [] (rapidjson::Value const&) -> Bomberman::IObject* {
+	return new Bomberman::DestroyableWall();
+      },
+      [] (rapidjson::Value const&) -> Bomberman::IObject* {
+	return new Bomberman::Spawn();
+      },
+      [] (rapidjson::Value const&) -> Bomberman::IObject* {
+	return new Bomberman::Empty();
+      },
+    };
+
+  if (_doc.IsObject() && _doc.HasMember("map"))
+    {
+      rapidjson::Value const& mapsArray = _doc["map"];
+      for (rapidjson::Value::ConstValueIterator it = mapsArray.Begin(); it != mapsArray.End(); ++it)
+	{
+	  if ((*it)["name"].GetString() == name)
+	    {
+	      rapidjson::Value const& mapObj = (*it);
+	      Bomberman::Map* mapPtr = new Bomberman::Map(mapObj["name"].GetString(), mapObj["width"].GetUint(), mapObj["height"].GetUint(), mapObj["nbPlayers"].GetUint(), static_cast<Bomberman::Map::e_difficulty>(mapObj["difficulty"].GetUint()));
+	      rapidjson::Value const& mapArray = mapObj["cases"];
+	      std::for_each(mapArray.Begin(), mapArray.End(), [mapPtr] (rapidjson::Value const& row) {
+		Bomberman::IObject* elem = func_tab[row["typeId"].GetUint()](row);
+		mapPtr->setCellValue(row["posX"].GetUint(), row["posY"].GetUint(), elem);
+	      });
+	      return mapPtr;
+	    }
+	}
+    }
+  return NULL;
 }

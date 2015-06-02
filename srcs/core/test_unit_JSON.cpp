@@ -13,8 +13,8 @@ int	main()
 {
   Bomberman::Score score;
   JSONDoc doc;
-  Bomberman::Player player("Grisha", 42, 21);
-  Bomberman::Player griGri("Putin", 75, 42);
+  Bomberman::Player player("Grisha");
+  Bomberman::Player griGri("Putin");
   SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
   std::vector<std::string> players;
   players.push_back("GriGri");
@@ -23,7 +23,8 @@ int	main()
   players.push_back("Jean");
   players.push_back("Milow");
   Bomberman::Map map("testMap", 10, 10, 5, Bomberman::Map::EASY, new Bomberman::RessourceStock(players));
-
+  player.initGame(&map);
+  griGri.initGame(&map);
   fac->learn(new Bomberman::Buff::NoBomb);
   fac->learn(new Bomberman::Buff::Shield);
   fac->learn(new Bomberman::Buff::IncSpeed);
