@@ -124,7 +124,8 @@ bool		Game::update()
   float		movefactor;
   glm::vec3	move;
   static int	change = 0;
-  Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
+  Player	*player = dynamic_cast<Player *>(_stock.getPlayer(1));
+  Player	*ai = dynamic_cast<Player *>(_stock.getPlayer(0));
 
   movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
   // If the escape key is pressed or if the window has been closed we stop the program
@@ -166,10 +167,17 @@ bool		Game::update()
   else if (_input.getKey(SDLK_RIGHT))
     player->Player::rotate(glm::vec3(0, 1, 0), -3 * movefactor);
   _map.checkBombsOnMap();
-  _camera.setPosition(player->getPosition()
+
+  // ia
+  _camera.setRotation(ai->getPosition());
+  _camera.setPosition(ai->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
-				    player->getRotation().y + 90,
+				    ai->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
+  //  ai->move(glm::vec3(5, 5, 5) * movefactor);
+  //  ai->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
+  // end ia
+
   _camera.updateView();
   // Update inputs an clock
   _context.updateClock(_clock);
