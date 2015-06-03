@@ -179,56 +179,120 @@ void	Map::equalize()
     }
 }
 
+void	Map::addSpawn(unsigned int x, unsigned int y)
+{
+  this->setCellValue(x, y, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
+		     this->_rcs->getObject(IObject::EMPTY));
+  this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
+		     this->_rcs->getObject(IObject::EMPTY));
+  std::cout << "Spawn added in (" << x << ", " << y << ") !" << std::endl;
+}
+
+void	Map::drawLosange(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
+{
+  unsigned int	leftX = this->_width / 2 - sideX;
+  unsigned int	topY = this->_height / 2 - sideY;
+  unsigned int	rightX = this->_width / 2 - !(this->_width % 2) + sideX;
+  unsigned int	bottomY = this->_height / 2 - !(this->_height % 2) + sideY;
+
+  if (nbJoueurs >= 4)
+    {
+      this->addSpawn(this->_width / 2, topY);
+      this->addSpawn(this->_width / 2, bottomY);
+      this->addSpawn(leftX, this->_height / 2);
+      this->addSpawn(rightX, this->_height / 2);
+      nbJoueurs -= 4;
+    }
+  else
+    {
+      switch (nbJoueurs)
+	{
+	case 3:
+	  this->addSpawn(this->_width / 2, topY);
+	  this->addSpawn(this->_width / 2, bottomY);
+	  this->addSpawn(leftX, this->_height / 2);
+	  nbJoueurs -= 3;
+	  break;
+	case 2:
+	  this->addSpawn(this->_width / 2, topY);
+	  this->addSpawn(this->_width / 2, bottomY);
+	  nbJoueurs -= 2;
+	  break;
+	case 1:
+	  this->addSpawn(this->_width / 2, topY);
+	  nbJoueurs -= 1;
+	  break;
+	default:
+	  return;
+	}
+    }
+  this->drawSquare(sideX + sideX / 2, sideY + sideY / 2, nbJoueurs / 2 + nbJoueurs % 2);
+  this->drawSquare(sideX - sideX / 2, sideY - sideY / 2, nbJoueurs / 2);
+}
+
+void	Map::drawSquare(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
+{
+  unsigned int	leftX = this->_width / 2 - sideX;
+  unsigned int	leftY = this->_height / 2 - sideY;
+  unsigned int	rightX = this->_width / 2 - !(this->_width % 2) + sideX;
+  unsigned int	rightY = this->_height / 2 - !(this->_height % 2) + sideY;
+
+  if (nbJoueurs >= 4)
+    {
+      this->addSpawn(leftX, leftY);
+      this->addSpawn(rightX, rightY);
+      this->addSpawn(leftX, rightY);
+      this->addSpawn(rightX, leftY);
+      nbJoueurs -= 4;
+    }
+  else
+    {
+      switch (nbJoueurs)
+	{
+	case 3:
+	  this->addSpawn(leftX, leftY);
+	  this->addSpawn(rightX, rightY);
+	  this->addSpawn(leftX, rightY);
+	  nbJoueurs -= 3;
+	  break;
+	case 2:
+	  this->addSpawn(leftX, leftY);
+	  this->addSpawn(rightX, rightY);
+	  nbJoueurs -= 2;
+	  break;
+	case 1:
+	  this->addSpawn(leftX, leftY);
+	  nbJoueurs -= 1;
+	  break;
+	default:
+	  return;
+	}
+    }
+  this->drawLosange(sideX, sideY, nbJoueurs);
+}
+
 void	Map::spawnize()
 {
-  this->setCellValue(0, 0, this->_rcs->getObject(IObject::SPAWN));
-  this->setCellValue(0 + (((0 > 0 && my_random(0, 1)) || 0 == _width - 1) ? (-1) : (1)), 0,
-		     this->_rcs->getObject(IObject::EMPTY));
-  this->setCellValue(0, 0 + (((0 > 0 && my_random(0, 1)) || 0 == _height - 1) ? (-1) : (1)),
-		     this->_rcs->getObject(IObject::EMPTY));
+  unsigned int	save = this->_nbJoueurs;
 
-  this->setCellValue(this->_width - 1, this->_height - 1, this->_rcs->getObject(IObject::SPAWN));
-  this->setCellValue(this->_width - 1 + (((this->_width - 1 > 0 && my_random(0, 1)) || this->_width - 1 == _width - 1) ? (-1) : (1)), this->_height - 1,
-  		     this->_rcs->getObject(IObject::EMPTY));
-  this->setCellValue(this->_width - 1, this->_height - 1 + (((this->_height - 1 > 0 && my_random(0, 1)) || this->_height - 1 == _height - 1) ? (-1) : (1)),
-  		     this->_rcs->getObject(IObject::EMPTY));
-
-  this->setCellValue(0, this->_height - 1, this->_rcs->getObject(IObject::SPAWN));
-  this->setCellValue(0 + (((0 > 0 && my_random(0, 1)) || 0 == _width - 1) ? (-1) : (1)), this->_height - 1,
-		     this->_rcs->getObject(IObject::EMPTY));
-  this->setCellValue(0, this->_height - 1 + (((this->_height - 1 > 0 && my_random(0, 1)) || this->_height - 1 == _height - 1) ? (-1) : (1)),
-		     this->_rcs->getObject(IObject::EMPTY));
-
-  this->setCellValue(this->_width - 1, 0, this->_rcs->getObject(IObject::SPAWN));
-  this->setCellValue(this->_width - 1 + (((this->_width - 1 > 0 && my_random(0, 1)) || this->_width - 1 == _width - 1) ? (-1) : (1)), 0,
-  		     this->_rcs->getObject(IObject::EMPTY));
-  this->setCellValue(this->_width - 1, 0 + (((0 > 0 && my_random(0, 1)) || 0 == _height - 1) ? (-1) : (1)),
-  		     this->_rcs->getObject(IObject::EMPTY));
-
-  this->setCellValue((this->_width - 1) / 2, (this->_height - 1) / 2, this->_rcs->getObject(IObject::SPAWN));
-  this->setCellValue((this->_width - 1) / 2 + (((this->_width - 1 > 0 && my_random(0, 1)) || this->_width - 1 == _width - 1) ? (-1) : (1)), (this->_height - 1) / 2,
-  		     this->_rcs->getObject(IObject::EMPTY));
-  this->setCellValue((this->_width - 1) / 2, (this->_height - 1) / 2 + (((this->_height - 1 > 0 && my_random(0, 1)) || this->_height - 1 == _height - 1) ? (-1) : (1)),
-  		     this->_rcs->getObject(IObject::EMPTY));
-
-  // unsigned int	x;
-  // unsigned int	y;
-  // unsigned int	numJoueur = 0;
-  // unsigned int	playerspace = this->_width * this->_height / this->_nbJoueurs;
-  // unsigned int	pos;
-
-  // while (numJoueur < this->_nbJoueurs)
-  //   {
-  //     pos = numJoueur * playerspace + playerspace / 2;
-  //     x = pos % this->_width;
-  //     y = pos / this->_width;
-  //     this->setCellValue(x, y, this->_rcs->getObject(IObject::SPAWN));
-  //     this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
-  // 			 this->_rcs->getObject(IObject::EMPTY));
-  //     this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
-  // 			 this->_rcs->getObject(IObject::EMPTY));
-  //     ++numJoueur;
-  //   }
+  std::cout << this->_nbJoueurs << std::endl;
+  if (this->_nbJoueurs > 4)
+    {
+      this->addSpawn(this->_width / 2, this->_height / 2);
+      --this->_nbJoueurs;
+    }
+  std::cout << this->_nbJoueurs << std::endl;
+  this->drawSquare(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
+  this->_nbJoueurs -= ((save > 4) ? (4) : (save));
+  std::cout << this->_nbJoueurs << std::endl;
+  save = this->_nbJoueurs;
+  this->drawLosange(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
+  this->_nbJoueurs -= ((save > 4) ? (4) : (save));
+  std::cout << this->_nbJoueurs << std::endl;
+  this->drawSquare(this->_width / 2 - this->_width / 4,
+		   this->_height / 2 - this->_height / 4,
+		   this->_nbJoueurs);
 }
 
 
