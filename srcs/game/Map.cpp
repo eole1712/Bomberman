@@ -179,23 +179,20 @@ void		Map::killPlayers(unsigned int x, unsigned int y)
 
 void		Map::checkBombsOnMap()
 {
-  BombTimer	*bomb;
-
-  for (unsigned int y = 0; y < getHeight(); ++y)
+  for (std::list<BombTimer*>::iterator it = _bombs.begin(); it != _bombs.end(); it++)
     {
-      for (unsigned int x = 0; x < getWidth(); ++x)
-	{
-	  if (getCellValue(x, y)->getObjectType() == IObject::BOMB)
-	    {
-	      bomb = dynamic_cast<BombTimer*>(getCellValue(x, y));
-	      if (bomb->finish(x, y, this))
-		{
-		  killObject(x, y);
-		  delete bomb;
-		}
-	    }
-	}
+      if ((*it)->finish((*it)->getX(), (*it)->getY(), this))
+  	{
+  	  killObject((*it)->getX(), (*it)->getY());
+  	  delete *it;
+  	  it = _bombs.erase(it);
+  	}
     }
+}
+
+void		Map::addBomb(BombTimer *bomb)
+{
+  _bombs.push_back(bomb);
 }
 
 unsigned int		Map::getNumberPlayers() const

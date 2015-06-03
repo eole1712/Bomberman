@@ -1,15 +1,21 @@
 #ifndef MAP_H_
 # define MAP_H_
 
+# include <map>
 # include "GenericMap.hpp"
 # include "IObject.hpp"
 # include "RessourceStock.hpp"
+# include "BombTimer.hpp"
 
 namespace Bomberman
 {
 
 class Map : public GenericMap<IObject*>
 {
+public:
+  typedef std::pair<unsigned int, unsigned int> PosPair;
+  typedef std::map<std::pair<unsigned int, unsigned int>, BombTimer*> MapBomb;
+
 private:
 
   void	randomize();
@@ -40,12 +46,15 @@ public:
   void		checkBomb(unsigned int x, unsigned int y);
   void		killPlayers(unsigned int x, unsigned int y);
   void		checkBombsOnMap();
+  void		addBomb(BombTimer*);
+
 
 private:
   std::string		_name;
   unsigned int		_nbJoueurs;
   e_difficulty		_difficulty;
   RessourceStock*	_rcs;
+  std::list<BombTimer*>	_bombs;
 };
 
 }

@@ -34,6 +34,7 @@ bool		Classic::isNull() const
 
 void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 {
+  std::cout << "0" << std::endl;
   for (struct {int i; unsigned int r;} s = {x, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
       if (map->getCellValue(s.i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -45,6 +46,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	}
       map->killPlayers(s.i, y);
     }
+  std::cout << "1" << std::endl;
   for (unsigned int i = x, r = 0; i < map->getWidth() && r < range; ++i, ++r)
     {
       if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -56,6 +58,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	}
       map->killPlayers(i, y);
     }
+  std::cout << "2" << std::endl;
   for (struct {int i; unsigned int r; } s = {y, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
       if (map->getCellValue(x, s.i)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -67,6 +70,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	}
       map->killPlayers(x, s.i);
     }
+  std::cout << "3" << std::endl;
   for (unsigned int i = y, r = 0; i < map->getHeight() && r < range; ++i, ++r)
     {
       if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -78,6 +82,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	}
       map->killPlayers(x, i);
     }
+  std::cout << "4" << std::endl;
 }
 
 IBomb*		Classic::clone() const
