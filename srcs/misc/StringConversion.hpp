@@ -18,6 +18,9 @@ T			stringToType(std::string const& str)
   return (res);
 }
 
+template <>
+std::string		stringToType(std::string const& str);
+
 template <typename T>
 std::string		typeToString(T const& type)
 {
