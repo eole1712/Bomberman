@@ -86,9 +86,9 @@ bool				Game::initialize()
   attachObject(new Asset3d("srcs/assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
-  _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
+  _assets[PLAYER]->createSubAnim(0, "start", 10, 28);
   _assets[PLAYER]->createSubAnim(0, "run", 34, 55);
-  _assets[PLAYER]->createSubAnim(0, "end", 55, 100);
+  _assets[PLAYER]->createSubAnim(0, "end", 55, 130);
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("srcs/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
