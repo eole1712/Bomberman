@@ -23,7 +23,7 @@ public:
 public:
   virtual int		getDuration() const = 0;
   virtual Type		getBombType() const = 0;
-  virtual void		explose(unsigned int, unsigned int, Map *) const = 0;
+  virtual void		explose(int, int, Map *, unsigned int) const = 0;
 public:
   static const int	nbBomb;
 };

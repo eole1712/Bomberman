@@ -44,7 +44,7 @@ bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 {
   if (isFinished())
     {
-      _bomb->explose(x, y, map);
+      _bomb->explose(x, y, map, getRange());
       dynamic_cast<Player*>(_player)->incBomb();
       return true;
     }

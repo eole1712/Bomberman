@@ -10,10 +10,10 @@
 namespace Bomberman
 {
 
-unsigned int const	Player::dftRange = 0;
+unsigned int const	Player::dftRange = 2;
 unsigned int const	Player::dftSpeed = 0;
 unsigned int const	Player::dftShield = 0;
-unsigned int const	Player::dftBomb = 0;
+unsigned int const	Player::dftBomb = 1;
 
 Player::Player(std::string const &name, glm::vec4 color)
   : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _color(color)
@@ -95,7 +95,7 @@ bool			Player::isParalyzed() const
 
 bool			Player::zeroBomb() const
 {
-  return _zeroBomb || (_bomb != 0);
+  return _zeroBomb || (_bomb == 0);
 }
 
 bool			Player::canAbsorb() const
