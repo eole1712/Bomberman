@@ -4,8 +4,8 @@
 namespace Bomberman
 {
 
-BombTimer::BombTimer(IObject *player, unsigned int range, IBomb *bomb)
-  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb)
+BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
+  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY())
 {
   start();
 }
@@ -20,7 +20,7 @@ unsigned int	BombTimer::getRange() const
   return _range;
 }
 
-IObject*	BombTimer::getPlayer() const
+Player*		BombTimer::getPlayer() const
 {
   return _player;
 }
@@ -40,12 +40,22 @@ bool		BombTimer::isNull() const
   return false;
 }
 
+unsigned int	BombTimer::getX() const
+{
+  return _x;
+}
+
+unsigned int	BombTimer::getY() const
+{
+  return _y;
+}
+
 bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 {
   if (isFinished())
     {
       _bomb->explose(x, y, map, getRange());
-      dynamic_cast<Player*>(_player)->incBomb();
+      _player->incBomb();
       return true;
     }
   return false;
