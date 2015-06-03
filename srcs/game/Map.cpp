@@ -24,7 +24,6 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   std::cout << "-->" << _rcs->getNbPlayer() << std::endl;
   this->randomize();
   this->equalize();
-  // check aucun endroit inaccessible
   this->spawnize();
 }
 
@@ -40,8 +39,17 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 5 || this->_width < 5)
     throw new Exception::InvalidDimensions("Map Constructor");
-  //std::cout << "-->" << _rcs->getNbPlayer() << std::endl;
-  // check aucun endroit inaccessible
+}
+
+void	Map::generateForm(unsigned int x, unsigned int y)
+{
+  IObject*	obj;
+
+  if (my_random(1, 4) == 1)
+    obj = this->_rcs->getObject(IObject::DESTROYABLEWALL);
+  else
+    obj = this->_rcs->getObject(IObject::WALL);
+  this->setCellValue(x, y, obj);
 }
 
 void	Map::randomize()
@@ -54,35 +62,80 @@ void	Map::randomize()
       x = 0;
       while (x < this->_width)
 	{
-	  if (y == 0 || y == (this->_height - 1)
-	      || x == 0 || x == (this->_width - 1)
-	      || my_random(1, 10) > this->_difficulty)
-	    this->setCellValue(x, y, this->_rcs->getObject(IObject::DESTROYABLEWALL));
+	  if (my_random(2, 10) > this->_difficulty)
+	    this->setCellValue(x, y, this->_rcs->getObject(IObject::EMPTY));
 	  else
-	    this->setCellValue(x, y, this->_rcs->getObject(IObject::WALL));
+	    this->setCellValue(x, y, this->_rcs->getObject(IObject::DESTROYABLEWALL));
 	  ++x;
 	}
       ++y;
     }
+  y = 2;
+  while (y < this->_height - 2)
+    {
+      x = 2;
+      while (x < this->_width - 2)
+  	{
+  	  if ((my_random(10, 100) + 5) / 10 > this->_difficulty)
+  	    this->setCellValue(x, y, this->_rcs->getObject(IObject::DESTROYABLEWALL));
+  	  else
+  	    {
+  	      this->setCellValue(x, y, this->_rcs->getObject(IObject::WALL));
+	      this->generateForm(x + ((my_random(0, 1) == 1) ? (1) : (-1)), y);
+	      this->generateForm(x, y + ((my_random(0, 1) == 1) ? (1) : (-1)));
+  	      ++x;
+  	    }
+  	  x = x + 2;
+  	}
+      y = y + 2;
+    }
 }
 
-bool	Map::checkDensity(unsigned int x, unsigned int y)
+bool	Map::addNoBlocking(unsigned int x, unsigned int y)
 {
   unsigned int	posx;
   unsigned int	posy = 0;
-  unsigned int	i = 0;
+  unsigned int	maxX = 0;
+  unsigned int	maxY = 0;
 
-  while (posy < 3)
+  if (x > this->_width - 1 || y > this->_height - 1)
+    return (false);
+  maxX = ((x > this->_width - 2) || (x == 0));
+  maxY = ((y > this->_height - 2) || (y == 0));
+  x = x - (x != 0);
+  y = y - (y != 0);
+  while (posy < 3 - maxY)
     {
       posx = 0;
-      while (posx < 3)
+      while (posx < 3 - maxX)
 	{
-	  i += (this->getCellValue(x + posx, y  + posy)->getObjectType() == IObject::WALL);
+	  if (this->getCellValue(x + posx, y  + posy)->getObjectType() == IObject::WALL)
+	    return (false);
 	  ++posx;
 	}
       ++posy;
     }
-  return (!i);
+  this->setCellValue(x + 1, y + 1, this->_rcs->getObject(IObject::WALL));
+  return (true);
+}
+
+bool	Map::checkDensity(unsigned int x, unsigned int y, unsigned int radius)
+{
+  unsigned int	posx;
+  unsigned int	posy = 0;
+
+  while (posy < radius)
+    {
+      posx = 0;
+      while (posx < radius)
+	{
+	  if (this->getCellValue(x + posx, y  + posy)->getObjectType() == IObject::WALL)
+	    return (false);
+	  ++posx;
+	}
+      ++posy;
+    }
+  return (true);
 }
 
 void	Map::equalize()
@@ -90,17 +143,18 @@ void	Map::equalize()
   unsigned int	x;
   unsigned int	y = 0;
   unsigned int	radius;
+  bool		check;
 
   switch(this->_difficulty)
     {
     case EASY:
-      radius = 5;
-      break;
-    case MEDIUM:
       radius = 4;
       break;
-    case DIFFICULT:
+    case MEDIUM:
       radius = 3;
+      break;
+    case DIFFICULT:
+      radius = 2;
       break;
     }
   while (y < this->_height)
@@ -108,12 +162,16 @@ void	Map::equalize()
       x = 0;
       while (x < this->_width)
 	{
-	  if ((x + radius) < this->_width && (y + radius) < this->_height
-	      && this->checkDensity(x, y))
+	  if (((x + radius - 1) < this->_width) && ((y + radius - 1) < this->_height)
+	      && this->checkDensity(x, y, radius))
 	    {
-	      this->setCellValue(x, y, this->_rcs->getObject(IObject::WALL));
-	      this->setCellValue(x + radius, y + radius, this->_rcs->getObject(IObject::WALL));
-	      x = x + radius;
+	      if (!(check = this->addNoBlocking(x, y)))
+		check = ((check == true) ? (true) : (this->addNoBlocking(x, y + radius - 1)));
+	      if (!(check = ((check == true) ? (true) : (this->addNoBlocking(x + radius - 1,
+									     y + radius - 1)))))
+		check = ((check == true) ? (true) : (this->addNoBlocking(x + radius - 1, y)));
+	      if (!check)
+		check = this->addNoBlocking(x + radius / 2, y + radius / 2);
 	    }
 	  ++x;
 	}
@@ -123,24 +181,54 @@ void	Map::equalize()
 
 void	Map::spawnize()
 {
-  unsigned int	x;
-  unsigned int	y;
-  unsigned int	numJoueur = 0;
-  unsigned int	playerspace = this->_width * this->_height / this->_nbJoueurs;
-  unsigned int	pos;
+  this->setCellValue(0, 0, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue(0 + (((0 > 0 && my_random(0, 1)) || 0 == _width - 1) ? (-1) : (1)), 0,
+		     this->_rcs->getObject(IObject::EMPTY));
+  this->setCellValue(0, 0 + (((0 > 0 && my_random(0, 1)) || 0 == _height - 1) ? (-1) : (1)),
+		     this->_rcs->getObject(IObject::EMPTY));
 
-  while (numJoueur < this->_nbJoueurs)
-    {
-      pos = numJoueur * playerspace + playerspace / 2;
-      x = pos % this->_width;
-      y = pos / this->_width;
-      this->setCellValue(x, y, this->_rcs->getObject(IObject::SPAWN));
-      this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
-			 this->_rcs->getObject(IObject::EMPTY));
-      this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
-			 this->_rcs->getObject(IObject::EMPTY));
-      ++numJoueur;
-    }
+  this->setCellValue(this->_width - 1, this->_height - 1, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue(this->_width - 1 + (((this->_width - 1 > 0 && my_random(0, 1)) || this->_width - 1 == _width - 1) ? (-1) : (1)), this->_height - 1,
+  		     this->_rcs->getObject(IObject::EMPTY));
+  this->setCellValue(this->_width - 1, this->_height - 1 + (((this->_height - 1 > 0 && my_random(0, 1)) || this->_height - 1 == _height - 1) ? (-1) : (1)),
+  		     this->_rcs->getObject(IObject::EMPTY));
+
+  this->setCellValue(0, this->_height - 1, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue(0 + (((0 > 0 && my_random(0, 1)) || 0 == _width - 1) ? (-1) : (1)), this->_height - 1,
+		     this->_rcs->getObject(IObject::EMPTY));
+  this->setCellValue(0, this->_height - 1 + (((this->_height - 1 > 0 && my_random(0, 1)) || this->_height - 1 == _height - 1) ? (-1) : (1)),
+		     this->_rcs->getObject(IObject::EMPTY));
+
+  this->setCellValue(this->_width - 1, 0, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue(this->_width - 1 + (((this->_width - 1 > 0 && my_random(0, 1)) || this->_width - 1 == _width - 1) ? (-1) : (1)), 0,
+  		     this->_rcs->getObject(IObject::EMPTY));
+  this->setCellValue(this->_width - 1, 0 + (((0 > 0 && my_random(0, 1)) || 0 == _height - 1) ? (-1) : (1)),
+  		     this->_rcs->getObject(IObject::EMPTY));
+
+  this->setCellValue((this->_width - 1) / 2, (this->_height - 1) / 2, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue((this->_width - 1) / 2 + (((this->_width - 1 > 0 && my_random(0, 1)) || this->_width - 1 == _width - 1) ? (-1) : (1)), (this->_height - 1) / 2,
+  		     this->_rcs->getObject(IObject::EMPTY));
+  this->setCellValue((this->_width - 1) / 2, (this->_height - 1) / 2 + (((this->_height - 1 > 0 && my_random(0, 1)) || this->_height - 1 == _height - 1) ? (-1) : (1)),
+  		     this->_rcs->getObject(IObject::EMPTY));
+
+  // unsigned int	x;
+  // unsigned int	y;
+  // unsigned int	numJoueur = 0;
+  // unsigned int	playerspace = this->_width * this->_height / this->_nbJoueurs;
+  // unsigned int	pos;
+
+  // while (numJoueur < this->_nbJoueurs)
+  //   {
+  //     pos = numJoueur * playerspace + playerspace / 2;
+  //     x = pos % this->_width;
+  //     y = pos / this->_width;
+  //     this->setCellValue(x, y, this->_rcs->getObject(IObject::SPAWN));
+  //     this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
+  // 			 this->_rcs->getObject(IObject::EMPTY));
+  //     this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
+  // 			 this->_rcs->getObject(IObject::EMPTY));
+  //     ++numJoueur;
+  //   }
 }
 
 
@@ -179,23 +267,20 @@ void		Map::killPlayers(unsigned int x, unsigned int y)
 
 void		Map::checkBombsOnMap()
 {
-  BombTimer	*bomb;
-
-  for (unsigned int y = 0; y < getHeight(); ++y)
+  for (std::list<BombTimer*>::iterator it = _bombs.begin(); it != _bombs.end(); it++)
     {
-      for (unsigned int x = 0; x < getWidth(); ++x)
-	{
-	  if (getCellValue(x, y)->getObjectType() == IObject::BOMB)
-	    {
-	      bomb = dynamic_cast<BombTimer*>(getCellValue(x, y));
-	      if (bomb->finish(x, y, this))
-		{
-		  killObject(x, y);
-		  delete bomb;
-		}
-	    }
-	}
+      if ((*it)->finish((*it)->getX(), (*it)->getY(), this))
+  	{
+  	  killObject((*it)->getX(), (*it)->getY());
+  	  delete *it;
+  	  it = _bombs.erase(it);
+  	}
     }
+}
+
+void		Map::addBomb(BombTimer *bomb)
+{
+  _bombs.push_back(bomb);
 }
 
 unsigned int		Map::getNumberPlayers() const

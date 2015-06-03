@@ -27,9 +27,10 @@ public:
   virtual IBomb::Type	getBombType() const;
 
 public:
-  virtual void			explose(unsigned int, unsigned int, Map *) const;
+  virtual void		explose(int, int, Map *, unsigned int) const;
   virtual IBomb*	clone() const;
   virtual std::string	getClassName() const;
+
 public:
   virtual IObject::Type	getObjectType() const;
   virtual bool		isNull() const;

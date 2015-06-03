@@ -13,7 +13,7 @@ class BombTimer
   : public IObject, public Timer
 {
 public:
-  BombTimer(IObject *, unsigned int, IBomb *);
+  BombTimer(Player *, unsigned int, IBomb *);
   virtual ~BombTimer();
 
 private:
@@ -22,14 +22,22 @@ private:
 
 public:
   unsigned int	getRange() const;
-  IObject*	getPlayer() const;
+  Player*	getPlayer() const;
   IBomb*	getBombType() const;
   bool		finish(unsigned int x, unsigned int y, Map *map);
 
 private:
-  IObject*	_player;
+  Player*	_player;
   unsigned int	_range;
   IBomb*	_bomb;
+
+public:
+  unsigned int	getX() const;
+  unsigned int	getY() const;
+
+private:
+  unsigned int	_x;
+  unsigned int	_y;
 
 public:
   IObject::Type	getObjectType() const;
