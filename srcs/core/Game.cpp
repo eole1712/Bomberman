@@ -126,11 +126,11 @@ bool		Game::update()
   glm::vec3	move;
   static int	change = 0;
   Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
+
   movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
-
   static bool	space = false;
   if (_input.getKey(SDLK_SPACE))
     {

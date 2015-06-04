@@ -39,6 +39,13 @@ private:
   unsigned int	_y;
 
 public:
+  IObject*	getBuff() const;
+  void		setBuff(IObject*);
+
+private:
+  IObject*	_buff;
+
+public:
   IObject::Type	getObjectType() const;
   bool		isNull() const;
 

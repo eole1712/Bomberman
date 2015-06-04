@@ -341,8 +341,11 @@ void		Map::checkBombsOnMap()
     {
       if ((*it)->isFinished())
   	{
-	  killObject((*it)->getX(), (*it)->getY());
-  	  delete *it;
+	  if (getCellValue((*it)->getX(), (*it)->getY()) == (*it))
+	    killObject((*it)->getX(), (*it)->getY());
+	  if ((*it)->getBuff() != NULL)
+	    setCellValue((*it)->getX(), (*it)->getY(), (*it)->getBuff());
+  	  delete (*it);
   	  it = _firebox.erase(it);
   	}
     }
@@ -359,10 +362,15 @@ void		Map::addBomb(BombTimer *bomb)
 
 void		Map::addFire(Player *player, unsigned int x, unsigned int y)
 {
-  Fire		*fire = new Fire(player, x, y);
+  if (getCellValue(x, y)->getObjectType() != IObject::FIRE)
+    {
+      Fire		*fire = new Fire(player, x, y);
 
-  setCellValue(x, y, fire);
-  _firebox.push_back(fire);
+      if (getCellValue(x, y)->getObjectType() == IObject::BONUS)
+	fire->setBuff(getCellValue(x, y));
+      setCellValue(x, y, fire);
+      _firebox.push_back(fire);
+    }
 }
 
 unsigned int		Map::getNumberPlayers() const

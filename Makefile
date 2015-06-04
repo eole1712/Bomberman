@@ -37,6 +37,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffIncBomb.cpp	\
 		  BuffIncSpeed.cpp	\
 		  BuffNoBomb.cpp	\
+		  BuffWeapon.cpp	\
 		  BuffParalyzed.cpp	\
 		  BuffShield.cpp	\
 		  BuffIncRange.cpp	\

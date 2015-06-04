@@ -392,12 +392,12 @@ bool			Player::tryToKill()
   if (isAlive())
     {
       if (canAbsorb())
-	decShield();
+  	decShield();
       else
-	{
-	  _isAlive = false;
-	  return true;
-	}
+  	{
+  	  _isAlive = false;
+  	  return true;
+  	}
       return false;
     }
   return true;
