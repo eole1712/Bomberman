@@ -29,7 +29,7 @@ namespace Bomberman
 
 Game::Game()
   : _width(20), _height(20), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri",}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
   Player	*player;
@@ -43,7 +43,7 @@ Game::Game()
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4", "5","6","7","8","9","10","11","12","13"}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
 
