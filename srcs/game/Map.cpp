@@ -357,8 +357,11 @@ void		Map::addBomb(BombTimer *bomb)
   _bombs.push_back(bomb);
 }
 
-void		Map::addFire(Fire *fire)
+void		Map::addFire(Player *player, unsigned int x, unsigned int y)
 {
+  Fire		*fire = new Fire(player, x, y);
+
+  setCellValue(x, y, fire);
   _firebox.push_back(fire);
 }
 
