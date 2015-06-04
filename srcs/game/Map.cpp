@@ -276,20 +276,16 @@ void	Map::spawnize()
 {
   unsigned int	save = this->_nbJoueurs;
 
-  std::cout << this->_nbJoueurs << std::endl;
   if (this->_nbJoueurs > 4)
     {
       this->addSpawn(this->_width / 2, this->_height / 2);
       --this->_nbJoueurs;
     }
-  std::cout << this->_nbJoueurs << std::endl;
   this->drawSquare(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
   this->_nbJoueurs -= ((save > 4) ? (4) : (save));
-  std::cout << this->_nbJoueurs << std::endl;
   save = this->_nbJoueurs;
   this->drawLosange(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
   this->_nbJoueurs -= ((save > 4) ? (4) : (save));
-  std::cout << this->_nbJoueurs << std::endl;
   this->drawSquare(this->_width / 2 - this->_width / 4,
 		   this->_height / 2 - this->_height / 4,
 		   this->_nbJoueurs);
