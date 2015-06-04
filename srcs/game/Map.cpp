@@ -276,20 +276,16 @@ void	Map::spawnize()
 {
   unsigned int	save = this->_nbJoueurs;
 
-  std::cout << this->_nbJoueurs << std::endl;
   if (this->_nbJoueurs > 4)
     {
       this->addSpawn(this->_width / 2, this->_height / 2);
       --this->_nbJoueurs;
     }
-  std::cout << this->_nbJoueurs << std::endl;
   this->drawSquare(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
   this->_nbJoueurs -= ((save > 4) ? (4) : (save));
-  std::cout << this->_nbJoueurs << std::endl;
   save = this->_nbJoueurs;
   this->drawLosange(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
   this->_nbJoueurs -= ((save > 4) ? (4) : (save));
-  std::cout << this->_nbJoueurs << std::endl;
   this->drawSquare(this->_width / 2 - this->_width / 4,
 		   this->_height / 2 - this->_height / 4,
 		   this->_nbJoueurs);
@@ -335,16 +331,35 @@ void		Map::checkBombsOnMap()
     {
       if ((*it)->finish((*it)->getX(), (*it)->getY(), this))
   	{
-  	  killObject((*it)->getX(), (*it)->getY());
+	  if (getCellValue((*it)->getX(), (*it)->getY()) == (*it))
+	    killObject((*it)->getX(), (*it)->getY());
   	  delete *it;
   	  it = _bombs.erase(it);
   	}
+    }
+  for (std::list<Fire*>::iterator it = _firebox.begin(); it != _firebox.end(); it++)
+    {
+      if ((*it)->isFinished())
+  	{
+	  killObject((*it)->getX(), (*it)->getY());
+  	  delete *it;
+  	  it = _firebox.erase(it);
+  	}
+      else
+	{
+	  killPlayers((*it)->getX(), (*it)->getY());
+	}
     }
 }
 
 void		Map::addBomb(BombTimer *bomb)
 {
   _bombs.push_back(bomb);
+}
+
+void		Map::addFire(Fire *fire)
+{
+  _firebox.push_back(fire);
 }
 
 unsigned int		Map::getNumberPlayers() const

@@ -110,6 +110,7 @@ bool				Game::initialize()
   _ObjectToAsset[IObject::DESTROYABLEWALL] = DST_BLOCK;
   _ObjectToAsset[IObject::SPAWN] = FLOOR;
   _ObjectToAsset[IObject::EMPTY] = FLOOR;
+  _ObjectToAsset[IObject::FIRE] = FIRE;
   _shader.bind();
   return true;
 }

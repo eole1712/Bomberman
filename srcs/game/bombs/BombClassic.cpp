@@ -32,9 +32,10 @@ bool		Classic::isNull() const
   return false;
 }
 
-void		Classic::explose(int x, int y, Map *map, unsigned int range) const
+void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *player) const
 {
-  std::cout << "0" << std::endl;
+  Fire		*fire;
+
   for (struct {int i; unsigned int r;} s = {x, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
       if (map->getCellValue(s.i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -45,8 +46,10 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	  break;
 	}
       map->killPlayers(s.i, y);
+      fire = new Fire(player, s.i, y);
+      map->setCellValue(s.i, y, fire);
+      map->addFire(fire);
     }
-  std::cout << "1" << std::endl;
   for (unsigned int i = x, r = 0; i < map->getWidth() && r < range; ++i, ++r)
     {
       if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -57,8 +60,10 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	  break;
 	}
       map->killPlayers(i, y);
+      fire = new Fire(player, i, y);
+      map->setCellValue(i, y, fire);
+      map->addFire(fire);
     }
-  std::cout << "2" << std::endl;
   for (struct {int i; unsigned int r; } s = {y, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
       if (map->getCellValue(x, s.i)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -69,8 +74,10 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	  break;
 	}
       map->killPlayers(x, s.i);
+      fire = new Fire(player, x, s.i);
+      map->setCellValue(x, s.i, fire);
+      map->addFire(fire);
     }
-  std::cout << "3" << std::endl;
   for (unsigned int i = y, r = 0; i < map->getHeight() && r < range; ++i, ++r)
     {
       if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
@@ -81,8 +88,10 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range) const
 	  break;
 	}
       map->killPlayers(x, i);
+      fire = new Fire(player, x, i);
+      map->setCellValue(x, i, fire);
+      map->addFire(fire);
     }
-  std::cout << "4" << std::endl;
 }
 
 IBomb*		Classic::clone() const

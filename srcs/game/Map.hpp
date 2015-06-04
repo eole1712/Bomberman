@@ -6,6 +6,7 @@
 # include "IObject.hpp"
 # include "RessourceStock.hpp"
 # include "BombTimer.hpp"
+# include "Fire.hpp"
 
 namespace Bomberman
 {
@@ -52,7 +53,7 @@ public:
   void		killPlayers(unsigned int x, unsigned int y);
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
-
+  void		addFire(Fire*);
 
 private:
   std::string		_name;
@@ -60,6 +61,7 @@ private:
   e_difficulty		_difficulty;
   RessourceStock*	_rcs;
   std::list<BombTimer*>	_bombs;
+  std::list<Fire*>	_firebox;
 };
 
 }
