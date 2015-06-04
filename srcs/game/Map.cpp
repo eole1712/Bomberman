@@ -17,9 +17,9 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_width * this->_height / this->_nbJoueurs < 4)
+      || this->_nbJoueurs > this->_width * this->_height / 17)
     throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 5 || this->_width < 5)
+  if (this->_height < 6 || this->_width < 6)
     throw new Exception::InvalidDimensions("Map Constructor");
   std::cout << "-->" << _rcs->getNbPlayer() << std::endl;
   this->randomize();
@@ -35,7 +35,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_width * this->_height / this->_nbJoueurs < 4)
+      || this->_nbJoueurs > this->_width * this->_height / 17)
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 5 || this->_width < 5)
     throw new Exception::InvalidDimensions("Map Constructor");
