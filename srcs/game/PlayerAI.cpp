@@ -7,7 +7,7 @@ namespace Bomberman
   /*
   ** Constructor/Destructor
   */
-  PlayerAI::PlayerAI(std::string const& name, std::string const& script)
+  PlayerAI::PlayerAI(std::string const& name, std::string const& script) :
     Player() /* tmp */, LuaScript(script), _aiAction(NULL)
   {
     luaObjectInit();
@@ -49,15 +49,15 @@ namespace Bomberman
   {
     getGlobalNamespace(_state)
       .beginClass<Player>("Player")
-      .addConstructor<void (*)(void)>
-      .addProperty("isAlive", &PlayerAI::isAlive, NULL)
-      .addProperty("isParalyzed", &PlayerAI::isParalyzed, NULL)
-      .addProperty("isZeroBomb", &PlayerAI::zeroBomb, NULL)
-      .addProperty("range", &PlayerAI::getRange, NULL)
-      .addProperty("speed", &PlayerAI::getSpeed, NULL)
-      .addProperty("nbBomb", &PlayerAI::getNbBomb, NULL)
-      .addProperty("bombType", &PlayerAI::getBombType, NULL)
-      .addFunction("putBomb", &PlayerAI::putBomb()) /* + move + rotate ? */
+      .addConstructor<void (*)(void)>()
+      .addProperty("isAlive", &PlayerAI::isAlive)
+      .addProperty("isParalyzed", &PlayerAI::isParalyzed)
+      .addProperty("isZeroBomb", &PlayerAI::zeroBomb)
+      .addProperty("range", &PlayerAI::getRange)
+      .addProperty("speed", &PlayerAI::getSpeed)
+      .addProperty("nbBomb", &PlayerAI::getNbBomb)
+      .addProperty("bombType", &PlayerAI::getBombType)
+      .addFunction("putBomb", &PlayerAI::putBomb) /* + move + rotate ? */
       .endClass();
   }
 

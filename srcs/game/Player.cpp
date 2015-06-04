@@ -167,6 +167,11 @@ void			Player::resetShield()
 
 // bomb methods
 
+  unsigned int		Player::getNbBomb() const
+  {
+    return _bomb;
+  }
+
 void			Player::incBomb()
 {
   _bomb++;

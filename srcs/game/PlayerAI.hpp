@@ -26,6 +26,7 @@ namespace Bomberman
 
   protected:
     void		luaObjectInit();
+    void		loadAIData();
 
   protected:
     std::string		_aiName;
