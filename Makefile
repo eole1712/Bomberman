@@ -1,4 +1,4 @@
-CC		= clang++
+CC		= g++
 
 NAME		= bomberman
 
@@ -67,7 +67,7 @@ CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
 CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson
 
-LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -ldl -lrt -lfbxsdk -lSDL2
+LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL2 -ldl
 
 all: $(NAME)
 
