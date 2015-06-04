@@ -7,7 +7,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
-#include "glm/gtx/string_cast.hpp"
 #include "Game.hh"
 #include "Clock.hh"
 #include "Input.hh"
@@ -122,15 +121,15 @@ void		Game::attachObject(Asset3d *obj)
 
 bool		Game::update()
 {
-  float		movefactor;
   glm::vec3	move;
   static int	change = 0;
   Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
+  float		elsapsedTime = static_cast<float>(_clock.getElapsed()) * 60;
 
-  movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
+
   static bool	space = false;
   if (_input.getKey(SDLK_SPACE))
     {
@@ -148,10 +147,10 @@ bool		Game::update()
 	  _assets[PLAYER]->setCurrentSubAnim("run", true);
 	}
       change = 1;
-
-      move = (_input.getKey(SDLK_UP)) ? glm::vec3(0, 0, 0.06) : glm::vec3(0, 0, -0.06);
-      move = glm::rotate(move, player->getRotation().y, glm::vec3(0, 1, 0)) * movefactor;
-      player->move(move);
+      if (_input.getKey(SDLK_UP))
+	player->move(player->getRotation().y, elsapsedTime);
+      else
+	player->move(180 + player->getRotation().y, elsapsedTime);
       _camera.setRotation(player->getPosition());
       _camera.updateView();
     }
@@ -161,10 +160,8 @@ bool		Game::update()
       _assets[PLAYER]->setCurrentSubAnim("end", false);
       // _assets[PLAYER]->setCurrentSubAnim("end2", true);
     }
-  if (_input.getKey(SDLK_LEFT))
-    player->Player::rotate(glm::vec3(0, 1, 0), 3 * movefactor);
-  else if (_input.getKey(SDLK_RIGHT))
-    player->Player::rotate(glm::vec3(0, 1, 0), -3 * movefactor);
+  if (_input.getKey(SDLK_RIGHT) || _input.getKey(SDLK_LEFT))
+    player->Player::rotate(_input.getKey(SDLK_LEFT), elsapsedTime);
   _map.checkBombsOnMap();
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),

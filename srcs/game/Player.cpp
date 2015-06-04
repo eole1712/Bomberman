@@ -6,6 +6,9 @@
 #include "Map.hpp"
 #include "BombTimer.hpp"
 #include "glm/glm.hpp"
+#include "glm/ext.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "my_random.hpp"
 
 namespace Bomberman
@@ -311,13 +314,17 @@ void			Player::setY(float y)
   setPosition(glm::vec3(getPosition().x, 0, y));
 }
 
-void			Player::move(glm::vec3 pos)
+void			Player::move(float const & direction, float const & elsapsedTime)
 {
+  glm::vec3		pos;
   glm::vec3		npos;
   IObject::Type		type;
+  float			speedbra;
 
   if (!isAlive() || isParalyzed())
-    return;
+    return ;
+  speedbra = _speed * elsapsedTime;
+  pos = glm::rotate(glm::vec3(0, 0, 0.06), direction, glm::vec3(0, 1, 0)) * speedbra;
   npos = getPosition() + pos;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
@@ -342,11 +349,15 @@ void			Player::move(glm::vec3 pos)
     }
 }
 
-void			Player::rotate(const glm::vec3 &axis, float angle)
+void			Player::rotate(bool const & direction,
+				       float const & elsapsedTime)
 {
   if (!isAlive() || isParalyzed())
     return;
-  Object3d::rotate(axis, angle);
+  if (direction)
+    Object3d::rotate(glm::vec3(0, 1, 0), 3 * elsapsedTime * _speed);
+  else
+    Object3d::rotate(glm::vec3(0, 1, 0), -3 * elsapsedTime * _speed);
 }
 
 //attacks

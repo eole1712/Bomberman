@@ -116,8 +116,10 @@ protected:
   void			setY(float);
 
 public:
-  void			move(glm::vec3 pos);
-  void			rotate(const glm::vec3 &axis, float angle);
+  void			move(float const & direction, float const & elsapsedTime);
+  void			rotate(bool const & direction,
+			       float const & elsapsedTime);
+
 
 public:
   void			setBombType(IBomb::Type);
