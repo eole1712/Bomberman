@@ -43,6 +43,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 		  IBuff.cpp		\
 
 BOMBSRCS	= BombClassic.cpp	\
+		  BombVirus.cpp		\
 		  IBomb.cpp		\
 		  BombFactory.cpp	\
 

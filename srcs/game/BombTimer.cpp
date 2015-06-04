@@ -10,6 +10,12 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
   start();
 }
 
+BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time, unsigned int x, unsigned int y)
+  : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y)
+{
+  start();
+}
+
 BombTimer::~BombTimer()
 {
 

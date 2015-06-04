@@ -17,7 +17,8 @@ class IBuff : public IClonable<IBuff>, public IObject
 	INC_RANGE,
 	NO_BOMB,
 	PARALYZED,
-	SHIELD
+	SHIELD,
+	WEAPON
       };
 
   public:

@@ -6,6 +6,7 @@
 #include "Map.hpp"
 #include "BombTimer.hpp"
 #include "glm/glm.hpp"
+#include "my_random.hpp"
 
 namespace Bomberman
 {
@@ -25,6 +26,7 @@ Player::Player(std::string const &name, glm::vec4 color)
   _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
   _buffOn[IBuff::PARALYZED] = &Player::paralyze;
   _buffOn[IBuff::SHIELD] = &Player::incShield;
+  _buffOn[IBuff::WEAPON] = &Player::randWeapon;
 
   _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
   _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
@@ -33,10 +35,11 @@ Player::Player(std::string const &name, glm::vec4 color)
   _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
   _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
   _buffOff[IBuff::SHIELD] = &Player::decShield;
+  _buffOff[IBuff::WEAPON] = &Player::randWeapon;
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _color(glm::vec4(1))
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -45,6 +48,7 @@ Player::Player()
   _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
   _buffOn[IBuff::PARALYZED] = &Player::paralyze;
   _buffOn[IBuff::SHIELD] = &Player::incShield;
+  _buffOn[IBuff::WEAPON] = &Player::randWeapon;
 
   _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
   _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
@@ -53,6 +57,7 @@ Player::Player()
   _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
   _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
   _buffOff[IBuff::SHIELD] = &Player::decShield;
+  _buffOff[IBuff::WEAPON] = &Player::randWeapon;
 }
 
 Player::~Player()
@@ -196,15 +201,22 @@ void			Player::unparalyze()
   _isParalyzed = false;
 }
 
+void			Player::randWeapon()
+{
+  setBombType((IBomb::Type)(my_random(0, IBomb::nbBomb)));
+}
+
 // buff methods
 void			Player::addBuff(IBuff *n)
 {
-  BuffTimer		*buff = new BuffTimer(n);
-
-
   (this->*_buffOn[n->getBuffType()])();
-  _buff.push_back(buff);
-  buff->start();
+  if (n->getDuration() != IBuff::infinite)
+    {
+      BuffTimer		*buff = new BuffTimer(n);
+
+      _buff.push_back(buff);
+      buff->start();
+    }
 }
 
 void			Player::addTimedBuff(Bomberman::BuffTimer *buff)
@@ -360,6 +372,20 @@ void			Player::putBomb()
       decBomb();
     }
 }
+
+void			Player::putTimedBomb(unsigned int x, unsigned int y)
+{
+  if (_map)
+    {
+      IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(IBomb::CLASSIC));
+      BombTimer	*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
+
+      _map->addBomb(bombT);
+      _map->setCellValue(x, y, bombT);
+      decBomb();
+    }
+}
+
 
 bool			Player::tryToKill()
 {

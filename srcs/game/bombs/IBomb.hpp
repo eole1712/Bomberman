@@ -15,7 +15,8 @@ class IBomb : public IClonable<IBomb>, public IObject
 public:
   enum Type
     {
-      CLASSIC = 0
+      CLASSIC = 0,
+      VIRUS
     };
 
 public:

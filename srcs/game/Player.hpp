@@ -100,8 +100,8 @@ public:
 
 private:
   std::list<BuffTimer*>	_buff;
-  Buff_exec		_buffOn[7];
-  Buff_exec		_buffOff[7];
+  Buff_exec		_buffOn[8];
+  Buff_exec		_buffOff[8];
 
 public:
   void			initGame(unsigned int, unsigned int, Map*);
@@ -123,7 +123,9 @@ public:
   void			setBombType(IBomb::Type);
   IBomb::Type		getBombType() const;
   void			putBomb();
+  void			putTimedBomb(unsigned int, unsigned int);
   bool			tryToKill();
+  void			randWeapon();
 
 private:
   IBomb::Type		_bombType;
