@@ -124,6 +124,9 @@ void						JSONDoc::serialize<Bomberman::Player>(const Bomberman::Player &obj)
   player.AddMember("name", obj.getName().c_str(), _doc.GetAllocator());
   player.AddMember("xPos", obj.getfX(), _doc.GetAllocator());
   player.AddMember("yPos", obj.getfY(), _doc.GetAllocator());
+  player.AddMember("red", obj.getColor()[0], _doc.GetAllocator());
+  player.AddMember("green", obj.getColor()[1], _doc.GetAllocator());
+  player.AddMember("blue", obj.getColor()[2], _doc.GetAllocator());
   if (!buffList.empty())
     {
       rapidjson::Value buffArray(rapidjson::kArrayType);
@@ -154,12 +157,12 @@ Bomberman::Player*				JSONDoc::unserialize<Bomberman::Player*>(std::string const
 	  {
 	    std::cout << "Name ok" << std::endl;
 	    try {
-	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString(), glm::vec4(1));
+	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString(), glm::vec4(player["red"].GetDouble(),
+												   player["green"].GetDouble(), player["blue"].GetDouble(), 0));
 	      ret->setPosition(glm::vec3(player["xPos"].GetDouble(), 0, player["yPos"].GetDouble()));
 	      SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
 	      std::for_each(player["buffs"].Begin(), player["buffs"].End(), [&ret, &fac] (rapidjson::Value const& obj) {
 		Bomberman::IBuff* buff = fac->generate(obj["type"].GetString());
-
 		if (buff->getDuration() != Bomberman::IBuff::infinite)
 		  ret->addTimedBuff(new Bomberman::BuffTimer(buff, obj["time"].GetUint()));
 		else
