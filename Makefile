@@ -47,6 +47,7 @@ BOMBSRCS	= BombClassic.cpp	\
 
 MISCSRCS	= Timer.cpp		\
 		  my_random.cpp		\
+		  StringConversion.cpp	\
 
 EXCEPTSRCS	= ResourceUnavailable.cpp	\
 		  LuaError.cpp			\
