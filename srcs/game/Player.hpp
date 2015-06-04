@@ -82,6 +82,7 @@ public:
   void			resetBomb();
   void			enableAttack();
   void			disableAttack();
+  unsigned int		getNbBomb() const;
 
 private:
   unsigned int		_bomb;
@@ -119,7 +120,6 @@ public:
   void			move(float const & direction, float const & elsapsedTime);
   void			rotate(bool const & direction,
 			       float const & elsapsedTime);
-
 
 public:
   void			setBombType(IBomb::Type);

@@ -177,7 +177,7 @@ bool		Game::update()
   //  ai->move(glm::vec3(5, 5, 5) * movefactor);
   //ai->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
   // end ia
-
+  //  ai->move(90, elsapsedTime); //
   _camera.updateView();
   // Update inputs an clock
   _context.updateClock(_clock);
