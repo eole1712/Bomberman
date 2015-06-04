@@ -331,16 +331,35 @@ void		Map::checkBombsOnMap()
     {
       if ((*it)->finish((*it)->getX(), (*it)->getY(), this))
   	{
-  	  killObject((*it)->getX(), (*it)->getY());
+	  if (getCellValue((*it)->getX(), (*it)->getY()) == (*it))
+	    killObject((*it)->getX(), (*it)->getY());
   	  delete *it;
   	  it = _bombs.erase(it);
   	}
+    }
+  for (std::list<Fire*>::iterator it = _firebox.begin(); it != _firebox.end(); it++)
+    {
+      if ((*it)->isFinished())
+  	{
+	  killObject((*it)->getX(), (*it)->getY());
+  	  delete *it;
+  	  it = _firebox.erase(it);
+  	}
+      else
+	{
+	  killPlayers((*it)->getX(), (*it)->getY());
+	}
     }
 }
 
 void		Map::addBomb(BombTimer *bomb)
 {
   _bombs.push_back(bomb);
+}
+
+void		Map::addFire(Fire *fire)
+{
+  _firebox.push_back(fire);
 }
 
 unsigned int		Map::getNumberPlayers() const

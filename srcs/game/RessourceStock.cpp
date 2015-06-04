@@ -40,6 +40,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _objects[IObject::DESTROYABLEWALL] = new DestroyableWall;
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
+  _objects[IObject::FIRE] = NULL;
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)

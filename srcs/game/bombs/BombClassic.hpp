@@ -27,7 +27,7 @@ public:
   virtual IBomb::Type	getBombType() const;
 
 public:
-  virtual void		explose(int, int, Map *, unsigned int) const;
+  virtual void		explose(int, int, Map *, unsigned int, Player*) const;
   virtual IBomb*	clone() const;
   virtual std::string	getClassName() const;
 

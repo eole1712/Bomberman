@@ -15,7 +15,8 @@ public:
       WALL,
       DESTROYABLEWALL,
       SPAWN,
-      EMPTY
+      EMPTY,
+      FIRE
     };
 
 public:
