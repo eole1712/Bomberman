@@ -6,12 +6,16 @@
 #include "Map.hpp"
 #include "BombTimer.hpp"
 #include "glm/glm.hpp"
+#include "glm/ext.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
+#include "my_random.hpp"
 
 namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 0;
+unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 
@@ -25,18 +29,20 @@ Player::Player(std::string const &name, glm::vec4 color)
   _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
   _buffOn[IBuff::PARALYZED] = &Player::paralyze;
   _buffOn[IBuff::SHIELD] = &Player::incShield;
+  _buffOn[IBuff::WEAPON] = &Player::randWeapon;
 
   _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
   _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
   _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
-  _buffOn[IBuff::INC_RANGE] = &Player::decRange;
+  _buffOff[IBuff::INC_RANGE] = &Player::decRange;
   _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
   _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
   _buffOff[IBuff::SHIELD] = &Player::decShield;
+  _buffOff[IBuff::WEAPON] = &Player::randWeapon;
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _color(glm::vec4(1))
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -45,14 +51,16 @@ Player::Player()
   _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
   _buffOn[IBuff::PARALYZED] = &Player::paralyze;
   _buffOn[IBuff::SHIELD] = &Player::incShield;
+  _buffOn[IBuff::WEAPON] = &Player::randWeapon;
 
   _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
   _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
   _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
-  _buffOn[IBuff::INC_RANGE] = &Player::decRange;
+  _buffOff[IBuff::INC_RANGE] = &Player::decRange;
   _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
   _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
   _buffOff[IBuff::SHIELD] = &Player::decShield;
+  _buffOff[IBuff::WEAPON] = &Player::randWeapon;
 }
 
 Player::~Player()
@@ -112,6 +120,7 @@ void			Player::incRange()
 
 void			Player::decRange()
 {
+  if (_range > 2)
   _range--;
 }
 
@@ -129,7 +138,8 @@ void			Player::incSpeed()
 
 void			Player::decSpeed()
 {
-  _speed--;
+  if (_speed > 1)
+    _speed--;
 }
 
 void			Player::resetSpeed()
@@ -146,7 +156,8 @@ void			Player::incShield()
 
 void			Player::decShield()
 {
-  _shield--;
+  if (_shield > 0)
+    _shield--;
 }
 
 void			Player::resetShield()
@@ -193,15 +204,23 @@ void			Player::unparalyze()
   _isParalyzed = false;
 }
 
+void			Player::randWeapon()
+{
+  std::cout << "Rand Bomb"  << std::endl;
+  setBombType((IBomb::Type)(my_random(1, IBomb::nbBomb - 1)));
+}
+
 // buff methods
 void			Player::addBuff(IBuff *n)
 {
-  BuffTimer		*buff = new BuffTimer(n);
-
-
   (this->*_buffOn[n->getBuffType()])();
-  _buff.push_back(buff);
-  buff->start();
+  if (n->getDuration() != IBuff::infinite)
+    {
+      BuffTimer		*buff = new BuffTimer(n);
+
+      _buff.push_back(buff);
+      buff->start();
+    }
 }
 
 void			Player::addTimedBuff(Bomberman::BuffTimer *buff)
@@ -220,7 +239,7 @@ void			 Player::checkBuffList()
 	{
 	  (this->*_buffOff[(*it)->getBuff()->getBuffType()])();
 	  delete (*it);
-	  _buff.erase(it);
+	  it = _buff.erase(it);
 	}
     }
 }
@@ -295,13 +314,17 @@ void			Player::setY(float y)
   setPosition(glm::vec3(getPosition().x, 0, y));
 }
 
-void			Player::move(glm::vec3 pos)
+void			Player::move(float const & direction, float const & elsapsedTime)
 {
+  glm::vec3		pos;
   glm::vec3		npos;
   IObject::Type		type;
+  float			speedbra;
 
   if (!isAlive() || isParalyzed())
-    return;
+    return ;
+  speedbra = _speed * elsapsedTime;
+  pos = glm::rotate(glm::vec3(0, 0, 0.06), direction, glm::vec3(0, 1, 0)) * speedbra;
   npos = getPosition() + pos;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
@@ -315,13 +338,26 @@ void			Player::move(glm::vec3 pos)
       if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
 	translate(glm::vec3(0, 0, pos.z));
     }
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
+    {
+      addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
+      _map->killObject(getX(), getY());
+    }
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
+    {
+      tryToKill();
+    }
 }
 
-void			Player::rotate(const glm::vec3 &axis, float angle)
+void			Player::rotate(bool const & direction,
+				       float const & elsapsedTime)
 {
   if (!isAlive() || isParalyzed())
     return;
-  Object3d::rotate(axis, angle);
+  if (direction)
+    Object3d::rotate(glm::vec3(0, 1, 0), 3 * elsapsedTime * _speed);
+  else
+    Object3d::rotate(glm::vec3(0, 1, 0), -3 * elsapsedTime * _speed);
 }
 
 //attacks
@@ -349,17 +385,31 @@ void			Player::putBomb()
     }
 }
 
+void			Player::putTimedBomb(unsigned int x, unsigned int y)
+{
+  if (_map)
+    {
+      IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(IBomb::CLASSIC));
+      BombTimer	*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
+
+      _map->addBomb(bombT);
+      _map->setCellValue(x, y, bombT);
+      decBomb();
+    }
+}
+
+
 bool			Player::tryToKill()
 {
   if (isAlive())
     {
       if (canAbsorb())
-	decShield();
+  	decShield();
       else
-	{
-	  _isAlive = false;
-	  return true;
-	}
+  	{
+  	  _isAlive = false;
+  	  return true;
+  	}
       return false;
     }
   return true;

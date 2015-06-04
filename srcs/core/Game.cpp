@@ -7,7 +7,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
-#include "glm/gtx/string_cast.hpp"
 #include "Game.hh"
 #include "Clock.hh"
 #include "Input.hh"
@@ -29,7 +28,7 @@ namespace Bomberman
 
 Game::Game()
   : _width(20), _height(20), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri",}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
   Player	*player;
@@ -43,7 +42,7 @@ Game::Game()
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4", "5","6","7","8","9","10","11","12","13"}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
 
@@ -105,7 +104,7 @@ bool				Game::initialize()
   _camera.setRotation(player->getPosition());
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
-  _ObjectToAsset[IObject::BONUS] = FIRE;
+  _ObjectToAsset[IObject::BONUS] = SKYBOX;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;
   _ObjectToAsset[IObject::DESTROYABLEWALL] = DST_BLOCK;
   _ObjectToAsset[IObject::SPAWN] = FLOOR;
@@ -122,13 +121,15 @@ void		Game::attachObject(Asset3d *obj)
 
 bool		Game::update()
 {
-  float		movefactor;
   glm::vec3	move;
   static int	change = 0;
+  //  float		movefactor;
   Player	*player = dynamic_cast<Player *>(_stock.getPlayer(1));
   Player	*ai = dynamic_cast<Player *>(_stock.getPlayer(0));
 
-  movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
+  //  movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
+  float		elsapsedTime = static_cast<float>(_clock.getElapsed()) * 60;
+
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
@@ -150,10 +151,10 @@ bool		Game::update()
 	  _assets[PLAYER]->setCurrentSubAnim("run", true);
 	}
       change = 1;
-
-      move = (_input.getKey(SDLK_UP)) ? glm::vec3(0, 0, 0.06) : glm::vec3(0, 0, -0.06);
-      move = glm::rotate(move, player->getRotation().y, glm::vec3(0, 1, 0)) * movefactor;
-      player->move(move);
+      if (_input.getKey(SDLK_UP))
+	player->move(player->getRotation().y, elsapsedTime);
+      else
+	player->move(180 + player->getRotation().y, elsapsedTime);
       _camera.setRotation(player->getPosition());
       _camera.updateView();
     }
@@ -163,10 +164,8 @@ bool		Game::update()
       _assets[PLAYER]->setCurrentSubAnim("end", false);
       // _assets[PLAYER]->setCurrentSubAnim("end2", true);
     }
-  if (_input.getKey(SDLK_LEFT))
-    player->Player::rotate(glm::vec3(0, 1, 0), 3 * movefactor);
-  else if (_input.getKey(SDLK_RIGHT))
-    player->Player::rotate(glm::vec3(0, 1, 0), -3 * movefactor);
+  if (_input.getKey(SDLK_RIGHT) || _input.getKey(SDLK_LEFT))
+    player->Player::rotate(_input.getKey(SDLK_LEFT), elsapsedTime);
   _map.checkBombsOnMap();
 
   // ia

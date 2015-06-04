@@ -53,7 +53,7 @@ public:
   void		killPlayers(unsigned int x, unsigned int y);
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
-  void		addFire(Fire*);
+  void		addFire(Player*, unsigned int, unsigned int);
 
 private:
   std::string		_name;

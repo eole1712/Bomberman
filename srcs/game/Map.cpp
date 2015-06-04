@@ -17,9 +17,9 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_width * this->_height / this->_nbJoueurs < 4)
+      || this->_nbJoueurs > this->_width * this->_height / 17)
     throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 5 || this->_width < 5)
+  if (this->_height < 6 || this->_width < 6)
     throw new Exception::InvalidDimensions("Map Constructor");
   std::cout << "-->" << _rcs->getNbPlayer() << std::endl;
   this->randomize();
@@ -35,7 +35,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_width * this->_height / this->_nbJoueurs < 4)
+      || this->_nbJoueurs > this->_width * this->_height / 17)
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 5 || this->_width < 5)
     throw new Exception::InvalidDimensions("Map Constructor");
@@ -341,14 +341,17 @@ void		Map::checkBombsOnMap()
     {
       if ((*it)->isFinished())
   	{
-	  killObject((*it)->getX(), (*it)->getY());
-  	  delete *it;
+	  if (getCellValue((*it)->getX(), (*it)->getY()) == (*it))
+	    killObject((*it)->getX(), (*it)->getY());
+	  if ((*it)->getBuff() != NULL)
+	    setCellValue((*it)->getX(), (*it)->getY(), (*it)->getBuff());
+  	  delete (*it);
   	  it = _firebox.erase(it);
   	}
-      else
-	{
-	  killPlayers((*it)->getX(), (*it)->getY());
-	}
+    }
+  for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
+    {
+      dynamic_cast<Player*>(_rcs->getPlayer(i))->checkBuffList();
     }
 }
 
@@ -357,9 +360,17 @@ void		Map::addBomb(BombTimer *bomb)
   _bombs.push_back(bomb);
 }
 
-void		Map::addFire(Fire *fire)
+void		Map::addFire(Player *player, unsigned int x, unsigned int y)
 {
-  _firebox.push_back(fire);
+  if (getCellValue(x, y)->getObjectType() != IObject::FIRE)
+    {
+      Fire		*fire = new Fire(player, x, y);
+
+      if (getCellValue(x, y)->getObjectType() == IObject::BONUS)
+	fire->setBuff(getCellValue(x, y));
+      setCellValue(x, y, fire);
+      _firebox.push_back(fire);
+    }
 }
 
 unsigned int		Map::getNumberPlayers() const

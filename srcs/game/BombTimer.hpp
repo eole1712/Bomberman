@@ -14,6 +14,7 @@ class BombTimer
 {
 public:
   BombTimer(Player *, unsigned int, IBomb *);
+  BombTimer(Player *, unsigned int, IBomb *, float, unsigned int x, unsigned int y);
   virtual ~BombTimer();
 
 private:
