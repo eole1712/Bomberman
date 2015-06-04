@@ -323,6 +323,10 @@ void			Player::move(glm::vec3 pos)
       addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
       _map->killObject(getX(), getY());
     }
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
+    {
+      tryToKill();
+    }
 }
 
 void			Player::rotate(const glm::vec3 &axis, float angle)

@@ -345,10 +345,6 @@ void		Map::checkBombsOnMap()
   	  delete *it;
   	  it = _firebox.erase(it);
   	}
-      else
-	{
-	  killPlayers((*it)->getX(), (*it)->getY());
-	}
     }
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
