@@ -105,7 +105,7 @@ bool				Game::initialize()
   _camera.setRotation(player->getPosition());
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
-  _ObjectToAsset[IObject::BONUS] = FIRE;
+  _ObjectToAsset[IObject::BONUS] = SKYBOX;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;
   _ObjectToAsset[IObject::DESTROYABLEWALL] = DST_BLOCK;
   _ObjectToAsset[IObject::SPAWN] = FLOOR;

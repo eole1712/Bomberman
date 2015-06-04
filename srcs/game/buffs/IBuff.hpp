@@ -35,7 +35,8 @@ class IBuff : public IClonable<IBuff>, public IObject
   public:
     static const int	infinite;
     static const int	nbBuff;
-  };
+    static const int	prob;
+};
 }
 
 #endif /* !__IBUFF_HPP__ */

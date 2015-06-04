@@ -11,7 +11,7 @@ namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 0;
+unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 
@@ -29,7 +29,7 @@ Player::Player(std::string const &name, glm::vec4 color)
   _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
   _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
   _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
-  _buffOn[IBuff::INC_RANGE] = &Player::decRange;
+  _buffOff[IBuff::INC_RANGE] = &Player::decRange;
   _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
   _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
   _buffOff[IBuff::SHIELD] = &Player::decShield;
@@ -49,7 +49,7 @@ Player::Player()
   _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
   _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
   _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
-  _buffOn[IBuff::INC_RANGE] = &Player::decRange;
+  _buffOff[IBuff::INC_RANGE] = &Player::decRange;
   _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
   _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
   _buffOff[IBuff::SHIELD] = &Player::decShield;
@@ -112,6 +112,7 @@ void			Player::incRange()
 
 void			Player::decRange()
 {
+  if (_range > 2)
   _range--;
 }
 
@@ -129,7 +130,8 @@ void			Player::incSpeed()
 
 void			Player::decSpeed()
 {
-  _speed--;
+  if (_speed > 1)
+    _speed--;
 }
 
 void			Player::resetSpeed()
@@ -146,7 +148,8 @@ void			Player::incShield()
 
 void			Player::decShield()
 {
-  _shield--;
+  if (_shield > 0)
+    _shield--;
 }
 
 void			Player::resetShield()
@@ -220,7 +223,7 @@ void			 Player::checkBuffList()
 	{
 	  (this->*_buffOff[(*it)->getBuff()->getBuffType()])();
 	  delete (*it);
-	  _buff.erase(it);
+	  it = _buff.erase(it);
 	}
     }
 }
@@ -314,6 +317,11 @@ void			Player::move(glm::vec3 pos)
       type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
       if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
 	translate(glm::vec3(0, 0, pos.z));
+    }
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
+    {
+      addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
+      _map->killObject(getX(), getY());
     }
 }
 

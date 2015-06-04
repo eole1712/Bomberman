@@ -350,6 +350,10 @@ void		Map::checkBombsOnMap()
 	  killPlayers((*it)->getX(), (*it)->getY());
 	}
     }
+  for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
+    {
+      dynamic_cast<Player*>(_rcs->getPlayer(i))->checkBuffList();
+    }
 }
 
 void		Map::addBomb(BombTimer *bomb)
