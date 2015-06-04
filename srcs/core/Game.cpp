@@ -95,6 +95,8 @@ bool				Game::initialize()
   attachObject(new Asset3d("srcs/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
+  attachObject(new Asset3d("srcs/assets/bonus.obj"));
+  _assets[BONUS]->scale(glm::vec3(0.05));
   // We have the bind the shader before calling the setUniform method
 
   _camera.setPosition(player->getPosition()
@@ -104,7 +106,7 @@ bool				Game::initialize()
   _camera.setRotation(player->getPosition());
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
-  _ObjectToAsset[IObject::BONUS] = SKYBOX;
+  _ObjectToAsset[IObject::BONUS] = BONUS;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;
   _ObjectToAsset[IObject::DESTROYABLEWALL] = DST_BLOCK;
   _ObjectToAsset[IObject::SPAWN] = FLOOR;
@@ -202,7 +204,8 @@ void		Game::draw()
 	    {
 	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]
 		->setPosition(glm::vec3(i[0], 0, i[1]));
-	      if (IObject::BOMB == _map.getCellValue(i[0], i[1])->getObjectType())
+	      if (IObject::BOMB == _map.getCellValue(i[0], i[1])->getObjectType() ||
+		  IObject::BONUS == _map.getCellValue(i[0], i[1])->getObjectType())
 		{
 		  _assets[FLOOR]->setPosition(glm::vec3(i[0], 0, i[1]));
 		  _assets[FLOOR]->draw(_shader, _clock);
