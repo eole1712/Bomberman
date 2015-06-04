@@ -24,6 +24,7 @@ CORESRCS	= main.cpp		\
 		  Score.cpp		\
 
 GAMESRCS	= Player.cpp 		\
+		  PlayerAI.cpp		\
 		  BuffTimer.cpp		\
 		  Empty.cpp		\
 		  Map.cpp		\
@@ -55,6 +56,7 @@ BOMBSRCS	= BombClassic.cpp	\
 MISCSRCS	= Timer.cpp		\
 		  my_random.cpp		\
 		  StringConversion.cpp	\
+		  LuaScript.cpp		\
 
 EXCEPTSRCS	= ResourceUnavailable.cpp	\
 		  LuaError.cpp			\

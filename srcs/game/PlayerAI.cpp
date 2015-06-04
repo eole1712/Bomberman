@@ -1,4 +1,6 @@
+#include <iostream>
 #include "PlayerAI.hpp"
+#include "LuaError.hpp"
 
 namespace Bomberman
 {
@@ -9,6 +11,7 @@ namespace Bomberman
     Player() /* tmp */, LuaScript(script), _aiAction(NULL)
   {
     luaObjectInit();
+    loadAIData();
     static_cast<void>(name);
   }
 
@@ -21,6 +24,17 @@ namespace Bomberman
   */
   void			PlayerAI::doAction()
   {
+    if (_aiAction == NULL)
+      throw std::runtime_error("AI's action is not set");
+    try
+      {
+	(*_aiAction)(this);
+      }
+    catch (luabridge::LuaException const& e)
+      {
+	std::cerr << "Error: AI: " << e.what() << std::endl;
+	throw ;
+      }
   }
 
   std::string const&	PlayerAI::getAIName() const
@@ -45,5 +59,19 @@ namespace Bomberman
       .addProperty("bombType", &PlayerAI::getBombType, NULL)
       .addFunction("putBomb", &PlayerAI::putBomb()) /* + move + rotate ? */
       .endClass();
+  }
+
+  void			PlayerAI::loadAIData()
+  {
+    luabridge::LuaRef	data = getGlobal(_state, "aiData");
+
+    if (!data.isTable())
+      throw Exception::LuaError("aiData is not a table");
+    if (!data["name"].isString())
+      throw Exception::LuaError("name specified in aiData is not a string");
+    _aiName = data["name"].cast<std::string>();
+    if (!data["aiAction"].isFunction())
+      throw Exception::LuaError("aiAction specified in aiData is not a function");
+    _aiAction = data["aiAction"];
   }
 }

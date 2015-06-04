@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 /*
   https://github.com/vinniefalco/LuaBridge
-  
+
   Copyright 2012, Vinnie Falco <vinnie.falco@gmail.com>
 
   License: The MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -68,7 +68,7 @@ protected:
   /**
     Get an untyped pointer to the contained class.
   */
-  inline void* const getPointer ()
+  inline void* /* const // ignored, g++ warning */ getPointer ()
   {
     return m_p;
   }
@@ -112,7 +112,7 @@ private:
       {
         lua_pop (L, 2);
         mismatch = true;
-      }      
+      }
     }
 
     if (!mismatch)
@@ -262,7 +262,7 @@ ud __parent (nil)
       {
         lua_pop (L, 2);
         mismatch = true;
-      }      
+      }
     }
     else
     {
@@ -689,7 +689,7 @@ struct Stack <T*>
     UserdataPtr::push (L, p);
   }
 
-  static inline T* const get (lua_State* L, int index)
+  static inline T* /* const // ignored, g++ warning */ get (lua_State* L, int index)
   {
     return Userdata::get <T> (L, index, false);
   }
@@ -704,7 +704,7 @@ struct Stack <T* const>
     UserdataPtr::push (L, p);
   }
 
-  static inline T* const get (lua_State* L, int index)
+  static inline T* /*const // ignored g++ warning*/ get (lua_State* L, int index)
   {
     return Userdata::get <T> (L, index, false);
   }
@@ -719,7 +719,7 @@ struct Stack <T const*>
     UserdataPtr::push (L, p);
   }
 
-  static inline T const* const get (lua_State* L, int index)
+  static inline T const* /*const // ignored g++ warning */ get (lua_State* L, int index)
   {
     return Userdata::get <T> (L, index, true);
   }
@@ -734,7 +734,7 @@ struct Stack <T const* const>
     UserdataPtr::push (L, p);
   }
 
-  static inline T const* const get (lua_State* L, int index)
+  static inline T const* /*const // ignored g++ warning */ get (lua_State* L, int index)
   {
     return Userdata::get <T> (L, index, true);
   }
@@ -761,8 +761,8 @@ struct Stack <T&>
 template <class C, bool byContainer>
 struct RefStackHelper
 {
-  typedef C return_type;  
-	
+  typedef C return_type;
+
   static inline void push (lua_State* L, C const& t)
   {
     UserdataSharedHelper <C,
@@ -781,8 +781,8 @@ struct RefStackHelper
 template <class T>
 struct RefStackHelper <T, false>
 {
-  typedef T const& return_type;  
-	
+  typedef T const& return_type;
+
 	static inline void push (lua_State* L, T const& t)
 	{
 	  UserdataPtr::push (L, &t);
@@ -796,7 +796,7 @@ struct RefStackHelper <T, false>
       luaL_error (L, "nil passed to reference");
     return *t;
   }
-    
+
 };
 
 // reference to const
@@ -804,7 +804,7 @@ template <class T>
 struct Stack <T const&>
 {
   typedef RefStackHelper <T, TypeTraits::isContainer <T>::value> helper_t;
-  
+
   static inline void push (lua_State* L, T const& t)
   {
     helper_t::push (L, t);
