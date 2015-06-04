@@ -203,7 +203,8 @@ void			Player::unparalyze()
 
 void			Player::randWeapon()
 {
-  setBombType((IBomb::Type)(my_random(0, IBomb::nbBomb)));
+  std::cout << "Rand Bomb"  << std::endl;
+  setBombType((IBomb::Type)(my_random(1, IBomb::nbBomb - 1)));
 }
 
 // buff methods

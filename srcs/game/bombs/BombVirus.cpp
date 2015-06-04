@@ -80,7 +80,7 @@ void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
 	  break;
 	}
     }
-  player->setBombType(IBomb::VIRUS);
+  player->setBombType(IBomb::CLASSIC);
 }
 
 IBomb*		Virus::clone() const
