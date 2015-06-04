@@ -10,6 +10,10 @@ EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
 BOMBDIR		= $(GAMEDIR)/bombs/
 GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
+VENDORSDIR	= $(SRCSDIR)/vendors/
+LUADIR		= $(VENDORSDIR)/lua-5.3.0/
+LUABDIR		= $(VENDORSDIR)/LuaBridge/
+LUAINCS		= $(LUADIR)/include/
 
 CORESRCS	= main.cpp		\
 		  Game.cpp		\
@@ -68,13 +72,15 @@ CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
 CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson
+CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS)
 
-LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL2 -ldl
+LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib
+LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL2 -ldl -llua
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	 $(CC) -o $(NAME) $(OBJS) -L $(GDLDIR)/libs/ $(LDFLAGS)
+	 $(CC) -o $(NAME) $(OBJS) $(LDFLAGS)
 	 echo "export LD_LIBRARY_PATH=~/rendu/cpp_bomberman/srcs/LibBomberman_linux_x64/libs/"
 
 clean:
