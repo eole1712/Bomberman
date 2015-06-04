@@ -16,7 +16,7 @@ Virus::~Virus()
 
 int		Virus::getDuration() const
 {
-  return 5;
+  return 4;
 }
 
 IBomb::Type	Virus::getBombType() const
