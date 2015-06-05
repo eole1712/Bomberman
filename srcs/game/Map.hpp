@@ -10,7 +10,7 @@
 
 namespace Bomberman
 {
-
+  class RessourceStock;
 class Map : public GenericMap<IObject*>
 {
 public:

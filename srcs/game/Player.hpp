@@ -6,7 +6,7 @@
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "BuffTimer.hpp"
-# include "IBomb.hpp"
+# include "BombTypes.hpp"
 # include "Object3d.hpp"
 # include "glm/glm.hpp"
 # include "Animation.hpp"
@@ -83,6 +83,7 @@ public:
   void			resetBomb();
   void			enableAttack();
   void			disableAttack();
+  unsigned int		getNbBomb() const;
 
 private:
   unsigned int		_bomb;
@@ -123,18 +124,17 @@ public:
   void			rotate(bool const & direction,
 			       float const & elsapsedTime);
 
-
 public:
-  void			setBombType(IBomb::Type);
-  IBomb::Type		getBombType() const;
+  void			setBombType(Bomb::Type);
+  Bomb::Type		getBombType() const;
   void			putBomb();
   void			putTimedBomb(unsigned int, unsigned int);
   bool			tryToKill();
   void			randWeapon();
 
 private:
-  IBomb::Type		_bombType;
-  static const IBomb::Type dftBombType;
+  Bomb::Type		_bombType;
+  static const Bomb::Type dftBombType;
 
 public:
   glm::vec4		_color;

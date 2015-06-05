@@ -8,22 +8,22 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
   : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY()), _isFinished(false)
 {
   std::cout << bomb->getClassName() << std::endl;
-  if (bomb->getBombType() == IBomb::MINE)
+  if (bomb->getBombType() == Bomb::MINE)
     {
       player->incBomb();
     }
-  player->setBombType(IBomb::CLASSIC);
+  player->setBombType(Bomb::CLASSIC);
   start();
 }
 
 BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time, unsigned int x, unsigned int y)
   : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y), _isFinished(false)
 {
-  if (bomb->getBombType() == IBomb::MINE)
+  if (bomb->getBombType() == Bomb::MINE)
     {
       player->incBomb();
     }
-  player->setBombType(IBomb::CLASSIC);
+  player->setBombType(Bomb::CLASSIC);
   start();
 }
 
@@ -76,7 +76,7 @@ bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 {
   if (isFinished() || _isFinished)
     {
-      if (_isFinished == true && _bomb->getBombType() == IBomb::MINE && getElapsedTime() < 1000000)
+      if (_isFinished == true && _bomb->getBombType() == Bomb::MINE && getElapsedTime() < 1000000)
 	{
 	  _isFinished = false;
 	  return false;
@@ -88,4 +88,8 @@ bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
   return false;
 }
 
+  void		BombTimer::setBlastRangeToMap(AI::StateMap* map, Map const* realMap) const
+  {
+    _bomb->setBlastRangeToMap(map, realMap, _x, _y, _range);
+  }
 }

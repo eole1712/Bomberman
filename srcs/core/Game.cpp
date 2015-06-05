@@ -23,6 +23,7 @@
 #include "BuffParalyzed.hpp"
 #include "Player.hpp"
 #include "Game.hpp"
+#include "PlayerAI.hpp"
 
 namespace Bomberman
 {

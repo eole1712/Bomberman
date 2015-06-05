@@ -56,7 +56,7 @@ void	LuaScript::run()
 */
 void	LuaScript::init()
 {
-  if ((_state = luaL_newstate()) == NULL)
+  if ((_state = luabridge::luaL_newstate()) == NULL)
     throw Exception::ResourceUnavailable("Creating new state failed: memory allocation failed");
   luaL_openlibs(_state);
 }

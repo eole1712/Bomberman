@@ -5,8 +5,6 @@
 namespace Bomberman
 {
 
-const int	IBomb::nbBomb = 3;
-
 bool		IBomb::isOtherBomb(Map *map, int x, int y, Player *player, int x2, int y2)
 {
   if (map->getCellValue(x, y)->getObjectType() >= IObject::BOMB &&

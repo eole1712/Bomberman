@@ -18,7 +18,7 @@ unsigned int const	Player::dftRange = 3;
 unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
-IBomb::Type const	Player::dftBombType = IBomb::CLASSIC;
+Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
   : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
@@ -168,6 +168,11 @@ void			Player::resetShield()
 
 // bomb methods
 
+  unsigned int		Player::getNbBomb() const
+  {
+    return _bomb;
+  }
+
 void			Player::incBomb()
 {
   _bomb++;
@@ -208,7 +213,7 @@ void			Player::unparalyze()
 void			Player::randWeapon()
 {
   std::cout << "Rand Bomb"  << std::endl;
-  setBombType((IBomb::Type)(my_random(1, IBomb::nbBomb - 1)));
+  setBombType((Bomb::Type)(my_random(1, Bomb::nbBomb - 1)));
 }
 
 // buff methods
@@ -421,12 +426,12 @@ void			Player::moveLeft(float const & elsapsedTime)
 
 //attacks
 
-void			Player::setBombType(IBomb::Type type)
+void			Player::setBombType(Bomb::Type type)
 {
   _bombType = type;
 }
 
-IBomb::Type		Player::getBombType() const
+Bomb::Type		Player::getBombType() const
 {
   return _bombType;
 }
@@ -448,7 +453,7 @@ void                  Player::putTimedBomb(unsigned int x, unsigned int y)
 {
   if (_map)
     {
-      IBomb   *bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(IBomb::CLASSIC));
+      IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
       BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
 
       _map->addBomb(bombT);
