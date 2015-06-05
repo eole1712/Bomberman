@@ -329,13 +329,13 @@ void			Player::move(float const & direction, float const & elsapsedTime)
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
       type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
-      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+      if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL) || (int(npos.x) == int(getX()) && int(getPosition().z) == int(getY())))
 	translate(glm::vec3(pos.x, 0, 0));
     }
   if (npos.z > 0 && npos.z < _map->getHeight())
     {
       type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
-      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+      if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL) || (int(getPosition().x) == int(getX()) && int(npos.z) == int(getY())))
 	translate(glm::vec3(0, 0, pos.z));
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
@@ -346,6 +346,10 @@ void			Player::move(float const & direction, float const & elsapsedTime)
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
     {
       tryToKill();
+    }
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BOMB2)
+    {
+      dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
     }
 }
 

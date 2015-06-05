@@ -16,7 +16,8 @@ public:
   enum Type
     {
       CLASSIC = 0,
-      VIRUS
+      VIRUS,
+      MINE
     };
 
 public:

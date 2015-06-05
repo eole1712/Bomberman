@@ -42,7 +42,7 @@ Game::Game()
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4", "5","6","7","8","9","10","11","12","13"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
 
@@ -105,6 +105,7 @@ bool				Game::initialize()
 				    glm::vec3(0, 1, 0)));
   _camera.setRotation(player->getPosition());
   _ObjectToAsset[IObject::BOMB] = BOMB;
+  _ObjectToAsset[IObject::BOMB2] = FLOOR;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
   _ObjectToAsset[IObject::BONUS] = BONUS;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;
@@ -210,14 +211,18 @@ void		Game::draw()
 		  _assets[FLOOR]->setPosition(glm::vec3(i[0], 0, i[1]));
 		  _assets[FLOOR]->draw(_shader, _clock);
 		}
+	      else if (IObject::BOMB2 == _map.getCellValue(i[0], i[1])->getObjectType())
+		{
+		  _shader.setUniform("color", glm::vec4(0, 1, 0, 0));
+		}
 	      _assets[_ObjectToAsset[_map.getCellValue(i[0], i[1])->getObjectType()]]
 		->draw(_shader, _clock);
+	      _shader.setUniform("color", glm::vec4(1.0));
 	    }
 	  i[1]++;
 	}
       i[0]++;
     }
-
   y = 0;
   while (y < _stock.getNbPlayer())
     {

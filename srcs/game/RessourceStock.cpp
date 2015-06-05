@@ -18,6 +18,7 @@
 #include "Color.hpp"
 #include "BombVirus.hpp"
 #include "BuffWeapon.hpp"
+#include "BombMine.hpp"
 
 namespace Bomberman
 {
@@ -37,7 +38,9 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _buffs[IBuff::WEAPON] = new Buff::Weapon;
   _bombs[IBomb::CLASSIC] = new Bomb::Classic;
   _bombs[IBomb::VIRUS] = new Bomb::Virus;
+  _bombs[IBomb::MINE] = new Bomb::Mine;
   _objects[IObject::BOMB] = NULL;
+  _objects[IObject::BOMB2] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
   _objects[IObject::WALL] = new Wall;
@@ -62,7 +65,9 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   _buffs[IBuff::WEAPON] = new Buff::Weapon;
   _bombs[IBomb::CLASSIC] = new Bomb::Classic;
   _bombs[IBomb::VIRUS] = new Bomb::Virus;
+  _bombs[IBomb::MINE] = new Bomb::Mine;
   _objects[IObject::BOMB] = NULL;
+  _objects[IObject::BOMB2] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
   _objects[IObject::WALL] = new Wall;

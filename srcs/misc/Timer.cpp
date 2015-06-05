@@ -32,13 +32,11 @@ void	Timer::reset()
 
 bool	Timer::isFinished()
 {
-  usleep(1);
   return (this->getCurTime() > _time);
 }
 
 uintmax_t			Timer::getElapsedTime()
 {
-  usleep(1);
   return (getCurTime().count());
 }
 

@@ -12,7 +12,7 @@
 
 int main()
 {
-  unsigned int		bra[2] = {15, 15};
+  unsigned int		bra[2] = {20, 20};
   Bomberman::Game	engine(bra[0], bra[1]);
 
   if (engine.initialize() == false)

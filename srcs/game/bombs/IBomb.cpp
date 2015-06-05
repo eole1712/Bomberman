@@ -5,11 +5,11 @@
 namespace Bomberman
 {
 
-const int	IBomb::nbBomb = 2;
+const int	IBomb::nbBomb = 3;
 
 bool		IBomb::isOtherBomb(Map *map, int x, int y, Player *player, int x2, int y2)
 {
-  if (map->getCellValue(x, y)->getObjectType() == IObject::BOMB &&
+  if (map->getCellValue(x, y)->getObjectType() >= IObject::BOMB &&
       !(x == x2 && y == y2))
     {
       dynamic_cast<BombTimer*>(map->getCellValue(x, y))->setFinished();

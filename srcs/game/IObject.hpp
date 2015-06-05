@@ -9,14 +9,15 @@ class IObject
 public:
   enum Type
     {
-      BOMB = 0,
-      PLAYER,
+      PLAYER = 0,
       BONUS,
       WALL,
       DESTROYABLEWALL,
       SPAWN,
       EMPTY,
-      FIRE
+      FIRE,
+      BOMB,
+      BOMB2
     };
 
 public:

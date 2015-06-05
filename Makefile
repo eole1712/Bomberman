@@ -46,6 +46,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 BOMBSRCS	= BombClassic.cpp	\
 		  BombVirus.cpp		\
 		  IBomb.cpp		\
+		  BombMine.cpp		\
 		  BombFactory.cpp	\
 
 MISCSRCS	= Timer.cpp		\
