@@ -1,6 +1,8 @@
 #ifndef __AIMAP_HPP__
 # define __AIMAP_HPP__
 
+# include <vector>
+# include <utility>
 # include "GenericMap.hpp"
 # include "Map.hpp"
 
@@ -37,10 +39,18 @@ namespace Bomberman
       std::string	toString() const;
 
     public:
+      int		getPlayerPosX(unsigned int player) const;
+      int		getPlayerPosY(unsigned int player) const;
+      int		getNbPlayers() const;
+
+    public:
       void		setAICells(Bomberman::Map const& map);
 
     protected:
       void		clear();
+
+    protected:
+      std::vector<std::pair<int, int> >	_playersCoo;
     };
   }
 }

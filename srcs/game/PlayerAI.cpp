@@ -119,6 +119,9 @@ void			PlayerAI::moveUp(float const& elsapsedTime)
       .endClass()
       .beginClass<AI::StateMap>("StateMap")
       .addFunction("toString", &AI::StateMap::toString)
+      .addFunction("getPlayerPosX", &AI::StateMap::getPlayerPosX)
+      .addFunction("getPlayerPosY", &AI::StateMap::getPlayerPosY)
+      .addFunction("getNbPlayers", &AI::StateMap::getNbPlayers)
       .endClass();
   }
 

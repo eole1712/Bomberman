@@ -88,13 +88,33 @@ namespace Bomberman
 		}
 	    }
 	}
-      // for (unsigned int i = 0; i < map.getRcs()->getNbPlayer(); ++i)
-      // 	{
-      // 	  Player*	player = dynamic_cast<Player*>(map.getRcs()->getPlayer(i));
+      _playersCoo.clear();
+      for (unsigned int i = 0; i < map.getRcs()->getNbPlayer(); ++i)
+      	{
+      	  Player*	player = dynamic_cast<Player*>(map.getRcs()->getPlayer(i));
 
-      // 	  if (player->isAlive())
-      // 	    setCellValue(player->getX(), player->getY(), AI::PLAYER);
-      // 	}
+      	  if (player->isAlive())
+      	    _playersCoo.push_back(std::pair<int, int>(player->getX(), player->getY()));
+      	}
+    }
+
+    int		StateMap::getPlayerPosX(unsigned int player) const
+    {
+      if (player >= _playersCoo.size())
+	return (-1);
+      return (_playersCoo[player].first);
+    }
+
+    int		StateMap::getPlayerPosY(unsigned int player) const
+    {
+      if (player >= _playersCoo.size())
+	return (-1);
+      return (_playersCoo[player].second);
+    }
+
+    int		StateMap::getNbPlayers() const
+    {
+      return (_playersCoo.size());
     }
 
     /*

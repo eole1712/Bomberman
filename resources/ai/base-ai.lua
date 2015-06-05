@@ -7,8 +7,11 @@ aiData = {
 			print(map:toString())
 			player:putBomb()
 			test = 1
+			for i=0,(map:getNbPlayers() -1)
+			do
+				print("coo ", map:getPlayerPosX(i), " ", map:getPlayerPosY(i))
+			end
 		else
-			print(map:toString())
 			player:moveLeft(elapsedTime)
 		end
 	end
