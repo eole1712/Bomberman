@@ -21,7 +21,6 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 6 || this->_width < 6)
     throw new Exception::InvalidDimensions("Map Constructor");
-  std::cout << "-->" << _rcs->getNbPlayer() << std::endl;
   this->randomize();
   this->equalize();
   this->spawnize();
