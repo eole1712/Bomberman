@@ -119,7 +119,7 @@ bool	Map::addNoBlocking(unsigned int x, unsigned int y)
   return (true);
 }
 
-bool	Map::checkDensity(unsigned int x, unsigned int y, unsigned int radius)
+bool	Map::checkDensity(unsigned int x, unsigned int y, unsigned int radius) const
 {
   unsigned int	posx;
   unsigned int	posy = 0;
@@ -310,12 +310,12 @@ RessourceStock	*Map::getRcs() const
   return _rcs;
 }
 
-bool		Map::isIn(unsigned int x, unsigned int y)
+bool		Map::isIn(unsigned int x, unsigned int y) const
 {
   return (x < getHeight() && y < getWidth());
 }
 
-void		Map::killPlayers(unsigned int x, unsigned int y)
+void		Map::killPlayers(unsigned int x, unsigned int y) const
 {
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {

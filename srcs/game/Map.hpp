@@ -22,7 +22,7 @@ private:
   void	generateForm(unsigned int, unsigned int);
   void	randomize();
   bool	addNoBlocking(unsigned int, unsigned int);
-  bool	checkDensity(unsigned int, unsigned int, unsigned int);
+  bool	checkDensity(unsigned int, unsigned int, unsigned int) const;
   void	equalize();
   void	addSpawn(unsigned int, unsigned int);
   void	drawLosange(unsigned int, unsigned int, unsigned int);
@@ -48,9 +48,8 @@ public:
   e_difficulty		getDiff() const;
 
 public:
-  bool		isIn(unsigned int x, unsigned int y);
-  void		checkBomb(unsigned int x, unsigned int y);
-  void		killPlayers(unsigned int x, unsigned int y);
+  bool		isIn(unsigned int x, unsigned int y) const;
+  void		killPlayers(unsigned int x, unsigned int y) const;
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
   void		addFire(Player*, unsigned int, unsigned int);
