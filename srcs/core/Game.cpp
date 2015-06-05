@@ -22,6 +22,7 @@
 #include "BuffParalyzed.hpp"
 #include "Player.hpp"
 #include "Game.hpp"
+#include "PlayerAI.hpp"
 
 namespace Bomberman
 {
@@ -130,6 +131,8 @@ bool		Game::update()
   //  movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
   float		elsapsedTime = static_cast<float>(_clock.getElapsed()) * 60;
 
+  PlayerAI*	testlua = new PlayerAI("test ai", "resources/ai/base-ai.lua"); //
+
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
@@ -176,6 +179,7 @@ bool		Game::update()
 				    glm::vec3(0, 1, 0)));
   //  ai->move(glm::vec3(5, 5, 5) * movefactor);
   //ai->rotate(glm::vec3(0, 1, 0), 3 * movefactor);
+  testlua->doAction();
   // end ia
   //  ai->move(90, elsapsedTime); //
   _camera.updateView();

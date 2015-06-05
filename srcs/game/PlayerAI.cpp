@@ -11,12 +11,15 @@ namespace Bomberman
     Player() /* tmp */, LuaScript(script), _aiAction(NULL)
   {
     luaObjectInit();
+    run();
     loadAIData();
     static_cast<void>(name);
   }
 
   PlayerAI::~PlayerAI()
   {
+    if (_aiAction != NULL)
+      delete (_aiAction);
   }
 
   /*
@@ -58,6 +61,8 @@ namespace Bomberman
       .addProperty("nbBomb", &PlayerAI::getNbBomb)
       .addProperty("bombType", &PlayerAI::getBombType)
       .addFunction("putBomb", &PlayerAI::putBomb) /* + move + rotate ? */
+      .endClass()
+      .deriveClass<PlayerAI, Player>("PlayerAI")
       .endClass();
   }
 
@@ -72,6 +77,6 @@ namespace Bomberman
     _aiName = data["name"].cast<std::string>();
     if (!data["aiAction"].isFunction())
       throw Exception::LuaError("aiAction specified in aiData is not a function");
-    _aiAction = data["aiAction"];
+    _aiAction = new luabridge::LuaRef(data["aiAction"]);
   }
 }
