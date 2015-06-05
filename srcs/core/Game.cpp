@@ -72,30 +72,30 @@ bool				Game::initialize()
   glShadeModel(GL_SMOOTH);
 
   // We create a shader
-  if (!_shader.load("srcs/shaders/basic.fp", GL_FRAGMENT_SHADER)
-      || !_shader.load("srcs/shaders/basic.vp", GL_VERTEX_SHADER)
+  if (!_shader.load("ressources/shaders/basic.fp", GL_FRAGMENT_SHADER)
+      || !_shader.load("ressources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
     return false;
 
-  attachObject(new Asset3d("srcs/assets/floor.obj"));
-  attachObject(new Asset3d("srcs/assets/idst_block.obj"));
-  attachObject(new Asset3d("srcs/assets/idst_block.obj"));
-  attachObject(new Asset3d("srcs/assets/dst_block.obj"));
-  attachObject(new Asset3d("srcs/assets/fire.obj"));
-  attachObject(new Asset3d("srcs/assets/marvin.fbx"));
+  attachObject(new Asset3d("ressources/assets/floor.obj"));
+  attachObject(new Asset3d("ressources/assets/idst_block.obj"));
+  attachObject(new Asset3d("ressources/assets/idst_block.obj"));
+  attachObject(new Asset3d("ressources/assets/dst_block.obj"));
+  attachObject(new Asset3d("ressources/assets/fire.obj"));
+  attachObject(new Asset3d("ressources/assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[PLAYER]->createSubAnim(0, "start", 10, 28);
   _assets[PLAYER]->createSubAnim(0, "run", 34, 55);
   _assets[PLAYER]->createSubAnim(0, "end", 55, 130);
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
-  attachObject(new Asset3d("srcs/assets/barrel.obj"));
+  attachObject(new Asset3d("ressources/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
   _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
-  attachObject(new Asset3d("srcs/assets/sky.obj"));
+  attachObject(new Asset3d("ressources/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
-  attachObject(new Asset3d("srcs/assets/bonus.obj"));
+  attachObject(new Asset3d("ressources/assets/bonus.obj"));
   _assets[BONUS]->scale(glm::vec3(0.05));
   // We have the bind the shader before calling the setUniform method
 
