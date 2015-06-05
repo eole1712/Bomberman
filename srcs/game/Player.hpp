@@ -152,13 +152,6 @@ private:
 
 public:
   Animation		*animation;
-
-public:
-  // I.A.
-  void			moveRight(float const & elsapsedTime);
-  void			moveLeft(float const & elsapsedTime);
-  void			moveUp(float const & elsapsedTime);
-  void			moveDown(float const & elsapsedTime);
 };
 
 }

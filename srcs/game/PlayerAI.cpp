@@ -40,6 +40,35 @@ namespace Bomberman
       }
   }
 
+void			PlayerAI::moveUp(float const & elsapsedTime)
+{
+  move(0, elsapsedTime);
+  if (getRotation().y != 0)
+    rotate((getRotation().y > 180), elsapsedTime, 0);
+}
+
+  void			PlayerAI::moveRight(float const & elsapsedTime)
+  {
+    move(90, elsapsedTime);
+    if (getRotation().y != 90)
+      rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90);
+  }
+
+  void			PlayerAI::moveDown(float const & elsapsedTime)
+  {
+
+    move(180, elsapsedTime);
+    if (getRotation().y != 180)
+      rotate((getRotation().y < 180), elsapsedTime, 180);
+  }
+
+  void			PlayerAI::moveLeft(float const & elsapsedTime)
+  {
+    move(270, elsapsedTime);
+    if (getRotation().y != 270)
+      rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270);
+  }
+
   std::string const&	PlayerAI::getAIName() const
   {
     return (_aiName);
