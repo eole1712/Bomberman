@@ -19,6 +19,7 @@
 #include "BombVirus.hpp"
 #include "BuffWeapon.hpp"
 #include "BombMine.hpp"
+#include "PlayerAI.hpp"
 
 namespace Bomberman
 {
@@ -26,8 +27,10 @@ namespace Bomberman
 RessourceStock::RessourceStock(std::vector<std::string> const &names)
   : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
 {
+  // for (unsigned int i = 0; i < names.size(); ++i)
+  //   _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
   for (unsigned int i = 0; i < names.size(); ++i)
-    _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+    _players[i] = new PlayerAI(names[i], "resources/ai/base-ai.lua", Color::HSVtoRGB(1.0 / names.size() * i, 1, 1)); // test ai
   _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
   _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
   _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;

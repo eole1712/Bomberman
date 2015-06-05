@@ -12,11 +12,12 @@ namespace Bomberman
   {
     enum Cell
       {
-	BLOCK,		/* wall + bombs + fire */
+	BLOCK = 0,	/* wall + bombs + fire */
 	DESTROYABLE,
 	SAFE,
 	UNSAFE,
-	PLAYER
+	PLAYER,
+	UNKNOWN		/* if the cell hasn't been initialized */
       };
 
     class StateMap : public GenericMap<AI::Cell>
@@ -27,13 +28,19 @@ namespace Bomberman
 
     public:
       StateMap(StateMap const& other);
-      StateMap&	operator=(StateMap const& other);
+      StateMap&		operator=(StateMap const& other);
 
     public:
       StateMap(Bomberman::Map const& map);
 
     public:
-      void	setAICells(Bomberman::Map const& map);
+      std::string	toString() const;
+
+    public:
+      void		setAICells(Bomberman::Map const& map);
+
+    protected:
+      void		clear();
     };
   }
 }

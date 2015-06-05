@@ -1,4 +1,5 @@
 #include "Map.hpp"
+#include "StringConversion.hpp"
 
 namespace Bomberman
 {
@@ -9,6 +10,7 @@ namespace Bomberman
     */
     StateMap::StateMap() : GenericMap<Cell>()
     {
+      clear();
     }
 
     StateMap::StateMap(Map const& map) : GenericMap<Cell>(map.getWidth(), map.getHeight())
@@ -36,19 +38,34 @@ namespace Bomberman
     /*
     ** Public member functions
     */
+    std::string		StateMap::toString() const
+    {
+      std::string	map;
+
+      for (unsigned int y = 0; y < _height; y++)
+	{
+	  for (unsigned int x = 0; x < _width; x++)
+	    {
+	      map += Conversion::typeToString<int>(getCellValue(x, y));
+	      if (x == _width - 1)
+		map += " ";
+	    }
+	  map += "\n";
+	}
+      return (map);
+    }
+
     void		StateMap::setAICells(Bomberman::Map const& map)
     {
       if (map.getWidth() != _width || map.getHeight() != _height)
 	throw std::runtime_error("AI's Map and map aren't the same dimensions.");
+      clear();
       for (unsigned int y = 0; y < _height; y++)
 	{
 	  for (unsigned int x = 0; x < _width; x++)
 	    {
 	      switch (map.getCellValue(x, y)->getObjectType())
 		{
-		case (IObject::PLAYER):
-		  setCellValue(x, y, AI::PLAYER);
-		  break ;
 		case (IObject::FIRE):
 		case (IObject::WALL):
 		  setCellValue(x, y, AI::BLOCK);
@@ -61,12 +78,35 @@ namespace Bomberman
 		    BombTimer*	bomb = dynamic_cast<BombTimer*>(map.getCellValue(x, y));
 
 		    bomb->setBlastRangeToMap(this, &map);
+		    setCellValue(x, y, AI::BLOCK);
 		    break ;
 		  }
 		default:
-		  setCellValue(x, y, AI::SAFE);
+		  if (getCellValue(x, y) == AI::UNKNOWN)
+		    setCellValue(x, y, AI::SAFE);
 		  break ;
 		}
+	    }
+	}
+      // for (unsigned int i = 0; i < map.getRcs()->getNbPlayer(); ++i)
+      // 	{
+      // 	  Player*	player = dynamic_cast<Player*>(map.getRcs()->getPlayer(i));
+
+      // 	  if (player->isAlive())
+      // 	    setCellValue(player->getX(), player->getY(), AI::PLAYER);
+      // 	}
+    }
+
+    /*
+    ** Protected member functions
+    */
+    void	StateMap::clear()
+    {
+      for (unsigned int y = 0; y < _height; y++)
+	{
+	  for (unsigned int x = 0; x < _width; x++)
+	    {
+	      setCellValue(x, y, AI::UNKNOWN);
 	    }
 	}
     }

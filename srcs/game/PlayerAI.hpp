@@ -6,6 +6,7 @@
 # include "lua.hpp"
 # include "Player.hpp"
 # include "LuaScript.hpp"
+# include "Map.hpp"
 
 namespace Bomberman
 {
@@ -13,6 +14,7 @@ namespace Bomberman
   {
   public:
     PlayerAI(std::string const& name, std::string const& script);
+    PlayerAI(std::string const& name, std::string const& script, glm::vec4 color);
     virtual ~PlayerAI();
 
   private:
@@ -21,7 +23,7 @@ namespace Bomberman
     PlayerAI&		operator=(PlayerAI const& other);
 
   public:
-    void		doAction(float const& elsapsedTime);
+    void		doAction(Map const& map, float const& elsapsedTime);
     std::string const&	getAIName() const;
 
 public:
