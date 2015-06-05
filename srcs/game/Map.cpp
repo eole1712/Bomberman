@@ -186,7 +186,6 @@ void	Map::addSpawn(unsigned int x, unsigned int y)
 		     this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
 		     this->_rcs->getObject(IObject::EMPTY));
-  std::cout << "Spawn added in (" << x << ", " << y << ") !" << std::endl;
 }
 
 void	Map::drawLosange(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
