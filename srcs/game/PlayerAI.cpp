@@ -60,24 +60,66 @@ namespace Bomberman
       }
   }
 
-  void		PlayerAI::moveRight()
+  void			PlayerAI::moveRight()
   {
     _moveDir = RIGHT;
   }
 
-  void		PlayerAI::moveLeft()
+  void			PlayerAI::moveLeft()
   {
     _moveDir = LEFT;
   }
 
-  void		PlayerAI::moveUp()
+  void			PlayerAI::moveUp()
   {
     _moveDir = UP;
   }
 
-  void		PlayerAI::moveDown()
+  void			PlayerAI::moveDown()
   {
     _moveDir = DOWN;
+  }
+
+  bool			PlayerAI::isAttack() const
+  {
+    return (_attack);
+  }
+
+  bool			PlayerAI::isDefense() const
+  {
+    return (!_attack);
+  }
+
+  void			PlayerAI::memoriseAttackMode()
+  {
+    _attack = true;
+  }
+
+  void			PlayerAI::memoriseDefenseMode()
+  {
+    _attack = false;
+  }
+
+  void			PlayerAI::memoriseGoal(unsigned int x, unsigned int y)
+  {
+    _goal.first = x;
+    _goal.second = y;
+  }
+
+  void			PlayerAI::resetGoal()
+  {
+    _goal.first = -1;
+    _goal.second = -1;
+  }
+
+  int			PlayerAI::getGoalX() const
+  {
+    return (_goal.first);
+  }
+
+  int			PlayerAI::getGoalY() const
+  {
+    return (_goal.second);
   }
 
   std::string const&	PlayerAI::getAIName() const
@@ -106,10 +148,18 @@ namespace Bomberman
       .endClass()
       .deriveClass<PlayerAI, Player>("PlayerAI")
       .addProperty("aiName", &PlayerAI::getAIName)
+      .addProperty("goalX", &PlayerAI::getGoalX)
+      .addProperty("goalY", &PlayerAI::getGoalY)
       .addFunction("moveRight", &PlayerAI::moveRight)
       .addFunction("moveLeft", &PlayerAI::moveLeft)
       .addFunction("moveUp", &PlayerAI::moveUp)
       .addFunction("moveDown", &PlayerAI::moveDown)
+      .addFunction("memoriseGoal", &PlayerAI::memoriseGoal)
+      .addFunction("resetGoal", &PlayerAI::resetGoal)
+      .addFunction("isAttack", &PlayerAI::isAttack)
+      .addFunction("isDefense", &PlayerAI::isDefense)
+      .addFunction("memoriseAttack", &PlayerAI::memoriseAttackMode)
+      .addFunction("memoriseDefense", &PlayerAI::memoriseDefenseMode)
       .endClass()
       .beginClass<GenericMap<AI::Cell> >("GenericMap")
       .addProperty("width", &GenericMap<AI::Cell>::getWidth)

@@ -43,6 +43,18 @@ namespace Bomberman
     void		moveUp();
     void		moveDown();
 
+  public:
+    bool		isAttack() const;
+    bool		isDefense() const;
+    void		memoriseAttackMode();
+    void		memoriseDefenseMode();
+
+  public:
+    void		memoriseGoal(unsigned int x, unsigned int y);
+    void		resetGoal();
+    int			getGoalX() const;
+    int			getGoalY() const;
+
   protected:
     void		moveRightFrame(float const& elapsedTime);
     void		moveLeftFrame(float const& elapsedTime);
@@ -63,6 +75,8 @@ namespace Bomberman
     std::string		_aiName;
     luabridge::LuaRef*	_aiAction;
     MoveDir		_moveDir;
+    std::pair<int, int>	_goal;
+    bool		_attack;
 
   protected:
     static const MoveBook	moveBook;
