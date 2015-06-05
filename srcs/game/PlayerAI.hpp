@@ -24,6 +24,12 @@ namespace Bomberman
     void		doAction();
     std::string const&	getAIName() const;
 
+public:
+    void		moveRight(float const & elsapsedTime);
+    void		moveLeft(float const & elsapsedTime);
+    void		moveUp(float const & elsapsedTime);
+    void		moveDown(float const & elsapsedTime);
+
   protected:
     void		luaObjectInit();
     void		loadAIData();

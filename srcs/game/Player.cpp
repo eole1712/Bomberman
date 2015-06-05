@@ -395,35 +395,6 @@ void			Player::rotate(bool const & direction,
     }
 }
 
-void			Player::moveUp(float const & elsapsedTime)
-{
-  move(0, elsapsedTime);
-  if (getRotation().y != 0)
-    rotate((getRotation().y > 180), elsapsedTime, 0);
-}
-
-void			Player::moveRight(float const & elsapsedTime)
-{
-  move(90, elsapsedTime);
-  if (getRotation().y != 90)
-    rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90);
-}
-
-void			Player::moveDown(float const & elsapsedTime)
-{
-
-  move(180, elsapsedTime);
-  if (getRotation().y != 180)
-    rotate((getRotation().y < 180), elsapsedTime, 180);
-}
-
-void			Player::moveLeft(float const & elsapsedTime)
-{
-  move(270, elsapsedTime);
-  if (getRotation().y != 270)
-    rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270);
-}
-
 //attacks
 
 void			Player::setBombType(Bomb::Type type)
