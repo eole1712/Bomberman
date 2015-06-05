@@ -58,29 +58,29 @@ bool				Game::initialize()
   glShadeModel(GL_SMOOTH);
 
   // We create a shader
-  if (!_shader.load("ressources/shaders/basic.fp", GL_FRAGMENT_SHADER)
-      || !_shader.load("ressources/shaders/basic.vp", GL_VERTEX_SHADER)
+  if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
+      || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
     return false;
 
-  attachObject(new Asset3d("ressources/assets/floor.obj"));
-  attachObject(new Asset3d("ressources/assets/idst_block.obj"));
-  attachObject(new Asset3d("ressources/assets/idst_block.obj"));
-  attachObject(new Asset3d("ressources/assets/dst_block.obj"));
-  attachObject(new Asset3d("ressources/assets/fire.obj"));
-  attachObject(new Asset3d("ressources/assets/marvin.fbx"));
+  attachObject(new Asset3d("resources/assets/floor.obj"));
+  attachObject(new Asset3d("resources/assets/idst_block.obj"));
+  attachObject(new Asset3d("resources/assets/idst_block.obj"));
+  attachObject(new Asset3d("resources/assets/dst_block.obj"));
+  attachObject(new Asset3d("resources/assets/fire.obj"));
+  attachObject(new Asset3d("resources/assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   //_assets[PLAYER]->createSubAnim(0, "start", 10, 28);
   //_assets[PLAYER]->createSubAnim(0, "run", 34, 55);
   //_assets[PLAYER]->createSubAnim(0, "end", 55, 130);
-  attachObject(new Asset3d("ressources/assets/barrel.obj"));
+  attachObject(new Asset3d("resources/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
   _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
-  attachObject(new Asset3d("ressources/assets/sky.obj"));
+  attachObject(new Asset3d("resources/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
-  attachObject(new Asset3d("ressources/assets/bonus.obj"));
+  attachObject(new Asset3d("resources/assets/bonus.obj"));
   _assets[BONUS]->scale(glm::vec3(0.05));
 
 
@@ -200,7 +200,8 @@ void		Game::draw()
 	    {
 	      _assets[_ObjectToAsset[_map.getCellValue(x, y)->getObjectType()]]
 		->setPosition(glm::vec3(x, 0, y));
-	      if (IObject::BOMB == _map.getCellValue(x, y)->getObjectType())
+	      if (IObject::BOMB == _map.getCellValue(x, y)->getObjectType() ||
+		  IObject::BONUS == _map.getCellValue(x, y)->getObjectType())
 		{
 		  _assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
 		  _assets[FLOOR]->draw(_shader, _clock);

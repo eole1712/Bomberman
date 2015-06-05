@@ -16,7 +16,10 @@ int main()
   Bomberman::Game	engine(bra[0], bra[1]);
 
   if (engine.initialize() == false)
-    return (EXIT_FAILURE);
+    {
+      std::cout << "Initialize failed" << std::endl;
+      return (EXIT_FAILURE);
+    }
   while (engine.update() == true)
     engine.draw();
   return EXIT_SUCCESS;
