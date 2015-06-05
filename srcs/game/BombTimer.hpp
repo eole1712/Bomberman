@@ -41,6 +41,12 @@ private:
   unsigned int	_y;
 
 public:
+  void		setFinished();
+
+private:
+  bool		_isFinished;
+
+public:
   IObject::Type	getObjectType() const;
   bool		isNull() const;
 };

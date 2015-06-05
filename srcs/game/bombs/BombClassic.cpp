@@ -34,21 +34,6 @@ bool		Classic::isNull() const
   return false;
 }
 
-bool		Classic::isOtherBomb(Map *map, int x, int y, Player *player) const
-{
-  if (map->getCellValue(x, y)->getObjectType() == IObject::BOMB)
-    {
-      dynamic_cast<BombTimer*>(map->getCellValue(x, y))->setFinished();
-      return true;
-    }
-  else
-    {
-      map->killPlayers(x, y);
-      map->addFire(player, x, y);
-    }
-  return false;
-}
-
 void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *player) const
 {
   int	        d;
@@ -70,7 +55,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	    }
 	  break;
 	}
-      isOtherBomb(map, s.i, y, player);
+      isOtherBomb(map, s.i, y, player, x, y);
     }
   for (unsigned int i = x, r = 0; i < map->getWidth() && r < range; ++i, ++r)
     {
@@ -89,7 +74,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	    }
 	  break;
 	}
-      isOtherBomb(map, i, y, player);
+      isOtherBomb(map, i, y, player, x, y);
     }
   for (struct {int i; unsigned int r; } s = {y, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
@@ -108,7 +93,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	    }
 	  break;
 	}
-      isOtherBomb(map, x, s.i, player);
+      isOtherBomb(map, x, s.i, player, x, y);
     }
   for (unsigned int i = y, r = 0; i < map->getHeight() && r < range; ++i, ++r)
     {
@@ -127,7 +112,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	    }
 	  break;
 	}
-      isOtherBomb(map, x, i, player);
+      isOtherBomb(map, x, i, player, x, y);
     }
 }
 

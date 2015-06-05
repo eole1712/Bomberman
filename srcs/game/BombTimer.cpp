@@ -5,13 +5,13 @@ namespace Bomberman
 {
 
 BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
-  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY())
+  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY()), _isFinished(false)
 {
   start();
 }
 
 BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time, unsigned int x, unsigned int y)
-  : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y)
+  : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y), _isFinished(false)
 {
   start();
 }
@@ -56,9 +56,14 @@ unsigned int	BombTimer::getY() const
   return _y;
 }
 
+void		BombTimer::setFinished()
+{
+  _isFinished = true;
+}
+
 bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 {
-  if (isFinished())
+  if (isFinished() || _isFinished)
     {
       _bomb->explose(x, y, map, getRange(), _player);
       _player->incBomb();
