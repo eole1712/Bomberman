@@ -6,6 +6,11 @@
 namespace Bomberman
 {
   /*
+  ** Static variables
+  */
+  const PlayerAI::MoveBook	PlayerAI::moveBook	= PlayerAI::getMoveBook();
+
+  /*
   ** Constructor/Destructor
   */
   PlayerAI::PlayerAI(std::string const& name, std::string const& script) :
@@ -43,7 +48,10 @@ namespace Bomberman
       throw std::runtime_error("AI's action is not set");
     try
       {
-	(*_aiAction)(this, &stateMap, elapsedTime);
+	_moveDir = NONE;
+	(*_aiAction)(this, &stateMap);
+	if (_moveDir != NONE)
+	  (this->*(moveBook.at(_moveDir)))(elapsedTime);
       }
     catch (luabridge::LuaException const& e)
       {
@@ -52,33 +60,24 @@ namespace Bomberman
       }
   }
 
-void			PlayerAI::moveUp(float const& elsapsedTime)
-{
-  move(0, elsapsedTime);
-  if (getRotation().y != 0)
-    rotate((getRotation().y > 180), elsapsedTime, 0);
-}
-
-  void			PlayerAI::moveRight(float const& elsapsedTime)
+  void		PlayerAI::moveRight()
   {
-    move(270, elsapsedTime);
-    if (getRotation().y != 270)
-      rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270);
+    _moveDir = RIGHT;
   }
 
-  void			PlayerAI::moveDown(float const& elsapsedTime)
+  void		PlayerAI::moveLeft()
   {
-
-    move(180, elsapsedTime);
-    if (getRotation().y != 180)
-      rotate((getRotation().y < 180), elsapsedTime, 180);
+    _moveDir = LEFT;
   }
 
-  void			PlayerAI::moveLeft(float const& elsapsedTime)
+  void		PlayerAI::moveUp()
   {
-    move(90, elsapsedTime);
-    if (getRotation().y != 90)
-      rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90);
+    _moveDir = UP;
+  }
+
+  void		PlayerAI::moveDown()
+  {
+    _moveDir = DOWN;
   }
 
   std::string const&	PlayerAI::getAIName() const
@@ -137,5 +136,48 @@ void			PlayerAI::moveUp(float const& elsapsedTime)
     if (!data["aiAction"].isFunction())
       throw Exception::LuaError("aiAction specified in aiData is not a function");
     _aiAction = new luabridge::LuaRef(data["aiAction"]);
+  }
+
+  void			PlayerAI::moveUpFrame(float const& elapsedTime)
+  {
+    move(0, elapsedTime);
+    if (getRotation().y != 0)
+      rotate((getRotation().y > 180), elapsedTime, 0);
+  }
+
+  void			PlayerAI::moveRightFrame(float const& elapsedTime)
+  {
+    move(270, elapsedTime);
+    if (getRotation().y != 270)
+      rotate((getRotation().y < 270 && getRotation().y >= 90), elapsedTime, 270);
+  }
+
+  void			PlayerAI::moveDownFrame(float const& elapsedTime)
+  {
+
+    move(180, elapsedTime);
+    if (getRotation().y != 180)
+      rotate((getRotation().y < 180), elapsedTime, 180);
+  }
+
+  void			PlayerAI::moveLeftFrame(float const& elapsedTime)
+  {
+    move(90, elapsedTime);
+    if (getRotation().y != 90)
+      rotate((getRotation().y < 90 || getRotation().y > 270), elapsedTime, 90);
+  }
+
+  /*
+  ** Static protected methods
+  */
+  PlayerAI::MoveBook	PlayerAI::getMoveBook()
+  {
+    MoveBook		res;
+
+    res[LEFT] = &PlayerAI::moveLeftFrame;
+    res[UP] = &PlayerAI::moveUpFrame;
+    res[DOWN] = &PlayerAI::moveDownFrame;
+    res[RIGHT] = &PlayerAI::moveRightFrame;
+    return (res);
   }
 }

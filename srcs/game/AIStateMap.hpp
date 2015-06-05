@@ -1,5 +1,5 @@
-#ifndef __AIMAP_HPP__
-# define __AIMAP_HPP__
+#ifndef __AISTATEMAP_HPP__
+# define __AISTATEMAP_HPP__
 
 # include <vector>
 # include <utility>
@@ -55,4 +55,4 @@ namespace Bomberman
   }
 }
 
-#endif /* !__AIMAP_HPP__ */
+#endif /* !__AISTATEMAP_HPP__ */

@@ -147,7 +147,7 @@ public:
   virtual Type		getObjectType() const;
   virtual bool		isNull() const;
 
-private:
+protected:
   Map			*_map;
 
 public:

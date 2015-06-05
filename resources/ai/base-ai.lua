@@ -1,18 +1,16 @@
-local test = 0
 aiData = {
        name = "base-ai",
-       aiAction = function(player, map, elapsedTime)
-		if test == 0
+       aiAction = function(player, map)
+		if player.y ~= 1
 		then
-			print(map:toString())
-			player:putBomb()
-			test = 1
-			for i=0,(map:getNbPlayers() -1)
-			do
-				print("coo ", map:getPlayerPosX(i), " ", map:getPlayerPosY(i))
-			end
-		else
-			player:moveLeft(elapsedTime)
+			player:moveUp(elapsedTime)
 		end
 	end
 }
+
+
+--[[			for i=0,(map:getNbPlayers() -1)
+			do
+				print("coo ", map:getPlayerPosX(i), " ", map:getPlayerPosY(i))
+			end
+]]--
