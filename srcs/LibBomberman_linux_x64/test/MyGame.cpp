@@ -58,9 +58,8 @@ bool		MyGame::initialize()
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("../assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
-  attachObject(new Asset3d("../assets/sky.obj"));
-  _assets[SKYBOX]->scale(glm::vec3(10.5 * 24));
-  _assets[SKYBOX]->setPosition(glm::vec3(24 / 2, -30, 24 / 2));
+  attachObject(new Asset3d("../assets/marvin.fbm/skybox.obj"));
+  _assets[SKYBOX]->scale(glm::vec3(10.5 * 10));
   _camera.setRotation(_assets[PLAYER]->getPosition());
   _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
   _camera.updateView();
@@ -117,7 +116,7 @@ bool		MyGame::update()
   else if (_input.getKey(SDLK_RIGHT))
     _assets[PLAYER]->rotate(glm::vec3(0, 1, 0), -3 * movefactor);
   _camera.setPosition(_assets[PLAYER]->getPosition()
-		      + glm::rotate(glm::vec3(3.5, 4, 0),
+		      + glm::rotate(glm::vec3(3.5, 1.5, 0),
 				    _assets[PLAYER]->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.updateView();
@@ -136,6 +135,7 @@ void		MyGame::draw()
   _shader.bind();
   _shader.setUniform("view", _camera.getView());
   _shader.setUniform("projection", _camera.getProjection());
+  _shader.setUniform("playercolor", _);
   // We draw all objects
   i[0] = 0;
   while (i[0] < 25)
@@ -166,6 +166,7 @@ void		MyGame::draw()
   _assets[DST_BLOCK]->draw(_shader, _clock);
   _assets[PLAYER]->draw(_shader, _clock);
   _assets[SKYBOX]->draw(_shader, _clock);
+<<<<<<< Updated upstream
   _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   _assets[SKYBOX]->scale(glm::vec3(-1));
   _assets[SKYBOX]->draw(_shader, _clock);
@@ -198,5 +199,11 @@ void		MyGame::draw()
 
   // poney.draw(_shader, glm::mat4(), GL_QUADS);
 
+=======
+  // _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
+  // _assets[SKYBOX]->scale(glm::vec3(-1));
+  // _assets[SKYBOX]->draw(_shader, _clock);
+  // _assets[SKYBOX]->scale(glm::vec3(1));
+>>>>>>> Stashed changes
   _context.flush();
 }

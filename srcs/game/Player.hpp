@@ -9,6 +9,7 @@
 # include "IBomb.hpp"
 # include "Object3d.hpp"
 # include "glm/glm.hpp"
+# include "Animation.hpp"
 
 namespace Bomberman
 {
@@ -145,6 +146,9 @@ public:
 
 private:
   Map			*_map;
+
+public:
+  Animation		*animation;
 };
 
 }

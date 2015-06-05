@@ -18,6 +18,7 @@ CORESRCS	= main.cpp		\
 		  CameraObject.cpp	\
 		  JSONDoc.cpp		\
 		  Score.cpp		\
+		  Animation.cpp		\
 
 GAMESRCS	= Player.cpp 		\
 		  BuffTimer.cpp		\

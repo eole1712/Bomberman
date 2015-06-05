@@ -12,6 +12,7 @@ public:
   void				start();
   void				stop();
   void				reset();
+  void				reset(uintmax_t time);
   bool				isFinished();
   uintmax_t			getElapsedTime();
 

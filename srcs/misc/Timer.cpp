@@ -30,6 +30,12 @@ void	Timer::reset()
   _saveTime = std::chrono::microseconds(0);
 }
 
+void	Timer::reset(uintmax_t time)
+{
+  _clock = std::chrono::system_clock::now();
+  _saveTime = std::chrono::microseconds(time);
+}
+
 bool	Timer::isFinished()
 {
   return (this->getCurTime() > _time);
