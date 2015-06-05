@@ -19,9 +19,9 @@ int		Classic::getDuration() const
   return 3;
 }
 
-IBomb::Type	Classic::getBombType() const
+Bomb::Type	Classic::getBombType() const
 {
-  return IBomb::CLASSIC;
+  return Bomb::CLASSIC;
 }
 
 IObject::Type	Classic::getObjectType() const
@@ -119,6 +119,39 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
       map->addFire(player, x, i);
     }
 }
+
+  void		Classic::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
+					    int y, unsigned int range) const
+  {
+  for (struct {int i; unsigned int r;} s = {x, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
+    {
+      if (realMap->getCellValue(s.i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  realMap->getCellValue(s.i, y)->getObjectType() == IObject::WALL)
+	break;
+      map->setCellValue(s.i, y, AI::UNSAFE);
+    }
+  for (unsigned int i = x, r = 0; i < map->getWidth() && r < range; ++i, ++r)
+    {
+      if (realMap->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  realMap->getCellValue(i, y)->getObjectType() == IObject::WALL)
+	break;
+      map->setCellValue(i, y, AI::UNSAFE);
+    }
+  for (struct {int i; unsigned int r; } s = {y, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
+    {
+      if (realMap->getCellValue(x, s.i)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  realMap->getCellValue(x, s.i)->getObjectType() == IObject::WALL)
+	break;
+      map->setCellValue(x, s.i, AI::UNSAFE);
+    }
+  for (unsigned int i = y, r = 0; i < map->getHeight() && r < range; ++i, ++r)
+    {
+      if (realMap->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
+	  realMap->getCellValue(x, i)->getObjectType() == IObject::WALL)
+	break;
+      map->setCellValue(x, i, AI::UNSAFE);
+    }
+  }
 
 IBomb*		Classic::clone() const
 {

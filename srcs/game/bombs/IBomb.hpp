@@ -3,6 +3,8 @@
 
 # include "IObject.hpp"
 # include "IClonable.hpp"
+# include "AIStateMap.hpp"
+# include "BombTypes.hpp"
 
 namespace Bomberman
 {
@@ -10,24 +12,22 @@ namespace Bomberman
 class Map;
 class Player;
 
+namespace AI
+{
+class StateMap;
+}
+
 class IBomb : public IClonable<IBomb>, public IObject
 {
-public:
-  enum Type
-    {
-      CLASSIC = 0,
-      VIRUS
-    };
-
 public:
   virtual ~IBomb() {}
 
 public:
   virtual int		getDuration() const = 0;
-  virtual Type		getBombType() const = 0;
+  virtual Bomb::Type	getBombType() const = 0;
   virtual void		explose(int, int, Map *, unsigned int, Player*) const = 0;
-public:
-  static const int	nbBomb;
+  virtual void		setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
+					   int y, unsigned int range) const = 0;
 };
 
 }

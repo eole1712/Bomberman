@@ -28,6 +28,7 @@ GAMESRCS	= Player.cpp 		\
 		  BuffTimer.cpp		\
 		  Empty.cpp		\
 		  Map.cpp		\
+		  AIStateMap.cpp	\
 		  RessourceStock.cpp	\
 		  BombTimer.cpp		\
 		  Spawn.cpp		\
@@ -50,7 +51,6 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 
 BOMBSRCS	= BombClassic.cpp	\
 		  BombVirus.cpp		\
-		  IBomb.cpp		\
 		  BombFactory.cpp	\
 
 MISCSRCS	= Timer.cpp		\

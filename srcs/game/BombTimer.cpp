@@ -67,4 +67,8 @@ bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
   return false;
 }
 
+  void		BombTimer::setBlastRangeToMap(AI::StateMap* map, Map const* realMap) const
+  {
+    _bomb->setBlastRangeToMap(map, realMap, _x, _y, _range);
+  }
 }

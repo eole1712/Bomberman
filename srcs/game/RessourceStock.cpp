@@ -23,7 +23,7 @@ namespace Bomberman
 {
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names)
-  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(IBomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
+  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
 {
   for (unsigned int i = 0; i < names.size(); ++i)
     _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
@@ -35,8 +35,8 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
   _buffs[IBuff::SHIELD] = new Buff::Shield;
   _buffs[IBuff::WEAPON] = new Buff::Weapon;
-  _bombs[IBomb::CLASSIC] = new Bomb::Classic;
-  _bombs[IBomb::VIRUS] = new Bomb::Virus;
+  _bombs[Bomb::CLASSIC] = new Bomb::Classic;
+  _bombs[Bomb::VIRUS] = new Bomb::Virus;
   _objects[IObject::BOMB] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
@@ -48,7 +48,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(IBomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
 {
   for (unsigned int i = 0; i < players.size(); ++i)
     _players[i] = players[i];
@@ -60,8 +60,8 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
   _buffs[IBuff::SHIELD] = new Buff::Shield;
   _buffs[IBuff::WEAPON] = new Buff::Weapon;
-  _bombs[IBomb::CLASSIC] = new Bomb::Classic;
-  _bombs[IBomb::VIRUS] = new Bomb::Virus;
+  _bombs[Bomb::CLASSIC] = new Bomb::Classic;
+  _bombs[Bomb::VIRUS] = new Bomb::Virus;
   _objects[IObject::BOMB] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
@@ -97,7 +97,7 @@ IObject		*RessourceStock::getBuff(IBuff::Type type) const
   return _buffs[type];
 }
 
-IObject		*RessourceStock::getBomb(IBomb::Type type) const
+IObject		*RessourceStock::getBomb(Bomb::Type type) const
 {
   return _bombs[type];
 }
