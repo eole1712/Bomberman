@@ -30,6 +30,7 @@ public:
   virtual void		explose(int, int, Map *, unsigned int, Player*) const;
   virtual IBomb*	clone() const;
   virtual std::string	getClassName() const;
+  virtual bool		isOtherBomb(Map*, int, int, Player*) const;
 
 public:
   virtual IObject::Type	getObjectType() const;

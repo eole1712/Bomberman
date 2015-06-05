@@ -34,6 +34,21 @@ bool		Virus::isNull() const
   return false;
 }
 
+bool		Virus::isOtherBomb(Map *map, int x, int y, Player *player) const
+{
+  if (map->getCellValue(x, y)->getObjectType() == IObject::BOMB)
+    {
+      dynamic_cast<BombTimer*>(map->getCellValue(x, y))->setFinished();
+      return true;
+    }
+  else
+    {
+      map->killPlayers(x, y);
+      map->addFire(player, x, y);
+    }
+  return false;
+}
+
 void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
 {
   for (int i = x; i >= 0 ; --i)
