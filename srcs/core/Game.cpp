@@ -122,8 +122,10 @@ void		Game::attachObject(Asset3d *obj)
 bool		Game::update()
 {
   static int	change = 0;
-  Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
+  Player	*player = dynamic_cast<Player *>(_stock.getPlayer(1));
+  Player	*ai = dynamic_cast<Player *>(_stock.getPlayer(0));
   float		elsapsedTime = static_cast<float>(_clock.getElapsed()) * 60;
+  PlayerAI*	testlua = new PlayerAI("test ai", "resources/ai/base-ai.lua"); //
 
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
@@ -165,10 +167,12 @@ bool		Game::update()
   if (_input.getKey(SDLK_RIGHT) || _input.getKey(SDLK_LEFT))
     player->Player::rotate(_input.getKey(SDLK_LEFT), elsapsedTime);
   _map.checkBombsOnMap();
-  _camera.setPosition(player->getPosition()
+  _camera.setRotation(ai->getPosition());
+  _camera.setPosition(ai->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
-				    player->getRotation().y + 90,
+				    ai->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
+  testlua->doAction();
   _camera.updateView();
   // Update inputs an clock
   _context.updateClock(_clock);
