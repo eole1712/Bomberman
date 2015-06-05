@@ -123,8 +123,8 @@ bool		Game::update()
 {
   static int	change = 0;
   Player	*player = dynamic_cast<Player *>(_stock.getPlayer(1));
-  Player	*ai = dynamic_cast<Player *>(_stock.getPlayer(0));
   float		elsapsedTime = static_cast<float>(_clock.getElapsed()) * 60;
+  Player	*ai = dynamic_cast<Player *>(_stock.getPlayer(0));
   PlayerAI*	testlua = new PlayerAI("test ai", "resources/ai/base-ai.lua"); //
 
   // If the escape key is pressed or if the window has been closed we stop the program
@@ -172,7 +172,7 @@ bool		Game::update()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    ai->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  testlua->doAction();
+  testlua->doAction(elsapsedTime);
   _camera.updateView();
   // Update inputs an clock
   _context.updateClock(_clock);

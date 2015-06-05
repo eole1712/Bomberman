@@ -25,13 +25,13 @@ namespace Bomberman
   /*
   ** Public member functions
   */
-  void			PlayerAI::doAction()
+  void			PlayerAI::doAction(float const& elapsedTime)
   {
     if (_aiAction == NULL)
       throw std::runtime_error("AI's action is not set");
     try
       {
-	(*_aiAction)(this);
+	(*_aiAction)(this, elapsedTime);
       }
     catch (luabridge::LuaException const& e)
       {
@@ -40,21 +40,23 @@ namespace Bomberman
       }
   }
 
-void			PlayerAI::moveUp(float const & elsapsedTime)
+void			PlayerAI::moveUp(float const& elsapsedTime)
 {
+  std::cout << "meh " << elsapsedTime << std::endl;
   move(0, elsapsedTime);
+  std::cout << "meh2 " << elsapsedTime << std::endl;
   if (getRotation().y != 0)
     rotate((getRotation().y > 180), elsapsedTime, 0);
 }
 
-  void			PlayerAI::moveRight(float const & elsapsedTime)
+  void			PlayerAI::moveRight(float const& elsapsedTime)
   {
     move(90, elsapsedTime);
     if (getRotation().y != 90)
       rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90);
   }
 
-  void			PlayerAI::moveDown(float const & elsapsedTime)
+  void			PlayerAI::moveDown(float const& elsapsedTime)
   {
 
     move(180, elsapsedTime);
@@ -62,7 +64,7 @@ void			PlayerAI::moveUp(float const & elsapsedTime)
       rotate((getRotation().y < 180), elsapsedTime, 180);
   }
 
-  void			PlayerAI::moveLeft(float const & elsapsedTime)
+  void			PlayerAI::moveLeft(float const& elsapsedTime)
   {
     move(270, elsapsedTime);
     if (getRotation().y != 270)
@@ -89,10 +91,14 @@ void			PlayerAI::moveUp(float const & elsapsedTime)
       .addProperty("speed", &PlayerAI::getSpeed)
       .addProperty("nbBomb", &PlayerAI::getNbBomb)
       .addProperty("bombType", &PlayerAI::getBombType)
-      .addFunction("putBomb", &PlayerAI::putBomb) /* + move + rotate ? */
+      .addFunction("putBomb", &PlayerAI::putBomb)
       .endClass()
       .deriveClass<PlayerAI, Player>("PlayerAI")
       .addProperty("aiName", &PlayerAI::getAIName)
+      .addFunction("moveRight", &PlayerAI::moveRight)
+      .addFunction("moveLeft", &PlayerAI::moveLeft)
+      .addFunction("moveUp", &PlayerAI::moveUp)
+      .addFunction("moveDown", &PlayerAI::moveDown)
       .endClass();
   }
 
