@@ -63,6 +63,7 @@ namespace Bomberman
       .addFunction("putBomb", &PlayerAI::putBomb) /* + move + rotate ? */
       .endClass()
       .deriveClass<PlayerAI, Player>("PlayerAI")
+      .addProperty("aiName", &PlayerAI::getAIName)
       .endClass();
   }
 

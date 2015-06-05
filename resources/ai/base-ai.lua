@@ -1,7 +1,6 @@
 aiData = {
        name = "base-ai",
        aiAction = function(player)
-       		player:putBomb()
-		print "ai: putBomb"
+		print(player.aiName)
 	end
 }
