@@ -51,11 +51,11 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	      	  map->setCellValue(s.i, y, map->getRcs()->getBuff((IBuff::Type)(d)));
 	      	}
 	      else
-		map->addFire(player, s.i, y);
+		map->addFire(player, s.i, y, Fire::explosionTime / (s.r + 1));
 	    }
 	  break;
 	}
-      isOtherBomb(map, s.i, y, player, x, y);
+      isOtherBomb(map, s.i, y, player, x, y, Fire::explosionTime / (s.r + 1));
     }
   for (unsigned int i = x, r = 0; i < map->getWidth() && r < range; ++i, ++r)
     {
@@ -70,11 +70,11 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 		  map->setCellValue(i, y, map->getRcs()->getBuff((IBuff::Type)(d)));
 		}
 	      else
-		map->addFire(player, i, y);
+		map->addFire(player, i, y, Fire::explosionTime / (r + 1));
 	    }
 	  break;
 	}
-      isOtherBomb(map, i, y, player, x, y);
+      isOtherBomb(map, i, y, player, x, y, Fire::explosionTime / (r + 1));
     }
   for (struct {int i; unsigned int r; } s = {y, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
@@ -89,11 +89,11 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 		  map->setCellValue(x, s.i, map->getRcs()->getBuff((IBuff::Type)(d)));
 		}
 	      else
-		map->addFire(player, x, s.i);
+		map->addFire(player, x, s.i, Fire::explosionTime / (s.r + 1));
 	    }
 	  break;
 	}
-      isOtherBomb(map, x, s.i, player, x, y);
+      isOtherBomb(map, x, s.i, player, x, y, Fire::explosionTime / (s.r + 1));
     }
   for (unsigned int i = y, r = 0; i < map->getHeight() && r < range; ++i, ++r)
     {
@@ -108,11 +108,11 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 		  map->setCellValue(x, i, map->getRcs()->getBuff((IBuff::Type)(d)));
 		}
 	      else
-		map->addFire(player, x, i);
+		map->addFire(player, x, i, Fire::explosionTime / (r + 1));
 	    }
 	  break;
 	}
-      isOtherBomb(map, x, i, player, x, y);
+      isOtherBomb(map, x, i, player, x, y, Fire::explosionTime / (r + 1));
     }
 }
 

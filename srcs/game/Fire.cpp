@@ -4,10 +4,16 @@
 namespace Bomberman
 {
 
-const float	Fire::explosionTime = 0.3;
+const float	Fire::explosionTime = 0.5;
 
 Fire::Fire(Player *player, unsigned int x, unsigned int y)
   : Timer(explosionTime * 1000000), _player(player), _x(x), _y(y), _buff(NULL)
+{
+  start();
+}
+
+Fire::Fire(Player *player, unsigned int x, unsigned int y, float time)
+  : Timer(time * 1000000), _player(player), _x(x), _y(y), _buff(NULL)
 {
   start();
 }
