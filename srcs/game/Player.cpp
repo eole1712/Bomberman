@@ -18,9 +18,10 @@ unsigned int const	Player::dftRange = 3;
 unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
+IBomb::Type const	Player::dftBombType = IBomb::MINE;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(color), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -42,7 +43,7 @@ Player::Player(std::string const &name, glm::vec4 color)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(glm::vec4(1))
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -380,7 +381,7 @@ IBomb::Type		Player::getBombType() const
 
 void			Player::putBomb()
 {
-  if (_map && isAlive() && !isParalyzed() && !zeroBomb())
+  if (_map && isAlive() && !isParalyzed() && !zeroBomb() && _map->getCellValue(getX(), getY())->getObjectType() != IObject::BOMB2)
     {
       IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);

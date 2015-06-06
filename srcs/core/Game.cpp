@@ -206,8 +206,11 @@ void		Game::draw()
 		  _assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
 		  _assets[FLOOR]->draw(_shader, _clock);
 		}
+	      else if (IObject::BOMB2 == _map.getCellValue(x, y)->getObjectType())
+		_shader.setUniform("color", glm::vec4(0, 1, 0, 0));
 	      _assets[_ObjectToAsset[_map.getCellValue(x, y)->getObjectType()]]
 		->draw(_shader, _clock);
+	      _shader.setUniform("color", glm::vec4(1.0));
 	    }
 	}
     }
