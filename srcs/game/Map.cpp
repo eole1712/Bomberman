@@ -375,7 +375,6 @@ void		Map::addFire(Player *player, unsigned int x, unsigned int y, float time)
 {
   if (getCellValue(x, y)->getObjectType() != IObject::FIRE)
     {
-      std::cout << time << std::endl;
       Fire		*fire = new Fire(player, x, y, time);
 
       if (getCellValue(x, y)->getObjectType() == IObject::BONUS)
