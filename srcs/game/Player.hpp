@@ -119,6 +119,8 @@ protected:
 public:
   void			move(float const & direction, float const & elsapsedTime);
   void			rotate(bool const & direction,
+			       float const & elsapsedTime, float const & stop);
+  void			rotate(bool const & direction,
 			       float const & elsapsedTime);
 
 
@@ -149,6 +151,13 @@ private:
 
 public:
   Animation		*animation;
+
+public:
+  // I.A.
+  void			moveRight(float const & elsapsedTime);
+  void			moveLeft(float const & elsapsedTime);
+  void			moveUp(float const & elsapsedTime);
+  void			moveDown(float const & elsapsedTime);
 };
 
 }

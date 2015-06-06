@@ -356,14 +356,66 @@ void			Player::move(float const & direction, float const & elsapsedTime)
 }
 
 void			Player::rotate(bool const & direction,
+				       float const & elsapsedTime, float const & stop)
+{
+  float			before;
+  float			after;
+
+  before = getRotation().y;
+  rotate(direction, elsapsedTime);
+  after = getRotation().y;
+  after -= 360 * (stop == 0 && direction == 1);
+  before -= 360 * (stop == 0 && direction == 1);
+  if (abs(stop - before) < abs(stop - after))
+    setRotation(glm::vec3(0, stop, 0));
+}
+
+void			Player::rotate(bool const & direction,
 				       float const & elsapsedTime)
 {
+  glm::vec3		rot;
+
   if (!isAlive() || isParalyzed())
     return;
+  rot = getRotation();
   if (direction)
-    Object3d::rotate(glm::vec3(0, 1, 0), 3 * elsapsedTime * _speed);
+    setRotation(glm::vec3(rot.x, fmod(getRotation().y + 3 * elsapsedTime * _speed, 360), rot.z));
   else
-    Object3d::rotate(glm::vec3(0, 1, 0), -3 * elsapsedTime * _speed);
+    {
+      if (rot.y - 3 * elsapsedTime * _speed < 0)
+	setRotation(glm::vec3(rot.x, 360 + rot.y - 3 * elsapsedTime * _speed, rot.z));
+      else
+	setRotation(glm::vec3(rot.x, rot.y - 3 * elsapsedTime * _speed, rot.z));
+    }
+}
+
+void			Player::moveUp(float const & elsapsedTime)
+{
+  move(0, elsapsedTime);
+  if (getRotation().y != 0)
+    rotate((getRotation().y > 180), elsapsedTime, 0);
+}
+
+void			Player::moveRight(float const & elsapsedTime)
+{
+  move(90, elsapsedTime);
+  if (getRotation().y != 90)
+    rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90);
+}
+
+void			Player::moveDown(float const & elsapsedTime)
+{
+
+  move(180, elsapsedTime);
+  if (getRotation().y != 180)
+    rotate((getRotation().y < 180), elsapsedTime, 180);
+}
+
+void			Player::moveLeft(float const & elsapsedTime)
+{
+  move(270, elsapsedTime);
+  if (getRotation().y != 270)
+    rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270);
 }
 
 //attacks
