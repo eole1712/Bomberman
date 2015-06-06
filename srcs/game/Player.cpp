@@ -18,7 +18,7 @@ unsigned int const	Player::dftRange = 3;
 unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
-IBomb::Type const	Player::dftBombType = IBomb::MINE;
+IBomb::Type const	Player::dftBombType = IBomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
   : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
