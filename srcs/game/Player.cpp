@@ -444,6 +444,19 @@ void			Player::putBomb()
     }
 }
 
+void                  Player::putTimedBomb(unsigned int x, unsigned int y)
+{
+  if (_map)
+    {
+      IBomb   *bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(IBomb::CLASSIC));
+      BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
+
+      _map->addBomb(bombT);
+      _map->setCellValue(x, y, bombT);
+      decBomb();
+    }
+}
+
 bool			Player::tryToKill()
 {
   if (isAlive())
