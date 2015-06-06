@@ -14,6 +14,7 @@ class Fire
 {
 public:
   Fire(Player *, unsigned int, unsigned int);
+  Fire(Player *, unsigned int, unsigned int, float);
   virtual ~Fire();
 
 private:

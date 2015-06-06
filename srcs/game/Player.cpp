@@ -18,9 +18,10 @@ unsigned int const	Player::dftRange = 3;
 unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
+IBomb::Type const	Player::dftBombType = IBomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(color), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -42,7 +43,7 @@ Player::Player(std::string const &name, glm::vec4 color)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(glm::vec4(1))
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -443,31 +444,17 @@ void			Player::putBomb()
     }
 }
 
-void			Player::putTimedBomb(unsigned int x, unsigned int y)
-{
-  if (_map)
-    {
-      IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(IBomb::CLASSIC));
-      BombTimer	*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
-
-      _map->addBomb(bombT);
-      _map->setCellValue(x, y, bombT);
-      decBomb();
-    }
-}
-
-
 bool			Player::tryToKill()
 {
   if (isAlive())
     {
       if (canAbsorb())
-  	decShield();
+	decShield();
       else
-  	{
-  	  _isAlive = false;
-  	  return true;
-  	}
+	{
+	  _isAlive = false;
+	  return true;
+	}
       return false;
     }
   return true;

@@ -371,6 +371,19 @@ void		Map::addFire(Player *player, unsigned int x, unsigned int y)
     }
 }
 
+void		Map::addFire(Player *player, unsigned int x, unsigned int y, float time)
+{
+  if (getCellValue(x, y)->getObjectType() != IObject::FIRE)
+    {
+      Fire		*fire = new Fire(player, x, y, time);
+
+      if (getCellValue(x, y)->getObjectType() == IObject::BONUS)
+	fire->setBuff(getCellValue(x, y));
+      setCellValue(x, y, fire);
+      _firebox.push_back(fire);
+    }
+}
+
 unsigned int		Map::getNumberPlayers() const
 {
   return _nbJoueurs;

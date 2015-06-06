@@ -11,8 +11,8 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
   if (bomb->getBombType() == IBomb::MINE)
     {
       player->incBomb();
-      player->setBombType(IBomb::CLASSIC);
     }
+  player->setBombType(IBomb::CLASSIC);
   start();
 }
 
@@ -22,8 +22,8 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time
   if (bomb->getBombType() == IBomb::MINE)
     {
       player->incBomb();
-      player->setBombType(IBomb::CLASSIC);
     }
+  player->setBombType(IBomb::CLASSIC);
   start();
 }
 

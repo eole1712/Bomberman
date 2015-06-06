@@ -134,6 +134,7 @@ public:
 
 private:
   IBomb::Type		_bombType;
+  static const IBomb::Type dftBombType;
 
 public:
   glm::vec4		_color;

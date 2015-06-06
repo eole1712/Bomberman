@@ -28,6 +28,7 @@ public:
   virtual Type		getBombType() const = 0;
   virtual void		explose(int, int, Map *, unsigned int, Player*) const = 0;
   static bool		isOtherBomb(Map*, int, int, Player*, int, int);
+  static bool		isOtherBomb(Map*, int, int, Player*, int, int, float);
 
 public:
   static const int	nbBomb;
