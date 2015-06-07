@@ -5,9 +5,17 @@
 # include "IObject.hpp"
 # include "Player.hpp"
 # include "IBomb.hpp"
+# include "AIStateMap.hpp"
 
 namespace Bomberman
 {
+
+  class IBomb;
+
+namespace AI
+{
+  class StateMap;
+}
 
 class BombTimer
   : public IObject, public Timer
@@ -26,6 +34,7 @@ public:
   Player*	getPlayer() const;
   IBomb*	getBombType() const;
   bool		finish(unsigned int x, unsigned int y, Map *map);
+  void		setBlastRangeToMap(AI::StateMap* map, Map const* realMap) const;
 
 private:
   Player*	_player;
