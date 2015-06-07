@@ -16,12 +16,12 @@ Virus::~Virus()
 
 int		Virus::getDuration() const
 {
-  return 5;
+  return 4;
 }
 
-IBomb::Type	Virus::getBombType() const
+Bomb::Type	Virus::getBombType() const
 {
-  return IBomb::VIRUS;
+  return Bomb::VIRUS;
 }
 
 IObject::Type	Virus::getObjectType() const
@@ -80,8 +80,17 @@ void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
 	  break;
 	}
     }
-  player->setBombType(IBomb::VIRUS);
 }
+
+  void		Virus::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
+					  int y, unsigned int range) const
+  {
+    static_cast<void>(map);
+    static_cast<void>(realMap);
+    static_cast<void>(x);
+    static_cast<void>(y);
+    static_cast<void>(range);
+  }
 
 IBomb*		Virus::clone() const
 {

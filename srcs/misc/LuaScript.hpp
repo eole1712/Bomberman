@@ -2,12 +2,13 @@
 # define __LUASCRIPT_HPP__
 
 # include <string>
+# include "LuaBridge.h"
 # include "lua.hpp"
 
 class LuaScript
 {
 public:
-  typedef int	(*functionC)(lua_State *L);
+  typedef int	(*functionC)(luabridge::lua_State *L);
 
 public:
   LuaScript();
@@ -28,8 +29,8 @@ private:
   void		reportError(std::string const& where);
 
 protected:
-  lua_State*	_state;
-  std::string	_filename;
+  luabridge::lua_State*	_state;
+  std::string		_filename;
 };
 
 #endif /* !__LUASCRIPT_HPP__ */

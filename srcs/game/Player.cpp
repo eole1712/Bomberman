@@ -6,6 +6,9 @@
 #include "Map.hpp"
 #include "BombTimer.hpp"
 #include "glm/glm.hpp"
+#include "glm/ext.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "my_random.hpp"
 
 namespace Bomberman
@@ -15,9 +18,10 @@ unsigned int const	Player::dftRange = 3;
 unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
+Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(color)
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -39,7 +43,7 @@ Player::Player(std::string const &name, glm::vec4 color)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(IBomb::CLASSIC), _color(glm::vec4(1))
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -164,6 +168,11 @@ void			Player::resetShield()
 
 // bomb methods
 
+  unsigned int		Player::getNbBomb() const
+  {
+    return _bomb;
+  }
+
 void			Player::incBomb()
 {
   _bomb++;
@@ -203,7 +212,8 @@ void			Player::unparalyze()
 
 void			Player::randWeapon()
 {
-  setBombType((IBomb::Type)(my_random(0, IBomb::nbBomb)));
+  std::cout << "Rand Bomb"  << std::endl;
+  setBombType((Bomb::Type)(my_random(1, Bomb::nbBomb - 1)));
 }
 
 // buff methods
@@ -310,24 +320,30 @@ void			Player::setY(float y)
   setPosition(glm::vec3(getPosition().x, 0, y));
 }
 
-void			Player::move(glm::vec3 pos)
+void			Player::move(float const & direction, float const & elsapsedTime)
 {
+  glm::vec3		pos;
   glm::vec3		npos;
   IObject::Type		type;
+  float			speedbra;
 
   if (!isAlive() || isParalyzed())
-    return;
+    return ;
+  speedbra = _speed * elsapsedTime;
+  pos = glm::rotate(glm::vec3(0, 0, 0.06), direction, glm::vec3(0, 1, 0)) * speedbra;
   npos = getPosition() + pos;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
       type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
-      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+      if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type != IObject::BOMB) ||
+	  (int(npos.x) == int(getX()) && int(getPosition().z) == int(getY())))
 	translate(glm::vec3(pos.x, 0, 0));
     }
   if (npos.z > 0 && npos.z < _map->getHeight())
     {
       type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
-      if (type != IObject::DESTROYABLEWALL && type != IObject::WALL)
+      if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type != IObject::BOMB) ||
+	  (int(getPosition().x) == int(getX()) && int(npos.z) == int(getY())))
 	translate(glm::vec3(0, 0, pos.z));
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
@@ -339,23 +355,54 @@ void			Player::move(glm::vec3 pos)
     {
       tryToKill();
     }
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BOMB2)
+    {
+      dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
+    }
 }
 
-void			Player::rotate(const glm::vec3 &axis, float angle)
+void			Player::rotate(bool const & direction,
+				       float const & elsapsedTime, float const & stop)
 {
+  float			before;
+  float			after;
+
+  before = getRotation().y;
+  rotate(direction, elsapsedTime);
+  after = getRotation().y;
+  after -= 360 * (stop == 0 && direction == 1);
+  before -= 360 * (stop == 0 && direction == 1);
+  if (abs(stop - before) < abs(stop - after))
+    setRotation(glm::vec3(0, stop, 0));
+}
+
+void			Player::rotate(bool const & direction,
+				       float const & elsapsedTime)
+{
+  glm::vec3		rot;
+
   if (!isAlive() || isParalyzed())
     return;
-  Object3d::rotate(axis, angle);
+  rot = getRotation();
+  if (direction)
+    setRotation(glm::vec3(rot.x, fmod(getRotation().y + 3 * elsapsedTime * _speed, 360), rot.z));
+  else
+    {
+      if (rot.y - 3 * elsapsedTime * _speed < 0)
+	setRotation(glm::vec3(rot.x, 360 + rot.y - 3 * elsapsedTime * _speed, rot.z));
+      else
+	setRotation(glm::vec3(rot.x, rot.y - 3 * elsapsedTime * _speed, rot.z));
+    }
 }
 
 //attacks
 
-void			Player::setBombType(IBomb::Type type)
+void			Player::setBombType(Bomb::Type type)
 {
   _bombType = type;
 }
 
-IBomb::Type		Player::getBombType() const
+Bomb::Type		Player::getBombType() const
 {
   return _bombType;
 }
@@ -373,19 +420,18 @@ void			Player::putBomb()
     }
 }
 
-void			Player::putTimedBomb(unsigned int x, unsigned int y)
+void                  Player::putTimedBomb(unsigned int x, unsigned int y)
 {
   if (_map)
     {
-      IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(IBomb::CLASSIC));
-      BombTimer	*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
+      IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
+      BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
 
       _map->addBomb(bombT);
       _map->setCellValue(x, y, bombT);
       decBomb();
     }
 }
-
 
 bool			Player::tryToKill()
 {

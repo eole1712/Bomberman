@@ -14,6 +14,7 @@ class Fire
 {
 public:
   Fire(Player *, unsigned int, unsigned int);
+  Fire(Player *, unsigned int, unsigned int, float);
   virtual ~Fire();
 
 private:
@@ -37,6 +38,13 @@ public:
 private:
   unsigned int	_x;
   unsigned int	_y;
+
+public:
+  IObject*	getBuff() const;
+  void		setBuff(IObject*);
+
+private:
+  IObject*	_buff;
 
 public:
   IObject::Type	getObjectType() const;

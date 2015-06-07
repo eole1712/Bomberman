@@ -4,5 +4,5 @@ namespace Bomberman
 {
 const int	IBuff::infinite = -1;
 const int	IBuff::nbBuff = 8;
-const int	IBuff::prob = 50;
+const int	IBuff::prob = 30;
 }

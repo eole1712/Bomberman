@@ -21,7 +21,6 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 6 || this->_width < 6)
     throw new Exception::InvalidDimensions("Map Constructor");
-  std::cout << "-->" << _rcs->getNbPlayer() << std::endl;
   this->randomize();
   this->equalize();
   this->spawnize();
@@ -119,7 +118,7 @@ bool	Map::addNoBlocking(unsigned int x, unsigned int y)
   return (true);
 }
 
-bool	Map::checkDensity(unsigned int x, unsigned int y, unsigned int radius)
+bool	Map::checkDensity(unsigned int x, unsigned int y, unsigned int radius) const
 {
   unsigned int	posx;
   unsigned int	posy = 0;
@@ -186,7 +185,6 @@ void	Map::addSpawn(unsigned int x, unsigned int y)
 		     this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
 		     this->_rcs->getObject(IObject::EMPTY));
-  std::cout << "Spawn added in (" << x << ", " << y << ") !" << std::endl;
 }
 
 void	Map::drawLosange(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
@@ -310,12 +308,12 @@ RessourceStock	*Map::getRcs() const
   return _rcs;
 }
 
-bool		Map::isIn(unsigned int x, unsigned int y)
+bool		Map::isIn(unsigned int x, unsigned int y) const
 {
   return (x < getHeight() && y < getWidth());
 }
 
-void		Map::killPlayers(unsigned int x, unsigned int y)
+void		Map::killPlayers(unsigned int x, unsigned int y) const
 {
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
@@ -341,8 +339,11 @@ void		Map::checkBombsOnMap()
     {
       if ((*it)->isFinished())
   	{
-	  killObject((*it)->getX(), (*it)->getY());
-  	  delete *it;
+	  if (getCellValue((*it)->getX(), (*it)->getY()) == (*it))
+	    killObject((*it)->getX(), (*it)->getY());
+	  if ((*it)->getBuff() != NULL)
+	    setCellValue((*it)->getX(), (*it)->getY(), (*it)->getBuff());
+  	  delete (*it);
   	  it = _firebox.erase(it);
   	}
     }
@@ -359,10 +360,28 @@ void		Map::addBomb(BombTimer *bomb)
 
 void		Map::addFire(Player *player, unsigned int x, unsigned int y)
 {
-  Fire		*fire = new Fire(player, x, y);
+  if (getCellValue(x, y)->getObjectType() != IObject::FIRE)
+    {
+      Fire		*fire = new Fire(player, x, y);
 
-  setCellValue(x, y, fire);
-  _firebox.push_back(fire);
+      if (getCellValue(x, y)->getObjectType() == IObject::BONUS)
+	fire->setBuff(getCellValue(x, y));
+      setCellValue(x, y, fire);
+      _firebox.push_back(fire);
+    }
+}
+
+void		Map::addFire(Player *player, unsigned int x, unsigned int y, float time)
+{
+  if (getCellValue(x, y)->getObjectType() != IObject::FIRE)
+    {
+      Fire		*fire = new Fire(player, x, y, time);
+
+      if (getCellValue(x, y)->getObjectType() == IObject::BONUS)
+	fire->setBuff(getCellValue(x, y));
+      setCellValue(x, y, fire);
+      _firebox.push_back(fire);
+    }
 }
 
 unsigned int		Map::getNumberPlayers() const

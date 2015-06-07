@@ -42,7 +42,7 @@ private:
 
   enum			mapAsset
     {FLOOR, WALL, IDST_BLOCK
-     ,DST_BLOCK, FIRE, PLAYER, BOMB, SKYBOX};
+     ,DST_BLOCK, FIRE, PLAYER, BOMB, SKYBOX, BONUS};
 
   int				_width;
   int				_height;

@@ -30,15 +30,19 @@ void	Timer::reset()
   _saveTime = std::chrono::microseconds(0);
 }
 
+void	Timer::reset(uintmax_t time)
+{
+  _clock = std::chrono::system_clock::now();
+  _saveTime = std::chrono::microseconds(time);
+}
+
 bool	Timer::isFinished()
 {
-  usleep(1);
   return (this->getCurTime() > _time);
 }
 
 uintmax_t			Timer::getElapsedTime()
 {
-  usleep(1);
   return (getCurTime().count());
 }
 
