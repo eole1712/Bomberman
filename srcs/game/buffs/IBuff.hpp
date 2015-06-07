@@ -17,7 +17,8 @@ class IBuff : public IClonable<IBuff>, public IObject
 	INC_RANGE,
 	NO_BOMB,
 	PARALYZED,
-	SHIELD
+	SHIELD,
+	WEAPON
       };
 
   public:
@@ -35,7 +36,8 @@ class IBuff : public IClonable<IBuff>, public IObject
   public:
     static const int	infinite;
     static const int	nbBuff;
-  };
+    static const int	prob;
+};
 }
 
 #endif /* !__IBUFF_HPP__ */

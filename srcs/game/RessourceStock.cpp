@@ -16,6 +16,7 @@
 #include "Wall.hpp"
 #include "DestroyableWall.hpp"
 #include "Color.hpp"
+#include "BombVirus.hpp"
 
 namespace Bomberman
 {
@@ -33,6 +34,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
   _buffs[IBuff::SHIELD] = new Buff::Shield;
   _bombs[IBomb::CLASSIC] = new Bomb::Classic;
+  _bombs[IBomb::VIRUS] = new Bomb::Virus;
   _objects[IObject::BOMB] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
@@ -40,6 +42,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names)
   _objects[IObject::DESTROYABLEWALL] = new DestroyableWall;
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
+  _objects[IObject::FIRE] = NULL;
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
@@ -55,6 +58,7 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
   _buffs[IBuff::SHIELD] = new Buff::Shield;
   _bombs[IBomb::CLASSIC] = new Bomb::Classic;
+  _bombs[IBomb::VIRUS] = new Bomb::Virus;
   _objects[IObject::BOMB] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;

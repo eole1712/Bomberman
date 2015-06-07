@@ -1,5 +1,5 @@
-#ifndef BOMBTIMER_H_
-# define BOMBTIMER_H_
+#ifndef FIRE_H_
+# define FIRE_H_
 
 # include "Timer.hpp"
 # include "IObject.hpp"
@@ -9,23 +9,21 @@
 namespace Bomberman
 {
 
-class BombTimer
+class Fire
   : public IObject, public Timer
 {
 public:
-  BombTimer(Player *, unsigned int, IBomb *);
-  BombTimer(Player *, unsigned int, IBomb *, float, unsigned int x, unsigned int y);
-  virtual ~BombTimer();
+  Fire(Player *, unsigned int, unsigned int);
+  virtual ~Fire();
 
 private:
-  BombTimer(const BombTimer &);
-  BombTimer &operator=(const BombTimer &);
+  Fire(const Fire &);
+  Fire &operator=(const Fire &);
 
 public:
   unsigned int	getRange() const;
   Player*	getPlayer() const;
   IBomb*	getBombType() const;
-  bool		finish(unsigned int x, unsigned int y, Map *map);
 
 private:
   Player*	_player;
@@ -43,8 +41,11 @@ private:
 public:
   IObject::Type	getObjectType() const;
   bool		isNull() const;
+
+public:
+  static const float	explosionTime;
 };
 
 }
 
-#endif /* !BOMBTIMER_H_ */
+#endif /* !FIRE_H_ */

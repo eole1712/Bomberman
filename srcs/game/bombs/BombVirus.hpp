@@ -1,5 +1,5 @@
-#ifndef BOMBCLASSIC_H_
-# define BOMBCLASSIC_H_
+#ifndef BOMBVIRUS_H_
+# define BOMBVIRUS_H_
 
 # include "IBomb.hpp"
 # include "IObject.hpp"
@@ -11,16 +11,16 @@ namespace Bomberman
 namespace Bomb
 {
 
-class Classic
+class Virus
   : public IBomb
 {
 public:
-  Classic();
-  ~Classic();
+  Virus();
+  ~Virus();
 
 private:
-  Classic(const Classic &);
-  Classic &operator=(const Classic &);
+  Virus(const Virus &);
+  Virus &operator=(const Virus &);
 
 public:
   virtual int		getDuration() const;
@@ -39,4 +39,4 @@ public:
 }
 }
 
-#endif /* !BOMBCLASSIC_H_ */
+#endif /* !BOMBVIRUS_H_ */

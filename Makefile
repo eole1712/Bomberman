@@ -30,6 +30,7 @@ GAMESRCS	= Player.cpp 		\
 		  DestroyableWall.cpp	\
 		  IObject.cpp		\
 		  Color.cpp		\
+		  Fire.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
@@ -42,6 +43,7 @@ BUFFSRCS	= BuffDecSpeed.cpp	\
 		  IBuff.cpp		\
 
 BOMBSRCS	= BombClassic.cpp	\
+		  BombVirus.cpp		\
 		  IBomb.cpp		\
 		  BombFactory.cpp	\
 

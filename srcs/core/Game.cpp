@@ -29,7 +29,7 @@ namespace Bomberman
 
 Game::Game()
   : _width(20), _height(20), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
+    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri",}),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
   Player	*player;
@@ -43,7 +43,8 @@ Game::Game()
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "bra", "bro"}),
+    _stock(std::vector<std::string> {"Adrien"//, "Jean", "grigri", "4", "5","6","7","8","9","10","11","12","13"
+	  }),
     _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
 {
 
@@ -86,9 +87,9 @@ bool				Game::initialize()
   attachObject(new Asset3d("srcs/assets/marvin.fbx"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
-  _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
+  _assets[PLAYER]->createSubAnim(0, "start", 10, 28);
   _assets[PLAYER]->createSubAnim(0, "run", 34, 55);
-  _assets[PLAYER]->createSubAnim(0, "end", 55, 100);
+  _assets[PLAYER]->createSubAnim(0, "end", 55, 130);
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("srcs/assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
@@ -105,11 +106,12 @@ bool				Game::initialize()
   _camera.setRotation(player->getPosition());
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
-  _ObjectToAsset[IObject::BONUS] = FIRE;
+  _ObjectToAsset[IObject::BONUS] = SKYBOX;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;
   _ObjectToAsset[IObject::DESTROYABLEWALL] = DST_BLOCK;
   _ObjectToAsset[IObject::SPAWN] = FLOOR;
   _ObjectToAsset[IObject::EMPTY] = FLOOR;
+  _ObjectToAsset[IObject::FIRE] = FIRE;
   _shader.bind();
   return true;
 }
@@ -125,7 +127,6 @@ bool		Game::update()
   glm::vec3	move;
   static int	change = 0;
   Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
-
   movefactor = static_cast<float>(_clock.getElapsed()) * _speed;
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))

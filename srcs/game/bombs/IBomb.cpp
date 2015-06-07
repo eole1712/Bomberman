@@ -3,6 +3,6 @@
 namespace Bomberman
 {
 
-const int	IBomb::nbBomb = 1;
+const int	IBomb::nbBomb = 2;
 
 }
