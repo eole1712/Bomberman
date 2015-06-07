@@ -41,6 +41,8 @@ bool		MyGame::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   // We create a shader
   if (!_shader.load("../shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("../shaders/basic.vp", GL_VERTEX_SHADER)
@@ -180,7 +182,7 @@ void		MyGame::draw()
   _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
 
 
-  Text2d	text("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
+  Text2d	text("15 PONEYROSE petit test", 150, 500, 700, 100, "../assets/textures/alpha2.tga");
   View2d	lol(400, 600, 200, 200, std::string("../assets/textures/lol.tga"));
 
   text.draw(_shader);
