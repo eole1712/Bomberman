@@ -1,8 +1,10 @@
+
 #ifndef PLAYER_H_
 # define PLAYER_H_
 
 # include <string>
 # include <list>
+# include "Asset3d.hpp"
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "BuffTimer.hpp"
@@ -152,6 +154,11 @@ private:
 
 public:
   Animation		*animation;
+
+void			draw(Asset3d & asset,
+			     gdl::BasicShader & shader,
+			     gdl::Clock const & clock) const;
+
 };
 
 }

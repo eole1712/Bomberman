@@ -471,4 +471,21 @@ bool			Player::isNull() const
 {
   return false;
 }
+
+void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
+				     gdl::Clock const & clock) const
+{
+  if (isAlive())
+    {
+      shader.setUniform("color", getColor());
+      asset.setPosition(this->getPosition());
+      asset.setRotation(this->getRotation());
+      if (isParalyzed())
+	asset.draw(shader, clock);
+      else
+	asset.draw(shader, clock, *this->animation);
+      shader.setUniform("color", glm::vec4(1.0));
+    }
+}
+
 }

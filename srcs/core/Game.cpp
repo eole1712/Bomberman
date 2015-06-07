@@ -178,8 +178,6 @@ bool		Game::update()
 
 void		Game::draw()
 {
-   Player	*player;
-
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   _shader.bind();
@@ -217,16 +215,7 @@ void		Game::draw()
     }
 
   for (unsigned int y = 0; y < _stock.getNbPlayer(); y++)
-    {
-      player = dynamic_cast<Player *>(_stock.getPlayer(y));
-      if (player->isAlive())
-	{
-	  _shader.setUniform("color", player->getColor());
-	  _assets[PLAYER]->setPosition(player->getPosition());
-	  _assets[PLAYER]->setRotation(player->getRotation());
-	  _assets[PLAYER]->draw(_shader, _clock, *player->animation);
-	}
-    }
+    dynamic_cast<Player *>(_stock.getPlayer(y))->draw(*_assets[PLAYER], _shader, _clock);
 
   _shader.setUniform("color", glm::vec4(1.0));
   _assets[SKYBOX]->draw(_shader, _clock);
