@@ -1,7 +1,7 @@
 
 NAME = test
 
-SRC = Asset3d.cpp Object3d.cpp CameraObject.cpp MyGame.cpp bra.cpp
+SRC = Asset3d.cpp Object3d.cpp CameraObject.cpp MyGame.cpp bra.cpp View2d.cpp Text2d.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
