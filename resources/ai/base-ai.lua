@@ -4,7 +4,8 @@ DESTROYABLE = 1
 SAFE = 2
 UNSAFE = 3
 PLAYER = 4
-UNKNOWN = 5
+BONUS = 5
+UNKNOWN = 6
 
 -- ai data table
 -- aiAction is the function called at each frame
@@ -22,7 +23,7 @@ aiData = {
 		else
 			player:resetGoal()
 			player:memoriseAttack()
-			-- get nearest enemy and set to enemy
+			-- get nearest enemy and set to objective
 		end
 	end
 }
