@@ -21,7 +21,7 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _score(0), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -43,7 +43,7 @@ Player::Player(std::string const &name, glm::vec4 color)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1)), _score(0)
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -433,7 +433,7 @@ void			Player::putBomb()
     }
 }
 
-void                  Player::putTimedBomb(unsigned int x, unsigned int y)
+void			Player::putTimedBomb(unsigned int x, unsigned int y)
 {
   if (_map)
     {
@@ -463,6 +463,7 @@ bool			Player::tryToKill()
 }
 
 // color
+
 void			Player::setColor(glm::vec4 color)
 {
   _color = color;
@@ -471,6 +472,23 @@ void			Player::setColor(glm::vec4 color)
 glm::vec4		Player::getColor() const
 {
   return _color;
+}
+
+// score
+
+void			Player::setScore(unsigned int score)
+{
+  _score = score;
+}
+
+void			Player::incScore(unsigned int score)
+{
+  _score += score;
+}
+
+unsigned int		Player::getScore() const
+{
+  return _score;
 }
 
 // type

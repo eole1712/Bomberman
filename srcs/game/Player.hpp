@@ -1,4 +1,3 @@
-
 #ifndef PLAYER_H_
 # define PLAYER_H_
 
@@ -144,6 +143,14 @@ public:
 public:
   void			setColor(glm::vec4 color);
   glm::vec4		getColor() const;
+
+public:
+  unsigned int		_score;
+
+public:
+  void			setScore(unsigned int);
+  void			incScore(unsigned int);
+  unsigned int		getScore() const;
 
 public:
   virtual Type		getObjectType() const;
