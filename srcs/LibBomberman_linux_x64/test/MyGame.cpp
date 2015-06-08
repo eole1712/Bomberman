@@ -69,6 +69,14 @@ bool		MyGame::initialize()
   _camera.updateView();
   // We have the bind the shader before calling the setUniform method
   _shader.bind();
+  _text = new Text2d("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
+  _text2 = new Text2d("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
+  _grid.addObject(_text, [] () {
+    std::cout << "Pink Pony" << std::endl;
+  });
+  _grid.addObject(_text2, [] () {
+    std::cout << "Blue Pony" << std::endl;
+  });
   return true;
 }
 
@@ -181,12 +189,21 @@ void		MyGame::draw()
   _shader.setUniform("view", glm::mat4());
   _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
 
-
-  Text2d	text("15 PONEYROSE petit test", 150, 500, 700, 100, "../assets/textures/alpha2.tga");
+  // Text2d	text("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
+  // Text2d	text2("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
   View2d	lol(400, 600, 200, 200, std::string("../assets/textures/lol.tga"));
 
-  text.draw(_shader);
-  lol.draw(_shader);
+  if (_input.getKey(SDLK_s))
+    _grid.moveRight();
+  if (_input.getKey(SDLK_z))
+    _grid.moveLeft();
+  if (_input.getKey(SDLK_TAB))
+    _grid.actionOnFocus();
+
+  _grid.drawGrid(_shader);
+
+  //text.draw(_shader);
+  //lol.draw(_shader);
 
   _context.flush();
 }

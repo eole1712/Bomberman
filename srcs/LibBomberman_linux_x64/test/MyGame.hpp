@@ -11,6 +11,9 @@
 # include "OpenGL.hh"
 # include "Asset3d.hpp"
 # include "CameraObject.hpp"
+# include "MenuGrid.hpp"
+# include "View2d.hpp"
+# include "Text2d.hpp"
 
 class MyGame : public gdl::Game
 {
@@ -37,7 +40,10 @@ private:
   gdl::Clock		_clock;
   gdl::Input		_input;
   gdl::BasicShader	_shader;
-  float			_speed;
+  MenuGrid		_grid;
+  Text2d		*_text;
+  Text2d		*_text2;
+float			_speed;
 
   Object3d		_player;
 };

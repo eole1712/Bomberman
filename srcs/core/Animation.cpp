@@ -41,6 +41,7 @@ void	Animation::setAnim(unsigned int const startframe,
     anim.total = anim.end - anim.start;
   else
     anim.total = anim.start - anim.end;
+  anim.endTime = anim.total;
   anim.loop = loop;
   anim.speed = speed;
   if (!_animationQueue.empty()
@@ -61,6 +62,41 @@ void	Animation::setAnim(unsigned int const startframe,
   setAnim(startframe, endframe, loop, _defaultSpeed);
 }
 
+unsigned int const & Animation::getDefaultSpeed() const
+{
+  return (_defaultSpeed);
+}
+
+void		Animation::extend()
+{
+  uintmax_t	time;
+  Queue		anim;
+
+  if (!_animationQueue.empty())
+    {
+      anim = _animationQueue.front();
+      time = _timer.getElapsedTime() / anim.speed;
+      if (anim.endTime < time && anim.endTime + (anim.speed * 30) < time)
+	anim.endTime += 60;
+    }
+}
+
+bool		Animation::queueEmpty() const
+{
+  return (_animationQueue.empty());
+}
+
+void		Animation::queueClear()
+{
+  _animationQueue.clear();
+}
+
+void		Animation::queuePop()
+{
+  if (!_animationQueue.empty())
+    _animationQueue.pop_back();
+}
+
 unsigned int	Animation::getFrame()
 {
   uintmax_t	time;
@@ -71,10 +107,10 @@ unsigned int	Animation::getFrame()
     return 0;
   anim = _animationQueue.front();
   time = _timer.getElapsedTime() / anim.speed;
-  while (!_animationQueue.empty() && !anim.loop && anim.total < time)
+  while (!_animationQueue.empty() && !anim.loop && anim.endTime < time)
     {
+      _timer.reset((time - anim.endTime) * anim.speed);
       _animationQueue.pop_front();
-      _timer.reset((time - anim.total) * anim.speed);
       if (!_animationQueue.empty())
 	{
 	  anim = _animationQueue.front();

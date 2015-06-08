@@ -1,14 +1,10 @@
 
 #include "Text2d.hpp"
 
-Text2d::Text2d(std::string text, int x, int y, int width, int height, std::string textureName)
-  :_text(text), _x(x), _y(y), _width(width), _height(height)
+Text2d::Text2d(std::string const& text, int x, int y, int width, int height, std::string const& textureName)
+  : AMenuObject(x, y, width, height, textureName), _text(text)
 {
-  _hidden = false;
-
-  _texture.load(textureName.c_str());
-
-  for (int i = 0; i < text.size(); i++)
+  for (unsigned int i = 0; i < text.size(); i++)
     {
       _geo.push_back(new gdl::Geometry);
 
@@ -34,11 +30,6 @@ Text2d::Text2d(std::string text, int x, int y, int width, int height, std::strin
 
 Text2d::~Text2d()
 {
-}
-
-void	Text2d::setHidden(bool hidden)
-{
-  _hidden = hidden;
 }
 
 void	Text2d::draw(gdl::BasicShader shader)

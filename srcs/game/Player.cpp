@@ -5,6 +5,7 @@
 #include "Player.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
+#include "CurrScore.hpp"
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -15,7 +16,7 @@ namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 1;
+unsigned int const	Player::dftSpeed = 1.0;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
@@ -84,7 +85,7 @@ unsigned int   		Player::getRange() const
   return _range;
 }
 
-unsigned int   		Player::getSpeed() const
+float   		Player::getSpeed() const
 {
   return _speed;
 }
@@ -134,13 +135,13 @@ void			Player::resetRange()
 
 void			Player::incSpeed()
 {
-  _speed++;
+  _speed += 0.3;
 }
 
 void			Player::decSpeed()
 {
-  if (_speed > 1)
-    _speed--;
+  if (_speed >= 1.3)
+    _speed -= 0.3;
 }
 
 void			Player::resetSpeed()
@@ -326,6 +327,7 @@ void			Player::move(float const & direction, float const & elsapsedTime)
   glm::vec3		npos;
   IObject::Type		type;
   float			speedbra;
+  unsigned int		animFrame;
 
   if (!isAlive() || isParalyzed())
     return ;
@@ -358,6 +360,18 @@ void			Player::move(float const & direction, float const & elsapsedTime)
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BOMB2)
     {
       dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
+    }
+  if (animation->queueEmpty())
+    {
+      animation->setAnim(10, 34, false, animation->getDefaultSpeed() / (getSpeed() + 0.3));
+      animation->setAnim(34, 55, false, animation->getDefaultSpeed() / getSpeed());
+      animation->setAnim(55, 119, false, animation->getDefaultSpeed() / (getSpeed() + 0.3));
+    }
+  else
+    {
+      animFrame = animation->getFrame();
+      if (animFrame >= 34 && animFrame < 55)
+      	animation->extend();
     }
 }
 
@@ -420,7 +434,7 @@ void			Player::putBomb()
     }
 }
 
-void                  Player::putTimedBomb(unsigned int x, unsigned int y)
+void			Player::putTimedBomb(unsigned int x, unsigned int y)
 {
   if (_map)
     {
@@ -450,6 +464,7 @@ bool			Player::tryToKill()
 }
 
 // color
+
 void			Player::setColor(glm::vec4 color)
 {
   _color = color;
@@ -460,12 +475,40 @@ glm::vec4		Player::getColor() const
   return _color;
 }
 
+// score
+
+CurrScore		Player::getScore() const
+{
+  return _score;
+}
+
+void			Player::incScore()
+{
+  this->_score.inc();
+}
+
 // type
 
 IObject::Type		Player::getObjectType() const
 {
   return IObject::PLAYER;
 }
+
+glm::vec3		Player::getNewPos(Player const *sec) const
+{
+  glm::vec3		t(0, 0, 0);
+
+  t.x = (getPosition().x + sec->getPosition().x) / 2;
+  t.y = (getPosition().y + sec->getPosition().y) / 2;
+  t.z = (getPosition().z + sec->getPosition().z) / 2;
+  return t;
+}
+
+glm::vec3		Player::getAbsVec(Player const *sec) const
+{
+  return (getPosition() - sec->getPosition());
+}
+
 
 bool			Player::isNull() const
 {
