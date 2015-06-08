@@ -326,6 +326,7 @@ void			Player::move(float const & direction, float const & elsapsedTime)
   glm::vec3		npos;
   IObject::Type		type;
   float			speedbra;
+  unsigned int		animFrame;
 
   if (!isAlive() || isParalyzed())
     return ;
@@ -358,6 +359,18 @@ void			Player::move(float const & direction, float const & elsapsedTime)
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BOMB2)
     {
       dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
+    }
+  if (animation->queueEmpty())
+    {
+      animation->setAnim(10, 34, false, animation->getDefaultSpeed() / (getSpeed() + 0.3));
+      animation->setAnim(34, 55, false, animation->getDefaultSpeed() / getSpeed());
+      animation->setAnim(55, 119, false, animation->getDefaultSpeed() / (getSpeed() + 0.3));
+    }
+  else
+    {
+      animFrame = animation->getFrame();
+      if (animFrame >= 34 && animFrame < 55)
+      	animation->extend();
     }
 }
 
