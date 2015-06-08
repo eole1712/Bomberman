@@ -9,7 +9,7 @@ namespace	gdl
 	// Class for an Sdl Context
 	class SdlContext : public IRenderContext
 	{
-	protected:
+	  public:
 		SDL_Window		*_window;
 		SDL_GLContext	_glContext;
 
