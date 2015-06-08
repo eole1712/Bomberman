@@ -5,7 +5,8 @@
 #include "Player.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
-#include "CurrScore.hpp"
+#include "Score.hpp"
+#include "ScoreList.hpp"
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -22,7 +23,7 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scores(NULL), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -71,6 +72,8 @@ Player::~Player()
     {
       delete *it;
     }
+  if (_scores != NULL)
+    _scores->addScore(getName(), getScore().getScore());
 }
 
 // getters
@@ -477,7 +480,7 @@ glm::vec4		Player::getColor() const
 
 // score
 
-CurrScore		Player::getScore() const
+Score			Player::getScore() const
 {
   return _score;
 }
@@ -485,6 +488,11 @@ CurrScore		Player::getScore() const
 void			Player::incScore()
 {
   this->_score.inc();
+}
+
+void			Player::linkScoreList(Bomberman::ScoreList* scores)
+{
+  this->_scores = scores;
 }
 
 // type

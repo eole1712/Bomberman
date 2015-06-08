@@ -32,6 +32,7 @@ private:
 public:
   enum e_difficulty	{ EASY = 7, MEDIUM, DIFFICULT };
 
+  Map();
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty);
   virtual ~Map() {};

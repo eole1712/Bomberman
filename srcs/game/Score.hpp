@@ -1,12 +1,12 @@
-#ifndef CURRSCORE_H_
-# define CURRSCORE_H_
+#ifndef SCORE_H_
+# define SCORE_H_
 
 #include "Timer.hpp"
 
 namespace Bomberman
 {
 
-class	CurrScore
+class	Score
 {
 private:
   unsigned int	_score;
@@ -14,8 +14,8 @@ private:
   unsigned int	_killStreak;
 
 public:
-  CurrScore();
-  ~CurrScore();
+  Score();
+  ~Score();
 
 public:
   static const int	dftTime;
@@ -26,4 +26,4 @@ public:
 
 }
 
-#endif /* !CURRSCORE_H_ */
+#endif /* !SCORE_H_ */

@@ -1,24 +1,24 @@
 #include <math.h>
-#include "CurrScore.hpp"
+#include "Score.hpp"
 
 namespace Bomberman
 {
 
-const int	CurrScore::dftTime = 10;
+const int	Score::dftTime = 10;
 
-CurrScore::CurrScore()
+Score::Score()
   : _score(0), _timer(NULL), _killStreak(0)
 {}
 
-CurrScore::~CurrScore()
+Score::~Score()
 {}
 
-unsigned int	CurrScore::getScore() const
+unsigned int	Score::getScore() const
 {
   return (this->_score);
 }
 
-void		CurrScore::inc()
+void		Score::inc()
 {
   if (this->_timer == NULL || this->_timer->isFinished())
     {
@@ -27,12 +27,12 @@ void		CurrScore::inc()
 	  delete this->_timer;
 	  this->_killStreak = 0;
 	}
-      this->_timer = new Timer(CurrScore::dftTime * 1000000);
+      this->_timer = new Timer(Score::dftTime * 1000000);
     }
   else
     {
       delete this->_timer;
-      this->_timer = new Timer((CurrScore::dftTime + this->_killStreak * 2) * 1000000);
+      this->_timer = new Timer((Score::dftTime + this->_killStreak * 2) * 1000000);
     }
   this->_timer->start();
   this->_score += 100 * pow(2, this->_killStreak);

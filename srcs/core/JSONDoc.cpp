@@ -74,7 +74,7 @@ void		JSONDoc::writeDown(const std::string &filename)
 }
 
 template<>
-void				JSONDoc::serialize<Bomberman::Score>(const Bomberman::Score &obj)
+void				JSONDoc::serialize<Bomberman::ScoreList>(const Bomberman::ScoreList &obj)
 {
   std::list<std::string>	names = obj.getNames();
   rapidjson::Value		object(rapidjson::kObjectType);
@@ -92,9 +92,9 @@ void				JSONDoc::serialize<Bomberman::Score>(const Bomberman::Score &obj)
 }
 
 template<>
-Bomberman::Score		JSONDoc::unserialize<Bomberman::Score>(std::string const&) const
+Bomberman::ScoreList		JSONDoc::unserialize<Bomberman::ScoreList>(std::string const&) const
 {
-  Bomberman::Score		scores;
+  Bomberman::ScoreList		scores;
 
   if (_doc.IsObject() && _doc.HasMember("Scores"))
     {

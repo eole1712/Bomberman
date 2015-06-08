@@ -8,6 +8,9 @@
 namespace Bomberman
 {
 
+Map::Map()
+{}
+
 Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty,
 	 RessourceStock* objects)
