@@ -480,6 +480,22 @@ IObject::Type		Player::getObjectType() const
   return IObject::PLAYER;
 }
 
+glm::vec3		Player::getNewPos(Player const *sec) const
+{
+  glm::vec3		t(0, 0, 0);
+
+  t.x = (getPosition().x + sec->getPosition().x) / 2;
+  t.y = (getPosition().y + sec->getPosition().y) / 2;
+  t.z = (getPosition().z + sec->getPosition().z) / 2;
+  return t;
+}
+
+glm::vec3		Player::getAbsVec(Player const *sec) const
+{
+  return (getPosition() - sec->getPosition());
+}
+
+
 bool			Player::isNull() const
 {
   return false;

@@ -1,4 +1,3 @@
-
 #ifndef PLAYER_H_
 # define PLAYER_H_
 
@@ -155,9 +154,11 @@ private:
 public:
   Animation		*animation;
 
-void			draw(Asset3d & asset,
+  void			draw(Asset3d & asset,
 			     gdl::BasicShader & shader,
 			     gdl::Clock const & clock) const;
+  glm::vec3		getNewPos(Player const *) const;
+  glm::vec3		getAbsVec(Player const *sec) const;
 
 };
 
