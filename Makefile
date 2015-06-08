@@ -21,7 +21,7 @@ CORESRCS	= main.cpp		\
 		  Object3d.cpp		\
 		  CameraObject.cpp	\
 		  JSONDoc.cpp		\
-		  Score.cpp		\
+		  ScoreList.cpp		\
 		  Animation.cpp		\
 
 GAMESRCS	= Player.cpp 		\
@@ -38,7 +38,7 @@ GAMESRCS	= Player.cpp 		\
 		  IObject.cpp		\
 		  Color.cpp		\
 		  Fire.cpp		\
-		  CurrScore.cpp		\
+		  Score.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\

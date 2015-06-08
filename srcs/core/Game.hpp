@@ -15,10 +15,12 @@
 
 # include "RessourceStock.hpp"
 # include "Map.hpp"
+# include "Score.hpp"
 # include "BuffFactory.hpp"
 # include "BuffIncSpeed.hpp"
 # include "BuffParalyzed.hpp"
 # include "Player.hpp"
+# include "JSONDoc.hpp"
 
 namespace Bomberman
 {
@@ -56,8 +58,10 @@ private:
 
   std::map<Bomberman::IObject::Type, mapAsset>	_ObjectToAsset;
 
-  Bomberman::RessourceStock	_stock;
-  Bomberman::Map		_map;
+  JSONDoc			_json;
+  Bomberman::RessourceStock*	_stock;
+  Bomberman::Map*		_map;
+  Bomberman::ScoreList		_scores;
 };
 
 }

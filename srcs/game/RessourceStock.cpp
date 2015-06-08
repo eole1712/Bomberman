@@ -19,15 +19,22 @@
 #include "BombVirus.hpp"
 #include "BuffWeapon.hpp"
 #include "BombMine.hpp"
+#include "Score.hpp"
 
 namespace Bomberman
 {
 
-RessourceStock::RessourceStock(std::vector<std::string> const &names)
+RessourceStock::RessourceStock()
+{}
+
+RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
   : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
 {
   for (unsigned int i = 0; i < names.size(); ++i)
-    _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+    {
+      _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+      reinterpret_cast<Player*>(_players[i])->linkScoreList(scoreList);
+    }
   _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
   _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
   _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;
