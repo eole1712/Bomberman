@@ -121,6 +121,11 @@ namespace Bomberman
       return (_playersCoo.size());
     }
 
+    int		StateMap::getIntCell(unsigned int x, unsigned int y) const
+    {
+      return (getCellValue(x, y));
+    }
+
     /*
     ** Protected member functions
     */

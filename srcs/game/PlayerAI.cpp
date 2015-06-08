@@ -164,13 +164,13 @@ namespace Bomberman
       .beginClass<GenericMap<AI::Cell> >("GenericMap")
       .addProperty("width", &GenericMap<AI::Cell>::getWidth)
       .addProperty("height", &GenericMap<AI::Cell>::getHeight)
-      .addFunction("getCell", &GenericMap<AI::Cell>::getCellValue)
       .endClass()
-      .beginClass<AI::StateMap>("StateMap")
+      .deriveClass<AI::StateMap, GenericMap<AI::Cell> >("StateMap")
       .addFunction("toString", &AI::StateMap::toString)
       .addFunction("getPlayerPosX", &AI::StateMap::getPlayerPosX)
       .addFunction("getPlayerPosY", &AI::StateMap::getPlayerPosY)
       .addFunction("getNbPlayers", &AI::StateMap::getNbPlayers)
+      .addFunction("getCell", &AI::StateMap::getIntCell)
       .endClass();
   }
 

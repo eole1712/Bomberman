@@ -17,17 +17,32 @@ aiData = {
 			player:memoriseDefense()
 			-- get nearest safe cell, and set to objective
 			player:resetGoal()
-			while player.goalX == -1
-			do
-			end
 		else
 			player:resetGoal()
 			player:memoriseAttack()
+			player:moveUp()
 			-- get nearest enemy and set to objective
 		end
 	end
 }
 
+-- path finding
+-- returns a table containing each coordinates of cells to follow
+
+function findPath(map, xStart, yStart, xEnd, yEnd)
+	 mainCoo = { { x = xEnd, y = yEnd, count = 0 } }
+	 i = 0
+
+	 while i < table.getn(mainCoo)
+	 do
+		mainCoo = checkCell(map, mainCoo, i)
+		++i;
+	 end
+end
+
+function checkCell(map, mainCoo, idx)
+	 return mainCoo
+end
 
 --[[			for i=0,(map:getNbPlayers() -1)
 			do

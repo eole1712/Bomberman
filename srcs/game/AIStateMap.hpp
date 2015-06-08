@@ -43,6 +43,7 @@ namespace Bomberman
       int		getPlayerPosX(unsigned int player) const;
       int		getPlayerPosY(unsigned int player) const;
       int		getNbPlayers() const;
+      int		getIntCell(unsigned int x, unsigned int y) const;
 
     public:
       void		setAICells(Bomberman::Map const& map);
