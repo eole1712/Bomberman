@@ -47,6 +47,8 @@ namespace Bomberman
 
     public:
       void		setAICells(Bomberman::Map const& map);
+      int		getIntWidth() const;
+      int		getIntHeight() const;
 
     protected:
       void		clear();

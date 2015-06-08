@@ -126,6 +126,16 @@ namespace Bomberman
       return (getCellValue(x, y));
     }
 
+    int		StateMap::getIntWidth() const
+    {
+      return (_width);
+    }
+
+    int		StateMap::getIntHeight() const
+    {
+      return (_height);
+    }
+
     /*
     ** Protected member functions
     */
