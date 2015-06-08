@@ -24,28 +24,37 @@
 #include "Player.hpp"
 #include "Game.hpp"
 #include "PlayerAI.hpp"
+#include "JSONDoc.hpp"
 
 namespace Bomberman
 {
 
 Game::Game()
-  : _width(20), _height(20), _camera(90.0, 1000, 1000), _camera2(90.0, 1000, 1000), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri"}),
-    _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
+  : _width(20), _height(20), _camera(90.0, 1000, 1000), _camera2(90.0, 1000, 1000), _speed(70)
 {
+  if (_json.parse("Scores.json"))
+    _scores = _json.unserialize<Bomberman::ScoreList>();
+  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, &_scores);
+  _map = new Map("blibi", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
+  _change = false;
 }
 
 Game::Game(const unsigned int & width, const unsigned int & height)
-  : _width(width), _height(height), _camera(90.0, 800, 800), _camera2(90.0, 800, 800), _speed(70),
-    _stock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}),
-    _map("blibi", _width, _height, _stock.getNbPlayer(), Map::EASY, &_stock)
+  : _width(width), _height(height), _camera(90.0, 900, 900), _camera2(90.0, 900, 900), _speed(70)
 {
+  if (_json.parse("Scores.json"))
+    _scores = _json.unserialize<Bomberman::ScoreList>();
+  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, &_scores);
+  _map = new Map("blibi", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
+  _change = false;
 }
 
 Game::~Game()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
+  _json.serialize<Bomberman::ScoreList>(_scores);
+  _json.writeDown("Scores.json");
 }
 
 bool				Game::initialize()
@@ -172,15 +181,15 @@ bool				Game::initialize2()
   _shader.bind();
   _shader2.bind();
 
-  for (unsigned int i = 0; i < _stock.getNbPlayer(); ++i)
+  for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(_stock.getPlayer(i));
-      player->initGame(&_map);
+      player = dynamic_cast<Player *>(_stock->getPlayer(i));
+      player->initGame(_map);
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
-  player = dynamic_cast<Player *>(_stock.getPlayer(0));
-  player2 = dynamic_cast<Player *>(_stock.getPlayer(1));
+  player = dynamic_cast<Player *>(_stock->getPlayer(0));
+  player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
@@ -201,8 +210,8 @@ void		Game::attachObject(Asset3d *obj)
 
 bool		Game::update()
 {
-  Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
-  Player	*player2 = dynamic_cast<Player *>(_stock.getPlayer(1));
+  Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
+  Player	*player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
   float		elsapsedTime = static_cast<float>(_clock2.getElapsed()) * 60;
   static bool	space = false;
   static bool	space2 = false;
@@ -245,14 +254,10 @@ bool		Game::update()
   if ((_input.getKey(SDLK_RIGHT) || _input2.getKey(SDLK_RIGHT)) ||
       (_input.getKey(SDLK_LEFT) || _input2.getKey(SDLK_LEFT)))
     player->Player::rotate(_input.getKey(SDLK_LEFT), elsapsedTime);
-
   if (_input.getKey(SDLK_q) || _input.getKey(SDLK_d) ||
       _input2.getKey(SDLK_q) || _input2.getKey(SDLK_d))
     player2->Player::rotate(_input.getKey(SDLK_q) || _input2.getKey(SDLK_q), elsapsedTime);
-  _map.checkBombsOnMap();
-
-  // _camera.setRotation(player->getNewPos(player2));
-  // _camera.setPosition(player->getNewPos(player2) + glm::rotate(player2->getPosition() - player->getNewPos(player2) + glm::vec3(0, player->getAbsVec(player2).length() + 10, 0), 90.0f, glm::vec3(0, 1, 0)));
+  _map->checkBombsOnMap();
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
@@ -270,10 +275,10 @@ bool		Game::update()
   _context.updateInputs(_input);
   _context2.updateClock(_clock2);
   _context2.updateInputs(_input2);
-  // _context3.updateClock(_clock2);
-  // _context3.updateInputs(_input2);
   return true;
 }
+
+void		Game::draw() {}
 
 void		Game::draw(gdl::SdlContext &context, gdl::Clock &clock, gdl::BasicShader &shader, CameraObject &camera)
 {
@@ -296,28 +301,28 @@ void		Game::draw(gdl::SdlContext &context, gdl::Clock &clock, gdl::BasicShader &
 	    }
 	  else
 	    {
-	      _assets[_ObjectToAsset[_map.getCellValue(x, y)->getObjectType()]]
+	      _assets[_ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
 		->setPosition(glm::vec3(x, 0, y));
-	      if (IObject::BOMB == _map.getCellValue(x, y)->getObjectType() ||
-		  IObject::BONUS == _map.getCellValue(x, y)->getObjectType())
+	      if (IObject::BOMB == _map->getCellValue(x, y)->getObjectType() ||
+		  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
 		{
 		  _assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
 		  _assets[FLOOR]->draw(shader, clock);
 		}
-	      else if (IObject::BOMB2 == _map.getCellValue(x, y)->getObjectType())
+	      else if (IObject::BOMB2 == _map->getCellValue(x, y)->getObjectType())
 		{
 		  shader.setUniform("color", glm::vec4(0, 1, 0, 0));
 		}
-	      _assets[_ObjectToAsset[_map.getCellValue(x, y)->getObjectType()]]
+	      _assets[_ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
 		->draw(shader, clock);
 	      shader.setUniform("color", glm::vec4(1.0));
 	    }
 	}
     }
 
-  for (unsigned int y = 0; y < _stock.getNbPlayer(); y++)
+  for (unsigned int y = 0; y < _stock->getNbPlayer(); y++)
     {
-      dynamic_cast<Player *>(_stock.getPlayer(y))->draw(*_assets[PLAYER], shader, clock);
+      dynamic_cast<Player *>(_stock->getPlayer(y))->draw(*_assets[PLAYER], shader, clock);
     }
   shader.setUniform("color", glm::vec4(1.0));
   _assets[SKYBOX]->draw(shader, clock);
@@ -325,77 +330,81 @@ void		Game::draw(gdl::SdlContext &context, gdl::Clock &clock, gdl::BasicShader &
   _assets[SKYBOX]->scale(glm::vec3(-1));
   _assets[SKYBOX]->draw(shader, clock);
   _assets[SKYBOX]->scale(glm::vec3(1));
-  // if (0)
   context.flush();
 }
 
-void		Game::draw()
-{
-  // Clear the screen
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  _shader.bind();
-  _shader2.bind();
-  _shader.setUniform("view", _camera.getView());
-  _shader2.setUniform("view", _camera2.getView());
-  _shader.setUniform("projection", _camera.getProjection());
-  _shader2.setUniform("projection", _camera2.getProjection());
-  _shader.setUniform("color", glm::vec4(1.0));
-  _shader2.setUniform("color", glm::vec4(1.0));
+// void		Game::draw()
+// {
+//   // Clear the screen
+//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//   _shader.bind();
+//   _shader2.bind();
+//   _shader.setUniform("view", _camera.getView());
+//   _shader2.setUniform("view", _camera2.getView());
+//   _shader.setUniform("projection", _camera.getProjection());
+//   _shader2.setUniform("projection", _camera2.getProjection());
+//   _shader.setUniform("color", glm::vec4(1.0));
+//   _shader2.setUniform("color", glm::vec4(1.0));
 
-  // We draw all objects
-  for (int x = -1; x <= _width; x++)
-    {
-      for (int y = -1; y <= _height; y++)
-	{
-	  if (x == -1 || y == -1 || x == _width || y == _height)
-	    {
-	      _assets[WALL]->setPosition(glm::vec3(x, 0, y));
-	      _assets[WALL]->draw(_shader, _clock);
-	      _assets[WALL]->draw(_shader2, _clock2);
-	    }
-	  else
-	    {
-	      _assets[_ObjectToAsset[_map.getCellValue(x, y)->getObjectType()]]
-		->setPosition(glm::vec3(x, 0, y));
-	      if (IObject::BOMB == _map.getCellValue(x, y)->getObjectType() ||
-		  IObject::BONUS == _map.getCellValue(x, y)->getObjectType())
-		{
-		  _assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
-		  _assets[FLOOR]->draw(_shader, _clock);
-		  _assets[FLOOR]->draw(_shader2, _clock2);
-		}
-	      else if (IObject::BOMB2 == _map.getCellValue(x, y)->getObjectType())
-		{
-		  _shader.setUniform("color", glm::vec4(0, 1, 0, 0));
-		  _shader2.setUniform("color", glm::vec4(0, 1, 0, 0));
-		}
-	      _assets[_ObjectToAsset[_map.getCellValue(x, y)->getObjectType()]]
-		->draw(_shader, _clock);
-	      _assets[_ObjectToAsset[_map.getCellValue(x, y)->getObjectType()]]
-		->draw(_shader2, _clock2);
-	      _shader.setUniform("color", glm::vec4(1.0));
-	      _shader2.setUniform("color", glm::vec4(1.0));
-	    }
-	}
-    }
-  for (unsigned int y = 0; y < _stock.getNbPlayer(); y++)
-    {
-      dynamic_cast<Player *>(_stock.getPlayer(y))->draw(*_assets[PLAYER], _shader, _clock);
-      dynamic_cast<Player *>(_stock.getPlayer(y))->draw(*_assets[PLAYER], _shader2, _clock2);
-    }
+//   // We draw all objects
+//   for (int x = -1; x <= _width; x++)
+//     {
+//       for (int y = -1; y <= _height; y++)
+// 	{
+// 	  if (x == -1 || y == -1 || x == _width || y == _height)
+// 	    {
+// 	      _assets[WALL]->setPosition(glm::vec3(x, 0, y));
+// 	      _assets[WALL]->draw(_shader, _clock);
+// 	      _assets[WALL]->draw(_shader2, _clock2);
+// 	    }
+// 	  else
+// 	    {
+// 	      _assets[_ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+// 		->setPosition(glm::vec3(x, 0, y));
+// 	      if (IObject::BOMB == _map->getCellValue(x, y)->getObjectType() ||
+// 		  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
+// 		{
+// 		  _assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
+// 		  _assets[FLOOR]->draw(_shader, _clock);
+// 		  _assets[FLOOR]->draw(_shader2, _clock2);
+// 		}
+// 	      else if (IObject::BOMB2 == _map->getCellValue(x, y)->getObjectType())
+// 		{
+// 		  _shader.setUniform("color", glm::vec4(0, 1, 0, 0));
+// 		  _shader2.setUniform("color", glm::vec4(0, 1, 0, 0));
+// 		}
+// 	      _assets[_ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+// 		->draw(_shader, _clock);
+// 	      _assets[_ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+// 		->draw(_shader2, _clock2);
+// 	      _shader.setUniform("color", glm::vec4(1.0));
+// 	      _shader2.setUniform("color", glm::vec4(1.0));
+// 	    }
+// 	}
+//     }
+//   for (unsigned int y = 0; y < _stock.getNbPlayer(); y++)
+//     {
+//       dynamic_cast<Player *>(_stock.getPlayer(y))->draw(*_assets[PLAYER], _shader, _clock);
+//       dynamic_cast<Player *>(_stock.getPlayer(y))->draw(*_assets[PLAYER], _shader2, _clock2);
+//     }
+// =======
 
-  _shader.setUniform("color", glm::vec4(1.0));
-  _shader2.setUniform("color", glm::vec4(1.0));
-  _assets[SKYBOX]->draw(_shader, _clock);
-  _assets[SKYBOX]->draw(_shader2, _clock2);
-  _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
-  _assets[SKYBOX]->scale(glm::vec3(-1));
-  _assets[SKYBOX]->draw(_shader, _clock);
-  _assets[SKYBOX]->draw(_shader2, _clock2);
-  _assets[SKYBOX]->scale(glm::vec3(1));
-  // _context.flush();
-  // _context2.flush();
-}
+//   for (unsigned int y = 0; y < _stock->getNbPlayer(); y++)
+//     dynamic_cast<Player *>(_stock->getPlayer(y))->draw(*_assets[PLAYER], _shader, _clock);
+// >>>>>>> 448902fff79b428789b8c008d51134515d5d5813
+
+//   _shader.setUniform("color", glm::vec4(1.0));
+//   _shader2.setUniform("color", glm::vec4(1.0));
+//   _assets[SKYBOX]->draw(_shader, _clock);
+//   _assets[SKYBOX]->draw(_shader2, _clock2);
+//   _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
+//   _assets[SKYBOX]->scale(glm::vec3(-1));
+//   _assets[SKYBOX]->draw(_shader, _clock);
+//   _assets[SKYBOX]->draw(_shader2, _clock2);
+//   _assets[SKYBOX]->scale(glm::vec3(1));
+//   // _context.flush();
+//   // _context2.flush();
+// }
 
 void		Game::change()
 {

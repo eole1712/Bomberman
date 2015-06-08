@@ -32,6 +32,7 @@ private:
 public:
   enum e_difficulty	{ EASY = 7, MEDIUM, DIFFICULT };
 
+  Map();
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty);
   virtual ~Map() {};
@@ -49,7 +50,7 @@ public:
 
 public:
   bool		isIn(unsigned int x, unsigned int y) const;
-  void		killPlayers(unsigned int x, unsigned int y) const;
+  void		killPlayers(unsigned int x, unsigned int y, Player *) const;
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
   void		addFire(Player*, unsigned int, unsigned int);

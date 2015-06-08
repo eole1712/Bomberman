@@ -68,6 +68,7 @@ bool		MyGame::initialize()
   _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
   _camera.updateView();
   // We have the bind the shader before calling the setUniform method
+  _text = new Text2d("test", 150, 500, 700, 100, "../assets/textures/alpha3.tga");
   _shader.bind();
   return true;
 }
@@ -124,6 +125,7 @@ bool		MyGame::update()
 				    _assets[PLAYER]->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.updateView();
+  _text->listen(_input);
   // Update inputs an clock
   _context.updateClock(_clock);
   _context.updateInputs(_input);
@@ -181,12 +183,7 @@ void		MyGame::draw()
   _shader.setUniform("view", glm::mat4());
   _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
 
-
-  Text2d	text("15 PONEYROSE petit test", 150, 500, 700, 100, "../assets/textures/alpha2.tga");
-  View2d	lol(400, 600, 200, 200, std::string("../assets/textures/lol.tga"));
-
-  text.draw(_shader);
-  lol.draw(_shader);
+  _text->draw(_shader);
 
   _context.flush();
 }

@@ -1,22 +1,22 @@
 #include <algorithm>
 #include <iostream>
 #include <unordered_map>
-#include "Score.hpp"
+#include "ScoreList.hpp"
 
 namespace Bomberman
 {
 
-Score::Score()
+ScoreList::ScoreList()
 {
   ;
 }
 
-Score::~Score()
+ScoreList::~ScoreList()
 {
   ;
 }
 
-int	Score::getBestScore(const std::string &name) const
+int	ScoreList::getBestScore(const std::string &name) const
 {
   std::unordered_map<int, int> _map;
   std::list<unsigned int> list = _scores.at(name);
@@ -29,17 +29,17 @@ int	Score::getBestScore(const std::string &name) const
   return tmp;
 }
 
-std::list<unsigned int> const& Score::getScore(const std::string &name) const
+std::list<unsigned int> const& ScoreList::getScore(const std::string &name) const
 {
   return _scores.at(name);
 }
 
-void Score::addScore(const std::string &name, unsigned int score)
+void ScoreList::addScore(const std::string &name, unsigned int score)
 {
   _scores[name].push_back(score);
 }
 
-std::list<std::string> const Score::getNames() const
+std::list<std::string> const ScoreList::getNames() const
 {
   std::list<std::string> list;
 
@@ -49,7 +49,7 @@ std::list<std::string> const Score::getNames() const
   return list;
 }
 
-bool Score::operator==(Score const& other) const
+bool ScoreList::operator==(ScoreList const& other) const
 {
   return _scores == other._scores;
 }

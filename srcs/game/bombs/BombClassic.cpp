@@ -116,7 +116,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
     }
 }
 
-  void		Classic::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
+void		Classic::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
 					    int y, unsigned int range) const
   {
   for (struct {int i; unsigned int r;} s = {x, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)

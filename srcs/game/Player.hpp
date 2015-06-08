@@ -11,6 +11,8 @@
 # include "Object3d.hpp"
 # include "glm/glm.hpp"
 # include "Animation.hpp"
+# include "Score.hpp"
+# include "ScoreList.hpp"
 
 namespace Bomberman
 {
@@ -21,7 +23,7 @@ class Player
   : public IObject, public Object3d
 {
 public:
-  Player(std::string const &, glm::vec4 color);
+  Player(std::string const &, glm::vec4);
   Player();
   virtual ~Player();
 
@@ -145,12 +147,13 @@ public:
   glm::vec4		getColor() const;
 
 public:
-  unsigned int		_score;
+  Score			_score;
+  ScoreList*		_scores;
 
 public:
-  void			setScore(unsigned int);
-  void			incScore(unsigned int);
-  unsigned int		getScore() const;
+  Score			getScore() const;
+  void			incScore();
+  void			linkScoreList(ScoreList*);
 
 public:
   virtual Type		getObjectType() const;

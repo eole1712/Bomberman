@@ -6,13 +6,18 @@
 #include "Geometry.hh"
 #include "Texture.hh"
 #include "BasicShader.hh"
+#include "Input.hh"
+#include "AMenuObject.hpp"
+#include "SDL_keyboard.h"
 
-class Text2d
+class Text2d : public AMenuObject
 {
 public:
-  Text2d(std::string text, int x, int y, int width, int height, std::string textureName);
+  Text2d(std::string const& text, int x, int y, int width, int height, std::string const& textureName);
   ~Text2d();
 
+  void	update();
+  void	listen(gdl::Input input);
   void	setHidden(bool hidden);
   void	draw(gdl::BasicShader shader);
 private:
@@ -21,17 +26,7 @@ private:
 
 private:
   std::string	_text;
-
-  int	_x;
-  int	_y;
-  int	_width;
-  int	_height;
-
   std::vector<gdl::Geometry*>	_geo;
-  gdl::Texture			_texture;
-
-
-  bool	_hidden;
 };
 
 #endif /* !TEXT2D */

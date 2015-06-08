@@ -1,13 +1,9 @@
 
 #include "View2d.hpp"
 
-View2d::View2d(int x, int y, int width, int height, std::string textureName)
-  :_x(x), _y(y), _width(width), _height(height)
+View2d::View2d(int x, int y, int width, int height, std::string const& textureName)
+  : AMenuObject(x, y, width, height, textureName)
 {
-  _hidden = false;
-
-  _texture.load(textureName.c_str());
-
   _geo.pushVertex(glm::vec3(x, y, 0));
   _geo.pushVertex(glm::vec3(x + width, y, 0));
   _geo.pushVertex(glm::vec3(x + width, y + height, 0));
@@ -23,11 +19,6 @@ View2d::View2d(int x, int y, int width, int height, std::string textureName)
 
 View2d::~View2d()
 {
-}
-
-void	View2d::setHidden(bool hidden)
-{
-  _hidden = hidden;
 }
 
 void	View2d::draw(gdl::BasicShader shader)

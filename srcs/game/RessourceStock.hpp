@@ -7,6 +7,7 @@
 # include "IBuff.hpp"
 # include "IBomb.hpp"
 # include "Player.hpp"
+# include "Score.hpp"
 
 namespace Bomberman
 {
@@ -14,11 +15,10 @@ namespace Bomberman
 class RessourceStock
 {
 public:
-  RessourceStock(std::vector<std::string> const &);
+  RessourceStock();
+  RessourceStock(std::vector<std::string> const &, ScoreList*);
   RessourceStock(std::vector<Bomberman::Player*> const& players);
   virtual ~RessourceStock();
-
-private:
   RessourceStock(const RessourceStock &);
   RessourceStock &operator=(const RessourceStock &);
 
