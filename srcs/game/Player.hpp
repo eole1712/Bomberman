@@ -145,6 +145,14 @@ public:
   glm::vec4		getColor() const;
 
 public:
+  unsigned int		_score;
+
+public:
+  void			setScore(unsigned int);
+  void			incScore(unsigned int);
+  unsigned int		getScore() const;
+
+public:
   virtual Type		getObjectType() const;
   virtual bool		isNull() const;
 
