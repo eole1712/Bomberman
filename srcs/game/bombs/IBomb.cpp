@@ -15,7 +15,7 @@ bool		IBomb::isOtherBomb(Map *map, int x, int y, Player *player, int x2, int y2)
     }
   else
     {
-      map->killPlayers(x, y);
+      map->killPlayers(x, y, player);
       map->addFire(player, x, y);
     }
   return false;
@@ -31,7 +31,7 @@ bool		IBomb::isOtherBomb(Map *map, int x, int y, Player *player, int x2, int y2,
     }
   else
     {
-      map->killPlayers(x, y);
+      map->killPlayers(x, y, player);
       map->addFire(player, x, y, time);
     }
   return false;

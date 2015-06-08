@@ -11,6 +11,7 @@
 # include "Object3d.hpp"
 # include "glm/glm.hpp"
 # include "Animation.hpp"
+# include "CurrScore.hpp"
 
 namespace Bomberman
 {
@@ -145,12 +146,11 @@ public:
   glm::vec4		getColor() const;
 
 public:
-  unsigned int		_score;
+  CurrScore		_score;
 
 public:
-  void			setScore(unsigned int);
-  void			incScore(unsigned int);
-  unsigned int		getScore() const;
+  CurrScore		getScore() const;
+  void			incScore();
 
 public:
   virtual Type		getObjectType() const;

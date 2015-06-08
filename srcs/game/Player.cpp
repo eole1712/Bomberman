@@ -5,6 +5,7 @@
 #include "Player.hpp"
 #include "Map.hpp"
 #include "BombTimer.hpp"
+#include "CurrScore.hpp"
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -21,7 +22,7 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _score(0), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -43,7 +44,7 @@ Player::Player(std::string const &name, glm::vec4 color)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1)), _score(0)
+  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -476,19 +477,14 @@ glm::vec4		Player::getColor() const
 
 // score
 
-void			Player::setScore(unsigned int score)
-{
-  _score = score;
-}
-
-void			Player::incScore(unsigned int score)
-{
-  _score += score;
-}
-
-unsigned int		Player::getScore() const
+CurrScore		Player::getScore() const
 {
   return _score;
+}
+
+void			Player::incScore()
+{
+  this->_score.inc();
 }
 
 // type

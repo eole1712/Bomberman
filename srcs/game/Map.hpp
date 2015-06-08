@@ -49,7 +49,7 @@ public:
 
 public:
   bool		isIn(unsigned int x, unsigned int y) const;
-  void		killPlayers(unsigned int x, unsigned int y) const;
+  void		killPlayers(unsigned int x, unsigned int y, Player *) const;
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
   void		addFire(Player*, unsigned int, unsigned int);

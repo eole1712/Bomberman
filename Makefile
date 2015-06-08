@@ -38,6 +38,7 @@ GAMESRCS	= Player.cpp 		\
 		  IObject.cpp		\
 		  Color.cpp		\
 		  Fire.cpp		\
+		  CurrScore.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
