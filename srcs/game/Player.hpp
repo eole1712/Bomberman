@@ -3,6 +3,7 @@
 
 # include <string>
 # include <list>
+# include "Asset3d.hpp"
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "BuffTimer.hpp"
@@ -10,6 +11,7 @@
 # include "Object3d.hpp"
 # include "glm/glm.hpp"
 # include "Animation.hpp"
+# include "CurrScore.hpp"
 
 namespace Bomberman
 {
@@ -33,7 +35,7 @@ public:
 public:
   std::string const&	getName() const;
   unsigned int		getRange() const;
-  unsigned int		getSpeed() const;
+  float			getSpeed() const;
 
 private:
   std::string		_name;
@@ -144,6 +146,13 @@ public:
   glm::vec4		getColor() const;
 
 public:
+  CurrScore		_score;
+
+public:
+  CurrScore		getScore() const;
+  void			incScore();
+
+public:
   virtual Type		getObjectType() const;
   virtual bool		isNull() const;
 
@@ -152,6 +161,13 @@ private:
 
 public:
   Animation		*animation;
+
+  void			draw(Asset3d & asset,
+			     gdl::BasicShader & shader,
+			     gdl::Clock const & clock) const;
+  glm::vec3		getNewPos(Player const *) const;
+  glm::vec3		getAbsVec(Player const *sec) const;
+
 };
 
 }

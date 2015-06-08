@@ -101,8 +101,7 @@ bool				Game::initialize()
       player = dynamic_cast<Player *>(_stock.getPlayer(i));
       player->initGame(&_map);
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
-					_assets[PLAYER]->getAnimationSpeed()
-					* player->getSpeed());
+					_assets[PLAYER]->getAnimationSpeed());
     }
   player = dynamic_cast<Player *>(_stock.getPlayer(0));
   _camera.setPosition(player->getPosition()
@@ -121,15 +120,14 @@ void		Game::attachObject(Asset3d *obj)
 
 bool		Game::update()
 {
-  static int	change = 0;
   Player	*player = dynamic_cast<Player *>(_stock.getPlayer(0));
   float		elsapsedTime = static_cast<float>(_clock.getElapsed()) * 60;
+  static bool	space = false;
 
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
 
-  static bool	space = false;
   if (_input.getKey(SDLK_SPACE))
     {
       if (space)
@@ -140,27 +138,12 @@ bool		Game::update()
     }
   if (_input.getKey(SDLK_UP) || _input.getKey(SDLK_DOWN))
     {
-      if (change == 0)
-	{
-	  player->animation->setAnim(10, 34, false,
-				     _assets[PLAYER]->getAnimationSpeed()
-				     * player->getSpeed());
-	  player->animation->setAnim(34, 55, true,
-				     _assets[PLAYER]->getAnimationSpeed()
-				     * player->getSpeed());
-	}
-      change = 1;
       if (_input.getKey(SDLK_UP))
 	player->move(player->getRotation().y, elsapsedTime);
       else
 	player->move(180 + player->getRotation().y, elsapsedTime);
       _camera.setRotation(player->getPosition());
       _camera.updateView();
-    }
-  else if (change == 1)
-    {
-      player->animation->setAnim(55, 130, false, player->getSpeed());
-      change = 0;
     }
   if (_input.getKey(SDLK_RIGHT) || _input.getKey(SDLK_LEFT))
     player->Player::rotate(_input.getKey(SDLK_LEFT), elsapsedTime);
@@ -178,8 +161,6 @@ bool		Game::update()
 
 void		Game::draw()
 {
-   Player	*player;
-
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   _shader.bind();
@@ -217,16 +198,7 @@ void		Game::draw()
     }
 
   for (unsigned int y = 0; y < _stock.getNbPlayer(); y++)
-    {
-      player = dynamic_cast<Player *>(_stock.getPlayer(y));
-      if (player->isAlive())
-	{
-	  _shader.setUniform("color", player->getColor());
-	  _assets[PLAYER]->setPosition(player->getPosition());
-	  _assets[PLAYER]->setRotation(player->getRotation());
-	  _assets[PLAYER]->draw(_shader, _clock, *player->animation);
-	}
-    }
+    dynamic_cast<Player *>(_stock.getPlayer(y))->draw(*_assets[PLAYER], _shader, _clock);
 
   _shader.setUniform("color", glm::vec4(1.0));
   _assets[SKYBOX]->draw(_shader, _clock);

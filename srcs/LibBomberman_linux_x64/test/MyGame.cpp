@@ -17,6 +17,8 @@
 #include "OpenGL.hh"
 #include "MyGame.hpp"
 #include "Asset3d.hpp"
+#include "View2d.hpp"
+#include "Text2d.hpp"
 
 #define CAMERA_HEIGTH 1000
 #define CAMERA_WIDTH 1000
@@ -39,6 +41,8 @@ bool		MyGame::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   // We create a shader
   if (!_shader.load("../shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("../shaders/basic.vp", GL_VERTEX_SHADER)

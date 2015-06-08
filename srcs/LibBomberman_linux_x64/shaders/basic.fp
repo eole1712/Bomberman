@@ -12,9 +12,7 @@ varying vec2 fUv;
 
 void main(void)
 {
-	gl_FragColor = texture2D(fTexture0, fUv) * fColor;
-	if (gl_FragColor == vec4(1, 1, 0, 1))
-	{
-		gl_FragColor = vec4(0,0,0,0);
-	}
+	 gl_FragColor = texture2D(fTexture0, fUv) * fColor;
+	 if (gl_FragColor == vec4(1, 1, 0, 1))
+	   gl_FragColor = vec4(0, 1, 0, 0);
 }
