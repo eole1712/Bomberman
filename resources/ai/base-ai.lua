@@ -13,8 +13,12 @@ aiData = {
        aiAction = function(player, map)
 		if map:getCell(player.x, player.y) == UNSAFE
 		then
-			player:memoriseMode()
+			player:memoriseDefense()
 			-- get nearest safe cell, and set to objective
+			player:resetGoal()
+			while player.goalX == -1
+			do
+			end
 		else
 			player:resetGoal()
 			player:memoriseAttack()

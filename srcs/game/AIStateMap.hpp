@@ -19,6 +19,7 @@ namespace Bomberman
 	SAFE,
 	UNSAFE,
 	PLAYER,
+	BONUS,
 	UNKNOWN		/* if the cell hasn't been initialized */
       };
 

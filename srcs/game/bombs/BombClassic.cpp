@@ -124,7 +124,8 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
       if (realMap->getCellValue(s.i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
 	  realMap->getCellValue(s.i, y)->getObjectType() == IObject::WALL)
 	break;
-      if (map->getCellValue(s.i, y) == AI::UNKNOWN || map->getCellValue(s.i, y) == AI::SAFE)
+      if (map->getCellValue(s.i, y) == AI::UNKNOWN || map->getCellValue(s.i, y) == AI::SAFE
+	  || map->getCellValue(s.i, y) == AI::BONUS)
 	map->setCellValue(s.i, y, AI::UNSAFE);
     }
   for (unsigned int i = x, r = 0; i < map->getWidth() && r < range; ++i, ++r)
@@ -132,7 +133,8 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
       if (realMap->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
 	  realMap->getCellValue(i, y)->getObjectType() == IObject::WALL)
 	break;
-      if (map->getCellValue(i, y) == AI::UNKNOWN || map->getCellValue(i, y) == AI::SAFE)
+      if (map->getCellValue(i, y) == AI::UNKNOWN || map->getCellValue(i, y) == AI::SAFE
+	  || map->getCellValue(i, y) == AI::BONUS)
 	map->setCellValue(i, y, AI::UNSAFE);
     }
   for (struct {int i; unsigned int r; } s = {y, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
@@ -140,7 +142,8 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
       if (realMap->getCellValue(x, s.i)->getObjectType() == IObject::DESTROYABLEWALL ||
 	  realMap->getCellValue(x, s.i)->getObjectType() == IObject::WALL)
 	break;
-      if (map->getCellValue(x, s.i) == AI::UNKNOWN || map->getCellValue(x, s.i) == AI::SAFE)
+      if (map->getCellValue(x, s.i) == AI::UNKNOWN || map->getCellValue(x, s.i) == AI::SAFE ||
+	  map->getCellValue(x, s.i) == AI::BONUS)
 	map->setCellValue(x, s.i, AI::UNSAFE);
     }
   for (unsigned int i = y, r = 0; i < map->getHeight() && r < range; ++i, ++r)
@@ -148,7 +151,8 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
       if (realMap->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
 	  realMap->getCellValue(x, i)->getObjectType() == IObject::WALL)
 	break;
-      if (map->getCellValue(x, i) == AI::UNKNOWN || map->getCellValue(x, i) == AI::SAFE)
+      if (map->getCellValue(x, i) == AI::UNKNOWN || map->getCellValue(x, i) == AI::SAFE ||
+	  map->getCellValue(x, i) == AI::BONUS)
 	map->setCellValue(x, i, AI::UNSAFE);
     }
   }

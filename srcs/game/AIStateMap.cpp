@@ -73,6 +73,10 @@ namespace Bomberman
 		case (IObject::DESTROYABLEWALL):
 		  setCellValue(x, y, AI::DESTROYABLE);
 		  break ;
+		case (IObject::BONUS):
+		  if (getCellValue(x, y) == AI::UNKNOWN || getCellValue(x, y) == AI::SAFE)
+		    setCellValue(x, y, AI::BONUS);
+		  break ;
 		case (IObject::BOMB):
 		  {
 		    BombTimer*	bomb = dynamic_cast<BombTimer*>(map.getCellValue(x, y));
