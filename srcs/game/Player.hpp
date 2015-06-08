@@ -35,7 +35,7 @@ public:
 public:
   std::string const&	getName() const;
   unsigned int		getRange() const;
-  unsigned int		getSpeed() const;
+  float			getSpeed() const;
 
 private:
   std::string		_name;

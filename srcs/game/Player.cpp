@@ -15,7 +15,7 @@ namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 1;
+unsigned int const	Player::dftSpeed = 1.0;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
@@ -84,7 +84,7 @@ unsigned int   		Player::getRange() const
   return _range;
 }
 
-unsigned int   		Player::getSpeed() const
+float   		Player::getSpeed() const
 {
   return _speed;
 }
@@ -134,13 +134,13 @@ void			Player::resetRange()
 
 void			Player::incSpeed()
 {
-  _speed++;
+  _speed += 0.3;
 }
 
 void			Player::decSpeed()
 {
-  if (_speed > 1)
-    _speed--;
+  if (_speed >= 1.3)
+    _speed -= 0.3;
 }
 
 void			Player::resetSpeed()
