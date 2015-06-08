@@ -79,7 +79,7 @@ aiData = {
 				runAway(map, player)
 			  else
 			   	player:moveDown()
-			  end	
+			  end
 		   end
 		end
 	end
@@ -205,18 +205,24 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		i = i + 1
 	 end
 
-	 local path = {}
-	 local count = mainCoo[#mainCoo].count
+--[[
+	 print "start"
+	 for k, v in pairs(mainCoo)
+	 do
+		print(v.x, v.y, v.count)
+	 end
+	 print "end"
+]]--
+
+	 local path = { { x = xStart, y = yStart } }
+	 local count = mainCoo[#mainCoo].count - 1
 
 	 local i = #mainCoo
 	 while (i >= 1)
 	 do
-		if ((mainCoo[i].x == xStart and mainCoo[i].y == yStart and
-		    mainCoo[i].count == count) or
-		    (i == 1 and mainCoo[i].count == count) or
-		    (isAdjacentCell(mainCoo[i].x, mainCoo[i].y, 
-		    		    path[#path].x, path[#path].y) == true and
-		     mainCoo[i].count == count))
+		if (isAdjacentCell(mainCoo[i].x, mainCoo[i].y,
+		   		   path[#path].x, path[#path].y) == true and
+		    mainCoo[i].count == count)
 		then
 			path[#path + 1] = { x = mainCoo[i].x, y = mainCoo[i].y }
 			count = count - 1
@@ -224,14 +230,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 
 		i = i - 1
 	 end
-
-
-	 print "start"
-	 for k, v in pairs(path)
-	 do
-		print(v.x, v.y)
-	 end
-	 print "end"
 
 	return path
 end
