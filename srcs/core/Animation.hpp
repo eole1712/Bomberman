@@ -22,8 +22,16 @@ virtual ~Animation();
 
   void		setSpeed(unsigned int const speed);
 
+  unsigned int const & getDefaultSpeed() const;
   unsigned int	getFrame();
   std::string	getFrameName();
+
+
+  void		extend();
+
+  bool		queueEmpty() const;
+  void		queuePop();
+  void		queueClear();
 
   void		setFrameCount(unsigned int const framecount);
 
@@ -39,6 +47,7 @@ private:
     unsigned int	total;
     bool		loop;
     unsigned int	speed;
+    unsigned int	endTime;
   }			Queue;
 
   std::list<Queue> _animationQueue;
