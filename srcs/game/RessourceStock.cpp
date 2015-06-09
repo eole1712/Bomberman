@@ -21,6 +21,8 @@
 #include "BombMine.hpp"
 #include "Score.hpp"
 #include "BombBarrel.hpp"
+#include "Sound.hpp"
+#include "my_random.hpp"
 
 namespace Bomberman
 {
@@ -59,6 +61,21 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
   _objects[IObject::FIRE] = NULL;
+  _sounds[TWO] = Sound("./resources/sound/killstreak/rampage.wav");
+  _sounds[THREE] = Sound("./resources/sound/killstreak/killingspree.wav");
+  _sounds[FOUR] = Sound("./resources/sound/killstreak/dominating.wav");
+  _sounds[FIVE] = Sound("./resources/sound/killstreak/unstoppable.wav");
+  _sounds[SIX] = Sound("./resources/sound/killstreak/megakill.wav");
+  _sounds[SEVEN] = Sound("./resources/sound/killstreak/ultrakill.wav");
+  _sounds[EIGHT] = Sound("./resources/sound/killstreak/ludicrouskill.wav");
+  _sounds[NINE] = Sound("./resources/sound/killstreak/wickedsick.wav");
+  _sounds[TEN] = Sound("./resources/sound/killstreak/monsterkill.wav");
+  _sounds[ELEVEN] = Sound("./resources/sound/killstreak/holyshit.wav");
+  _sounds[TWELVE] = Sound("./resources/sound/killstreak/godlike.wav");
+  _sounds[FIRSTBLOOD] = Sound("./resources/sound/firstblood.wav");
+  _sounds[MINE] = Sound("./resources/sound/mine.wav");
+  _sounds[PREPARE] = Sound("./resources/sound/prepare1.wav")
+  _sounds[SUICIDE] = Sound("./resources/sound/suicide1.wav")
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
@@ -89,7 +106,21 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
   _objects[IObject::FIRE] = NULL;
-}
+  _sounds[TWO] = Sound("./resources/sound/killstreak/rampage.wav");
+  _sounds[THREE] = Sound("./resources/sound/killstreak/killingspree.wav");
+  _sounds[FOUR] = Sound("./resources/sound/killstreak/dominating.wav");
+  _sounds[FIVE] = Sound("./resources/sound/killstreak/unstoppable.wav");
+  _sounds[SIX] = Sound("./resources/sound/killstreak/megakill.wav");
+  _sounds[SEVEN] = Sound("./resources/sound/killstreak/ultrakill.wav");
+  _sounds[EIGHT] = Sound("./resources/sound/killstreak/ludicrouskill.wav");
+  _sounds[NINE] = Sound("./resources/sound/killstreak/wickedsick.wav");
+  _sounds[TEN] = Sound("./resources/sound/killstreak/monsterkill.wav");
+  _sounds[ELEVEN] = Sound("./resources/sound/killstreak/holyshit.wav");
+  _sounds[TWELVE] = Sound("./resources/sound/killstreak/godlike.wav");
+  _sounds[FIRSTBLOOD] = Sound("./resources/sound/firstblood.wav");
+  _sounds[MINE] = Sound("./resources/sound/mine.wav");
+  _sounds[PREPARE] = Sound("./resources/sound/prepare1.wav")
+  _sounds[SUICIDE] = Sound("./resources/sound/suicide1.wav")}
 
 RessourceStock::~RessourceStock()
 {
@@ -120,6 +151,15 @@ IObject		*RessourceStock::getBuff(IBuff::Type type) const
 IObject		*RessourceStock::getBomb(Bomb::Type type) const
 {
   return _bombs[type];
+}
+
+Sound&		RessourceStock::getSound(RessourceStock::Sound type)
+{
+  if (type == PREPARE)
+    _sounds[PREPARE] = Sound("./resources/sound/prepare" + my_random(1, 4) + ".wav");
+  else if (type == SUICIDE)
+    _sounds[SUICIDE] = Sound("./resources/sound/suicide" + my_random(1, 5) + ".wav");
+  return (_sounds[type]);
 }
 
 IObject		*RessourceStock::getPlayer(std::string const &name) const
