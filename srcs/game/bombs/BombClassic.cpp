@@ -36,83 +36,25 @@ bool		Classic::isNull() const
 
 void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *player) const
 {
-  int	        d;
-
   for (struct {int i; unsigned int r;} s = {x, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
-      if (map->getCellValue(s.i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(s.i, y)->getObjectType() == IObject::WALL)
-	{
-	  if (map->getCellValue(s.i, y)->getObjectType() == IObject::DESTROYABLEWALL)
-	    {
-	      if ((d = my_random(0, IBuff::prob)) < (IBuff::nbBuff + 5))
-	      	{
-	      	  d = d >= IBuff::nbBuff ? (int)(IBuff::WEAPON) : d;
-	      	  map->setCellValue(s.i, y, map->getRcs()->getBuff((IBuff::Type)(d)));
-	      	}
-	      else
-		map->addFire(player, s.i, y, Fire::explosionTime / (s.r + 1));
-	    }
-	  break;
-	}
-      isOtherBomb(map, s.i, y, player, x, y, Fire::explosionTime / (s.r + 1));
+      if (exploseCase(map, s.i, y, s.r, player, x, y))
+	break;
     }
   for (unsigned int i = x + 1, r = 1; i < map->getWidth() && r < range; ++i, ++r)
     {
-      if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(i, y)->getObjectType() == IObject::WALL)
-	{
-	  if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL)
-	    {
-	      if ((d = my_random(0, IBuff::prob)) < (IBuff::nbBuff + 5))
-	      	{
-	      	  d = d >= IBuff::nbBuff ? (int)(IBuff::WEAPON) : d;
-		  map->setCellValue(i, y, map->getRcs()->getBuff((IBuff::Type)(d)));
-		}
-	      else
-		map->addFire(player, i, y, Fire::explosionTime / (r + 1));
-	    }
-	  break;
-	}
-      isOtherBomb(map, i, y, player, x, y, Fire::explosionTime / (r + 1));
+      if (exploseCase(map, i, y, r, player, x, y))
+	break;
     }
   for (struct {int i; unsigned int r; } s = {y - 1, 1}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
-      if (map->getCellValue(x, s.i)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(x, s.i)->getObjectType() == IObject::WALL)
-	{
-	  if (map->getCellValue(x, s.i)->getObjectType() == IObject::DESTROYABLEWALL)
-	    {
-	      if ((d = my_random(0, IBuff::prob)) < (IBuff::nbBuff + 5))
-	      	{
-	      	  d = d >= IBuff::nbBuff ? (int)(IBuff::WEAPON) : d;
-		  map->setCellValue(x, s.i, map->getRcs()->getBuff((IBuff::Type)(d)));
-		}
-	      else
-		map->addFire(player, x, s.i, Fire::explosionTime / (s.r + 1));
-	    }
-	  break;
-	}
-      isOtherBomb(map, x, s.i, player, x, y, Fire::explosionTime / (s.r + 1));
+      if (exploseCase(map, x, s.i, s.r, player, x, y))
+	break;
     }
   for (unsigned int i = y + 1, r = 1; i < map->getHeight() && r < range; ++i, ++r)
     {
-      if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(x, i)->getObjectType() == IObject::WALL)
-	{
-	  if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL)
-	    {
-	      if ((d = my_random(0, IBuff::prob)) < (IBuff::nbBuff + 5))
-	      	{
-	      	  d = d >= IBuff::nbBuff ? (int)(IBuff::WEAPON) : d;
-		  map->setCellValue(x, i, map->getRcs()->getBuff((IBuff::Type)(d)));
-		}
-	      else
-		map->addFire(player, x, i, Fire::explosionTime / (r + 1));
-	    }
-	  break;
-	}
-      isOtherBomb(map, x, i, player, x, y, Fire::explosionTime / (r + 1));
+      if (exploseCase(map, x, i, r, player, x, y))
+	break;
     }
 }
 

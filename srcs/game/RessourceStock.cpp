@@ -20,6 +20,7 @@
 #include "BuffWeapon.hpp"
 #include "BombMine.hpp"
 #include "Score.hpp"
+#include "BombBarrel.hpp"
 
 namespace Bomberman
 {
@@ -46,8 +47,10 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
   _bombs[Bomb::CLASSIC] = new Bomb::Classic;
   _bombs[Bomb::VIRUS] = new Bomb::Virus;
   _bombs[Bomb::MINE] = new Bomb::Mine;
+  _bombs[Bomb::BARREL] = new Bomb::Barrel;
   _objects[IObject::BOMB] = NULL;
   _objects[IObject::BOMB2] = NULL;
+  _objects[IObject::BOMB3] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
   _objects[IObject::WALL] = new Wall;

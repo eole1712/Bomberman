@@ -56,6 +56,7 @@ BOMBSRCS	= BombClassic.cpp	\
 		  BombVirus.cpp		\
 		  IBomb.cpp		\
 		  BombMine.cpp		\
+		  BombBarrel.cpp		\
 		  BombFactory.cpp	\
 
 MISCSRCS	= Timer.cpp		\

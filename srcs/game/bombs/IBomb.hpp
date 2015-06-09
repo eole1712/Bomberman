@@ -28,6 +28,7 @@ public:
   virtual void		explose(int, int, Map *, unsigned int, Player*) const = 0;
   static bool		isOtherBomb(Map*, int, int, Player*, int, int);
   static bool		isOtherBomb(Map*, int, int, Player*, int, int, float);
+  static bool		exploseCase(Map*, int, int, unsigned int, Player*, int, int);
 
   virtual void		setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
 					   int y, unsigned int range) const = 0;

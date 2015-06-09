@@ -39,15 +39,15 @@ void		Mine::explose(int x, int y, Map *map, unsigned int, Player *player) const
   isOtherBomb(map, x, y, player, x, y);
 }
 
-  void		Mine::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
-					  int y, unsigned int range) const
-  {
-    static_cast<void>(map);
-    static_cast<void>(realMap);
-    static_cast<void>(x);
-    static_cast<void>(y);
-    static_cast<void>(range);
-  }
+void		Mine::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
+					 int y, unsigned int range) const
+{
+  static_cast<void>(map);
+  static_cast<void>(realMap);
+  static_cast<void>(x);
+  static_cast<void>(y);
+  static_cast<void>(range);
+}
 
 IBomb*		Mine::clone() const
 {

@@ -9,9 +9,10 @@ namespace Bomberman
       {
 	CLASSIC = 0,
 	VIRUS,
-	MINE
+	MINE,
+	BARREL
       };
-    const int	nbBomb = 3;
+    const int	nbBomb = 4;
   }
 }
 
