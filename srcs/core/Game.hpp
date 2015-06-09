@@ -33,13 +33,11 @@ public:
   virtual ~Game();
 
   virtual bool		initialize();
-  virtual bool		initialize2();
   virtual bool		update();
   virtual void		draw();
   void			attachObject(Asset3d *);
   void			translate(glm::vec3 const &v);
-  virtual void		draw(gdl::SdlContext &, gdl::Clock &, gdl::BasicShader &, CameraObject&);
-  void			change();
+  virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&);
 
 private:
   Game(const Game &);
@@ -50,9 +48,9 @@ private:
      ,DST_BLOCK, FIRE, PLAYER, BOMB, SKYBOX, BONUS};
 
 public:
-  gdl::SdlContext		&getContext(unsigned int);
-  gdl::Clock			&getClock(unsigned int);
-  gdl::BasicShader		&getShader(unsigned int);
+  gdl::SdlContext		&getContext();
+  gdl::Clock			&getClock();
+  gdl::BasicShader		&getShader();
   CameraObject			&getCamera(unsigned int);
 
 private:
@@ -62,17 +60,12 @@ private:
   CameraObject			_camera;
   CameraObject			_camera2;
   gdl::SdlContext		_context;
-  gdl::SdlContext		_context2;
   gdl::Clock			_clock;
-  gdl::Clock			_clock2;
   gdl::Input			_input;
   gdl::Input			_input2;
   gdl::BasicShader		_shader;
-  gdl::BasicShader		_shader2;
   float				_speed;
-  SDL_Window			*win;
   std::map<Bomberman::IObject::Type, mapAsset>	_ObjectToAsset;
-  bool				_change;
   JSONDoc			_json;
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
