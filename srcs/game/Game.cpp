@@ -32,12 +32,16 @@ namespace Bomberman
 Game::Game()
   : _width(20), _height(20), _camera(90.0, 900, 900), _camera2(90.0, 900, 900), _speed(70)
 {
-  _mapList = ((_json.parse("./resources/json/Gamedata.json"))
-	      ? (_json.unserialize<Bomberman::MapList*>())
-	      : (new MapList()));
-  _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
-	      ? (_json.unserialize<Bomberman::ScoreList*>())
-		: (new ScoreList()));
+  if (_json.parse("./resources/json/Gamedata.json"))
+    {
+      _mapList = _json.unserialize<Bomberman::MapList*>();
+      _scoreList = _json.unserialize<Bomberman::ScoreList*>();
+    }
+  else
+    {
+      _mapList = new MapList();
+      _scoreList = new ScoreList();
+    }
   std::vector<std::string>	nameList = {"Adrien", "Jean", "Grigri", "Le nettoyeur", "Poneyman"};
   _stock = new RessourceStock(nameList, _scoreList);
   std::string	mapName = "de_bra";
@@ -49,12 +53,16 @@ Game::Game()
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 900, 900), _camera2(90.0, 900, 900), _speed(70)
 {
-  _mapList = ((_json.parse("./resources/json/Gamedata.json"))
-	      ? (_json.unserialize<Bomberman::MapList*>())
-	      : (new MapList()));
-  _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
-	      ? (_json.unserialize<Bomberman::ScoreList*>())
-		: (new ScoreList()));
+  if (_json.parse("./resources/json/Gamedata.json"))
+    {
+      _mapList = _json.unserialize<Bomberman::MapList*>();
+      _scoreList = _json.unserialize<Bomberman::ScoreList*>();
+    }
+  else
+    {
+      _mapList = new MapList();
+      _scoreList = new ScoreList();
+    }
   std::vector<std::string>	nameList = {"Adrien", "Jean", "Grigri", "Le nettoyeur", "Poneyman"};
   _stock = new RessourceStock(nameList, _scoreList);
   std::string	mapName = "de_bra";

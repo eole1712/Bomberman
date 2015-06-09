@@ -16,7 +16,6 @@ LUABDIR		= $(VENDORSDIR)/LuaBridge/
 LUAINCS		= $(LUADIR)/include/
 
 CORESRCS	= main.cpp		\
-		  Game.cpp		\
 		  Asset3d.cpp		\
 		  Object3d.cpp		\
 		  CameraObject.cpp	\
@@ -26,6 +25,7 @@ CORESRCS	= main.cpp		\
 		  Animation.cpp		\
 
 GAMESRCS	= Player.cpp 		\
+		  Game.cpp		\
 		  PlayerAI.cpp		\
 		  BuffTimer.cpp		\
 		  Empty.cpp		\
