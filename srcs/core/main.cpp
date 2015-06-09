@@ -15,16 +15,19 @@ int main()
   unsigned int		bra[2] = {20, 20};
   Bomberman::Game	engine(bra[0], bra[1]);
 
-  if (!engine.initialize2())
+  if (!engine.initialize())
     {
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
   while (engine.update() == true)
     {
-      engine.draw(engine.getContext(0), engine.getClock(0), engine.getShader(0), engine.getCamera(0));
-      engine.draw(engine.getContext(1), engine.getClock(1), engine.getShader(1), engine.getCamera(1));
-      engine.change();
+      glViewport(900, 0, 900, 900);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      engine.draw(engine.getClock(), engine.getShader(), engine.getCamera(0));
+      glViewport(0, 0, 900, 900);
+      engine.draw(engine.getClock(), engine.getShader(), engine.getCamera(1));
+      engine.getContext().flush();
     }
   return EXIT_SUCCESS;
 }
