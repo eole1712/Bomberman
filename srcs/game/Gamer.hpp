@@ -1,0 +1,67 @@
+
+#ifndef GAME_H_
+# define GAME_H_
+
+# include <vector>
+# include <map>
+# include "Game.hh"
+# include "Clock.hh"
+# include "Input.hh"
+# include "SdlContext.hh"
+# include "BasicShader.hh"
+# include "OpenGL.hh"
+# include "Asset3d.hpp"
+# include "CameraObject.hpp"
+
+# include "RessourceStock.hpp"
+# include "Map.hpp"
+# include "ScoreList.hpp"
+# include "BuffFactory.hpp"
+# include "BuffIncSpeed.hpp"
+# include "BuffParalyzed.hpp"
+# include "Player.hpp"
+# include "JSONDoc.hpp"
+# include "Core.hpp"
+
+namespace Bomberman
+{
+
+class Core;
+
+class Gamer
+{
+public:
+  Gamer();
+  Gamer(unsigned int, unsigned int, unsigned int, unsigned int);
+  virtual ~Gamer();
+
+  virtual bool		update(gdl::Clock &, gdl::Input &);
+  virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&, std::vector<Asset3d*>&,
+			     std::map<Bomberman::IObject::Type, Core::mapAsset>&);
+  void			startGame();
+
+private:
+  Gamer(const Gamer &);
+  Gamer &operator=(const Gamer &);
+
+public:
+  CameraObject			&getCamera(unsigned int);
+
+private:
+  int				_width;
+  int				_height;
+  JSONDoc			_json;
+
+private:
+  CameraObject			_camera;
+  CameraObject			_camera2;
+
+public:
+  Bomberman::MapList*		_mapList;
+  Bomberman::ScoreList*		_scoreList;
+  Bomberman::RessourceStock*	_stock;
+  Bomberman::Map*		_map;
+};
+
+}
+#endif /* !GAME_H_ */
