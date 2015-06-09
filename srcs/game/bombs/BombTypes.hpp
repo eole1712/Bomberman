@@ -11,7 +11,7 @@ namespace Bomberman
 	VIRUS,
 	MINE
       };
-    const int	nbBomb = 2;
+    const int	nbBomb = 3;
   }
 }
 

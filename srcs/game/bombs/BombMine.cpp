@@ -42,10 +42,8 @@ void		Mine::explose(int x, int y, Map *map, unsigned int, Player *player) const
   void		Mine::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
 					  int y, unsigned int range) const
   {
-    static_cast<void>(map);
+    map->setCellValue(x, y, AI::UNSAFE);
     static_cast<void>(realMap);
-    static_cast<void>(x);
-    static_cast<void>(y);
     static_cast<void>(range);
   }
 
