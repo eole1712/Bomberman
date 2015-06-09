@@ -19,6 +19,7 @@ public:
   virtual ~MapList();
   Map*					getMap(std::string const& name) const;
   void					addMap(Map*);
+  void					addMap(std::string, unsigned int, unsigned int);
   std::unordered_map<std::string, std::pair<unsigned int, unsigned int> >	getMapList() const;
   bool					operator==(MapList const& other) const;
 

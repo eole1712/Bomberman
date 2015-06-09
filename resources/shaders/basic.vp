@@ -18,7 +18,10 @@ varying vec2 fUv;
 
 void main(void)
 {
-  fColor = (vColor + color) / 2;
+  if (color != vec4(1))
+    fColor = (vColor + color) / 2;
+  else
+    fColor = vColor;
   fNormal = vNormal;
   fUv = vTexCoord;
   gl_Position = projection * view * model * vPosition;

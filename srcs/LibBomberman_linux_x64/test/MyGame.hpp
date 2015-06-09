@@ -14,6 +14,7 @@
 # include "MenuGrid.hpp"
 # include "View2d.hpp"
 # include "Text2d.hpp"
+# include "Input.hh"
 
 class MyGame : public gdl::Game
 {
