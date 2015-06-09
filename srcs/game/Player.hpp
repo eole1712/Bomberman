@@ -46,11 +46,13 @@ public:
   bool			isParalyzed() const;
   bool			zeroBomb() const;
   bool			canAbsorb() const;
+  bool			isPlaced() const;
 
 private:
   bool			_isAlive;
   bool			_isParalyzed;
   bool			_zeroBomb;
+  bool			_isPlaced;
 
 public:
   void			incRange();
