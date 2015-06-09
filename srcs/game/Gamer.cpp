@@ -246,7 +246,7 @@ void		Gamer::draw(gdl::Clock &clock,
 		  assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
 		  assets[FLOOR]->draw(shader, clock);
 		}
-	      else if (IObject::BOMB2 == _map->getCellValue(x, y)->getObjectType())
+	      else if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
 		{
 		  shader.setUniform("color", glm::vec4(0, 1, 0, 0));
 		}

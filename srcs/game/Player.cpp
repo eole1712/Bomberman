@@ -357,7 +357,7 @@ void			Player::move(float const & direction, float const & elsapsedTime)
     {
       tryToKill();
     }
-  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BOMB2)
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::MINE)
     {
       dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
     }

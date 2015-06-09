@@ -57,6 +57,8 @@ void				Core::loadTextures()
   attachObject(new Asset3d("resources/assets/sky.obj"));
   attachObject(new Asset3d("resources/assets/bonus.obj"));
   attachObject(new Asset3d("resources/assets/barrel.obj"));
+  attachObject(new Asset3d("resources/assets/bombs/LandMine/LandMine.obj"));
+  attachObject(new Asset3d("resources/assets/bombs/WindBomb/WindBomb.obj"));
 
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
@@ -68,8 +70,9 @@ void				Core::loadTextures()
   _assets[BONUS]->scale(glm::vec3(0.05));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
-  _ObjectToAsset[IObject::BOMB2] = FLOOR;
-  _ObjectToAsset[IObject::BOMB3] = BARREL;
+  _ObjectToAsset[IObject::MINE] = MINE;
+  _ObjectToAsset[IObject::BARREL] = BARREL;
+  _ObjectToAsset[IObject::VIRUS] = VIRUS;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
   _ObjectToAsset[IObject::BONUS] = BONUS;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;

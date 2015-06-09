@@ -49,8 +49,9 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
   _bombs[Bomb::MINE] = new Bomb::Mine;
   _bombs[Bomb::BARREL] = new Bomb::Barrel;
   _objects[IObject::BOMB] = NULL;
-  _objects[IObject::BOMB2] = NULL;
-  _objects[IObject::BOMB3] = NULL;
+  _objects[IObject::BARREL] = NULL;
+  _objects[IObject::MINE] = NULL;
+  _objects[IObject::VIRUS] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
   _objects[IObject::WALL] = new Wall;
@@ -78,8 +79,9 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   _bombs[Bomb::MINE] = new Bomb::Mine;
   _bombs[Bomb::BARREL] = new Bomb::Barrel;
   _objects[IObject::BOMB] = NULL;
-  _objects[IObject::BOMB2] = NULL;
-  _objects[IObject::BOMB3] = NULL;
+  _objects[IObject::BARREL] = NULL;
+  _objects[IObject::MINE] = NULL;
+  _objects[IObject::VIRUS] = NULL;
   _objects[IObject::PLAYER] = NULL;
   _objects[IObject::BONUS] = NULL;
   _objects[IObject::WALL] = new Wall;
