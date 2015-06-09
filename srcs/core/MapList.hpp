@@ -7,8 +7,11 @@
 # include "Map.hpp"
 # include "JSONDoc.hpp"
 
+class JSONDoc;
+
 namespace Bomberman
 {
+
 class		MapList
 {
 public:
@@ -22,7 +25,7 @@ public:
 
 private:
   std::unordered_map<std::string, std::pair<unsigned int, unsigned int> >	_maps;
-  JSONDoc	_json;
+  JSONDoc*									_json;
 };
 
 }

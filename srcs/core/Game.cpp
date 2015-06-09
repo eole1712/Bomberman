@@ -35,20 +35,24 @@ Game::Game()
 
   _mapList = ((_json.parse("./resources/json/Maplist.json"))
 	      ? (_json.unserialize<Bomberman::MapList*>())
-	      : (new MapList()))
+	      : (new MapList()));
   _scoreList = ((_json.parse("./resources/json/Scores.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
-	      : (new ScoreList()))
-  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, &_scoreList);
+		: (new ScoreList()));
+  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, _scoreList);
   _map = new Map("blibi", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
 }
 
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 900, 900), _camera2(90.0, 900, 900), _speed(70)
 {
-  if (_json.parse("./resources/json/Scores.json"))
-    _scoreList = _json.unserialize<Bomberman::ScoreList>();
-  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, &_scoreList);
+  _mapList = ((_json.parse("./resources/json/Maplist.json"))
+	      ? (_json.unserialize<Bomberman::MapList*>())
+	      : (new MapList()));
+  _scoreList = ((_json.parse("./resources/json/Scores.json"))
+	      ? (_json.unserialize<Bomberman::ScoreList*>())
+		: (new ScoreList()));
+  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, _scoreList);
   _map = new Map("blibi", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
 }
 
@@ -56,7 +60,7 @@ Game::~Game()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
-  _json.serialize<Bomberman::ScoreList>(_scores);
+  _json.serialize<Bomberman::ScoreList>(*_scoreList);
   _json.writeDown("./resources/json/Scores.json");
 }
 
@@ -70,6 +74,7 @@ bool				Game::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+
   // We create a shader
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
@@ -168,6 +173,8 @@ bool		Game::update()
 	player->move(player->getRotation().y, elsapsedTime);
       else
 	player->move(180 + player->getRotation().y, elsapsedTime);
+      _camera.setRotation(player->getPosition());
+      _camera.updateView();
     }
   if (_input.getKey(SDLK_z) || _input.getKey(SDLK_s) ||
       _input2.getKey(SDLK_z) || _input2.getKey(SDLK_s))

@@ -6,6 +6,12 @@
 #include "document.h"
 #include "ScoreList.hpp"
 #include "Player.hpp"
+#include "MapList.hpp"
+
+namespace Bomberman
+{
+class MapList;
+}
 
 class JSONDoc
 {
@@ -36,7 +42,13 @@ template<>
 void			JSONDoc::serialize<Bomberman::ScoreList>(const Bomberman::ScoreList& obj);
 
 template<>
-Bomberman::ScoreList	JSONDoc::unserialize<Bomberman::ScoreList>(std::string const& name) const;
+Bomberman::ScoreList*	JSONDoc::unserialize<Bomberman::ScoreList*>(std::string const& name) const;
+
+template<>
+void			JSONDoc::serialize<Bomberman::MapList>(const Bomberman::MapList& obj);
+
+template<>
+Bomberman::MapList*	JSONDoc::unserialize<Bomberman::MapList*>(std::string const& name) const;
 
 template<>
 void			JSONDoc::serialize<Bomberman::Player>(const Bomberman::Player& obj);
