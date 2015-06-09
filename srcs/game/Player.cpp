@@ -23,7 +23,7 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scores(NULL), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -68,12 +68,15 @@ Player::Player()
 
 Player::~Player()
 {
+  std::cout << "Player destroyed !" << std::endl;
   for (std::list<BuffTimer*>::iterator it = _buff.begin(); it != _buff.end(); it++)
     {
       delete *it;
     }
-  if (_scores != NULL)
-    _scores->addScore(getName(), getScore().getScore());
+  if (_scoreList != NULL)
+    _scoreList->addScore(getName(), getScore().getScore());
+  else
+    std::cout << "null" << std::endl;
 }
 
 // getters
@@ -490,9 +493,9 @@ void			Player::incScore()
   this->_score.inc();
 }
 
-void			Player::linkScoreList(Bomberman::ScoreList* scores)
+void			Player::linkScoreList(Bomberman::ScoreList* scoreList)
 {
-  this->_scores = scores;
+  this->_scoreList = scoreList;
 }
 
 // type

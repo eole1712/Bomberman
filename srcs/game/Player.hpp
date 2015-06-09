@@ -148,7 +148,7 @@ public:
 
 public:
   Score			_score;
-  ScoreList*		_scores;
+  ScoreList*		_scoreList;
 
 public:
   Score			getScore() const;
