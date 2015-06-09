@@ -25,6 +25,11 @@ void	MapList::addMap(Map* map)
   this->_maps.insert(map->getName(), std::make_pair(map->getWidth(), map->getHeight()));
 }
 
+void	MapList::addMap(std::string name, unsigned int width, unsigned int height)
+{
+  this->_maps.insert(name, std::make_pair(width, height));
+}
+
 std::unordered_map<std::string, std::pair<unsigned int, unsigned int> >	MapList::getMapList() const
 {
   return (this->_maps);
