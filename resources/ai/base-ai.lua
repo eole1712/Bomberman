@@ -22,6 +22,17 @@ aiData = {
 		   return
 		end
 
+		if (#route > 0 and player.x == route[1].x and route[1].y)
+		then
+		   table.remove(route, 1)
+		end
+
+		if (#route > 0 and isAdjacentCell(player.x, player.y, route[1].x, route[1].y) == false)
+		then
+			print("route error", player.x, player.y, route[1].x, route[1].y)
+			route = {}
+		end
+
 		if (map:getCell(player.x, player.y) == UNSAFE and attack == true or
 		    map:getCell(player.x, player.y) == UNSAFE and #route == 0)
 		then
@@ -37,72 +48,55 @@ aiData = {
 			route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1))
 		end
 
-		if (#route > 0 and player.x == route[1].x and route[1].y)
-		then
-		   table.remove(route, 1)
-		end
-
 		if (#route > 0)
 		then
-			print("try to move", route[1].x, route[1].y, player.x, player.y)
+			print(player.x, player.y, route[1].x, route[1].y)
 		   if (route[1].x > player.x)
 		   then
-			print("left:", player.x + 1, player.y, map:getCell(player.x + 1, player.y))
 			  if (map:getCell(player.x + 1, player.y) == DESTROYABLE)
 			  then
-				print "left destroyable"
 				player:putBomb()
 				runAway(map, player)
 			  elseif (map:getCell(player.x + 1, player.y) == SAFE or
 			  	  map:getCell(player.x + 1, player.y) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
-				print "try to move left"
 			       	  player:moveLeft()
 			  end
 		   elseif (route[1].x < player.x)
 		   then
-			print("right:", player.x - 1, player.y, map:getCell(player.x - 1, player.y))
 			  if (map:getCell(player.x - 1, player.y) == DESTROYABLE)
 			  then
-				print "right destroyable"
 				player:putBomb()
 				runAway(map, player)
 			  elseif (map:getCell(player.x - 1, player.y) == SAFE or
 			  	  map:getCell(player.x - 1, player.y) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
-				print "try to move right"
 			  	player:moveRight() -- left/right are switched ?
 			  end
 		   elseif (route[1].y > player.y)
 		   then
-			print("up:", player.x, player.y + 1, map:getCell(player.x, player.y + 1))
 			  if (map:getCell(player.x, player.y + 1) == DESTROYABLE)
 			  then
-				print "up destroyable"
 				player:putBomb()
 				runAway(map, player)
 			  elseif (map:getCell(player.x, player.y + 1) == SAFE or
 			  	  map:getCell(player.x, player.y + 1) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
-				print "try to move up"
 			     	player:moveUp()
 			  end
 		   elseif (route[1].y < player.y)
 		   then
-			print("down:", player.x, player.y - 1, map:getCell(player.x, player.y - 1))
 			  if (map:getCell(player.x, player.y - 1) == DESTROYABLE)
 			  then
-				print "down destroyable"
 				player:putBomb()
 				runAway(map, player)
 			  elseif (map:getCell(player.x, player.y - 1) == SAFE or
 			  	  map:getCell(player.x, player.y - 1) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
-				print "try to move down"
 			   	player:moveDown()
 			  end
 		   end
@@ -231,15 +225,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		i = i + 1
 	 end
 
---[[
-	 print "start"
-	 for k, v in pairs(mainCoo)
-	 do
-		print(v.x, v.y, v.count)
-	 end
-	 print "end"
-]]--
-
 	 local path = { { x = xStart, y = yStart } }
 	 local count = mainCoo[#mainCoo].count - 1
 
@@ -257,6 +242,14 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		i = i - 1
 	 end
 
+--[[
+	 print "start"
+	 for k, v in pairs(path)
+	 do
+		print(v.x, v.y)
+	 end
+	 print "end"
+]]--
 	return path
 end
 
