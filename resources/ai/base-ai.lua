@@ -30,8 +30,8 @@ aiData = {
 -- returns a table containing each coordinates of cells to follow
 
 function findPath(map, xStart, yStart, xEnd, yEnd)
-	 mainCoo = { { x = xEnd, y = yEnd, count = 0 } }
-	 i = 1
+	 local mainCoo = { { x = xEnd, y = yEnd, count = 0 } }
+	 local i = 1
 
 	 while (i <= #mainCoo)
 	 do
@@ -40,7 +40,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		-- check rightside cell
 		if (checkCell(map, mainCoo, mainCoo[i].x + 1, mainCoo[i].y) == true)
 		then
-			print "break1"
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x + 1,
 						  y = mainCoo[i].y,
@@ -54,10 +53,8 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		end
 
 		-- check leftside cell
-		print("test", i, mainCoo[i].x)
 		if (checkCell(map, mainCoo, mainCoo[i].x - 1, mainCoo[i].y) == true)
 		then
-			print("test2", i, mainCoo[i].x)
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x - 1,
 						  y = mainCoo[i].y,
@@ -73,7 +70,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		-- check upside cell
 		if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y + 1) == true)
 		then
-			print "break3"
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x,
 						  y = mainCoo[i].y + 1,
@@ -89,7 +85,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		-- check downside cell
 		if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y - 1) == true)
 		then
-			print "break4"
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x,
 						  y = mainCoo[i].y - 1,
@@ -105,11 +100,34 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		i = i + 1
 	 end
 
-	 for k, v in pairs(mainCoo)
+	 local path = {}
+	 local count = mainCoo[#mainCoo].count
+
+	 i = #mainCoo
+	 while (i >= 1)
 	 do
-		print(v.x, v.y, v.count)
+		if ((mainCoo[i].x == xStart and mainCoo[i].y == yStart and
+		    mainCoo[i].count == count) or
+		    (isAdjacentCell(mainCoo[i].x, mainCoo[i].y, 
+		    		    path[#path].x, path[#path].y) == true and 
+		     mainCoo[i].count == count))
+		then
+			path[#path + 1] = { x = mainCoo[i].x, y = mainCoo[i].y }
+			count = count - 1
+		end
+
+		i = i - 1
+	 end
+
+--[[
+	 print "start"
+	 for k, v in pairs(path)
+	 do
+		print(v.x, v.y)
 	 end
 	 print "end"
+]]--
+
 end
 
 function checkCell(map, mainCoo, x, y)
@@ -123,8 +141,21 @@ function checkCell(map, mainCoo, x, y)
 	 return false
 end
 
+-- checks whether x1/y1 and x2/y2 are adjacents
+function isAdjacentCell(x1, y1, x2, y2)
+	 if ((x1 + 1 == x2 and y1 == y2) or
+	     (x1 - 1 == x2 and y1 == y2) or
+	     (x1 == x2 and y1 + 1 == y2) or
+	     (x1 == x2 and y1 - 1 == y2))
+	 then
+		return true
+	 end
+
+	 return false
+end
+
 function isCooInTable(mainCoo, x, y)
-	 i = 1
+	 local i = 1
 
 	 while (i <= #mainCoo)
 	 do
