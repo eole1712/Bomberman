@@ -21,7 +21,7 @@ aiData = {
 			player:resetGoal()
 			player:memoriseAttack()
 			-- get nearest enemy and set to objective
-			findPath(map, player.x, player.y, map:getPlayerPosX(3), map:getPlayerPosY(3))
+			findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1))
 		end
 	end
 }
@@ -126,8 +126,9 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		print(v.x, v.y)
 	 end
 	 print "end"
-]]--
 
+	return path
+]]--
 end
 
 function checkCell(map, mainCoo, x, y)
