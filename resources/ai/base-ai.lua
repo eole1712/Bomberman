@@ -17,10 +17,15 @@ local attack = false
 aiData = {
        name = "base-ai",
        aiAction = function(player, map)
+       		if (player.isAlive == false)
+		then
+		   return
+		end
+
 		if (map:getCell(player.x, player.y) == UNSAFE and attack == true or
 		    map:getCell(player.x, player.y) == UNSAFE and #route == 0)
 		then
-			attack = false
+			runAway(map, player)
 
 			-- get nearest safe cell, and set to objective
 		elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
@@ -39,23 +44,52 @@ aiData = {
 
 		if (#route > 0)
 		then
-		   print(player.x, player.y, route[1].x, route[1].y)
 		   if (route[1].x > player.x)
 		   then
-		      	  player:moveLeft()
+			  if (map:getCell(player.x + 1, player.y) == DESTROYABLE)
+			  then
+				player:putBomb()
+				runAway(map, player)
+			  else
+			       	  player:moveLeft()
+			  end
 		   elseif (route[1].x < player.x)
 		   then
-		   	  player:moveRight() -- left/right are switched ?
+			  if (map:getCell(player.x - 1, player.y) == DESTROYABLE)
+			  then
+				player:putBomb()
+				runAway(map, player)
+			  else
+			  	player:moveRight() -- left/right are switched ?
+			  end
 		   elseif (route[1].y > player.y)
 		   then
-		   	  player:moveDown()  
+			  if (map:getCell(player.x, player.y + 1) == DESTROYABLE)
+			  then
+				player:putBomb()
+				runAway(map, player)
+			  else
+			     	player:moveUp()
+			  end
 		   elseif (route[1].y < player.y)
 		   then
-		   	  player:moveUp()
+			  if (map:getCell(player.x, player.y - 1) == DESTROYABLE)
+			  then
+				player:putBomb()
+				runAway(map, player)
+			  else
+			   	player:moveDown()
+			  end	
 		   end
 		end
 	end
 }
+
+function runAway(map, player)
+	 attack = false
+	 local cell = findCellType(map, player.x, player.y, SAFE)
+	 route = findPath(map, player.x, player.y, cell.x, cell.y)
+end
 
 -- find nearest cell of type 'type'
 -- /!\ to refacto
@@ -174,13 +208,14 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 	 local path = {}
 	 local count = mainCoo[#mainCoo].count
 
-	 i = #mainCoo
+	 local i = #mainCoo
 	 while (i >= 1)
 	 do
 		if ((mainCoo[i].x == xStart and mainCoo[i].y == yStart and
 		    mainCoo[i].count == count) or
+		    (i == 1 and mainCoo[i].count == count) or
 		    (isAdjacentCell(mainCoo[i].x, mainCoo[i].y, 
-		    		    path[#path].x, path[#path].y) == true and 
+		    		    path[#path].x, path[#path].y) == true and
 		     mainCoo[i].count == count))
 		then
 			path[#path + 1] = { x = mainCoo[i].x, y = mainCoo[i].y }
@@ -190,14 +225,14 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		i = i - 1
 	 end
 
---[[
+
 	 print "start"
 	 for k, v in pairs(path)
 	 do
 		print(v.x, v.y)
 	 end
 	 print "end"
-]]--
+
 	return path
 end
 
