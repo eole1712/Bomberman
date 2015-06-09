@@ -62,7 +62,6 @@ private:
   gdl::SdlContext		_context;
   gdl::Clock			_clock;
   gdl::Input			_input;
-  gdl::Input			_input2;
   gdl::BasicShader		_shader;
   float				_speed;
   std::map<Bomberman::IObject::Type, mapAsset>	_ObjectToAsset;
