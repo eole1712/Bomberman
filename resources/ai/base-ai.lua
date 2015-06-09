@@ -57,6 +57,46 @@ aiData = {
 	end
 }
 
+-- find nearest cell of type 'type'
+-- /!\ to refacto
+function findCellType(map, xStart, yStart, type)
+	 local i = 1
+	 local cell = { x = -1, y = -1 }
+
+	 while (cell.x == -1 and cell.y == -1)
+	 do
+		if (xStart + i < map.width and xStart + i >= 0 and yStart < map.height and yStart >= 0 and
+		    map:getCell(xStart + i, yStart) == type) then
+			cell = { x = xStart + i, y = yStart }
+		elseif (xStart - i < map.width and xStart - i >= 0 and yStart < map.height and yStart >= 0 and
+		        map:getCell(xStart - i, yStart) == type) then
+			cell = { x = xStart - i, y = yStart }
+		elseif (xStart < map.width and xStart >= 0 and yStart + i < map.height and yStart + i >= 0 and
+		        map:getCell(xStart, yStart + i) == type) then
+			cell = { x = xStart, y = yStart + i }
+		elseif (xStart < map.width and xStart >= 0 and yStart - i < map.height and yStart - i >= 0 and
+		        map:getCell(xStart, yStart - i) == type) then
+			cell = { x = xStart, y = yStart - i }
+		elseif (xStart + i < map.width and xStart + i >= 0 and yStart + i < map.height and yStart + i >= 0 and
+		        map:getCell(xStart + i, yStart + i) == type) then
+			cell = { x = xStart + i, y = yStart + i }
+		elseif (xStart + i < map.width and xStart + i >= 0 and yStart - i < map.height and yStart - i >= 0 and
+		        map:getCell(xStart + i, yStart - i) == type) then
+			cell = { x = xStart + i, y = yStart - i }
+		elseif (xStart - i < map.width and xStart - i >= 0 and yStart < map.height and yStart >= 0 and
+		        map:getCell(xStart - i, yStart + i) == type) then
+			cell = { x = xStart - i, y = yStart + i }
+		elseif (xStart - i < map.width and xStart - i >= 0 and yStart - i < map.height and yStart - i >= 0 and
+		        map:getCell(xStart - i, yStart - i) == type) then
+			cell = { x = xStart - i, y = yStart - i }
+		end
+
+		i = i + 1
+	 end
+
+	 return cell
+end
+
 -- path finding
 -- returns a table containing each coordinates of cells to follow
 
