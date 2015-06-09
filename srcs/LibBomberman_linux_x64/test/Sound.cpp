@@ -1,12 +1,16 @@
 
+#include <iostream>
 #include "Sound.hpp"
 
-AudioManager::AudioManager()
+/* AUDIOMANAGER */
+
+AudioManager::AudioManager(int nbChannels)
 {
   if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
     {
       throw new std::exception;
     }
+  Mix_AllocateChannels(nbChannels);
 }
 
 AudioManager::~AudioManager()
@@ -14,9 +18,15 @@ AudioManager::~AudioManager()
   Mix_CloseAudio();
 }
 
-MusicManager::MusicManager(char *file)
+/* !AUDIOMANAGER */
+/* MUSIC MANAGER */
+
+MusicManager::MusicManager(const std::string& file)
 {
-  _music = Mix_LoadMUS(file);
+  _music = Mix_LoadMUS(file.c_str());
+
+
+  std::cout << Mix_GetError() << std::endl;
 }
 
 MusicManager::~MusicManager()
@@ -48,3 +58,23 @@ void	MusicManager::volume(int vol)
 {
   Mix_VolumeMusic(vol);
 }
+
+/* !MUSIC MANAGER */
+/* SOUND MANAGER */
+
+SoundManager::SoundManager(const std::string& file)
+{
+  _sound = Mix_LoadWAV(file.c_str());
+}
+
+SoundManager::~SoundManager()
+{
+  Mix_FreeChunk(_sound);
+}
+
+void	SoundManager::play(int loop)
+{
+  Mix_PlayChannel(-1, _sound, loop);
+}
+
+/* !SOUND MANAGER */
