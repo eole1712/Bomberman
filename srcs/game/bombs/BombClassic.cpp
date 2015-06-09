@@ -57,7 +57,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	}
       isOtherBomb(map, s.i, y, player, x, y, Fire::explosionTime / (s.r + 1));
     }
-  for (unsigned int i = x, r = 0; i < map->getWidth() && r < range; ++i, ++r)
+  for (unsigned int i = x + 1, r = 1; i < map->getWidth() && r < range; ++i, ++r)
     {
       if (map->getCellValue(i, y)->getObjectType() == IObject::DESTROYABLEWALL ||
 	  map->getCellValue(i, y)->getObjectType() == IObject::WALL)
@@ -76,7 +76,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	}
       isOtherBomb(map, i, y, player, x, y, Fire::explosionTime / (r + 1));
     }
-  for (struct {int i; unsigned int r; } s = {y, 0}; s.i >= 0 && s.r < range; --s.i, ++s.r)
+  for (struct {int i; unsigned int r; } s = {y - 1, 1}; s.i >= 0 && s.r < range; --s.i, ++s.r)
     {
       if (map->getCellValue(x, s.i)->getObjectType() == IObject::DESTROYABLEWALL ||
 	  map->getCellValue(x, s.i)->getObjectType() == IObject::WALL)
@@ -95,7 +95,7 @@ void		Classic::explose(int x, int y, Map *map, unsigned int range, Player *playe
 	}
       isOtherBomb(map, x, s.i, player, x, y, Fire::explosionTime / (s.r + 1));
     }
-  for (unsigned int i = y, r = 0; i < map->getHeight() && r < range; ++i, ++r)
+  for (unsigned int i = y + 1, r = 1; i < map->getHeight() && r < range; ++i, ++r)
     {
       if (map->getCellValue(x, i)->getObjectType() == IObject::DESTROYABLEWALL ||
 	  map->getCellValue(x, i)->getObjectType() == IObject::WALL)

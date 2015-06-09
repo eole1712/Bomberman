@@ -156,46 +156,43 @@ bool		Game::update()
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
-  if (_input2.getKey(SDLK_ESCAPE) || _input2.getInput(SDL_QUIT))
-    return false;
 
-  if (_input.getKey(SDLK_KP_0) || _input2.getKey(SDLK_KP_0))
+  if (_input.getKey(SDLK_RCTRL))
     {
       if (space)
 	player->putBomb();
       space = !space;
     }
-  if (_input.getKey(SDLK_SPACE) || _input2.getKey(SDLK_SPACE))
+  if (_input.getKey(SDLK_SPACE))
     {
       if (space2)
 	player2->putBomb();
       space2 = !space2;
     }
 
-  if (_input.getKey(SDLK_UP) || _input.getKey(SDLK_DOWN) ||
-      _input2.getKey(SDLK_UP) || _input2.getKey(SDLK_DOWN))
+  if (_input.getKey(SDLK_UP) || _input.getKey(SDLK_DOWN))
     {
-      if (_input.getKey(SDLK_UP) || _input2.getKey(SDLK_UP))
+      if (_input.getKey(SDLK_UP))
 	player->move(player->getRotation().y, elsapsedTime);
       else
 	player->move(180 + player->getRotation().y, elsapsedTime);
       _camera.setRotation(player->getPosition());
       _camera.updateView();
     }
-  if (_input.getKey(SDLK_z) || _input.getKey(SDLK_s) ||
-      _input2.getKey(SDLK_z) || _input2.getKey(SDLK_s))
+
+  if (_input.getKey(SDLK_z) || _input.getKey(SDLK_s))
     {
-      if (_input.getKey(SDLK_z) || _input2.getKey(SDLK_z))
+      if (_input.getKey(SDLK_z))
 	player2->move(player2->getRotation().y, elsapsedTime);
       else
 	player2->move(180 + player2->getRotation().y, elsapsedTime);
     }
-  if ((_input.getKey(SDLK_RIGHT) || _input2.getKey(SDLK_RIGHT)) ||
-      (_input.getKey(SDLK_LEFT) || _input2.getKey(SDLK_LEFT)))
+
+  if (_input.getKey(SDLK_RIGHT) != _input.getKey(SDLK_LEFT))
     player->Player::rotate(_input.getKey(SDLK_LEFT), elsapsedTime);
-  if (_input.getKey(SDLK_q) || _input.getKey(SDLK_d) ||
-      _input2.getKey(SDLK_q) || _input2.getKey(SDLK_d))
-    player2->Player::rotate(_input.getKey(SDLK_q) || _input2.getKey(SDLK_q), elsapsedTime);
+  if (_input.getKey(SDLK_q) != _input.getKey(SDLK_d))
+    player2->Player::rotate(_input.getKey(SDLK_q), elsapsedTime);
+
   _map->checkBombsOnMap();
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
@@ -268,20 +265,6 @@ void		Game::draw(gdl::Clock &clock,
   _assets[SKYBOX]->scale(glm::vec3(-1));
   _assets[SKYBOX]->draw(shader, clock);
   _assets[SKYBOX]->scale(glm::vec3(1));
-
-  // //
-  // Player	*player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
-  // _camera2.setPosition(player2->getPosition()
-  // 		       + glm::rotate(glm::vec3(3.5, 4, 0),
-  // 				     player2->getRotation().y + 90,
-  // 				     glm::vec3(0, 1, 0)));
-  // _camera2.setRotation(player2->getPosition());
-  // _camera2.updateView();
-  // _shader.bind();
-  // shader.setUniform("view", _camera2.getView());
-  // shader.setUniform("projection", _camera2.getProjection());
-  // shader.setUniform("color", glm::vec4(1.0));
-  // _assets[SKYBOX]->draw(shader, clock);
 }
 
 gdl::SdlContext		&Game::getContext()
