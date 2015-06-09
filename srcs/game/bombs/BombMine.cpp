@@ -26,7 +26,7 @@ Bomb::Type	Mine::getBombType() const
 
 IObject::Type	Mine::getObjectType() const
 {
-  return IObject::BOMB2;
+  return IObject::MINE;
 }
 
 bool		Mine::isNull() const

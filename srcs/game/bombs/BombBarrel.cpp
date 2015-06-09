@@ -26,7 +26,7 @@ Bomb::Type	Barrel::getBombType() const
 
 IObject::Type	Barrel::getObjectType() const
 {
-  return IObject::BOMB3;
+  return IObject::BARREL;
 }
 
 bool		Barrel::isNull() const

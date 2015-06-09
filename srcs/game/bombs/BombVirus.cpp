@@ -26,7 +26,7 @@ Bomb::Type	Virus::getBombType() const
 
 IObject::Type	Virus::getObjectType() const
 {
-  return IObject::BOMB;
+  return IObject::VIRUS;
 }
 
 bool		Virus::isNull() const

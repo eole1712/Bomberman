@@ -1,14 +1,3 @@
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include "RessourceStock.hpp"
-#include "Map.hpp"
-#include "BuffFactory.hpp"
-#include "BuffIncSpeed.hpp"
-#include "BuffParalyzed.hpp"
-#include "Player.hpp"
-#include "Gamer.hpp"
 #include "Core.hpp"
 
 int main()

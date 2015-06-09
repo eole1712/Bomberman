@@ -4,13 +4,13 @@
 #include <map>
 #include <math.h>
 #include <iostream>
+#include "SdlContext.hh"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
 #include "Game.hh"
 #include "Clock.hh"
 #include "Input.hh"
-#include "SdlContext.hh"
 #include "BasicShader.hh"
 #include "OpenGL.hh"
 #include "Asset3d.hpp"
