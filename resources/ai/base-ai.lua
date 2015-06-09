@@ -44,40 +44,65 @@ aiData = {
 
 		if (#route > 0)
 		then
+			print("try to move", route[1].x, route[1].y, player.x, player.y)
 		   if (route[1].x > player.x)
 		   then
+			print("left:", player.x + 1, player.y, map:getCell(player.x + 1, player.y))
 			  if (map:getCell(player.x + 1, player.y) == DESTROYABLE)
 			  then
+				print "left destroyable"
 				player:putBomb()
 				runAway(map, player)
-			  else
+			  elseif (map:getCell(player.x + 1, player.y) == SAFE or
+			  	  map:getCell(player.x + 1, player.y) == BONUS or
+			  	  map:getCell(player.x, player.y) ~= SAFE)
+			  then
+				print "try to move left"
 			       	  player:moveLeft()
 			  end
 		   elseif (route[1].x < player.x)
 		   then
+			print("right:", player.x - 1, player.y, map:getCell(player.x - 1, player.y))
 			  if (map:getCell(player.x - 1, player.y) == DESTROYABLE)
 			  then
+				print "right destroyable"
 				player:putBomb()
 				runAway(map, player)
-			  else
+			  elseif (map:getCell(player.x - 1, player.y) == SAFE or
+			  	  map:getCell(player.x - 1, player.y) == BONUS or
+			  	  map:getCell(player.x, player.y) ~= SAFE)
+			  then
+				print "try to move right"
 			  	player:moveRight() -- left/right are switched ?
 			  end
 		   elseif (route[1].y > player.y)
 		   then
+			print("up:", player.x, player.y + 1, map:getCell(player.x, player.y + 1))
 			  if (map:getCell(player.x, player.y + 1) == DESTROYABLE)
 			  then
+				print "up destroyable"
 				player:putBomb()
 				runAway(map, player)
-			  else
+			  elseif (map:getCell(player.x, player.y + 1) == SAFE or
+			  	  map:getCell(player.x, player.y + 1) == BONUS or
+			  	  map:getCell(player.x, player.y) ~= SAFE)
+			  then
+				print "try to move up"
 			     	player:moveUp()
 			  end
 		   elseif (route[1].y < player.y)
 		   then
+			print("down:", player.x, player.y - 1, map:getCell(player.x, player.y - 1))
 			  if (map:getCell(player.x, player.y - 1) == DESTROYABLE)
 			  then
+				print "down destroyable"
 				player:putBomb()
 				runAway(map, player)
-			  else
+			  elseif (map:getCell(player.x, player.y - 1) == SAFE or
+			  	  map:getCell(player.x, player.y - 1) == BONUS or
+			  	  map:getCell(player.x, player.y) ~= SAFE)
+			  then
+				print "try to move down"
 			   	player:moveDown()
 			  end
 		   end
@@ -88,6 +113,7 @@ aiData = {
 function runAway(map, player)
 	 attack = false
 	 local cell = findCellType(map, player.x, player.y, SAFE)
+
 	 route = findPath(map, player.x, player.y, cell.x, cell.y)
 end
 
@@ -237,7 +263,7 @@ end
 function checkCell(map, mainCoo, x, y)
 	 if (x < map.width and x >= 0 and y < map.height and y >= 0 and
 	     isCooInTable(mainCoo, x, y) == false and
-	     map:getCell(x, y) ~= BLOCK)
+	     map:getCell(x, y) ~= BLOCK and map:getCell(x, y) ~= FIRE)
 	 then
 		return true
 	 end
