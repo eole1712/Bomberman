@@ -15,8 +15,8 @@ MapList::~MapList()
 
 Map*	MapList::getMap(const std::string &name) const
 {
-  if (_json.parse(name + ".json"))
-    return (_json.unserialize<Bomberman::Map>());
+  if (_json.parse("./resources/json/" + name + ".json"))
+    return (_json.unserialize<Bomberman::Map>(name));
   return (NULL);
 }
 
