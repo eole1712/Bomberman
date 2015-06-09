@@ -117,11 +117,11 @@ void		JSONDoc::serialize<Bomberman::MapList>(const Bomberman::MapList &obj)
 
   if (!_doc.IsObject())
     _doc.SetObject();
-  std::for_each(list.cbegin(), list.cend(), [this, &obj, &object] (std::pair<std::string, std::pair<unsigned int, unsigned int> >& value) {
+  std::for_each(list.cbegin(), list.cend(), [this, &obj, &object] (std::pair<std::string, std::pair<unsigned int, unsigned int> > const& value) {
     rapidjson::Value		members(rapidjson::kObjectType);
     members.AddMember("width", value.second.first, _doc.GetAllocator());
     members.AddMember("height", value.second.second, _doc.GetAllocator());
-    object.AddMember(value.first.c_str(), members, _doc.GetAllocators());
+    object.AddMember(value.first.c_str(), members, _doc.GetAllocator());
   });
   _doc.AddMember("Maps", object, _doc.GetAllocator());
 }
@@ -140,6 +140,7 @@ Bomberman::MapList*		JSONDoc::unserialize<Bomberman::MapList*>(std::string const
 	  list->addMap(map.name.GetString(), map.value["width"].GetUint(), map.value["height"].GetUint());
       });
     }
+  return list;
 }
 
 template<>

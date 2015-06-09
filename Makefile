@@ -22,7 +22,7 @@ CORESRCS	= main.cpp		\
 		  CameraObject.cpp	\
 		  JSONDoc.cpp		\
 		  ScoreList.cpp		\
-		  Maplist.cpp		\
+		  MapList.cpp		\
 		  Animation.cpp		\
 
 GAMESRCS	= Player.cpp 		\
