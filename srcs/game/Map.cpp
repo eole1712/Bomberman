@@ -181,15 +181,20 @@ void	Map::equalize()
     }
 }
 
-class Spawn;
+void	Map::pushSpawn(unsigned int x, unsigned int y, unsigned int level)
+{
+  t_spawn	spawn = { x, y, level };
+
+  this->_spawnList.push_back(spawn);
+}
 
 void	Map::addSpawn(unsigned int x, unsigned int y)
 {
   this->setCellValue(x, y, this->_rcs->getObject(IObject::SPAWN));
   this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
-		     this->_rcs->getObject(IObject::EMPTY));
+  		     this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
-		     this->_rcs->getObject(IObject::EMPTY));
+  		     this->_rcs->getObject(IObject::EMPTY));
 }
 
 void	Map::menger(unsigned int sizeX, unsigned int sizeY, unsigned int level,
@@ -203,9 +208,9 @@ void	Map::menger(unsigned int sizeX, unsigned int sizeY, unsigned int level,
     return ;
   std::cout << level << std::endl;
   if (first)
-    addSpawn(sizeX / 2 - !(sizeX % 2), sizeY / 2 - !(sizeY % 2));
+    pushSpawn(sizeX / 2 - !(sizeX % 2), sizeY / 2 - !(sizeY % 2), level);
   else
-    addSpawn(saveX + sizeX / 3, saveY + sizeY / 3);
+    pushSpawn(saveX + sizeX / 3, saveY + sizeY / 3, level);
   while (x < (sizeX - 1))
     {
       y = 0;

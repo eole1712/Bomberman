@@ -24,6 +24,7 @@ private:
   bool	addNoBlocking(unsigned int, unsigned int);
   bool	checkDensity(unsigned int, unsigned int, unsigned int) const;
   void	equalize();
+  void	pushSpawn(unsigned int, unsigned int, unsigned int);
   void	addSpawn(unsigned int, unsigned int);
   void	menger(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, bool);
   unsigned int	findLevel();
@@ -31,6 +32,13 @@ private:
 
 public:
   enum e_difficulty	{ EASY = 7, MEDIUM, DIFFICULT };
+
+  struct		t_spawn
+  {
+    unsigned int	posX;
+    unsigned int	posY;
+    unsigned int	level;
+  };
 
   Map();
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
@@ -61,6 +69,7 @@ private:
   unsigned int		_nbJoueurs;
   e_difficulty		_difficulty;
   RessourceStock*	_rcs;
+  std::list<t_spawn>	_spawnList;
   std::list<BombTimer*>	_bombs;
   std::list<Fire*>	_firebox;
 };
