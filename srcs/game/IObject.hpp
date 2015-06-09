@@ -17,7 +17,8 @@ public:
       EMPTY,
       FIRE,
       BOMB,
-      BOMB2
+      BOMB2,
+      BOMB3
     };
 
 public:

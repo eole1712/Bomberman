@@ -94,22 +94,22 @@ bool				Game::initialize()
   attachObject(new Asset3d("resources/assets/dst_block.obj"));
   attachObject(new Asset3d("resources/assets/fire.obj"));
   attachObject(new Asset3d("resources/assets/marvin.fbx"));
+  attachObject(new Asset3d("resources/assets/bombs/FireBomb/Bomb.obj"));
+  attachObject(new Asset3d("resources/assets/sky.obj"));
+  attachObject(new Asset3d("resources/assets/bonus.obj"));
+  attachObject(new Asset3d("resources/assets/barrel.obj"));
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   //_assets[PLAYER]->createSubAnim(0, "start", 10, 28);
   //_assets[PLAYER]->createSubAnim(0, "run", 34, 55);
   //_assets[PLAYER]->createSubAnim(0, "end", 55, 130);
-  attachObject(new Asset3d("resources/assets/bombs/FireBomb/Bomb.obj"));
   _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
-  attachObject(new Asset3d("resources/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
-  attachObject(new Asset3d("resources/assets/bonus.obj"));
   _assets[BONUS]->scale(glm::vec3(0.05));
-
-
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::BOMB2] = FLOOR;
+  _ObjectToAsset[IObject::BOMB3] = BARREL;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
   _ObjectToAsset[IObject::BONUS] = BONUS;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;

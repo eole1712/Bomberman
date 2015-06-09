@@ -44,8 +44,18 @@ private:
   Game &operator=(const Game &);
 
   enum			mapAsset
-    {FLOOR, WALL, IDST_BLOCK
-     ,DST_BLOCK, FIRE, PLAYER, BOMB, SKYBOX, BONUS};
+    {
+      FLOOR,
+      WALL,
+      IDST_BLOCK,
+      DST_BLOCK,
+      FIRE,
+      PLAYER,
+      BOMB,
+      SKYBOX,
+      BONUS,
+      BARREL
+    };
 
 public:
   gdl::SdlContext		&getContext();
