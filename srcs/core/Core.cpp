@@ -86,7 +86,7 @@ bool				Core::initialize()
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
-
+  std::cout << "passé" << std::endl;
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
@@ -104,14 +104,16 @@ void		Core::attachObject(Asset3d *obj)
 void		Core::startGame()
 {
   Player	*player;
+  Gamer		*tmpGame;
 
-  _game = new Gamer(30, 30, _width / 2, _height);
-  for (unsigned int i = 0; i < _game->_stock->getNbPlayer(); ++i)
+  tmpGame = new Gamer(30, 30, _width / 2, _height);
+  for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(_game->_stock->getPlayer(i));
+      player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
+  _game = tmpGame;
 }
 
 bool		Core::update()
@@ -125,11 +127,7 @@ bool		Core::update()
 
 void		Core::draw()
 {
-  glViewport(900, 0, 900, 900);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  _game->draw(_clock, _shader, _game->getCamera(0), _assets, _ObjectToAsset);
-  glViewport(0, 0, 900, 900);
-  _game->draw(_clock, _shader, _game->getCamera(1), _assets, _ObjectToAsset);
+  _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
 }
 

@@ -22,13 +22,14 @@
 # include "Player.hpp"
 # include "JSONDoc.hpp"
 # include "Core.hpp"
+# include "IScene.hpp"
 
 namespace Bomberman
 {
 
 class Core;
 
-class Gamer
+class Gamer : public IScene
 {
 public:
   Gamer();
@@ -37,7 +38,9 @@ public:
 
   virtual bool		update(gdl::Clock &, gdl::Input &);
   virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&, std::vector<Asset3d*>&,
-			     std::map<Bomberman::IObject::Type, Core::mapAsset>&);
+			     std::map<Bomberman::IObject::Type, mapAsset>&);
+  virtual void		drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
+				 std::map<Bomberman::IObject::Type, mapAsset>&);
   void			startGame();
 
 private:
