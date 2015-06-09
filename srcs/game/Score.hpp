@@ -20,7 +20,7 @@ public:
 public:
   static const int	dftTime;
 
-  unsigned int	getScore() const;
+  unsigned int	getValue() const;
   void		inc();
 };
 

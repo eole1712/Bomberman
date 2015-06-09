@@ -1,3 +1,4 @@
+  #include <iostream>
 #include <math.h>
 #include "Score.hpp"
 
@@ -13,7 +14,7 @@ Score::Score()
 Score::~Score()
 {}
 
-unsigned int	Score::getScore() const
+unsigned int	Score::getValue() const
 {
   return (this->_score);
 }
