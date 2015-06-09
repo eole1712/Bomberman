@@ -15,7 +15,7 @@
 
 # include "RessourceStock.hpp"
 # include "Map.hpp"
-# include "Score.hpp"
+# include "ScoreList.hpp"
 # include "BuffFactory.hpp"
 # include "BuffIncSpeed.hpp"
 # include "BuffParalyzed.hpp"
@@ -67,9 +67,10 @@ private:
   float				_speed;
   std::map<Bomberman::IObject::Type, mapAsset>	_ObjectToAsset;
   JSONDoc			_json;
+  Bomberman::MapList*		_mapList;
+  Bomberman::ScoreList*		_scoreList;
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
-  Bomberman::ScoreList		_scores;
 };
 
 }

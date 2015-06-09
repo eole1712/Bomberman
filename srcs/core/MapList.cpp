@@ -15,14 +15,19 @@ MapList::~MapList()
 
 Map*	MapList::getMap(const std::string &name) const
 {
-  if (_json.parse(name + ".json"))
-    return (_json.unserialize<Bomberman::Map>());
+  if (_json.parse("./resources/json/" + name + ".json"))
+    return (_json.unserialize<Bomberman::Map>(name));
   return (NULL);
 }
 
 void	MapList::addMap(Map* map)
 {
   this->_maps.insert(map->getName(), std::make_pair(map->getWidth(), map->getHeight()));
+}
+
+void	MapList::addMap(std::string name, unsigned int width, unsigned int height)
+{
+  this->_maps.insert(name, std::make_pair(width, height));
 }
 
 std::unordered_map<std::string, std::pair<unsigned int, unsigned int> >	MapList::getMapList() const
