@@ -32,10 +32,10 @@ namespace Bomberman
 Game::Game()
   : _width(20), _height(20), _camera(90.0, 900, 900), _camera2(90.0, 900, 900), _speed(70)
 {
-  _mapList = ((_json.parse("./resources/json/Maplist.json"))
+  _mapList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::MapList*>())
 	      : (new MapList()));
-  _scoreList = ((_json.parse("./resources/json/Scores.json"))
+  _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
 		: (new ScoreList()));
   std::vector<std::string>	nameList = {"Adrien", "Jean", "Grigri", "Le nettoyeur", "Poneyman"};
@@ -49,10 +49,10 @@ Game::Game()
 Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 900, 900), _camera2(90.0, 900, 900), _speed(70)
 {
-  _mapList = ((_json.parse("./resources/json/Maplist.json"))
+  _mapList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::MapList*>())
 	      : (new MapList()));
-  _scoreList = ((_json.parse("./resources/json/Scores.json"))
+  _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
 		: (new ScoreList()));
   std::vector<std::string>	nameList = {"Adrien", "Jean", "Grigri", "Le nettoyeur", "Poneyman"};
@@ -67,8 +67,14 @@ Game::~Game()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
+  delete (_map);
+  delete (_stock);
+  _json.serialize<Bomberman::MapList>(*_mapList);
+  _json.writeDown("./resources/json/Gamedata.json");
+  delete (_mapList);
   _json.serialize<Bomberman::ScoreList>(*_scoreList);
-  _json.writeDown("./resources/json/Scores.json");
+  _json.writeDown("./resources/json/Gamedata.json");
+  delete (_scoreList);
 }
 
 bool				Game::initialize()

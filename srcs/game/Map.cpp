@@ -323,7 +323,8 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
       if (dynamic_cast<Player*>(_rcs->getPlayer(i))->getX() == x &&
 	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y)
 	{
-	  if (dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill())
+	  if (dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill() &&
+	      dynamic_cast<Player*>(_rcs->getPlayer(i)) != player)
 	    player->incScore();
 	}
     }

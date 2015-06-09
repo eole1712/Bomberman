@@ -45,7 +45,7 @@ Player::Player(std::string const &name, glm::vec4 color)
 }
 
 Player::Player()
-  : _name("NoName"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
+  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -68,15 +68,10 @@ Player::Player()
 
 Player::~Player()
 {
-  std::cout << "Player destroyed !" << std::endl;
   for (std::list<BuffTimer*>::iterator it = _buff.begin(); it != _buff.end(); it++)
-    {
-      delete *it;
-    }
+    delete *it;
   if (_scoreList != NULL)
-    _scoreList->addScore(getName(), getScore().getScore());
-  else
-    std::cout << "null" << std::endl;
+    _scoreList->addScore(getName(), getScore().getValue());
 }
 
 // getters
