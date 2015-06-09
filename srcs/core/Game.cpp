@@ -33,8 +33,8 @@ Game::Game()
   : _width(20), _height(20), _camera(90.0, 1000, 1000), _speed(70)
 {
   if (_json.parse("Scores.json"))
-    _scores = _json.unserialize<Bomberman::ScoreList>();
-  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, &_scores);
+    _scores = _json.unserialize<Bomberman::ScoreList*>();
+  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, _scores);
   _map = new Map("blibi", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
 }
 
@@ -42,8 +42,8 @@ Game::Game(const unsigned int & width, const unsigned int & height)
   : _width(width), _height(height), _camera(90.0, 1000, 1000), _speed(70)
 {
   if (_json.parse("Scores.json"))
-    _scores = _json.unserialize<Bomberman::ScoreList>();
-  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, &_scores);
+    _scores = _json.unserialize<Bomberman::ScoreList*>();
+  _stock = new RessourceStock(std::vector<std::string> {"Adrien", "Jean", "grigri", "4"}, _scores);
   _map = new Map("blibi", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
 }
 
@@ -51,7 +51,7 @@ Game::~Game()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
-  _json.serialize<Bomberman::ScoreList>(_scores);
+  _json.serialize<Bomberman::ScoreList>(*_scores);
   _json.writeDown("Scores.json");
 }
 

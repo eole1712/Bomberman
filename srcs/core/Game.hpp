@@ -61,7 +61,7 @@ private:
   JSONDoc			_json;
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
-  Bomberman::ScoreList		_scores;
+  Bomberman::ScoreList*		_scores;
 };
 
 }

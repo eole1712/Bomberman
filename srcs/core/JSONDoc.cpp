@@ -92,9 +92,9 @@ void				JSONDoc::serialize<Bomberman::ScoreList>(const Bomberman::ScoreList &obj
 }
 
 template<>
-Bomberman::ScoreList		JSONDoc::unserialize<Bomberman::ScoreList>(std::string const&) const
+Bomberman::ScoreList*		JSONDoc::unserialize<Bomberman::ScoreList*>(std::string const&) const
 {
-  Bomberman::ScoreList		scores;
+  Bomberman::ScoreList*		scores = new Bomberman::ScoreList;
 
   if (_doc.IsObject() && _doc.HasMember("Scores"))
     {
@@ -102,11 +102,44 @@ Bomberman::ScoreList		JSONDoc::unserialize<Bomberman::ScoreList>(std::string con
       std::for_each(object.MemberBegin(), object.MemberEnd(), [&scores] (const rapidjson::Value::Member& player) {
 	if (player.value.IsArray())
 	  std::for_each(player.value.Begin(), player.value.End(), [&player, &scores] (const rapidjson::Value& score) {
-	    scores.addScore(player.name.GetString(), score.GetUint());
+	    scores->addScore(player.name.GetString(), score.GetUint());
 	  });
       });
     }
   return scores;
+}
+
+template<>
+void		JSONDoc::serialize<Bomberman::MapList>(const Bomberman::MapList &obj)
+{
+  std::unordered_map<std::string, std::pair<unsigned int, unsigned int> > list = obj.getMapList();
+  rapidjson::Value		object(rapidjson::kObjectType);
+
+  if (!_doc.IsObject())
+    _doc.SetObject();
+  std::for_each(list.cbegin(), list.cend(), [this, &obj, &object] (std::pair<std::string, std::pair<unsigned int, unsigned int> >& value) {
+    rapidjson::Value		members(rapidjson::kObjectType);
+    members.AddMember("width", value.second.first, _doc.GetAllocator());
+    members.AddMember("height", value.second.second, _doc.GetAllocator());
+    object.AddMember(value.first.c_str(), members, _doc.GetAllocators());
+  });
+  _doc.AddMember("Maps", object, _doc.GetAllocator());
+}
+
+template<>
+Bomberman::MapList*		JSONDoc::unserialize<Bomberman::MapList*>(std::string const&) const
+{
+  Bomberman::MapList*		list = new Bomberman::MapList;
+
+  if (_doc.IsObject() && _doc.HasMember("Maps"))
+    {
+      rapidjson::Value const& object(_doc["Maps"]);
+      std::for_each(object.MemberBegin(), object.MemberEnd(), [&list] (const rapidjson::Value::Member& map) {
+	if (map.value.IsObject() && map.value.HasMember("height"),
+	    map.value.HasMember("width"))
+	  list->addMap(map.name.GetString(), map.value["width"].GetUint(), map.value["height"].GetUint());
+      });
+    }
 }
 
 template<>

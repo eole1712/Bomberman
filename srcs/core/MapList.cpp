@@ -8,15 +8,19 @@ namespace Bomberman
 {
 
 MapList::MapList()
-{}
+{
+  _json = new JSONDoc;
+}
 
 MapList::~MapList()
-{}
+{
+  delete _json;
+}
 
 Map*	MapList::getMap(const std::string &name) const
 {
-  if (_json.parse(name + ".json"))
-    return (_json.unserialize<Bomberman::Map>());
+  if (_json->parse(name + ".json"))
+    return (_json->unserialize<Bomberman::Map>());
   return (NULL);
 }
 
