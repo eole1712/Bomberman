@@ -99,8 +99,7 @@ bool				Game::initialize()
   //_assets[PLAYER]->createSubAnim(0, "start", 10, 28);
   //_assets[PLAYER]->createSubAnim(0, "run", 34, 55);
   //_assets[PLAYER]->createSubAnim(0, "end", 55, 130);
-  attachObject(new Asset3d("resources/assets/barrel.obj"));
-  _assets[BOMB]->scale(glm::vec3(0.06));
+  attachObject(new Asset3d("resources/assets/bombs/FireBomb/Bomb.obj"));
   _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
   attachObject(new Asset3d("resources/assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
