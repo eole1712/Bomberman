@@ -7,21 +7,52 @@ PLAYER = 4
 BONUS = 5
 UNKNOWN = 6
 
+-- local variable to the file
+-- allows ai to memorise the path
+local route = {}
+local attack = false
+
 -- ai data table
 -- aiAction is the function called at each frame
 aiData = {
        name = "base-ai",
        aiAction = function(player, map)
-		if (map:getCell(player.x, player.y) == UNSAFE)
+		if (map:getCell(player.x, player.y) == UNSAFE and attack == true or
+		    map:getCell(player.x, player.y) == UNSAFE and #route == 0)
 		then
-			player:memoriseDefense()
+			attack = false
+
 			-- get nearest safe cell, and set to objective
-			player:resetGoal()
-		else
-			player:resetGoal()
-			player:memoriseAttack()
+		elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
+		        map:getCell(player.x, player.y) == SAFE and #route == 0)
+		then
+		     	attack = true
+
 			-- get nearest enemy and set to objective
-			findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1))
+			route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1))
+		end
+
+		if (#route > 0 and player.x == route[1].x and route[1].y)
+		then
+		   table.remove(route, 1)
+		end
+
+		if (#route > 0)
+		then
+		   print(player.x, player.y, route[1].x, route[1].y)
+		   if (route[1].x > player.x)
+		   then
+		      	  player:moveLeft()
+		   elseif (route[1].x < player.x)
+		   then
+		   	  player:moveRight() -- left/right are switched ?
+		   elseif (route[1].y > player.y)
+		   then
+		   	  player:moveDown()  
+		   elseif (route[1].y < player.y)
+		   then
+		   	  player:moveUp()
+		   end
 		end
 	end
 }
@@ -126,9 +157,8 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		print(v.x, v.y)
 	 end
 	 print "end"
-
-	return path
 ]]--
+	return path
 end
 
 function checkCell(map, mainCoo, x, y)
