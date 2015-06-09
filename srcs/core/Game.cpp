@@ -263,20 +263,19 @@ void		Game::draw(gdl::Clock &clock,
   _assets[SKYBOX]->draw(shader, clock);
   _assets[SKYBOX]->scale(glm::vec3(1));
 
-  //
-  Player	*player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
-  glViewport(0, 0, 900, 900);
-  _camera2.setPosition(player2->getPosition()
-		       + glm::rotate(glm::vec3(3.5, 4, 0),
-				     player2->getRotation().y + 90,
-				     glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition());
-  _camera2.updateView();
-  _shader.bind();
-  shader.setUniform("view", _camera2.getView());
-  shader.setUniform("projection", _camera2.getProjection());
-  shader.setUniform("color", glm::vec4(1.0));
-  _assets[SKYBOX]->draw(shader, clock);
+  // //
+  // Player	*player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
+  // _camera2.setPosition(player2->getPosition()
+  // 		       + glm::rotate(glm::vec3(3.5, 4, 0),
+  // 				     player2->getRotation().y + 90,
+  // 				     glm::vec3(0, 1, 0)));
+  // _camera2.setRotation(player2->getPosition());
+  // _camera2.updateView();
+  // _shader.bind();
+  // shader.setUniform("view", _camera2.getView());
+  // shader.setUniform("projection", _camera2.getProjection());
+  // shader.setUniform("color", glm::vec4(1.0));
+  // _assets[SKYBOX]->draw(shader, clock);
 }
 
 gdl::SdlContext		&Game::getContext()
