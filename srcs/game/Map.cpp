@@ -20,9 +20,9 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 17)
+      || this->_nbJoueurs > this->_width * this->_height / 20)
     throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 6 || this->_width < 6)
+  if (this->_height < 10 || this->_width < 10)
     throw new Exception::InvalidDimensions("Map Constructor");
   this->randomize();
   this->equalize();
@@ -37,9 +37,9 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 17)
+      || this->_nbJoueurs > this->_width * this->_height / 20)
     throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 5 || this->_width < 5)
+  if (this->_height < 10 || this->_width < 10)
     throw new Exception::InvalidDimensions("Map Constructor");
 }
 
@@ -190,7 +190,8 @@ void	Map::addSpawn(unsigned int x, unsigned int y)
 		     this->_rcs->getObject(IObject::EMPTY));
 }
 
-void	Map::drawLosange(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
+void	Map::drawLosange(unsigned int sideX, unsigned int sideY,
+			 unsigned int incX, unsigned int incY, unsigned int nbJoueurs)
 {
   unsigned int	leftX = this->_width / 2 - sideX;
   unsigned int	topY = this->_height / 2 - sideY;
@@ -228,11 +229,16 @@ void	Map::drawLosange(unsigned int sideX, unsigned int sideY, unsigned int nbJou
 	  return;
 	}
     }
-  this->drawSquare(sideX + sideX / 2, sideY + sideY / 2, nbJoueurs / 2 + nbJoueurs % 2);
-  this->drawSquare(sideX - sideX / 2, sideY - sideY / 2, nbJoueurs / 2);
+  this->drawSquare(sideX + incX, sideY + incY,
+		   incX / 2, incY / 2,
+		   nbJoueurs / 2 + nbJoueurs % 2);
+  this->drawSquare(sideX - incX, sideY - incY,
+		   incX / 2, incY / 2,
+		   nbJoueurs / 2);
 }
 
-void	Map::drawSquare(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
+void	Map::drawSquare(unsigned int sideX, unsigned int sideY,
+			unsigned int incX, unsigned int incY, unsigned int nbJoueurs)
 {
   unsigned int	leftX = this->_width / 2 - sideX;
   unsigned int	leftY = this->_height / 2 - sideY;
@@ -270,7 +276,7 @@ void	Map::drawSquare(unsigned int sideX, unsigned int sideY, unsigned int nbJoue
 	  return;
 	}
     }
-  this->drawLosange(sideX, sideY, nbJoueurs);
+  this->drawLosange(sideX, sideY, incX, incY, nbJoueurs);
 }
 
 void	Map::spawnize()
@@ -282,13 +288,17 @@ void	Map::spawnize()
       this->addSpawn(this->_width / 2, this->_height / 2);
       --this->_nbJoueurs;
     }
-  this->drawSquare(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
+  this->drawSquare(this->_width / 2, this->_height / 2,
+		   0, 0,
+		   ((save > 4) ? (4) : (save)));
   this->_nbJoueurs -= ((save > 4) ? (4) : (save));
   save = this->_nbJoueurs;
-  this->drawLosange(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
+  this->drawLosange(this->_width / 2, this->_height / 2,
+		    0, 0,
+		    ((save > 4) ? (4) : (save)));
   this->_nbJoueurs -= ((save > 4) ? (4) : (save));
-  this->drawSquare(this->_width / 2 - this->_width / 4,
-		   this->_height / 2 - this->_height / 4,
+  this->drawSquare(this->_width / 4, this->_height / 4,
+		   this->_width / 8, this->_height / 8,
 		   this->_nbJoueurs);
 }
 

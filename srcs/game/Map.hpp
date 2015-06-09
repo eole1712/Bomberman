@@ -25,8 +25,10 @@ private:
   bool	checkDensity(unsigned int, unsigned int, unsigned int) const;
   void	equalize();
   void	addSpawn(unsigned int, unsigned int);
-  void	drawLosange(unsigned int, unsigned int, unsigned int);
-  void	drawSquare(unsigned int, unsigned int, unsigned int);
+  void	drawLosange(unsigned int, unsigned int,
+		    unsigned int, unsigned int, unsigned int);
+  void	drawSquare(unsigned int, unsigned int,
+		   unsigned int, unsigned int, unsigned int);
   void	spawnize();
 
 public:
