@@ -24,7 +24,7 @@ void	 MenuGrid::moveRight()
   _focus = _focus + 1 == _elems.end() ? _elems.begin() : _focus + 1;
 }
 
-void	MenuGrid::drawGrid(gdl::BasicShader& shader)
+void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset3d *> &, std::map<Bomberman::IObject::Type, Bomberman::mapAsset>)
 {
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
     {
@@ -52,4 +52,7 @@ void	MenuGrid::drawFocus(int x, int y, gdl::BasicShader& shader)
   Text2d	cursor("S", x - 70, y, 50, 50, "../assets/textures/alpha2.tga");
 
   cursor.draw(shader);
+}
+
+
 }
