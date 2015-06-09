@@ -16,8 +16,8 @@ public:
       SPAWN,
       EMPTY,
       FIRE,
-      BOMB,
       BOMB2,
+      BOMB,
       BOMB3
     };
 

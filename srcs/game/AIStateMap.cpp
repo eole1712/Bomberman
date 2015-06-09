@@ -57,6 +57,8 @@ namespace Bomberman
 		  setCellValue(x, y, AI::DESTROYABLE);
 		  break ;
 		case (IObject::BOMB):
+		case (IObject::BOMB2):
+		case (IObject::BOMB3):
 		  {
 		    BombTimer*	bomb = dynamic_cast<BombTimer*>(map.getCellValue(x, y));
 

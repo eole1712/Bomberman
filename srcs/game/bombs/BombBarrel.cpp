@@ -43,23 +43,23 @@ void		Barrel::explose(int x, int y, Map *map, unsigned int range, Player *player
        --s.x, --s.y, ++s.r)
     {
       if (exploseCase(map, s.x, s.y, s.r, player, x, y))
-	break;
+  	break;
     }
-  for (struct {int x; int y; unsigned int r;} s = {x - 1, y - 1, 1};
+  for (struct {int x; int y; unsigned int r;} s = {x + 1, y + 1, 1};
        s.x < int(map->getWidth()) && s.y < int(map->getHeight()) && s.r < range;
        ++s.x, ++s.y, ++s.r)
     {
       if (exploseCase(map, s.x, s.y, s.r, player, x, y))
   	break;
-    }
-  for (struct {int x; int y; unsigned int r;} s = {x - 1, y - 1, 1};
+   }
+  for (struct {int x; int y; unsigned int r;} s = {x - 1, y + 1, 1};
        s.x >= 0 && s.y < int(map->getHeight()) && s.r < range;
        --s.x, ++s.y, ++s.r)
     {
       if (exploseCase(map, s.x, s.y, s.r, player, x, y))
   	break;
     }
-  for (struct {int x; int y; unsigned int r;} s = {x - 1, y - 1, 1};
+  for (struct {int x; int y; unsigned int r;} s = {x + 1, y - 1, 1};
        s.x < int(map->getWidth()) && s.y >= 0 && s.r < range;
        ++s.x, --s.y, ++s.r)
     {

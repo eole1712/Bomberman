@@ -244,7 +244,7 @@ void		Game::draw(gdl::Clock &clock,
 	    {
 	      _assets[_ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
 		->setPosition(glm::vec3(x, 0, y));
-	      if (IObject::BOMB == _map->getCellValue(x, y)->getObjectType() ||
+	      if (IObject::BOMB <= _map->getCellValue(x, y)->getObjectType() ||
 		  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
 		{
 		  _assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
