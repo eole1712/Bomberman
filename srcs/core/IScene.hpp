@@ -8,7 +8,6 @@
 # include "Input.hh"
 # include "BasicShader.hh"
 # include "IObject.hpp"
-# include "Core.hpp"
 # include "Clock.hh"
 
 namespace Bomberman

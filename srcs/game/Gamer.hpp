@@ -21,13 +21,13 @@
 # include "BuffParalyzed.hpp"
 # include "Player.hpp"
 # include "JSONDoc.hpp"
-# include "Core.hpp"
+# include "Text2d.hpp"
 # include "IScene.hpp"
+
+//# include "Core.hpp"
 
 namespace Bomberman
 {
-
-class Core;
 
 class Gamer : public IScene
 {
@@ -41,7 +41,7 @@ public:
 			     std::map<Bomberman::IObject::Type, mapAsset>&);
   virtual void		drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
 				 std::map<Bomberman::IObject::Type, mapAsset>&);
-  void			startGame();
+  //void			startGame();
 
 private:
   Gamer(const Gamer &);

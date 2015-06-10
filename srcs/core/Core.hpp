@@ -22,12 +22,11 @@
 # include "JSONDoc.hpp"
 # include "Game.hh"
 # include "Gamer.hpp"
-# include "IScene.hpp"
+//# include "IScene.hpp"
 
 namespace Bomberman
 {
 
-class Gamer;
 class IScene;
 
 class Core : public gdl::Game

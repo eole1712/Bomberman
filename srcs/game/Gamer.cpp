@@ -110,24 +110,32 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
   Player			*player;
   Player			*player2;
 
+  std::cout << "Start init game" << std::endl;
   _mapList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::MapList*>())
 	      : (new MapList()));
   _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
 		: (new ScoreList()));
+  std::cout << "json done" << std::endl;
   _stock = new RessourceStock(nameList, _scoreList);
+  _stock->getPlayer(0);
   _map = _mapList->getMap(mapName);
   if (_map == NULL)
     _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
-
+  std::cout << "map done" << std::endl;
   for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
     {
+      std::cout << "first" << std::endl;
       player = dynamic_cast<Player *>(_stock->getPlayer(i));
+      std::cout << "Player" << std::endl;
       player->initGame(_map);
+      std::cout << "Map" << std::endl;
     }
+  std::cout << "first init play" << std::endl;
   player = dynamic_cast<Player *>(_stock->getPlayer(0));
   player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
+  std::cout << "Init players" << std::endl;
   _camera.setPosition(player->getPosition()
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
@@ -138,6 +146,7 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera2.setRotation(player2->getPosition());
+  std::cout << "Init game ended" << std::endl;
 }
 
 Gamer::~Gamer()

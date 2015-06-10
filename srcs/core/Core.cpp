@@ -24,7 +24,8 @@
 #include "Player.hpp"
 #include "PlayerAI.hpp"
 #include "JSONDoc.hpp"
-#include ""
+#include "MenuGrid.hpp"
+#include "Text2d.hpp"
 #include "Core.hpp"
 
 namespace Bomberman
@@ -117,12 +118,30 @@ void		Core::startGame()
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
+  //tmpGame->startGame();
   _game = tmpGame;
 }
 
 void		Core::firstMenu()
 {
-  AM
+  MenuGrid*	grid = new MenuGrid;
+  Text2d*	text1 = new Text2d("Load Game", 200, 200, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text2 = new Text2d("Start Game", 200, 350, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("High Scores", 200, 500, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+
+  std::cout << "Texts creted" << std::endl;
+  grid->addObject(text1, [] (void) {
+    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  });
+  grid->addObject(text2, [this] (void) {
+    Core* ptr;
+    ptr = this;
+    ptr->startGame();
+  });
+  grid->addObject(text3, [] (void) {
+    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  });
+  _game = grid;
 }
 
 bool		Core::update()

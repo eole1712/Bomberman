@@ -5,8 +5,9 @@
 # include <functional>
 # include "AMenuObject.hpp"
 # include "IScene.hpp"
+# include "CameraObject.hpp"
 
-class MenuGrid : public IScene
+class MenuGrid : public Bomberman::IScene
 {
 public:
   MenuGrid(std::string const& textName = "");
@@ -14,7 +15,7 @@ public:
   void	moveLeft();
   void	moveRight();
   virtual void	drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
-			 std::map<Bomberman::IObject::Type, Bomberman::Core::mapAsset>&);
+			 std::map<Bomberman::IObject::Type, Bomberman::mapAsset>&);
   void	drawFocus(int x, int y, gdl::BasicShader&);
   void	addObject(AMenuObject*, std::function<void()>);
   void	actionOnFocus();
@@ -27,6 +28,7 @@ protected:
   std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator	_focus;
   std::function<void(int x, int y)>						_drawFocus;
   gdl::Texture									_focusTexture;
+  CameraObject							_camera;
 };
 
 #endif /* !MENUGRID_H_ */

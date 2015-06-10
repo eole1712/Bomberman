@@ -76,8 +76,8 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
   _sounds[TWELVE] = new SoundManager("./resources/sound/killstreak/godlike.wav");
   _sounds[FIRSTBLOOD] = new SoundManager("./resources/sound/firstblood.wav");
   _sounds[MINE] = new SoundManager("./resources/sound/mine.wav");
-  _sounds[PREPARE] = new SoundManager("./resources/sound/prepare1.wav");
-  _sounds[SUICIDE] = new SoundManager("./resources/sound/suicide1.wav");
+  // _sounds[PREPARE] = new SoundManager("./resources/sound/prepare1.wav");
+  // _sounds[SUICIDE] = new SoundManager("./resources/sound/suicide1.wav");
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
