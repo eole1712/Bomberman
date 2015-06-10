@@ -1,4 +1,5 @@
 #include <iostream>
+#include <glm/gtx/norm.hpp>
 #include "PlayerAI.hpp"
 #include "LuaError.hpp"
 #include "AIStateMap.hpp"
@@ -156,7 +157,7 @@ namespace Bomberman
 	    setPosition(glm::vec3(pos.x, 0, pos.y));
 	    return (bra = true);
 	  }
-	if ((pos - savepos).length() < (pos - newpos).length())
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
 	  {
 	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
 	    return (bra = true);
@@ -186,12 +187,12 @@ namespace Bomberman
 	savepos = glm::vec2(getfX(), getfY());
 	move(90, elsapsedTime);
 	newpos = glm::vec2(getfX(), getfY());
-	if (savepos.x < pos.x && newpos.x >= pos.x)
+	if (savepos.x > pos.x && newpos.x <= pos.x)
 	  {
 	    setPosition(glm::vec3(pos.x, 0, pos.y));
 	    return (bra = true);
 	  }
-	if ((pos - savepos).length() < (pos - newpos).length())
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
 	  {
 	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
 	    return (bra = true);
@@ -226,7 +227,7 @@ namespace Bomberman
 	    setPosition(glm::vec3(pos.x, 0, pos.y));
 	    return (bra = true);
 	  }
-	if ((pos - savepos).length() < (pos - newpos).length())
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
 	  {
 	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
 	    return (bra = true);
@@ -261,7 +262,7 @@ namespace Bomberman
 	    setPosition(glm::vec3(pos.x, 0, pos.y));
 	    return (bra = true);
 	  }
-	if ((pos - savepos).length() < (pos - newpos).length())
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
 	  {
 	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
 	    return (bra = true);
