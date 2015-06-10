@@ -60,16 +60,16 @@ Gamer::Gamer()
     }
   player = dynamic_cast<Player *>(_stock->getPlayer(0));
   player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
-  _camera.setPosition(player->getPosition()
+  _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera.setRotation(player->getPosition());
-  _camera2.setPosition(player2->getPosition()
+  _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition());
+  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
 }
 
 Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam)
@@ -104,16 +104,16 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
     }
   player = dynamic_cast<Player *>(_stock->getPlayer(0));
   player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
-  _camera.setPosition(player->getPosition()
+  _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera.setRotation(player->getPosition());
-  _camera2.setPosition(player2->getPosition()
+  _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition());
+  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
 }
 
 Gamer::~Gamer()
@@ -175,16 +175,16 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
 
   _map->checkBombsOnMap();
-  _camera.setPosition(player->getPosition()
+  _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera.setRotation(player->getPosition());
-  _camera2.setPosition(player2->getPosition()
+  _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition());
+  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
   _camera.updateView();
   _camera2.updateView();
   return true;
