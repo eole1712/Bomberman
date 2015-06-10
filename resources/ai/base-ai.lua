@@ -101,12 +101,21 @@ end
 
 function runAway(map, player)
    attack = false
-   local cell = findCellType(map, player.x, player.y, { SAFE, BONUS })
 
+--   local cell = findCellType(map, player.x, player.y, { SAFE, BONUS })
+   local cell = findCellByBackTracking(map, player.x, player.y, { SAFE, BONUS }, { BLOCK, DESTROYABLE, FIRE })
+
+   if (cell.x == -1 or cell.y == -1) then
+      print "safe cell not found"
+   end
+
+   print("safe cell: ", cell.x, cell.y) --
+   print("player: ", player.x, player.y)
    route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
 end
 
-function findCellByBackTracking(map, x, y, cellTarget, blocksCells)
+local prevCells = {}
+function findCellByBackTracking(map, x, y, targetCells, blocksCells)
    local toTest = {
       { x = x + 1, y = y },
       { x = x - 1, y = y },
@@ -117,16 +126,24 @@ function findCellByBackTracking(map, x, y, cellTarget, blocksCells)
 
    for k, v in pairs(toTest)
    do
-      if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false)
+      if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false and 
+	  isCooInTable(prevCells, v.x, v.y) == false)
       then
-	 res = findCellByBackTracking(map, v.x, v.y, cellTarget, blocksCells)
+	 print(v.x, v.y, map:getCell(v.x, v.y))
+	 if (isTypeInTable(map:getCell(v.x, v.y), targetCells)) then
+	    prevCells = {}
+	    return { x = v.x, y = v.y, valid = true }
+	 end
+
+	 prevCells[#prevCells + 1] = { x = v.x, y = v.y }
+	 res = findCellByBackTracking(map, v.x, v.y, targetCells, blocksCells)
 	 if (res.valid == true) then
 	    return res
 	 end
       end
    end
 
-   return { x = -1, y = -1, valid = false}
+   return { x = -1, y = -1, valid = false }
 end
 
 -- find nearest cell of type 'type'
@@ -268,6 +285,7 @@ function isAdjacentCell(x1, y1, x2, y2)
    return false
 end
 
+-- checks whether x and y are in mainCoo
 function isCooInTable(mainCoo, x, y)
    local i = 1
 
