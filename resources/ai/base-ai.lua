@@ -168,68 +168,32 @@ end
 function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
    local mainCoo = { { x = xEnd, y = yEnd, count = 0 } }
    local i = 1
+   local done = false
 
-   while (i <= #mainCoo)
+   while (i <= #mainCoo and done == false)
    do
-      -- check i for 1000 and quit
+      local toTest = {
+	 { x = mainCoo[i].x + 1, y = mainCoo[i].y },
+	 { x = mainCoo[i].x - 1, y = mainCoo[i].y },
+	 { x = mainCoo[i].x, y = mainCoo[i].y + 1 },
+	 { x = mainCoo[i].x, y = mainCoo[i].y - 1 },
+      }
 
-      -- check rightside cell
-      if (checkCell(map, mainCoo, mainCoo[i].x + 1, mainCoo[i].y, tableType) == true)
-      then
-	 mainCoo[#mainCoo + 1] = {
-	    x = mainCoo[i].x + 1,
-	    y = mainCoo[i].y,
-	    count = mainCoo[i].count + 1
-	 }
-
-	 if (mainCoo[i].x + 1 == xStart and mainCoo[i].y == yStart)
+      for k, v in pairs(toTest)
+      do
+	 if (checkCell(map, mainCoo, v.x, v.y, tableType) == true)
 	 then
-	    break
-	 end
-      end
+	    mainCoo[#mainCoo + 1] = {
+	       x = v.x,
+	       y = v.y,
+	       count = mainCoo[i].count + 1
+	    }
 
-      -- check leftside cell
-      if (checkCell(map, mainCoo, mainCoo[i].x - 1, mainCoo[i].y, tableType) == true)
-      then
-	 mainCoo[#mainCoo + 1] = {
-	    x = mainCoo[i].x - 1,
-	    y = mainCoo[i].y,
-	    count = mainCoo[i].count + 1
-	 }
-
-	 if (mainCoo[i].x - 1 == xStart and mainCoo[i].y == yStart)
-	 then
-	    break
-	 end
-      end
-
-      -- check upside cell
-      if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y + 1, tableType) == true)
-      then
-	 mainCoo[#mainCoo + 1] = {
-	    x = mainCoo[i].x,
-	    y = mainCoo[i].y + 1,
-	    count = mainCoo[i].count + 1
-	 }
-
-	 if (mainCoo[i].x == xStart and mainCoo[i].y + 1 == yStart)
-	 then
-	    break
-	 end
-      end
-
-      -- check downside cell
-      if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y - 1, tableType) == true)
-      then
-	 mainCoo[#mainCoo + 1] = {
-	    x = mainCoo[i].x,
-	    y = mainCoo[i].y - 1,
-	    count = mainCoo[i].count + 1
-	 }
-
-	 if (mainCoo[i].x == xStart and mainCoo[i].y - 1 == yStart)
-	 then
-	    break
+	    if (v.x == xStart and v.y == yStart)
+	    then
+	       done = true
+	       break
+	    end
 	 end
       end
 
