@@ -3,6 +3,7 @@
 
 # include <string>
 # include <list>
+# include "Asset3d.hpp"
 # include "IObject.hpp"
 # include "IBuff.hpp"
 # include "BuffTimer.hpp"
@@ -10,6 +11,8 @@
 # include "Object3d.hpp"
 # include "glm/glm.hpp"
 # include "Animation.hpp"
+# include "Score.hpp"
+# include "ScoreList.hpp"
 
 namespace Bomberman
 {
@@ -20,7 +23,7 @@ class Player
   : public IObject, public Object3d
 {
 public:
-  Player(std::string const &, glm::vec4 color);
+  Player(std::string const &, glm::vec4);
   Player();
   virtual ~Player();
 
@@ -33,7 +36,7 @@ public:
 public:
   std::string const&	getName() const;
   unsigned int		getRange() const;
-  unsigned int		getSpeed() const;
+  float			getSpeed() const;
 
 private:
   std::string		_name;
@@ -43,11 +46,13 @@ public:
   bool			isParalyzed() const;
   bool			zeroBomb() const;
   bool			canAbsorb() const;
+  bool			isPlaced() const;
 
 private:
   bool			_isAlive;
   bool			_isParalyzed;
   bool			_zeroBomb;
+  bool			_isPlaced;
 
 public:
   void			incRange();
@@ -119,7 +124,7 @@ protected:
 
 public:
   void			move(float const & direction, float const & elsapsedTime);
-  void			rotate(bool const & direction,
+  bool			rotate(bool const & direction,
 			       float const & elsapsedTime, float const & stop);
   void			rotate(bool const & direction,
 			       float const & elsapsedTime);
@@ -144,6 +149,15 @@ public:
   glm::vec4		getColor() const;
 
 public:
+  Score			_score;
+  ScoreList*		_scoreList;
+
+public:
+  Score			getScore() const;
+  void			incScore();
+  void			linkScoreList(ScoreList*);
+
+public:
   virtual Type		getObjectType() const;
   virtual bool		isNull() const;
 
@@ -152,6 +166,13 @@ protected:
 
 public:
   Animation		*animation;
+
+  void			draw(Asset3d & asset,
+			     gdl::BasicShader & shader,
+			     gdl::Clock const & clock) const;
+  glm::vec3		getNewPos(Player const *) const;
+  glm::vec3		getAbsVec(Player const *sec) const;
+
 };
 
 }

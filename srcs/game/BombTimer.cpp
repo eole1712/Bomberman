@@ -76,7 +76,7 @@ bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 {
   if (isFinished() || _isFinished)
     {
-      if (_isFinished == true && _bomb->getBombType() == Bomb::MINE && getElapsedTime() < 1000000)
+      if (_isFinished == true && _bomb->getBombType() == Bomb::MINE && getElapsedTime() < 3000000)
 	{
 	  _isFinished = false;
 	  return false;

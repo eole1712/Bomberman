@@ -24,19 +24,34 @@ private:
   bool	addNoBlocking(unsigned int, unsigned int);
   bool	checkDensity(unsigned int, unsigned int, unsigned int) const;
   void	equalize();
+  void	pushSpawn(unsigned int, unsigned int, unsigned int);
   void	addSpawn(unsigned int, unsigned int);
-  void	drawLosange(unsigned int, unsigned int, unsigned int);
-  void	drawSquare(unsigned int, unsigned int, unsigned int);
+  void	menger(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, bool);
+  unsigned int	findLevel();
   void	spawnize();
 
 public:
   enum e_difficulty	{ EASY = 7, MEDIUM, DIFFICULT };
 
+  struct		t_spawn
+  {
+    unsigned int	posX;
+    unsigned int	posY;
+    float		level;
+    unsigned int	stock;
+  };
+
+  Map();
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty);
   virtual ~Map() {};
 
+public:
   RessourceStock	*getRcs() const;
+  typedef std::pair<unsigned int, unsigned int> TwoInt;
+  TwoInt		findEmptySpawn();
+  float			calcLong(unsigned int x1, unsigned int y1,
+				 unsigned int x2, unsigned int y2);
 
 public:
   void			swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny);
@@ -49,7 +64,7 @@ public:
 
 public:
   bool		isIn(unsigned int x, unsigned int y) const;
-  void		killPlayers(unsigned int x, unsigned int y) const;
+  void		killPlayers(unsigned int x, unsigned int y, Player *) const;
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
   void		addFire(Player*, unsigned int, unsigned int);
@@ -57,9 +72,11 @@ public:
 
 private:
   std::string		_name;
+  unsigned int		_order;
   unsigned int		_nbJoueurs;
   e_difficulty		_difficulty;
   RessourceStock*	_rcs;
+  std::list<t_spawn>	_spawnList;
   std::list<BombTimer*>	_bombs;
   std::list<Fire*>	_firebox;
 };

@@ -17,6 +17,8 @@
 #include "OpenGL.hh"
 #include "MyGame.hpp"
 #include "Asset3d.hpp"
+#include "View2d.hpp"
+#include "Text2d.hpp"
 
 #define CAMERA_HEIGTH 1000
 #define CAMERA_WIDTH 1000
@@ -39,6 +41,8 @@ bool		MyGame::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   // We create a shader
   if (!_shader.load("../shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("../shaders/basic.vp", GL_VERTEX_SHADER)
@@ -58,13 +62,22 @@ bool		MyGame::initialize()
   _assets[PLAYER]->createSubAnim(0, "end2", 0, 1);
   attachObject(new Asset3d("../assets/barrel.obj"));
   _assets[BOMB]->scale(glm::vec3(0.06));
-  attachObject(new Asset3d("../assets/marvin.fbm/skybox.obj"));
+  attachObject(new Asset3d("../assets/sky.obj"));
   _assets[SKYBOX]->scale(glm::vec3(10.5 * 10));
   _camera.setRotation(_assets[PLAYER]->getPosition());
   _camera.setPosition(_assets[PLAYER]->getPosition() + glm::vec3(3.5, 3.5, 3));
   _camera.updateView();
   // We have the bind the shader before calling the setUniform method
+  _text = new Text2d("test", 150, 500, 700, 100, "../assets/textures/alpha3.tga");
   _shader.bind();
+  _text = new Text2d("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
+  _text2 = new Text2d("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
+  _grid.addObject(_text, [] () {
+    std::cout << "Pink Pony" << std::endl;
+  });
+  _grid.addObject(_text2, [] () {
+    std::cout << "Blue Pony" << std::endl;
+  });
   return true;
 }
 
@@ -120,6 +133,7 @@ bool		MyGame::update()
 				    _assets[PLAYER]->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.updateView();
+  _text->listen(_input);
   // Update inputs an clock
   _context.updateClock(_clock);
   _context.updateInputs(_input);
@@ -135,7 +149,7 @@ void		MyGame::draw()
   _shader.bind();
   _shader.setUniform("view", _camera.getView());
   _shader.setUniform("projection", _camera.getProjection());
-  _shader.setUniform("playercolor", _);
+  //_shader.setUniform("playercolor", _);
   // We draw all objects
   i[0] = 0;
   while (i[0] < 25)
@@ -166,7 +180,7 @@ void		MyGame::draw()
   _assets[DST_BLOCK]->draw(_shader, _clock);
   _assets[PLAYER]->draw(_shader, _clock);
   _assets[SKYBOX]->draw(_shader, _clock);
-<<<<<<< Updated upstream
+  //<<<<<<< Updated upstream
   _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   _assets[SKYBOX]->scale(glm::vec3(-1));
   _assets[SKYBOX]->draw(_shader, _clock);
@@ -174,36 +188,25 @@ void		MyGame::draw()
 
   // 2D TESTS
 
-  // _shader.setUniform("view", glm::mat4());
-  // _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+  _shader.setUniform("view", glm::mat4());
+  _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
 
-  // gdl::Geometry		poney;
-  // gdl::Texture		texture;
+  // Text2d	text("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
+  // Text2d	text2("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
+  View2d	lol(400, 600, 200, 200, std::string("../assets/textures/lol.tga"));
 
-  // texture.load("../assets/textures/normal.tga");
-  // // poney.setColor(glm::vec4(1, 0, 0, 1));
+  if (_input.getKey(SDLK_s))
+    _grid.moveRight();
+  if (_input.getKey(SDLK_z))
+    _grid.moveLeft();
+  if (_input.getKey(SDLK_TAB))
+    _grid.actionOnFocus();
 
-  // poney.pushVertex(glm::vec3(400, 400, 0));
-  // poney.pushVertex(glm::vec3(600, 400, 0));
-  // poney.pushVertex(glm::vec3(600, 600, 0));
-  // poney.pushVertex(glm::vec3(400, 600, 0));
+  _grid.drawGrid(_shader);
 
-  // poney.pushUv(glm::vec2(0.0f, 0.0f));
-  // poney.pushUv(glm::vec2(1.0f, 0.0f));
-  // poney.pushUv(glm::vec2(1.0f, 1.0f));
-  // poney.pushUv(glm::vec2(0.0f, 1.0f));
+  //text.draw(_shader);
+  //lol.draw(_shader);
+	_text->draw(_shader);
 
-  // poney.build();
-
-  // texture.bind();
-
-  // poney.draw(_shader, glm::mat4(), GL_QUADS);
-
-=======
-  // _assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
-  // _assets[SKYBOX]->scale(glm::vec3(-1));
-  // _assets[SKYBOX]->draw(_shader, _clock);
-  // _assets[SKYBOX]->scale(glm::vec3(1));
->>>>>>> Stashed changes
   _context.flush();
 }

@@ -20,6 +20,7 @@ Fire::Fire(Player *player, unsigned int x, unsigned int y, float time)
 
 Fire::~Fire()
 {
+
 }
 
 Player*		Fire::getPlayer() const

@@ -16,8 +16,10 @@ public:
       SPAWN,
       EMPTY,
       FIRE,
+      MINE,
       BOMB,
-      BOMB2
+      BARREL,
+      VIRUS
     };
 
 public:

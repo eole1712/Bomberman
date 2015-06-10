@@ -26,7 +26,7 @@ Bomb::Type	Mine::getBombType() const
 
 IObject::Type	Mine::getObjectType() const
 {
-  return IObject::BOMB2;
+  return IObject::MINE;
 }
 
 bool		Mine::isNull() const
@@ -40,7 +40,7 @@ void		Mine::explose(int x, int y, Map *map, unsigned int, Player *player) const
 }
 
   void		Mine::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
-					  int y, unsigned int range) const
+					 int y, unsigned int range) const
   {
     map->setCellValue(x, y, AI::UNSAFE);
     static_cast<void>(realMap);

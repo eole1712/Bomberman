@@ -16,15 +16,17 @@ LUABDIR		= $(VENDORSDIR)/LuaBridge/
 LUAINCS		= $(LUADIR)/include/
 
 CORESRCS	= main.cpp		\
-		  Game.cpp		\
 		  Asset3d.cpp		\
 		  Object3d.cpp		\
 		  CameraObject.cpp	\
 		  JSONDoc.cpp		\
-		  Score.cpp		\
+		  ScoreList.cpp		\
+		  MapList.cpp		\
 		  Animation.cpp		\
+		  Core.cpp		\
 
 GAMESRCS	= Player.cpp 		\
+		  Gamer.cpp		\
 		  PlayerAI.cpp		\
 		  BuffTimer.cpp		\
 		  Empty.cpp		\
@@ -38,6 +40,8 @@ GAMESRCS	= Player.cpp 		\
 		  IObject.cpp		\
 		  Color.cpp		\
 		  Fire.cpp		\
+		  Score.cpp		\
+		  Sound.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
@@ -54,6 +58,7 @@ BOMBSRCS	= BombClassic.cpp	\
 		  BombVirus.cpp		\
 		  IBomb.cpp		\
 		  BombMine.cpp		\
+		  BombBarrel.cpp		\
 		  BombFactory.cpp	\
 
 MISCSRCS	= Timer.cpp		\
@@ -82,13 +87,12 @@ CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson
 CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS)
 
 LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib
-LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL2 -ldl -llua
+LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL2 -ldl -llua -lSDL_mixer
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	 $(CC) -o $(NAME) $(OBJS) $(LDFLAGS)
-	 echo "export LD_LIBRARY_PATH=~/rendu/cpp_bomberman/srcs/LibBomberman_linux_x64/libs/"
 
 clean:
 	rm -f $(OBJS)

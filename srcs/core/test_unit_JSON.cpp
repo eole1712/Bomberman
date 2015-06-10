@@ -14,8 +14,8 @@ int	main()
 {
   Bomberman::Score score;
   JSONDoc doc;
-  Bomberman::Player player("Grisha", glm::vec4(1));
-  Bomberman::Player griGri("Putin", glm::vec4(1));
+  Bomberman::Player player("Grisha", glm::vec4(0.5, 0, 0.2, 0));
+  Bomberman::Player griGri("Putin", glm::vec4(0, 1, 0, 0));
   SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
   std::vector<std::string> players;
   players.push_back("GriGri");
@@ -73,5 +73,25 @@ int	main()
   doc.serialize<Bomberman::Player>(griGri);
   doc.serialize<Bomberman::Map>(map);
   doc.writeDown("Test1.json");
-
+  Bomberman::Map* map2 = doc.unserialize<Bomberman::Map*>(map.getName());
+  bool diff = false;
+  if (map.getWidth() != map2->getWidth() || map.getHeight() != map2->getHeight())
+    {
+      std::cout << "sizes are differents !" << std::endl;
+      abort();
+    }
+  for (unsigned int i = 0; i != map.getWidth(); ++i)
+    {
+      for (unsigned int j = 0; j != map.getHeight(); ++j)
+	{
+	  if (map2->getCellValue(i, j)->getObjectType() != map.getCellValue(i, j)->getObjectType())
+	    {
+	      std::cout << "difference : " << map2->getCellValue(i, j)->getObjectType() << " and " <<  map.getCellValue(i, j)->getObjectType() << std::endl;
+	      diff = true;
+	      break;
+	    }
+	}
+    }
+  if (!diff)
+    std::cout << "Map are the same" << std::endl;
 }

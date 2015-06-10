@@ -8,6 +8,9 @@
 namespace Bomberman
 {
 
+Map::Map()
+{}
+
 Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty,
 	 RessourceStock* objects)
@@ -17,9 +20,9 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 17)
+      || this->_nbJoueurs > this->_width * this->_height / 12)
     throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 6 || this->_width < 6)
+  if (this->_height < 10 || this->_width < 10)
     throw new Exception::InvalidDimensions("Map Constructor");
   this->randomize();
   this->equalize();
@@ -34,9 +37,9 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 17)
+      || this->_nbJoueurs > this->_width * this->_height / 12)
     throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 5 || this->_width < 5)
+  if (this->_height < 10 || this->_width < 10)
     throw new Exception::InvalidDimensions("Map Constructor");
 }
 
@@ -178,115 +181,115 @@ void	Map::equalize()
     }
 }
 
+float		Map::calcLong(unsigned int x1, unsigned int y1,
+				      unsigned int x2, unsigned int y2)
+{
+  int		x = x1 - x2;
+  int		y = y1 - y2;
+
+  return (sqrt(pow(x, 2) + pow(y, 2)));
+}
+
+Map::TwoInt			Map::findEmptySpawn()
+{
+  Player*		player;
+  float			tmp;
+  float			rest;
+  t_spawn		s = {my_random(0, getWidth() - 1), my_random(0, getHeight() - 1), -1.0f, 0};
+  bool			ok;
+
+  for (unsigned int x = 0; x < getWidth(); x++)
+    for (unsigned int y = 0; y < getHeight(); y++)
+      {
+	rest = -1.0f;
+	ok = false;
+	for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
+	  {
+	    player = dynamic_cast<Player*>(_rcs->getPlayer(i));
+	    if (player->isPlaced())
+	      {
+		tmp = calcLong(player->getX(), player->getY(), x, y);
+		if (player->getX() == x && player->getY() == y)
+		  ok = true;
+		else if (tmp < rest || rest == -1)
+		  rest = tmp;
+	      }
+	  }
+	if ((rest > s.level || s.level == -1) && !ok && rest != -1.0f)
+	  {
+	    s.posX = x;
+	    s.posY = y;
+	    s.level = rest;
+	  }
+      }
+  addSpawn(s.posX, s.posY);
+  return std::make_pair(s.posX, s.posY);
+}
+
+void			Map::pushSpawn(unsigned int x, unsigned int y, unsigned int level)
+{
+  t_spawn	spawn = { x, y, float(level), 0};
+
+  this->_spawnList.push_back(spawn);
+}
+
 void	Map::addSpawn(unsigned int x, unsigned int y)
 {
-  this->setCellValue(x, y, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue(x, y, this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
-		     this->_rcs->getObject(IObject::EMPTY));
+  		     this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
-		     this->_rcs->getObject(IObject::EMPTY));
+  		     this->_rcs->getObject(IObject::EMPTY));
 }
 
-void	Map::drawLosange(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
+void	Map::menger(unsigned int sizeX, unsigned int sizeY, unsigned int level,
+		    unsigned int saveX, unsigned int saveY, bool first)
 {
-  unsigned int	leftX = this->_width / 2 - sideX;
-  unsigned int	topY = this->_height / 2 - sideY;
-  unsigned int	rightX = this->_width / 2 - !(this->_width % 2) + sideX;
-  unsigned int	bottomY = this->_height / 2 - !(this->_height % 2) + sideY;
+  unsigned int	written = 0;
+  unsigned int	x = 0;
+  unsigned int	y;
 
-  if (nbJoueurs >= 4)
-    {
-      this->addSpawn(this->_width / 2, topY);
-      this->addSpawn(this->_width / 2, bottomY);
-      this->addSpawn(leftX, this->_height / 2);
-      this->addSpawn(rightX, this->_height / 2);
-      nbJoueurs -= 4;
-    }
+  if (!level || !sizeX || !sizeY)
+    return ;
+  std::cout << level << std::endl;
+  if (first)
+    pushSpawn(sizeX / 2 - !(sizeX % 2), sizeY / 2 - !(sizeY % 2), level);
   else
+    pushSpawn(saveX + sizeX / 3, saveY + sizeY / 3, level);
+  while (x < (sizeX - 1))
     {
-      switch (nbJoueurs)
+      y = 0;
+      while (y < (sizeY - 1))
 	{
-	case 3:
-	  this->addSpawn(this->_width / 2, topY);
-	  this->addSpawn(this->_width / 2, bottomY);
-	  this->addSpawn(leftX, this->_height / 2);
-	  nbJoueurs -= 3;
-	  break;
-	case 2:
-	  this->addSpawn(this->_width / 2, topY);
-	  this->addSpawn(this->_width / 2, bottomY);
-	  nbJoueurs -= 2;
-	  break;
-	case 1:
-	  this->addSpawn(this->_width / 2, topY);
-	  nbJoueurs -= 1;
-	  break;
-	default:
-	  return;
+	  if (written != 4)
+	    menger(sizeX / 3, sizeY / 3, level - 1, saveX + x, saveY + y, false);
+	  ++written;
+	  y += sizeY / 3;
 	}
+      x += sizeX / 3;
     }
-  this->drawSquare(sideX + sideX / 2, sideY + sideY / 2, nbJoueurs / 2 + nbJoueurs % 2);
-  this->drawSquare(sideX - sideX / 2, sideY - sideY / 2, nbJoueurs / 2);
 }
 
-void	Map::drawSquare(unsigned int sideX, unsigned int sideY, unsigned int nbJoueurs)
+unsigned int	Map::findLevel()
 {
-  unsigned int	leftX = this->_width / 2 - sideX;
-  unsigned int	leftY = this->_height / 2 - sideY;
-  unsigned int	rightX = this->_width / 2 - !(this->_width % 2) + sideX;
-  unsigned int	rightY = this->_height / 2 - !(this->_height % 2) + sideY;
+  unsigned int	level = 1;
+  unsigned int	res = 9;
+  unsigned int	save = 8;
 
-  if (nbJoueurs >= 4)
+  if (this->_nbJoueurs <= 1)
+    return (0);
+  while (res < this->_nbJoueurs)
     {
-      this->addSpawn(leftX, leftY);
-      this->addSpawn(rightX, rightY);
-      this->addSpawn(leftX, rightY);
-      this->addSpawn(rightX, leftY);
-      nbJoueurs -= 4;
+      save = save * 8;
+      res += save;
+      ++level;
     }
-  else
-    {
-      switch (nbJoueurs)
-	{
-	case 3:
-	  this->addSpawn(leftX, leftY);
-	  this->addSpawn(rightX, rightY);
-	  this->addSpawn(leftX, rightY);
-	  nbJoueurs -= 3;
-	  break;
-	case 2:
-	  this->addSpawn(leftX, leftY);
-	  this->addSpawn(rightX, rightY);
-	  nbJoueurs -= 2;
-	  break;
-	case 1:
-	  this->addSpawn(leftX, leftY);
-	  nbJoueurs -= 1;
-	  break;
-	default:
-	  return;
-	}
-    }
-  this->drawLosange(sideX, sideY, nbJoueurs);
+  return (level + 1);
 }
 
 void	Map::spawnize()
 {
-  unsigned int	save = this->_nbJoueurs;
-
-  if (this->_nbJoueurs > 4)
-    {
-      this->addSpawn(this->_width / 2, this->_height / 2);
-      --this->_nbJoueurs;
-    }
-  this->drawSquare(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
-  this->_nbJoueurs -= ((save > 4) ? (4) : (save));
-  save = this->_nbJoueurs;
-  this->drawLosange(this->_width / 2, this->_height / 2, ((save > 4) ? (4) : (save)));
-  this->_nbJoueurs -= ((save > 4) ? (4) : (save));
-  this->drawSquare(this->_width / 2 - this->_width / 4,
-		   this->_height / 2 - this->_height / 4,
-		   this->_nbJoueurs);
+  //menger(this->_width, this->_height, this->findLevel(), 0, 0, true);
 }
 
 
@@ -313,13 +316,17 @@ bool		Map::isIn(unsigned int x, unsigned int y) const
   return (x < getHeight() && y < getWidth());
 }
 
-void		Map::killPlayers(unsigned int x, unsigned int y) const
+void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 {
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
       if (dynamic_cast<Player*>(_rcs->getPlayer(i))->getX() == x &&
 	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y)
-	dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill();
+	{
+	  if (dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill() &&
+	      dynamic_cast<Player*>(_rcs->getPlayer(i)) != player)
+	    player->incScore();
+	}
     }
 }
 

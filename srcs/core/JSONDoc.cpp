@@ -74,7 +74,7 @@ void		JSONDoc::writeDown(const std::string &filename)
 }
 
 template<>
-void				JSONDoc::serialize<Bomberman::Score>(const Bomberman::Score &obj)
+void				JSONDoc::serialize<Bomberman::ScoreList>(const Bomberman::ScoreList &obj)
 {
   std::list<std::string>	names = obj.getNames();
   rapidjson::Value		object(rapidjson::kObjectType);
@@ -92,9 +92,9 @@ void				JSONDoc::serialize<Bomberman::Score>(const Bomberman::Score &obj)
 }
 
 template<>
-Bomberman::Score		JSONDoc::unserialize<Bomberman::Score>(std::string const&) const
+Bomberman::ScoreList*		JSONDoc::unserialize<Bomberman::ScoreList*>(std::string const&) const
 {
-  Bomberman::Score		scores;
+  Bomberman::ScoreList*		scores = new Bomberman::ScoreList;
 
   if (_doc.IsObject() && _doc.HasMember("Scores"))
     {
@@ -102,11 +102,45 @@ Bomberman::Score		JSONDoc::unserialize<Bomberman::Score>(std::string const&) con
       std::for_each(object.MemberBegin(), object.MemberEnd(), [&scores] (const rapidjson::Value::Member& player) {
 	if (player.value.IsArray())
 	  std::for_each(player.value.Begin(), player.value.End(), [&player, &scores] (const rapidjson::Value& score) {
-	    scores.addScore(player.name.GetString(), score.GetUint());
+	    scores->addScore(player.name.GetString(), score.GetUint());
 	  });
       });
     }
   return scores;
+}
+
+template<>
+void		JSONDoc::serialize<Bomberman::MapList>(const Bomberman::MapList &obj)
+{
+  std::unordered_map<std::string, std::pair<unsigned int, unsigned int> > list = obj.getMapList();
+  rapidjson::Value		object(rapidjson::kObjectType);
+
+  if (!_doc.IsObject())
+    _doc.SetObject();
+  std::for_each(list.cbegin(), list.cend(), [this, &obj, &object] (std::pair<std::string, std::pair<unsigned int, unsigned int> > const& value) {
+    rapidjson::Value		members(rapidjson::kObjectType);
+    members.AddMember("width", value.second.first, _doc.GetAllocator());
+    members.AddMember("height", value.second.second, _doc.GetAllocator());
+    object.AddMember(value.first.c_str(), members, _doc.GetAllocator());
+  });
+  _doc.AddMember("Maps", object, _doc.GetAllocator());
+}
+
+template<>
+Bomberman::MapList*		JSONDoc::unserialize<Bomberman::MapList*>(std::string const&) const
+{
+  Bomberman::MapList*		list = new Bomberman::MapList;
+
+  if (_doc.IsObject() && _doc.HasMember("Maps"))
+    {
+      rapidjson::Value const& object(_doc["Maps"]);
+      std::for_each(object.MemberBegin(), object.MemberEnd(), [&list] (const rapidjson::Value::Member& map) {
+	if (map.value.IsObject() && map.value.HasMember("height"),
+	    map.value.HasMember("width"))
+	  list->addMap(map.name.GetString(), map.value["width"].GetUint(), map.value["height"].GetUint());
+      });
+    }
+  return list;
 }
 
 template<>
@@ -125,6 +159,9 @@ void						JSONDoc::serialize<Bomberman::Player>(const Bomberman::Player &obj)
   player.AddMember("name", obj.getName().c_str(), _doc.GetAllocator());
   player.AddMember("xPos", obj.getfX(), _doc.GetAllocator());
   player.AddMember("yPos", obj.getfY(), _doc.GetAllocator());
+  player.AddMember("red", obj.getColor()[0], _doc.GetAllocator());
+  player.AddMember("green", obj.getColor()[1], _doc.GetAllocator());
+  player.AddMember("blue", obj.getColor()[2], _doc.GetAllocator());
   if (!buffList.empty())
     {
       rapidjson::Value buffArray(rapidjson::kArrayType);
@@ -155,12 +192,12 @@ Bomberman::Player*				JSONDoc::unserialize<Bomberman::Player*>(std::string const
 	  {
 	    std::cout << "Name ok" << std::endl;
 	    try {
-	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString(), glm::vec4(1));
+	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString(), glm::vec4(player["red"].GetDouble(),
+												   player["green"].GetDouble(), player["blue"].GetDouble(), 0));
 	      ret->setPosition(glm::vec3(player["xPos"].GetDouble(), 0, player["yPos"].GetDouble()));
 	      SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
 	      std::for_each(player["buffs"].Begin(), player["buffs"].End(), [&ret, &fac] (rapidjson::Value const& obj) {
 		Bomberman::IBuff* buff = fac->generate(obj["type"].GetString());
-
 		if (buff->getDuration() != Bomberman::IBuff::infinite)
 		  ret->addTimedBuff(new Bomberman::BuffTimer(buff, obj["time"].GetUint()));
 		else
