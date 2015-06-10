@@ -45,7 +45,6 @@ void		Score::inc(RessourceStock* rcs)
     }
   this->_timer->start();
   this->_score += 100 * pow(2, this->_killStreak);
-  std::cout << this->_score << std::endl;
   ++this->_killStreak;
 }
 
