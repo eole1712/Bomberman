@@ -124,7 +124,7 @@ protected:
 
 public:
   void			move(float const & direction, float const & elsapsedTime);
-  void			rotate(bool const & direction,
+  bool			rotate(bool const & direction,
 			       float const & elsapsedTime, float const & stop);
   void			rotate(bool const & direction,
 			       float const & elsapsedTime);
