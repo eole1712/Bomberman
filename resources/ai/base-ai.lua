@@ -29,7 +29,7 @@ aiData = {
 
 		if (#route > 0 and isAdjacentCell(player.x, player.y, route[1].x, route[1].y) == false)
 		then
-			print("route error", player.x, player.y, route[1].x, route[1].y)
+--			print("route error", player.x, player.y, route[1].x, route[1].y)
 			route = {}
 		end
 
@@ -45,7 +45,7 @@ aiData = {
 		     	attack = true
 
 			-- get nearest enemy and set to objective
-			route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1))
+			route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1), { SAFE, BONUS, DESTROYABLE })
 		end
 
 		if (#route > 0)
@@ -61,6 +61,7 @@ aiData = {
 			  	  map:getCell(player.x + 1, player.y) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
+				print("go x + 1")
 			       	  player:moveLeft()
 			  end
 		   elseif (route[1].x < player.x)
@@ -73,6 +74,7 @@ aiData = {
 			  	  map:getCell(player.x - 1, player.y) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
+				print("go x - 1")
 			  	player:moveRight() -- left/right are switched ?
 			  end
 		   elseif (route[1].y > player.y)
@@ -85,6 +87,7 @@ aiData = {
 			  	  map:getCell(player.x, player.y + 1) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
+				print("go y + 1")
 			     	player:moveUp()
 			  end
 		   elseif (route[1].y < player.y)
@@ -97,6 +100,7 @@ aiData = {
 			  	  map:getCell(player.x, player.y - 1) == BONUS or
 			  	  map:getCell(player.x, player.y) ~= SAFE)
 			  then
+				print("go y - 1")
 			   	player:moveDown()
 			  end
 		   end
@@ -106,42 +110,34 @@ aiData = {
 
 function runAway(map, player)
 	 attack = false
-	 local cell = findCellType(map, player.x, player.y, SAFE)
+	 local cell = findCellType(map, player.x, player.y, { SAFE, BONUS })
 
-	 route = findPath(map, player.x, player.y, cell.x, cell.y)
+	 route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
 end
 
 -- find nearest cell of type 'type'
 -- /!\ to refacto
-function findCellType(map, xStart, yStart, type)
+function findCellType(map, xStart, yStart, tableType)
 	 local i = 1
 	 local cell = { x = -1, y = -1 }
 
 	 while (cell.x == -1 and cell.y == -1)
 	 do
-		if (xStart + i < map.width and xStart + i >= 0 and yStart < map.height and yStart >= 0 and
-		    map:getCell(xStart + i, yStart) == type) then
+		if (isInMap(map, xStart + i, yStart) and isTypeInTable(map:getCell(xStart + i, yStart), tableType)) then
 			cell = { x = xStart + i, y = yStart }
-		elseif (xStart - i < map.width and xStart - i >= 0 and yStart < map.height and yStart >= 0 and
-		        map:getCell(xStart - i, yStart) == type) then
+		elseif (isInMap(map, xStart - i, yStart) and isTypeInTable(map:getCell(xStart - i, yStart), tableType)) then
 			cell = { x = xStart - i, y = yStart }
-		elseif (xStart < map.width and xStart >= 0 and yStart + i < map.height and yStart + i >= 0 and
-		        map:getCell(xStart, yStart + i) == type) then
+		elseif (isInMap(map, xStart, yStart + i) and isTypeInTable(map:getCell(xStart, yStart + i), tableType)) then
 			cell = { x = xStart, y = yStart + i }
-		elseif (xStart < map.width and xStart >= 0 and yStart - i < map.height and yStart - i >= 0 and
-		        map:getCell(xStart, yStart - i) == type) then
+		elseif (isInMap(map, xStart, yStart - i) and isTypeInTable(map:getCell(xStart, yStart - i), tableType)) then
 			cell = { x = xStart, y = yStart - i }
-		elseif (xStart + i < map.width and xStart + i >= 0 and yStart + i < map.height and yStart + i >= 0 and
-		        map:getCell(xStart + i, yStart + i) == type) then
+		elseif (isInMap(map, xStart + i, yStart + i) and isTypeInTable(map:getCell(xStart + i, yStart + i), tableType)) then
 			cell = { x = xStart + i, y = yStart + i }
-		elseif (xStart + i < map.width and xStart + i >= 0 and yStart - i < map.height and yStart - i >= 0 and
-		        map:getCell(xStart + i, yStart - i) == type) then
+		elseif (isInMap(map, xStart + i, yStart - i) and isTypeInTable(map:getCell(xStart + i, yStart - i), tableType)) then
 			cell = { x = xStart + i, y = yStart - i }
-		elseif (xStart - i < map.width and xStart - i >= 0 and yStart < map.height and yStart >= 0 and
-		        map:getCell(xStart - i, yStart + i) == type) then
+		elseif (isInMap(map, xStart - i, yStart + i) and isTypeInTable(map:getCell(xStart - i, yStart + i), tableType)) then
 			cell = { x = xStart - i, y = yStart + i }
-		elseif (xStart - i < map.width and xStart - i >= 0 and yStart - i < map.height and yStart - i >= 0 and
-		        map:getCell(xStart - i, yStart - i) == type) then
+		elseif (isInMap(map, xStart - i, yStart - i) and isTypeInTable(map:getCell(xStart - i, yStart - i), tableType)) then
 			cell = { x = xStart - i, y = yStart - i }
 		end
 
@@ -153,8 +149,9 @@ end
 
 -- path finding
 -- returns a table containing each coordinates of cells to follow
+-- tableType is types where you can go through
 
-function findPath(map, xStart, yStart, xEnd, yEnd)
+function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 	 local mainCoo = { { x = xEnd, y = yEnd, count = 0 } }
 	 local i = 1
 
@@ -163,7 +160,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		-- check i for 1000 and quit
 
 		-- check rightside cell
-		if (checkCell(map, mainCoo, mainCoo[i].x + 1, mainCoo[i].y) == true)
+		if (checkCell(map, mainCoo, mainCoo[i].x + 1, mainCoo[i].y, tableType) == true)
 		then
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x + 1,
@@ -178,7 +175,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		end
 
 		-- check leftside cell
-		if (checkCell(map, mainCoo, mainCoo[i].x - 1, mainCoo[i].y) == true)
+		if (checkCell(map, mainCoo, mainCoo[i].x - 1, mainCoo[i].y, tableType) == true)
 		then
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x - 1,
@@ -193,7 +190,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		end
 
 		-- check upside cell
-		if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y + 1) == true)
+		if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y + 1, tableType) == true)
 		then
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x,
@@ -208,7 +205,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 		end
 
 		-- check downside cell
-		if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y - 1) == true)
+		if (checkCell(map, mainCoo, mainCoo[i].x, mainCoo[i].y - 1, tableType) == true)
 		then
 			mainCoo[#mainCoo + 1] = {
 					      	  x = mainCoo[i].x,
@@ -253,14 +250,34 @@ function findPath(map, xStart, yStart, xEnd, yEnd)
 	return path
 end
 
-function checkCell(map, mainCoo, x, y)
-	 if (x < map.width and x >= 0 and y < map.height and y >= 0 and
+function checkCell(map, mainCoo, x, y, tableType)
+	 if (isInMap(map, x, y) and
 	     isCooInTable(mainCoo, x, y) == false and
-	     map:getCell(x, y) ~= BLOCK and map:getCell(x, y) ~= FIRE)
+	     isTypeInTable(map:getCell(x, y), tableType))
 	 then
 		return true
 	 end
 
+	 return false
+end
+
+-- checks whether x/y are in map range
+function isInMap(map, x, y)
+	 if (x < map.width and x >= 0 and y < map.height and y >= 0)
+	 then
+		return true
+	end
+	return false
+end
+
+-- checks whether a type is in table
+function isTypeInTable(type, tableType)
+	 for k, v in pairs(tableType)
+	 do
+	     if (v == type) then
+	     	return true
+	     end
+	 end
 	 return false
 end
 
