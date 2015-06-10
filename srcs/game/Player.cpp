@@ -484,7 +484,7 @@ Score			Player::getScore() const
 
 void			Player::incScore()
 {
-  this->_score.inc();
+  this->_score.inc(this->_map->getRcs());
 }
 
 void			Player::linkScoreList(Bomberman::ScoreList* scoreList)
