@@ -96,7 +96,7 @@ bool			PlayerAI::moveRight(float const & elsapsedTime)
       savepos = glm::vec2(getfX(), getfY());
       move(90, elsapsedTime);
       newpos = glm::vec2(getfX(), getfY());
-      if (savepos.x < pos.x && newpos.x >= pos.x)
+      if (savepos.x > pos.x && newpos.x <= pos.x)
 	{
 	  setPosition(glm::vec3(pos.x, 0, pos.y));
 	  return (bra = true);
