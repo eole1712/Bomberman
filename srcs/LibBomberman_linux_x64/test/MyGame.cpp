@@ -54,6 +54,12 @@ bool		MyGame::initialize()
   attachObject(new Asset3d("../assets/dst_block.obj"));
   attachObject(new Asset3d("../assets/fire.obj"));
   attachObject(new Asset3d("../assets/marvin.fbx"));
+
+
+  _assets[DST_BLOCK]->scale(glm::vec3(100));
+  _assets[DST_BLOCK]->translate(glm::vec3(-50, -50 , 0));
+  //  _assets[DST_BLOCK]->setPosition(glm::vec3(500, 500, 0));
+
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[PLAYER]->createSubAnim(0, "start", 0, 34);
@@ -149,6 +155,8 @@ void		MyGame::draw()
   _shader.bind();
   _shader.setUniform("view", _camera.getView());
   _shader.setUniform("projection", _camera.getProjection());
+
+
   //_shader.setUniform("playercolor", _);
   // We draw all objects
   i[0] = 0;
@@ -176,8 +184,8 @@ void		MyGame::draw()
   	}
       i[0]++;
     }
-  _assets[DST_BLOCK]->setPosition(glm::vec3(rand() % 12 * 2, 0, rand() % 12 * 2));
-  _assets[DST_BLOCK]->draw(_shader, _clock);
+  // _assets[DST_BLOCK]->setPosition(glm::vec3(rand() % 12 * 2, 0, rand() % 12 * 2));
+  // _assets[DST_BLOCK]->draw(_shader, _clock);
   _assets[PLAYER]->draw(_shader, _clock);
   _assets[SKYBOX]->draw(_shader, _clock);
   //<<<<<<< Updated upstream
@@ -189,7 +197,7 @@ void		MyGame::draw()
   // 2D TESTS
 
   _shader.setUniform("view", glm::mat4());
-  _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+  _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1000.0f, 1000.0f));
 
   // Text2d	text("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
   // Text2d	text2("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
@@ -206,7 +214,16 @@ void		MyGame::draw()
 
   //text.draw(_shader);
   //lol.draw(_shader);
-	_text->draw(_shader);
+
+  _text->draw(_shader);
+
+  //3D interface
+
+  //  _shader.setUniform("view", glm::mat4());
+  // _shader.setUniform("projection",  glm::perspective(60.0f, (float)1000 / (float)1000, 0.1f, 100.0f));
+
+  _assets[DST_BLOCK]->rotate(glm::vec3(0, 1 ,0), 1);
+  _assets[DST_BLOCK]->draw(_shader, _clock);
 
   _context.flush();
 }
