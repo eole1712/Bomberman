@@ -1,11 +1,11 @@
 
 NAME = test
 
-SRC = Asset3d.cpp Object3d.cpp CameraObject.cpp MyGame.cpp bra.cpp View2d.cpp Text2d.cpp AMenuObject.cpp MenuGrid.cpp
+SRC = Asset3d.cpp Object3d.cpp CameraObject.cpp MyGame.cpp bra.cpp View2d.cpp Text2d.cpp AMenuObject.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-INCLUDESPATH = ../includes/
+INCLUDESPATH = ../includes/ 
 
 LIBPATH = ../libs/
 

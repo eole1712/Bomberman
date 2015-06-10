@@ -11,7 +11,7 @@
 # include "OpenGL.hh"
 # include "Asset3d.hpp"
 # include "CameraObject.hpp"
-# include "MenuGrid.hpp"
+//# include "MenuGrid.hpp"
 # include "View2d.hpp"
 # include "Text2d.hpp"
 # include "Input.hh"
@@ -41,7 +41,7 @@ private:
   gdl::Clock		_clock;
   gdl::Input		_input;
   gdl::BasicShader	_shader;
-  MenuGrid		_grid;
+  //MenuGrid		_grid;
   Text2d		*_text;
   Text2d		*_text2;
 float			_speed;
