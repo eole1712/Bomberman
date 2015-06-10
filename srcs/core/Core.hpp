@@ -1,10 +1,9 @@
 
-#ifndef GAME_H_
-# define GAME_H_
+#ifndef CORE_H_
+# define CORE_H_
 
 # include <vector>
 # include <map>
-# include "Game.hh"
 # include "Clock.hh"
 # include "Input.hh"
 # include "SdlContext.hh"
@@ -21,29 +20,30 @@
 # include "BuffParalyzed.hpp"
 # include "Player.hpp"
 # include "JSONDoc.hpp"
+# include "Game.hh"
+# include "Gamer.hpp"
 
 namespace Bomberman
 {
 
-class Game : public gdl::Game
+class Gamer;
+
+class Core : public gdl::Game
 {
 public:
-  Game();
-  Game(const unsigned int & width, const unsigned int & height);
-  virtual ~Game();
+  Core();
+  Core(const unsigned int & width, const unsigned int & height);
+  virtual ~Core();
 
   virtual bool		initialize();
   virtual bool		update();
   virtual void		draw();
   void			attachObject(Asset3d *);
-  void			translate(glm::vec3 const &v);
-  virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&);
+  void			loadTextures();
+  void			startGame();
 
-private:
-  Game(const Game &);
-  Game &operator=(const Game &);
-
-  enum			mapAsset
+public:
+  enum                  mapAsset
     {
       FLOOR,
       WALL,
@@ -57,30 +57,33 @@ private:
       BARREL
     };
 
+private:
+  Core(const Core &);
+  Core &operator=(const Core &);
+
+private:
+  bool				_inGame;
+Gamer*				_game;
+
+
 public:
   gdl::SdlContext		&getContext();
   gdl::Clock			&getClock();
   gdl::BasicShader		&getShader();
-  CameraObject			&getCamera(unsigned int);
 
 private:
   int				_width;
   int				_height;
-  std::vector<Asset3d *>	_assets;
-  CameraObject			_camera;
-  CameraObject			_camera2;
   gdl::SdlContext		_context;
   gdl::Clock			_clock;
   gdl::Input			_input;
   gdl::BasicShader		_shader;
   float				_speed;
+
+private:
+  std::vector<Asset3d *>	_assets;
   std::map<Bomberman::IObject::Type, mapAsset>	_ObjectToAsset;
-  JSONDoc			_json;
-  Bomberman::MapList*		_mapList;
-  Bomberman::ScoreList*		_scoreList;
-  Bomberman::RessourceStock*	_stock;
-  Bomberman::Map*		_map;
 };
 
 }
-#endif /* !GAME_H_ */
+#endif /* !CORE_H_ */

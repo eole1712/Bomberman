@@ -23,9 +23,10 @@ CORESRCS	= main.cpp		\
 		  ScoreList.cpp		\
 		  MapList.cpp		\
 		  Animation.cpp		\
+		  Core.cpp		\
 
 GAMESRCS	= Player.cpp 		\
-		  Game.cpp		\
+		  Gamer.cpp		\
 		  PlayerAI.cpp		\
 		  BuffTimer.cpp		\
 		  Empty.cpp		\
