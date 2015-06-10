@@ -16,8 +16,10 @@ namespace Bomberman
 class RessourceStock
 {
 public:
-  enum Sound { TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE,
-	       FIRSTBLOOD, MINE, PREPARE, SUICIDE };
+  enum SoundType { TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE,
+		   FIRSTBLOOD, MINE, PREPARE, SUICIDE };
+
+  static unsigned int const	nbSounds;
 
   RessourceStock();
   RessourceStock(std::vector<std::string> const &, ScoreList*);
@@ -30,6 +32,7 @@ public:
   IObject	*getObject(IObject::Type) const;
   IObject	*getBuff(IBuff::Type) const;
   IObject	*getBomb(Bomb::Type) const;
+  SoundManager	*getSound(SoundType);
   IObject	*getPlayer(std::string const &) const;
   IObject	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
@@ -39,7 +42,7 @@ private:
   std::vector<IObject *>	_buffs;
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
-  std::vector<Sound>		_sounds;
+  std::vector<SoundManager*>	_sounds;
 };
 
 }

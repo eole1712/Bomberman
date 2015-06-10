@@ -27,11 +27,13 @@
 namespace Bomberman
 {
 
+unsigned int const	RessourceStock::nbSounds = 15;
+
 RessourceStock::RessourceStock()
 {}
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
-  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
+  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds, NULL)
 {
   for (unsigned int i = 0; i < names.size(); ++i)
     {
@@ -61,25 +63,25 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
   _objects[IObject::FIRE] = NULL;
-  _sounds[TWO] = Sound("./resources/sound/killstreak/rampage.wav");
-  _sounds[THREE] = Sound("./resources/sound/killstreak/killingspree.wav");
-  _sounds[FOUR] = Sound("./resources/sound/killstreak/dominating.wav");
-  _sounds[FIVE] = Sound("./resources/sound/killstreak/unstoppable.wav");
-  _sounds[SIX] = Sound("./resources/sound/killstreak/megakill.wav");
-  _sounds[SEVEN] = Sound("./resources/sound/killstreak/ultrakill.wav");
-  _sounds[EIGHT] = Sound("./resources/sound/killstreak/ludicrouskill.wav");
-  _sounds[NINE] = Sound("./resources/sound/killstreak/wickedsick.wav");
-  _sounds[TEN] = Sound("./resources/sound/killstreak/monsterkill.wav");
-  _sounds[ELEVEN] = Sound("./resources/sound/killstreak/holyshit.wav");
-  _sounds[TWELVE] = Sound("./resources/sound/killstreak/godlike.wav");
-  _sounds[FIRSTBLOOD] = Sound("./resources/sound/firstblood.wav");
-  _sounds[MINE] = Sound("./resources/sound/mine.wav");
-  _sounds[PREPARE] = Sound("./resources/sound/prepare1.wav")
-  _sounds[SUICIDE] = Sound("./resources/sound/suicide1.wav")
+  _sounds[TWO] = new SoundManager("./resources/sound/killstreak/rampage.wav");
+  _sounds[THREE] = new SoundManager("./resources/sound/killstreak/killingspree.wav");
+  _sounds[FOUR] = new SoundManager("./resources/sound/killstreak/dominating.wav");
+  _sounds[FIVE] = new SoundManager("./resources/sound/killstreak/unstoppable.wav");
+  _sounds[SIX] = new SoundManager("./resources/sound/killstreak/megakill.wav");
+  _sounds[SEVEN] = new SoundManager("./resources/sound/killstreak/ultrakill.wav");
+  _sounds[EIGHT] = new SoundManager("./resources/sound/killstreak/ludicrouskill.wav");
+  _sounds[NINE] = new SoundManager("./resources/sound/killstreak/wickedsick.wav");
+  _sounds[TEN] = new SoundManager("./resources/sound/killstreak/monsterkill.wav");
+  _sounds[ELEVEN] = new SoundManager("./resources/sound/killstreak/holyshit.wav");
+  _sounds[TWELVE] = new SoundManager("./resources/sound/killstreak/godlike.wav");
+  _sounds[FIRSTBLOOD] = new SoundManager("./resources/sound/firstblood.wav");
+  _sounds[MINE] = new SoundManager("./resources/sound/mine.wav");
+  _sounds[PREPARE] = new SoundManager("./resources/sound/prepare1.wav");
+  _sounds[SUICIDE] = new SoundManager("./resources/sound/suicide1.wav");
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds, NULL)
 {
   for (unsigned int i = 0; i < players.size(); ++i)
     _players[i] = players[i];
@@ -106,21 +108,22 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
   _objects[IObject::FIRE] = NULL;
-  _sounds[TWO] = Sound("./resources/sound/killstreak/rampage.wav");
-  _sounds[THREE] = Sound("./resources/sound/killstreak/killingspree.wav");
-  _sounds[FOUR] = Sound("./resources/sound/killstreak/dominating.wav");
-  _sounds[FIVE] = Sound("./resources/sound/killstreak/unstoppable.wav");
-  _sounds[SIX] = Sound("./resources/sound/killstreak/megakill.wav");
-  _sounds[SEVEN] = Sound("./resources/sound/killstreak/ultrakill.wav");
-  _sounds[EIGHT] = Sound("./resources/sound/killstreak/ludicrouskill.wav");
-  _sounds[NINE] = Sound("./resources/sound/killstreak/wickedsick.wav");
-  _sounds[TEN] = Sound("./resources/sound/killstreak/monsterkill.wav");
-  _sounds[ELEVEN] = Sound("./resources/sound/killstreak/holyshit.wav");
-  _sounds[TWELVE] = Sound("./resources/sound/killstreak/godlike.wav");
-  _sounds[FIRSTBLOOD] = Sound("./resources/sound/firstblood.wav");
-  _sounds[MINE] = Sound("./resources/sound/mine.wav");
-  _sounds[PREPARE] = Sound("./resources/sound/prepare1.wav")
-  _sounds[SUICIDE] = Sound("./resources/sound/suicide1.wav")}
+  _sounds[TWO] = new SoundManager("./resources/sound/killstreak/rampage.wav");
+  _sounds[THREE] = new SoundManager("./resources/sound/killstreak/killingspree.wav");
+  _sounds[FOUR] = new SoundManager("./resources/sound/killstreak/dominating.wav");
+  _sounds[FIVE] = new SoundManager("./resources/sound/killstreak/unstoppable.wav");
+  _sounds[SIX] = new SoundManager("./resources/sound/killstreak/megakill.wav");
+  _sounds[SEVEN] = new SoundManager("./resources/sound/killstreak/ultrakill.wav");
+  _sounds[EIGHT] = new SoundManager("./resources/sound/killstreak/ludicrouskill.wav");
+  _sounds[NINE] = new SoundManager("./resources/sound/killstreak/wickedsick.wav");
+  _sounds[TEN] = new SoundManager("./resources/sound/killstreak/monsterkill.wav");
+  _sounds[ELEVEN] = new SoundManager("./resources/sound/killstreak/holyshit.wav");
+  _sounds[TWELVE] = new SoundManager("./resources/sound/killstreak/godlike.wav");
+  _sounds[FIRSTBLOOD] = new SoundManager("./resources/sound/firstblood.wav");
+  _sounds[MINE] = new SoundManager("./resources/sound/mine.wav");
+  _sounds[PREPARE] = new SoundManager("./resources/sound/prepare1.wav");
+  _sounds[SUICIDE] = new SoundManager("./resources/sound/suicide1.wav");
+}
 
 RessourceStock::~RessourceStock()
 {
@@ -135,6 +138,10 @@ RessourceStock::~RessourceStock()
   for (unsigned int i = 0; i < _objects.size(); ++i)
     {
       delete _objects[i];
+    }
+  for (unsigned int i = 0; i < _sounds.size(); ++i)
+    {
+      delete _sounds[i];
     }
 }
 
@@ -153,12 +160,20 @@ IObject		*RessourceStock::getBomb(Bomb::Type type) const
   return _bombs[type];
 }
 
-Sound&		RessourceStock::getSound(RessourceStock::Sound type)
+SoundManager*		RessourceStock::getSound(SoundType type)
 {
   if (type == PREPARE)
-    _sounds[PREPARE] = Sound("./resources/sound/prepare" + my_random(1, 4) + ".wav");
+    {
+      delete _sounds[PREPARE];
+      _sounds[PREPARE] = new SoundManager("./resources/sound/prepare"
+					  + Conversion::typeToString<int>(my_random(1, 4)) + ".wav");
+    }
   else if (type == SUICIDE)
-    _sounds[SUICIDE] = Sound("./resources/sound/suicide" + my_random(1, 5) + ".wav");
+    {
+      delete _sounds[SUICIDE];
+      _sounds[SUICIDE] = new SoundManager("./resources/sound/suicide"
+					  + Conversion::typeToString<int>(my_random(1, 5)) + ".wav");
+    }
   return (_sounds[type]);
 }
 
