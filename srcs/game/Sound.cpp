@@ -7,7 +7,8 @@ AudioManager::AudioManager(int nbChannels)
 {
   if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
     {
-      throw new std::exception;
+      //      throw new std::exception;
+      std::cerr << "fuck thibaut" << std::endl;
     }
   Mix_AllocateChannels(nbChannels);
 }

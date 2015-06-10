@@ -14,7 +14,7 @@ namespace Bomberman
   ** Constructor/Destructor
   */
   PlayerAI::PlayerAI(std::string const& name, std::string const& script) :
-    Player() /* tmp */, LuaScript(script), _aiAction(NULL)
+    Player() /* tmp */, LuaScript(script), _aiAction(NULL), _moveDir(NONE)
   {
     luaObjectInit();
     run();
@@ -24,7 +24,7 @@ namespace Bomberman
 
   PlayerAI::PlayerAI(std::string const& name,
 		     std::string const& script, glm::vec4 color) :
-    Player(name, color), LuaScript(script), _aiAction(NULL)
+    Player(name, color), LuaScript(script), _aiAction(NULL), _moveDir(NONE)
   {
     luaObjectInit();
     run();
