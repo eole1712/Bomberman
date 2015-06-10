@@ -46,11 +46,13 @@ public:
   bool			isParalyzed() const;
   bool			zeroBomb() const;
   bool			canAbsorb() const;
+  bool			isPlaced() const;
 
 private:
   bool			_isAlive;
   bool			_isParalyzed;
   bool			_zeroBomb;
+  bool			_isPlaced;
 
 public:
   void			incRange();
@@ -122,7 +124,7 @@ protected:
 
 public:
   void			move(float const & direction, float const & elsapsedTime);
-  void			rotate(bool const & direction,
+  bool			rotate(bool const & direction,
 			       float const & elsapsedTime, float const & stop);
   void			rotate(bool const & direction,
 			       float const & elsapsedTime);

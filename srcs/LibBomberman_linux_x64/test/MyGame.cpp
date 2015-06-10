@@ -76,8 +76,8 @@ bool		MyGame::initialize()
   // We have the bind the shader before calling the setUniform method
   _text = new Text2d("test", 150, 500, 700, 100, "../assets/textures/alpha3.tga");
   _shader.bind();
-  _text = new Text2d("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
-  _text2 = new Text2d("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
+  _text = new Text2d("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha3Blue.tga");
+  _text2 = new Text2d("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha3Blue.tga");
   _grid.addObject(_text, [] () {
     std::cout << "Pink Pony" << std::endl;
   });

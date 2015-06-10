@@ -19,7 +19,7 @@ varying vec2 fUv;
 void main(void)
 {
   if (color != vec4(1))
-    fColor = (vColor + color) / 2;
+    fColor = (vColor + color + color) / 3;
   else
     fColor = vColor;
   fNormal = vNormal;

@@ -23,7 +23,7 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -45,7 +45,7 @@ Player::Player(std::string const &name, glm::vec4 color)
 }
 
 Player::Player()
-  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
+  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
 {
   _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
   _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
@@ -102,6 +102,11 @@ bool			Player::isAlive() const
 bool			Player::isParalyzed() const
 {
   return _isParalyzed;
+}
+
+bool			Player::isPlaced() const
+{
+  return _isPlaced;
 }
 
 bool			Player::zeroBomb() const
@@ -276,20 +281,14 @@ void			Player::initGame(Map *map)
   if (map)
     {
       _map = map;
-      for (unsigned int y = 0; y < _map->getHeight(); ++y)
+      Map::TwoInt	two = map->findEmptySpawn();
+
+      if (_map->getWidth() > two.first && _map->getHeight() > two.second)
 	{
-	  for (unsigned int x = 0; x < _map->getWidth(); ++x)
-	    {
-	      if (_map->getCellValue(x, y)->getObjectType() == IObject::SPAWN)
-		{
-		  setPosition(glm::vec3(x + 0.5, 0, y + 0.5));
-		  _map->setCellValue(x, y, _map->getRcs()->getObject(IObject::EMPTY));
-		  return;
-		}
-	    }
+	  setPosition(glm::vec3(two.first + 0.5, 0, two.second + 0.5));
+	  _isPlaced = true;
 	}
     }
-  std::cout << "Pas de spawn" << std::endl;
 }
 
 unsigned int		Player::getX() const
@@ -358,7 +357,7 @@ void			Player::move(float const & direction, float const & elsapsedTime)
     {
       tryToKill();
     }
-  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BOMB2)
+  if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::MINE)
     {
       dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
     }
@@ -376,7 +375,7 @@ void			Player::move(float const & direction, float const & elsapsedTime)
     }
 }
 
-void			Player::rotate(bool const & direction,
+bool			Player::rotate(bool const & direction,
 				       float const & elsapsedTime, float const & stop)
 {
   float			before;
@@ -388,7 +387,11 @@ void			Player::rotate(bool const & direction,
   after -= 360 * (stop == 0 && direction == 1);
   before -= 360 * (stop == 0 && direction == 1);
   if (abs(stop - before) < abs(stop - after))
-    setRotation(glm::vec3(0, stop, 0));
+    {
+      setRotation(glm::vec3(0, stop, 0));
+      return true;
+    }
+  return false;
 }
 
 void			Player::rotate(bool const & direction,
@@ -485,7 +488,7 @@ Score			Player::getScore() const
 
 void			Player::incScore()
 {
-  this->_score.inc();
+  this->_score.inc(this->_map->getRcs());
 }
 
 void			Player::linkScoreList(Bomberman::ScoreList* scoreList)
@@ -527,7 +530,7 @@ void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
   if (isAlive())
     {
       shader.setUniform("color", getColor());
-      asset.setPosition(this->getPosition());
+      asset.setPosition(this->getPosition() + glm::vec3(-0.5, 0, -0.5));
       asset.setRotation(this->getRotation());
       if (isParalyzed())
 	asset.draw(shader, clock);

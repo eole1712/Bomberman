@@ -8,7 +8,8 @@ Text2d::Text2d(std::string const& text, int x, int y, int width, int height, std
 {
   _hidden = false;
 
-  _texture.load(textureName.c_str());
+  if (!_texture.load(textureName.c_str()))
+    std::cout << "failed to load " << textureName << std::endl;;
   update();
 }
 

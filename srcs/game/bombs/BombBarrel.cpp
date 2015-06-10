@@ -26,7 +26,7 @@ Bomb::Type	Barrel::getBombType() const
 
 IObject::Type	Barrel::getObjectType() const
 {
-  return IObject::BOMB3;
+  return IObject::BARREL;
 }
 
 bool		Barrel::isNull() const
@@ -37,6 +37,9 @@ bool		Barrel::isNull() const
 void		Barrel::explose(int x, int y, Map *map, unsigned int range, Player *player) const
 {
   dynamic_cast<IBomb*>(map->getRcs()->getBomb(CLASSIC))->explose(x, y, map, range, player);
+
+  if (map->getCellValue(x, y)->getObjectType() == IObject::FIRE)
+    dynamic_cast<Fire*>(map->getCellValue(x, y))->reset(10000000);
 
   for (struct {int x; int y; unsigned int r;} s = {x - 1, y - 1, 1};
        s.x >= 0 && s.y >= 0 && s.r < range;
