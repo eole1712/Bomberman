@@ -116,6 +116,25 @@ function runAway(map, player)
 	 print("runAway", cell.x, cell.y, #route)
 end
 
+function findCellByBackTracking(map, x, y, cellTarget, blocksCells)
+	 local toTest = {
+	       	      		{ x = x + 1, y = y },
+				{ x = x - 1, y = y },
+				{ x = x, y = y + 1 },
+				{ x = x, y = y - 1 },
+	 	  	}
+
+	 for k, v in pairs(toTest)
+	 do
+		if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false)
+		then
+			return findCellByBackTracking(map, v.x, v.y, cellTarget, blocksCells)
+		end
+	 end
+
+	 return { x = -1, y = -1, valid = false}
+end
+
 -- find nearest cell of type 'type'
 -- /!\ to refacto
 function findCellType(map, xStart, yStart, tableType)
