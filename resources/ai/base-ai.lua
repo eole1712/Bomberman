@@ -50,10 +50,10 @@ aiData = {
 
 		if (#route > 0)
 		then
-			print(player.x, player.y, route[1].x, route[1].y)
+			print(player.x, player.y, route[1].x, route[1].y, map:getCell(route[1].x, route[1].y), route[#route].x, route[#route].y)
 		   if (route[1].x > player.x)
 		   then
-			  if (map:getCell(player.x + 1, player.y) == DESTROYABLE)
+			  if (map:getCell(player.x + 1, player.y) == DESTROYABLE and attack)
 			  then
 				player:putBomb()
 				runAway(map, player)
@@ -66,7 +66,7 @@ aiData = {
 			  end
 		   elseif (route[1].x < player.x)
 		   then
-			  if (map:getCell(player.x - 1, player.y) == DESTROYABLE)
+			  if (map:getCell(player.x - 1, player.y) == DESTROYABLE and attack)
 			  then
 				player:putBomb()
 				runAway(map, player)
@@ -79,7 +79,7 @@ aiData = {
 			  end
 		   elseif (route[1].y > player.y)
 		   then
-			  if (map:getCell(player.x, player.y + 1) == DESTROYABLE)
+			  if (map:getCell(player.x, player.y + 1) == DESTROYABLE and attack)
 			  then
 				player:putBomb()
 				runAway(map, player)
@@ -92,7 +92,7 @@ aiData = {
 			  end
 		   elseif (route[1].y < player.y)
 		   then
-			  if (map:getCell(player.x, player.y - 1) == DESTROYABLE)
+			  if (map:getCell(player.x, player.y - 1) == DESTROYABLE and attack)
 			  then
 				player:putBomb()
 				runAway(map, player)
@@ -113,6 +113,7 @@ function runAway(map, player)
 	 local cell = findCellType(map, player.x, player.y, { SAFE, BONUS })
 
 	 route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
+	 print("runAway", cell.x, cell.y, #route)
 end
 
 -- find nearest cell of type 'type'
