@@ -56,17 +56,17 @@ namespace Bomberman
     int			getGoalY() const;
 
   protected:
-    void		moveRightFrame(float const& elapsedTime);
-    void		moveLeftFrame(float const& elapsedTime);
-    void		moveUpFrame(float const& elapsedTime);
-    void		moveDownFrame(float const& elapsedTime);
+    bool		moveRightCell(float const& elapsedTime);
+    bool		moveLeftCell(float const& elapsedTime);
+    bool		moveUpCell(float const& elapsedTime);
+    bool		moveDownCell(float const& elapsedTime);
 
   protected:
     void		luaObjectInit();
     void		loadAIData();
 
   protected:
-    typedef void	(PlayerAI::*moveFc)(float const& elapsedTime);
+    typedef bool	(PlayerAI::*moveFc)(float const& elapsedTime);
     typedef std::map<MoveDir, moveFc>	MoveBook;
 
     static MoveBook	getMoveBook();
