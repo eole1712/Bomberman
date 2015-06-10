@@ -1,10 +1,12 @@
 #ifndef SCORE_H_
 # define SCORE_H_
 
-#include "Timer.hpp"
+# include "Timer.hpp"
 
 namespace Bomberman
 {
+
+class RessourceStock;
 
 class	Score
 {
@@ -21,7 +23,7 @@ public:
   static const int	dftTime;
 
   unsigned int	getValue() const;
-  void		inc();
+  void		inc(RessourceStock*);
 };
 
 }

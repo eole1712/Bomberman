@@ -7,8 +7,9 @@
 # include "IBuff.hpp"
 # include "IBomb.hpp"
 # include "Player.hpp"
-# include "Score.hpp"
+# include "ScoreList.hpp"
 # include "Sound.hpp"
+# include "RessourceStock.hpp"
 
 namespace Bomberman
 {
@@ -21,7 +22,6 @@ public:
 
   static unsigned int const	nbSounds;
 
-  RessourceStock();
   RessourceStock(std::vector<std::string> const &, ScoreList*);
   RessourceStock(std::vector<Bomberman::Player*> const& players);
   virtual ~RessourceStock();
@@ -42,7 +42,8 @@ private:
   std::vector<IObject *>	_buffs;
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
-  std::vector<SoundManager*>	_sounds;
+  AudioManager			_soundManager;
+  std::vector<std::string>	_sounds;
 };
 
 }

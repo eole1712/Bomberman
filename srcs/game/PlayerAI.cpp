@@ -40,99 +40,142 @@ namespace Bomberman
       }
   }
 
-bool			PlayerAI::moveUp(float const & elsapsedTime, unsigned int x, unsigned int y)
+bool			PlayerAI::moveUp(float const & elsapsedTime)
 {
-  static glm::vec2	pos = glm::vec2(-1, -1);
+  static bool		bra = true;
+  static glm::vec2	pos;
   glm::vec2 		savepos;
   glm::vec2 		newpos;
 
-  if (x != pos.x || y != pos.y)
-    pos = glm::vec2(x, y);
-  savepos = glm::vec2(getfX(), getfY());
-  if (getX() == pos.x &&
-      getY() == pos.y)
-    return true;
-  move(0, elsapsedTime);
-  newpos = glm::vec2(getfX(), getfY());
-  if ((pos - savepos).length() < (pos - newpos).length())
+  if (bra)
     {
-      setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-      return true;
+      pos = glm::vec2(getfX(), getY() + 1.5);
+      bra = false;
     }
-  if (getRotation().y != 0)
-    rotate((getRotation().y > 180), elsapsedTime, 0);
+  else if (getfX() == pos.x &&
+	   getfY() == pos.y)
+    return (bra = true);
+  if (getRotation().y == 0 ||
+      rotate((getRotation().y > 180), elsapsedTime, 0))
+    {
+      savepos = glm::vec2(getfX(), getfY());
+      move(0, elsapsedTime);
+      newpos = glm::vec2(getfX(), getfY());
+      if (savepos.y < pos.y && newpos.y >= pos.y)
+	{
+	  setPosition(glm::vec3(pos.x, 0, pos.y));
+	  return (bra = true);
+	}
+      if ((pos - savepos).length() < (pos - newpos).length())
+	{
+	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	  return (bra = true);
+	}
+    }
   return (false);
 }
 
-bool			PlayerAI::moveRight(float const & elsapsedTime, unsigned int x, unsigned int y)
+bool			PlayerAI::moveRight(float const & elsapsedTime)
 {
-  static glm::vec2	pos = glm::vec2(-1, -1);
+  static bool		bra = true;
+  static glm::vec2	pos;
   glm::vec2 		savepos;
   glm::vec2 		newpos;
 
-  if (x != pos.x || y != pos.y)
-    pos = glm::vec2(x, y);
-  savepos = glm::vec2(getfX(), getfY());
-  if (getX() == pos.x &&
-      getY() == pos.y)
-    return true;
-  move(90, elsapsedTime);
-  newpos = glm::vec2(getfX(), getfY());
-  if ((pos - savepos).length() < (pos - newpos).length())
+  if (bra)
     {
-      setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-      return true;
+      pos = glm::vec2(getX() + 1.5, getfY());
+      bra = false;
     }
-  if (getRotation().y != 90)
-    rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90);
+  else if (getfX() == pos.x &&
+	   getfY() == pos.y)
+    return (bra = true);
+  if (getRotation().y == 90 ||
+      rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90))
+    {
+      savepos = glm::vec2(getfX(), getfY());
+      move(90, elsapsedTime);
+      newpos = glm::vec2(getfX(), getfY());
+      if (savepos.x < pos.x && newpos.x >= pos.x)
+	{
+	  setPosition(glm::vec3(pos.x, 0, pos.y));
+	  return (bra = true);
+	}
+      if ((pos - savepos).length() < (pos - newpos).length())
+	{
+	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	  return (bra = true);
+	}
+    }
   return false;
 }
 
-bool			PlayerAI::moveDown(float const & elsapsedTime, unsigned int x, unsigned int y)
+bool			PlayerAI::moveDown(float const & elsapsedTime)
 {
-  static glm::vec2	pos = glm::vec2(-1, -1);
+  static bool		bra = true;
+  static glm::vec2	pos;
   glm::vec2 		savepos;
   glm::vec2 		newpos;
 
-  if (x != pos.x || y != pos.y)
-    pos = glm::vec2(x, y);
-  savepos = glm::vec2(getfX(), getfY());
-  if (getX() == pos.x &&
-      getY() == pos.y)
-    return true;
-  move(180, elsapsedTime);
-  newpos = glm::vec2(getfX(), getfY());
-  if ((pos - savepos).length() < (pos - newpos).length())
+  if (bra)
     {
-      setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-      return true;
+      pos = glm::vec2(getfX(), getY() - 1.5);
+      bra = false;
     }
-  if (getRotation().y != 180)
-    rotate((getRotation().y < 180), elsapsedTime, 180);
+  else if (getfX() == pos.x &&
+	   getfY() == pos.y)
+    return (bra = true);
+  if (getRotation().y == 180 ||
+      rotate((getRotation().y < 180), elsapsedTime, 180))
+    {
+      savepos = glm::vec2(getfX(), getfY());
+      move(180, elsapsedTime);
+      newpos = glm::vec2(getfX(), getfY());
+      if (savepos.y > pos.y && newpos.y <= pos.y)
+	{
+	  setPosition(glm::vec3(pos.x, 0, pos.y));
+	  return (bra = true);
+	}
+      if ((pos - savepos).length() < (pos - newpos).length())
+	{
+	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	  return (bra = true);
+	}
+    }
   return false;
 }
-
-bool			PlayerAI::moveLeft(float const & elsapsedTime, unsigned int x, unsigned int y)
+bool			PlayerAI::moveLeft(float const & elsapsedTime)
 {
-  static glm::vec2	pos = glm::vec2(-1, -1);
+  static bool		bra = true;
+  static glm::vec2	pos;
   glm::vec2 		savepos;
   glm::vec2 		newpos;
 
-  if (x != pos.x || y != pos.y)
-    pos = glm::vec2(x, y);
-  savepos = glm::vec2(getfX(), getfY());
-  if (getX() == pos.x &&
-      getY() == pos.y)
-    return true;
-  move(270, elsapsedTime);
-  newpos = glm::vec2(getfX(), getfY());
-  if ((pos - savepos).length() < (pos - newpos).length())
+  if (bra)
     {
-      setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-      return true;
+      pos = glm::vec2(getX() - 1.5, getfY());
+      bra = false;
     }
-  if (getRotation().y != 270)
-    rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270);
+  else if (getfX() == pos.x &&
+	   getfY() == pos.y)
+    return (bra = true);
+  if (getRotation().y == 270 ||
+      rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270))
+    {
+      savepos = glm::vec2(getfX(), getfY());
+      move(270, elsapsedTime);
+      newpos = glm::vec2(getfX(), getfY());
+      if (savepos.x < pos.x && newpos.x >= pos.x)
+	{
+	  setPosition(glm::vec3(pos.x, 0, pos.y));
+	  return (bra = true);
+	}
+      if ((pos - savepos).length() < (pos - newpos).length())
+	{
+	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	  return (bra = true);
+	}
+    }
   return false;
 }
 

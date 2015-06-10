@@ -35,16 +35,48 @@ Gamer::Gamer()
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
-					    "Player 4",
-					    "Player 1",
-					    "Player 2",
-					    "Player 3",
-					    "Player 4",
-					    "Player 1",
-					    "Player 2",
-					    "Player 3",
-					    "Player 4",
-					    "Player 1",
+					    "Player 4"};
+
+  std::string			mapName = "de_bra";
+  std::vector<std::string>	vec;
+  Player			*player;
+  Player			*player2;
+
+  _mapList = ((_json.parse("./resources/json/Gamedata.json"))
+	      ? (_json.unserialize<Bomberman::MapList*>())
+	      : (new MapList()));
+  _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
+	      ? (_json.unserialize<Bomberman::ScoreList*>())
+		: (new ScoreList()));
+  _stock = new RessourceStock(nameList, _scoreList);
+  _map = _mapList->getMap(mapName);
+  if (_map == NULL)
+    _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
+
+  for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
+    {
+      player = dynamic_cast<Player *>(_stock->getPlayer(i));
+      player->initGame(_map);
+    }
+  player = dynamic_cast<Player *>(_stock->getPlayer(0));
+  player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+  _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
+		      + glm::rotate(glm::vec3(3.5, 4, 0),
+				    player->getRotation().y + 90,
+				    glm::vec3(0, 1, 0)));
+  _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
+		      + glm::rotate(glm::vec3(3.5, 4, 0),
+				    player2->getRotation().y + 90,
+				    glm::vec3(0, 1, 0)));
+  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
+}
+
+Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam)
+  : _width(width), _height(height), _camera(90.0, widthCam, heightCam),
+    _camera2(90.0, widthCam, heightCam)
+{
+  std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
 					    "Player 4"};
@@ -71,82 +103,17 @@ Gamer::Gamer()
       player->initGame(_map);
     }
   player = dynamic_cast<Player *>(_stock->getPlayer(0));
-  player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
-  _camera.setPosition(player->getPosition()
+  player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+  _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera.setRotation(player->getPosition());
-  _camera2.setPosition(player2->getPosition()
+  _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition());
-}
-
-Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam)
-  : _width(width), _height(height), _camera(90.0, widthCam, heightCam),
-    _camera2(90.0, widthCam, heightCam)
-{
-  std::vector<std::string>	nameList = {"Player 1",
-					    "Player 2",
-					    "Player 3",
-					    "Player 4",
-					    "Player 5",
-					    "Player 6",
-					    "Player 7",
-					    "Player 8",
-					    "Player 9",
-					    "Player 10",
-					    "Player 11",
-					    "Player 12",
-					    "Player 13",
-					    "Player 14",
-					    "Player 15",
-					    "Player 16"};
-
-  std::string			mapName = "de_bra";
-  std::vector<std::string>	vec;
-  Player			*player;
-  Player			*player2;
-
-  std::cout << "Start init game" << std::endl;
-  _mapList = ((_json.parse("./resources/json/Gamedata.json"))
-	      ? (_json.unserialize<Bomberman::MapList*>())
-	      : (new MapList()));
-  _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
-	      ? (_json.unserialize<Bomberman::ScoreList*>())
-		: (new ScoreList()));
-  std::cout << "json done" << std::endl;
-  _stock = new RessourceStock(nameList, _scoreList);
-  _stock->getPlayer(0);
-  _map = _mapList->getMap(mapName);
-  if (_map == NULL)
-    _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
-  std::cout << "map done" << std::endl;
-  for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
-    {
-      std::cout << "first" << std::endl;
-      player = dynamic_cast<Player *>(_stock->getPlayer(i));
-      std::cout << "Player" << std::endl;
-      player->initGame(_map);
-      std::cout << "Map" << std::endl;
-    }
-  std::cout << "first init play" << std::endl;
-  player = dynamic_cast<Player *>(_stock->getPlayer(0));
-  player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
-  std::cout << "Init players" << std::endl;
-  _camera.setPosition(player->getPosition()
-		      + glm::rotate(glm::vec3(3.5, 4, 0),
-				    player->getRotation().y + 90,
-				    glm::vec3(0, 1, 0)));
-  _camera.setRotation(player->getPosition());
-  _camera2.setPosition(player2->getPosition()
-		      + glm::rotate(glm::vec3(3.5, 4, 0),
-				    player2->getRotation().y + 90,
-				    glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition());
-  std::cout << "Init game ended" << std::endl;
+  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
 }
 
 Gamer::~Gamer()
@@ -164,7 +131,7 @@ Gamer::~Gamer()
 bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
 {
   Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
-  Player	*player2 = dynamic_cast<Player *>(_stock->getPlayer(1));
+  Player	*player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
   float		elsapsedTime = static_cast<float>(clock.getElapsed()) * 60;
   static bool	space = false;
   static bool	space2 = false;
@@ -208,16 +175,16 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
 
   _map->checkBombsOnMap();
-  _camera.setPosition(player->getPosition()
+  _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera.setRotation(player->getPosition());
-  _camera2.setPosition(player2->getPosition()
+  _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition());
+  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
   _camera.updateView();
   _camera2.updateView();
   return true;
@@ -249,19 +216,18 @@ void		Gamer::draw(gdl::Clock &clock,
 	    {
 	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
 		->setPosition(glm::vec3(x, 0, y));
-	      if (IObject::BOMB <= _map->getCellValue(x, y)->getObjectType() ||
+	      if (IObject::MINE <= _map->getCellValue(x, y)->getObjectType() ||
 		  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
 		{
 		  assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
 		  assets[FLOOR]->draw(shader, clock);
 		}
-	      else if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
-		{
-		  shader.setUniform("color", glm::vec4(0, 1, 0, 0));
-		}
+	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
+		shader.setUniform("color", glm::vec4(0, 1, 0, 0));
 	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
 		->draw(shader, clock);
-	      shader.setUniform("color", glm::vec4(1.0));
+	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
+		shader.setUniform("color", glm::vec4(1.0));
 	    }
 	}
     }

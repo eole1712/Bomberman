@@ -375,7 +375,7 @@ void			Player::move(float const & direction, float const & elsapsedTime)
     }
 }
 
-void			Player::rotate(bool const & direction,
+bool			Player::rotate(bool const & direction,
 				       float const & elsapsedTime, float const & stop)
 {
   float			before;
@@ -387,7 +387,11 @@ void			Player::rotate(bool const & direction,
   after -= 360 * (stop == 0 && direction == 1);
   before -= 360 * (stop == 0 && direction == 1);
   if (abs(stop - before) < abs(stop - after))
-    setRotation(glm::vec3(0, stop, 0));
+    {
+      setRotation(glm::vec3(0, stop, 0));
+      return true;
+    }
+  return false;
 }
 
 void			Player::rotate(bool const & direction,
@@ -484,7 +488,7 @@ Score			Player::getScore() const
 
 void			Player::incScore()
 {
-  this->_score.inc();
+  this->_score.inc(this->_map->getRcs());
 }
 
 void			Player::linkScoreList(Bomberman::ScoreList* scoreList)
@@ -526,7 +530,7 @@ void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
   if (isAlive())
     {
       shader.setUniform("color", getColor());
-      asset.setPosition(this->getPosition());
+      asset.setPosition(this->getPosition() + glm::vec3(-0.5, 0, -0.5));
       asset.setRotation(this->getRotation());
       if (isParalyzed())
 	asset.draw(shader, clock);

@@ -195,7 +195,7 @@ Map::TwoInt			Map::findEmptySpawn()
   Player*		player;
   float			tmp;
   float			rest;
-  t_spawn		s = {0, 0, -1.0f, 0};
+  t_spawn		s = {my_random(0, getWidth() - 1), my_random(0, getHeight() - 1), -1.0f, 0};
   bool			ok;
 
   for (unsigned int x = 0; x < getWidth(); x++)
@@ -215,7 +215,7 @@ Map::TwoInt			Map::findEmptySpawn()
 		  rest = tmp;
 	      }
 	  }
-	if ((rest > s.level || s.level == -1) && !ok)
+	if ((rest > s.level || s.level == -1) && !ok && rest != -1.0f)
 	  {
 	    s.posX = x;
 	    s.posY = y;
