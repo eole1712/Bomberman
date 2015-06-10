@@ -29,9 +29,6 @@ namespace Bomberman
 
 unsigned int const	RessourceStock::nbSounds = 15;
 
-RessourceStock::RessourceStock()
-{}
-
 RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
   : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _soundManager(10), _sounds(RessourceStock::nbSounds, "")
 {
