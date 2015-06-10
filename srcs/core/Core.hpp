@@ -22,11 +22,13 @@
 # include "JSONDoc.hpp"
 # include "Game.hh"
 # include "Gamer.hpp"
+# include "IScene.hpp"
 
 namespace Bomberman
 {
 
 class Gamer;
+class IScene;
 
 class Core : public gdl::Game
 {
@@ -42,28 +44,13 @@ public:
   void			loadTextures();
   void			startGame();
 
-public:
-  enum                  mapAsset
-    {
-      FLOOR,
-      WALL,
-      IDST_BLOCK,
-      DST_BLOCK,
-      FIRE,
-      PLAYER,
-      BOMB,
-      SKYBOX,
-      BONUS,
-      BARREL
-    };
-
 private:
   Core(const Core &);
   Core &operator=(const Core &);
 
 private:
-  bool				_inGame;
-Gamer*				_game;
+  bool						_inGame;
+  Bomberman::IScene*				_game;
 
 
 public:
@@ -82,7 +69,7 @@ private:
 
 private:
   std::vector<Asset3d *>	_assets;
-  std::map<Bomberman::IObject::Type, mapAsset>	_ObjectToAsset;
+  std::map<Bomberman::IObject::Type, Bomberman::mapAsset>	_ObjectToAsset;
 };
 
 }

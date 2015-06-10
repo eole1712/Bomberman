@@ -57,6 +57,8 @@ void				Core::loadTextures()
   attachObject(new Asset3d("resources/assets/sky.obj"));
   attachObject(new Asset3d("resources/assets/bonus.obj"));
   attachObject(new Asset3d("resources/assets/barrel.obj"));
+  attachObject(new Asset3d("resources/assets/bombs/LandMine/LandMine.obj"));
+  attachObject(new Asset3d("resources/assets/bombs/WindBomb/WindBomb.obj"));
 
   _assets[PLAYER]->scale(glm::vec3(0.002));
   _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
@@ -68,8 +70,9 @@ void				Core::loadTextures()
   _assets[BONUS]->scale(glm::vec3(0.05));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
-  _ObjectToAsset[IObject::BOMB2] = FLOOR;
-  _ObjectToAsset[IObject::BOMB3] = BARREL;
+  _ObjectToAsset[IObject::MINE] = MINE;
+  _ObjectToAsset[IObject::BARREL] = BARREL;
+  _ObjectToAsset[IObject::VIRUS] = VIRUS;
   _ObjectToAsset[IObject::PLAYER] = PLAYER;
   _ObjectToAsset[IObject::BONUS] = BONUS;
   _ObjectToAsset[IObject::WALL] = IDST_BLOCK;
@@ -86,7 +89,7 @@ bool				Core::initialize()
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
-
+  std::cout << "passé" << std::endl;
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
@@ -104,14 +107,16 @@ void		Core::attachObject(Asset3d *obj)
 void		Core::startGame()
 {
   Player	*player;
+  Gamer		*tmpGame;
 
-  _game = new Gamer(30, 30, _width / 2, _height);
-  for (unsigned int i = 0; i < _game->_stock->getNbPlayer(); ++i)
+  tmpGame = new Gamer(30, 30, _width / 2, _height);
+  for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(_game->_stock->getPlayer(i));
+      player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
+  _game = tmpGame;
 }
 
 bool		Core::update()
@@ -125,11 +130,7 @@ bool		Core::update()
 
 void		Core::draw()
 {
-  glViewport(900, 0, 900, 900);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  _game->draw(_clock, _shader, _game->getCamera(0), _assets, _ObjectToAsset);
-  glViewport(0, 0, 900, 900);
-  _game->draw(_clock, _shader, _game->getCamera(1), _assets, _ObjectToAsset);
+  _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
 }
 
