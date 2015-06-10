@@ -33,7 +33,8 @@ void	Timer::reset()
 void	Timer::reset(uintmax_t time)
 {
   _clock = std::chrono::system_clock::now();
-  _saveTime = std::chrono::microseconds(time);
+  _time = std::chrono::microseconds(time);
+  _saveTime = std::chrono::microseconds(0);
 }
 
 bool	Timer::isFinished()
