@@ -43,6 +43,7 @@ public:
   void			attachObject(Asset3d *);
   void			loadTextures();
   void			startGame();
+  void			firstMenu();
 
 private:
   Core(const Core &);

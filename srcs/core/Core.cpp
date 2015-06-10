@@ -24,6 +24,7 @@
 #include "Player.hpp"
 #include "PlayerAI.hpp"
 #include "JSONDoc.hpp"
+#include ""
 #include "Core.hpp"
 
 namespace Bomberman
@@ -114,6 +115,11 @@ void		Core::startGame()
 					_assets[PLAYER]->getAnimationSpeed());
     }
   _game = tmpGame;
+}
+
+void		Core::firstMenu()
+{
+  AM
 }
 
 bool		Core::update()
