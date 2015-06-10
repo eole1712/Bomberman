@@ -526,7 +526,7 @@ void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
   if (isAlive())
     {
       shader.setUniform("color", getColor());
-      asset.setPosition(this->getPosition());
+      asset.setPosition(this->getPosition() + glm::vec3(-0.5, 0, -0.5));
       asset.setRotation(this->getRotation());
       if (isParalyzed())
 	asset.draw(shader, clock);

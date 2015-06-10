@@ -240,19 +240,18 @@ void		Gamer::draw(gdl::Clock &clock,
 	    {
 	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
 		->setPosition(glm::vec3(x, 0, y));
-	      if (IObject::BOMB <= _map->getCellValue(x, y)->getObjectType() ||
+	      if (IObject::MINE <= _map->getCellValue(x, y)->getObjectType() ||
 		  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
 		{
 		  assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
 		  assets[FLOOR]->draw(shader, clock);
 		}
-	      else if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
-		{
-		  shader.setUniform("color", glm::vec4(0, 1, 0, 0));
-		}
+	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
+		shader.setUniform("color", glm::vec4(0, 1, 0, 0));
 	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
 		->draw(shader, clock);
-	      shader.setUniform("color", glm::vec4(1.0));
+	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
+		shader.setUniform("color", glm::vec4(1.0));
 	    }
 	}
     }
