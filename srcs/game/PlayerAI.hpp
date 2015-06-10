@@ -25,14 +25,10 @@ namespace Bomberman
     std::string const&	getAIName() const;
 
 public:
-    bool		moveRight(float const & elsapsedTime,
-				  unsigned int x, unsigned int y);
-    bool		moveLeft(float const & elsapsedTime,
-				 unsigned int x, unsigned int y);
-    bool		moveUp(float const & elsapsedTime,
-			       unsigned int x, unsigned int y);
-    bool		moveDown(float const & elsapsedTime,
-				 unsigned int x, unsigned int y);
+    bool		moveRight(float const & elsapsedTime);
+    bool		moveLeft(float const & elsapsedTime);
+    bool		moveUp(float const & elsapsedTime);
+    bool		moveDown(float const & elsapsedTime);
 
   protected:
     void		luaObjectInit();
