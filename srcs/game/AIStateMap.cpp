@@ -80,6 +80,7 @@ namespace Bomberman
 		case (IObject::BOMB):
 		case (IObject::MINE):
 		case (IObject::BARREL):
+		case (IObject::VIRUS):
 		  {
 		    BombTimer*	bomb = dynamic_cast<BombTimer*>(map.getCellValue(x, y));
 
