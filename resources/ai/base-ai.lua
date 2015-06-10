@@ -60,21 +60,21 @@ end
 if (#route > 0)
 then
    local adjCells = {
-      { x = player.x + 1, y = player.y, moveDesc = "AI: move right", 
+      { x = player.x + 1, y = player.y, moveDesc = "AI: move right",
 	 move = function (player) player:moveRight() end,
 	 shouldMove = function (player, x, y) return x > player.x end },
-      { x = player.x - 1, y = player.y, moveDesc = "AI: move left", 
+      { x = player.x - 1, y = player.y, moveDesc = "AI: move left",
 	 move = function (player) player:moveLeft() end,
 	 shouldMove = function (player, x, y) return x < player.x end },
-      { x = player.x, y = player.y + 1, moveDesc = "AI: move up", 
+      { x = player.x, y = player.y + 1, moveDesc = "AI: move up",
 	 move = function (player) player:moveUp() end,
 	 shouldMove = function (player, x, y) return y > player.y end },
-      { x = player.x, y = player.y - 1, moveDesc = "AI: move down", 
+      { x = player.x, y = player.y - 1, moveDesc = "AI: move down",
 	 move = function (player) player:moveDown() end,
 	 shouldMove = function (player, x, y) return y < player.y end },
    }
 
---   print(player.x, player.y, route[1].x, route[1].y, map:getCell(route[1].x, route[1].y), 
+--   print(player.x, player.y, route[1].x, route[1].y, map:getCell(route[1].x, route[1].y),
 --	 route[#route].x, route[#route].y)
    for k, v in pairs(adjCells)
    do
@@ -126,7 +126,7 @@ function findCellByBackTracking(map, x, y, targetCells, blocksCells)
 
    for k, v in pairs(toTest)
    do
-      if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false and 
+      if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false and
 	  isCooInTable(prevCells, v.x, v.y) == false)
       then
 	 print(v.x, v.y, map:getCell(v.x, v.y))
