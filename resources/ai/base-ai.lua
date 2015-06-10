@@ -48,8 +48,6 @@ if (map:getCell(player.x, player.y) == UNSAFE and attack == true or
     map:getCell(player.x, player.y) == UNSAFE and #route == 0)
 then
    runAway(map, player)
-
-   -- get nearest safe cell, and set to objective
 elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
 	map:getCell(player.x, player.y) == SAFE and #route == 0)
 then
