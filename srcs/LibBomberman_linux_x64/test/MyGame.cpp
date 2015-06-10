@@ -72,12 +72,12 @@ bool		MyGame::initialize()
   _shader.bind();
   _text = new Text2d("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha3Blue.tga");
   _text2 = new Text2d("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha3Blue.tga");
-  _grid.addObject(_text, [] () {
-    std::cout << "Pink Pony" << std::endl;
-  });
-  _grid.addObject(_text2, [] () {
-    std::cout << "Blue Pony" << std::endl;
-  });
+  // _grid.addObject(_text, [] () {
+  //   std::cout << "Pink Pony" << std::endl;
+  // });
+  // _grid.addObject(_text2, [] () {
+  //   std::cout << "Blue Pony" << std::endl;
+  // });
   return true;
 }
 
@@ -195,14 +195,14 @@ void		MyGame::draw()
   // Text2d	text2("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
   View2d	lol(400, 600, 200, 200, std::string("../assets/textures/lol.tga"));
 
-  if (_input.getKey(SDLK_s))
-    _grid.moveRight();
-  if (_input.getKey(SDLK_z))
-    _grid.moveLeft();
-  if (_input.getKey(SDLK_TAB))
-    _grid.actionOnFocus();
+  // if (_input.getKey(SDLK_s))
+  //   _grid.moveRight();
+  // if (_input.getKey(SDLK_z))
+  //   _grid.moveLeft();
+  // if (_input.getKey(SDLK_TAB))
+  //   _grid.actionOnFocus();
 
-  _grid.drawGrid(_shader);
+  // _grid.drawGrid(_shader);
 
   //text.draw(_shader);
   //lol.draw(_shader);
