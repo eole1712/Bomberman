@@ -41,6 +41,7 @@ GAMESRCS	= Player.cpp 		\
 		  Color.cpp		\
 		  Fire.cpp		\
 		  Score.cpp		\
+		  Sound.cpp		\
 
 BUFFSRCS	= BuffDecSpeed.cpp	\
 		  BuffFactory.cpp	\
@@ -86,7 +87,7 @@ CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson
 CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS)
 
 LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib
-LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL2 -ldl -llua
+LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL2 -ldl -llua -lSDL_mixer
 
 all: $(NAME)
 

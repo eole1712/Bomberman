@@ -4,10 +4,10 @@
 
 # include <vector>
 # include <map>
+# include "SdlContext.hh"
 # include "Game.hh"
 # include "Clock.hh"
 # include "Input.hh"
-# include "SdlContext.hh"
 # include "BasicShader.hh"
 # include "OpenGL.hh"
 # include "Asset3d.hpp"

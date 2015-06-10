@@ -4,13 +4,13 @@
 #include <map>
 #include <math.h>
 #include <iostream>
+#include "SdlContext.hh"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
 #include "Game.hh"
 #include "Clock.hh"
 #include "Input.hh"
-#include "SdlContext.hh"
 #include "BasicShader.hh"
 #include "OpenGL.hh"
 #include "Asset3d.hpp"
@@ -33,6 +33,18 @@ Gamer::Gamer()
   : _width(20), _height(20), _camera(90.0, 900, 900), _camera2(90.0, 900, 900)
 {
   std::vector<std::string>	nameList = {"Player 1",
+					    "Player 2",
+					    "Player 3",
+					    "Player 4",
+					    "Player 1",
+					    "Player 2",
+					    "Player 3",
+					    "Player 4",
+					    "Player 1",
+					    "Player 2",
+					    "Player 3",
+					    "Player 4",
+					    "Player 1",
 					    "Player 2",
 					    "Player 3",
 					    "Player 4"};
@@ -79,7 +91,19 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
-					    "Player 4"};
+					    "Player 4",
+					    "Player 5",
+					    "Player 6",
+					    "Player 7",
+					    "Player 8",
+					    "Player 9",
+					    "Player 10",
+					    "Player 11",
+					    "Player 12",
+					    "Player 13",
+					    "Player 14",
+					    "Player 15",
+					    "Player 16"};
 
   std::string			mapName = "de_bra";
   std::vector<std::string>	vec;
@@ -222,7 +246,7 @@ void		Gamer::draw(gdl::Clock &clock,
 		  assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
 		  assets[FLOOR]->draw(shader, clock);
 		}
-	      else if (IObject::BOMB2 == _map->getCellValue(x, y)->getObjectType())
+	      else if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
 		{
 		  shader.setUniform("color", glm::vec4(0, 1, 0, 0));
 		}

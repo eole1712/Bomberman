@@ -24,7 +24,9 @@ namespace Bomberman
       BOMB,
       SKYBOX,
       BONUS,
-      BARREL
+      BARREL,
+      MINE,
+      VIRUS
     };
 class IScene
 {

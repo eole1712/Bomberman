@@ -181,16 +181,61 @@ void	Map::equalize()
     }
 }
 
-void	Map::pushSpawn(unsigned int x, unsigned int y, unsigned int level)
+float		Map::calcLong(unsigned int x1, unsigned int y1,
+				      unsigned int x2, unsigned int y2)
 {
-  t_spawn	spawn = { x, y, level };
+  int		x = x1 - x2;
+  int		y = y1 - y2;
+
+  return (sqrt(pow(x, 2) + pow(y, 2)));
+}
+
+Map::TwoInt			Map::findEmptySpawn()
+{
+  Player*		player;
+  float			tmp;
+  float			rest;
+  t_spawn		s = {0, 0, -1.0f, 0};
+  bool			ok;
+
+  for (unsigned int x = 0; x < getWidth(); x++)
+    for (unsigned int y = 0; y < getHeight(); y++)
+      {
+	rest = -1.0f;
+	ok = false;
+	for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
+	  {
+	    player = dynamic_cast<Player*>(_rcs->getPlayer(i));
+	    if (player->isPlaced())
+	      {
+		tmp = calcLong(player->getX(), player->getY(), x, y);
+		if (player->getX() == x && player->getY() == y)
+		  ok = true;
+		else if (tmp < rest || rest == -1)
+		  rest = tmp;
+	      }
+	  }
+	if ((rest > s.level || s.level == -1) && !ok)
+	  {
+	    s.posX = x;
+	    s.posY = y;
+	    s.level = rest;
+	  }
+      }
+  addSpawn(s.posX, s.posY);
+  return std::make_pair(s.posX, s.posY);
+}
+
+void			Map::pushSpawn(unsigned int x, unsigned int y, unsigned int level)
+{
+  t_spawn	spawn = { x, y, float(level), 0};
 
   this->_spawnList.push_back(spawn);
 }
 
 void	Map::addSpawn(unsigned int x, unsigned int y)
 {
-  this->setCellValue(x, y, this->_rcs->getObject(IObject::SPAWN));
+  this->setCellValue(x, y, this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
   		     this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
@@ -244,7 +289,7 @@ unsigned int	Map::findLevel()
 
 void	Map::spawnize()
 {
-  menger(this->_width, this->_height, this->findLevel(), 0, 0, true);
+  //menger(this->_width, this->_height, this->findLevel(), 0, 0, true);
 }
 
 

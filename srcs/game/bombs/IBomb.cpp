@@ -10,7 +10,7 @@ namespace Bomberman
 
 bool		IBomb::isOtherBomb(Map *map, int x, int y, Player *player, int x2, int y2)
 {
-  if (map->getCellValue(x, y)->getObjectType() >= IObject::BOMB2 &&
+  if (map->getCellValue(x, y)->getObjectType() >= IObject::MINE &&
       !(x == x2 && y == y2))
     {
       dynamic_cast<BombTimer*>(map->getCellValue(x, y))->setFinished();
@@ -26,7 +26,7 @@ bool		IBomb::isOtherBomb(Map *map, int x, int y, Player *player, int x2, int y2)
 
 bool		IBomb::isOtherBomb(Map *map, int x, int y, Player *player, int x2, int y2, float time)
 {
-  if (map->getCellValue(x, y)->getObjectType() >= IObject::BOMB2 &&
+  if (map->getCellValue(x, y)->getObjectType() >= IObject::MINE &&
       !(x == x2 && y == y2))
     {
       dynamic_cast<BombTimer*>(map->getCellValue(x, y))->setFinished();

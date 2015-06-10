@@ -8,6 +8,7 @@
 # include "IBomb.hpp"
 # include "Player.hpp"
 # include "Score.hpp"
+# include "Sound.hpp"
 
 namespace Bomberman
 {
@@ -15,6 +16,11 @@ namespace Bomberman
 class RessourceStock
 {
 public:
+  enum SoundType { TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE,
+		   FIRSTBLOOD, MINE, PREPARE, SUICIDE };
+
+  static unsigned int const	nbSounds;
+
   RessourceStock();
   RessourceStock(std::vector<std::string> const &, ScoreList*);
   RessourceStock(std::vector<Bomberman::Player*> const& players);
@@ -26,6 +32,7 @@ public:
   IObject	*getObject(IObject::Type) const;
   IObject	*getBuff(IBuff::Type) const;
   IObject	*getBomb(Bomb::Type) const;
+  SoundManager	*getSound(SoundType);
   IObject	*getPlayer(std::string const &) const;
   IObject	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
@@ -35,6 +42,7 @@ private:
   std::vector<IObject *>	_buffs;
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
+  std::vector<SoundManager*>	_sounds;
 };
 
 }

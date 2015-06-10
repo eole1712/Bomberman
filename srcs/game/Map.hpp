@@ -37,7 +37,8 @@ public:
   {
     unsigned int	posX;
     unsigned int	posY;
-    unsigned int	level;
+    float		level;
+    unsigned int	stock;
   };
 
   Map();
@@ -45,7 +46,12 @@ public:
   Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty);
   virtual ~Map() {};
 
+public:
   RessourceStock	*getRcs() const;
+  typedef std::pair<unsigned int, unsigned int> TwoInt;
+  TwoInt		findEmptySpawn();
+  float			calcLong(unsigned int x1, unsigned int y1,
+				 unsigned int x2, unsigned int y2);
 
 public:
   void			swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny);
@@ -66,6 +72,7 @@ public:
 
 private:
   std::string		_name;
+  unsigned int		_order;
   unsigned int		_nbJoueurs;
   e_difficulty		_difficulty;
   RessourceStock*	_rcs;
