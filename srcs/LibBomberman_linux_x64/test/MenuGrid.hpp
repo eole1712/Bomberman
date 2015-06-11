@@ -20,6 +20,7 @@ public:
   void	addObject(AMenuObject*, std::function<void()>);
   void	actionOnFocus();
   virtual bool		update(gdl::Clock &, gdl::Input &);
+  void			init();
 private:
   MenuGrid(const MenuGrid &);
   MenuGrid &operator=(const MenuGrid &);
@@ -29,6 +30,9 @@ protected:
   std::function<void(int x, int y)>						_drawFocus;
   gdl::Texture									_focusTexture;
   CameraObject							_camera;
+  int										_prev;
+  std::function<void(void)> _ftab[5];
+
 };
 
 #endif /* !MENUGRID_H_ */

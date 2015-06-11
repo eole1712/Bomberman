@@ -32,12 +32,12 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _width(1800), _height(900)
+  : _change(false), _width(1800), _height(900)
 {
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
-  : _width(width), _height(height)
+  : _change(false), _width(width), _height(height)
 {
 }
 
@@ -45,6 +45,7 @@ Core::~Core()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
+  delete _game;
 }
 
 void				Core::loadTextures()
@@ -91,7 +92,6 @@ bool				Core::initialize()
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
-  std::cout << "passé" << std::endl;
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
@@ -118,8 +118,42 @@ void		Core::startGame()
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
-  //tmpGame->startGame();
+  _prev = _game;
+  _change = true;
   _game = tmpGame;
+}
+
+void		Core::gameMenu()
+{
+  MenuGrid*	gridou = new MenuGrid;
+  Text2d*	text1 = new Text2d("Width", 80, 200, 100, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text2 = new Text2d("Height", 80, 300, 100, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("", 200, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("", 200, 300, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	start = new Text2d("Start Game", 200, 600, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+
+  text4->setModifiable();
+  text3->setModifiable();
+  text2->unFocus();
+  text1->unFocus();
+  gridou->addObject(text1, [] (void) {
+    ;
+  });
+  gridou->addObject(text2, [] (void) {
+    ;
+  });
+  gridou->addObject(text3, [text3] (void) {
+    std::cout << text3->getText() << std::endl;
+  });
+  gridou->addObject(text4, [text4] (void) {
+    std::cout << text4->getText() << std::endl;
+  });
+  gridou->addObject(start, [this] (void) {
+    startGame();
+  });
+  _prev = _game;
+  _change = true;
+  _game = gridou;
 }
 
 void		Core::firstMenu()
@@ -129,14 +163,11 @@ void		Core::firstMenu()
   Text2d*	text2 = new Text2d("Start Game", 200, 350, 500, 150, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text3 = new Text2d("High Scores", 200, 500, 500, 150, "resources/assets/textures/alpha3Blue.tga");
 
-  std::cout << "Texts creted" << std::endl;
   grid->addObject(text1, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
   });
-  grid->addObject(text2, [this] (void) {
-    Core* ptr;
-    ptr = this;
-    ptr->startGame();
+  grid->addObject(text2, [this, &grid] (void) {
+    this->gameMenu();
   });
   grid->addObject(text3, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
@@ -146,8 +177,14 @@ void		Core::firstMenu()
 
 bool		Core::update()
 {
-  bool ret = _game->update(_clock, _input);
+  bool ret;
 
+  ret = _game->update(_clock, _input);
+  if (_change)
+    {
+      _change = false;
+      delete _prev;
+    }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
   return ret;

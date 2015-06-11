@@ -30,3 +30,8 @@ void	View2d::draw(gdl::BasicShader shader)
       _geo.draw(shader, glm::mat4(), GL_QUADS);
     }
 }
+
+void	View2d::update(gdl::Input&)
+{
+  ;
+}

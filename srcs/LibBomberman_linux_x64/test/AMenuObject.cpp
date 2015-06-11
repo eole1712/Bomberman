@@ -1,7 +1,7 @@
 #include "AMenuObject.hpp"
 
 AMenuObject::AMenuObject(int x, int y, int width, int height, std::string const& texName)
-  : _x(x), _y(y), _width(width), _height(height)
+  : _x(x), _y(y), _width(width), _height(height), _focusable(true)
 {
   _hidden = false;
   _texture.load(texName);
@@ -30,4 +30,14 @@ int	AMenuObject::getX()
 int	AMenuObject::getY()
 {
   return _y;
+}
+
+bool	AMenuObject::isFocusable()
+{
+  return _focusable;
+}
+
+void	AMenuObject::unFocus()
+{
+  _focusable = false;
 }

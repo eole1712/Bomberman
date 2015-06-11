@@ -24,6 +24,7 @@ void			showfps()
 
 int main()
 {
+  AudioManager		audioManager(10);
   Bomberman::Core	engine;
 
   if (!engine.initialize())
@@ -31,7 +32,7 @@ int main()
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
-  engine.startGame();
+  engine.firstMenu();
   while (engine.update() == true)
     {
       showfps();
