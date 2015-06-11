@@ -65,5 +65,4 @@ bool		IBomb::exploseCase(Map *map, int x, int y,
   isOtherBomb(map, x, y, player, x2, y2, Fire::explosionTime / (r + 1));
   return false;
 }
-
 }
