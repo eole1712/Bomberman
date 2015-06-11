@@ -319,6 +319,7 @@ bool		Map::isIn(unsigned int x, unsigned int y) const
 void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 {
   SoundManager*	sound;
+  static bool	firstBlood = true;
 
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
@@ -328,12 +329,21 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 	{
 	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
 	    {
+	      firstBlood = false;
 	      sound = this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE);
 	      sound->play(0);
 	      delete sound;
 	    }
 	  else
-	    player->incScore();
+	    {
+	      if (firstBlood)
+		{
+		  sound = this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD);
+		  sound->play(0);
+		  delete sound;
+		}
+	      player->incScore();
+	    }
 	}
     }
 }
