@@ -22,7 +22,6 @@
 # include "JSONDoc.hpp"
 # include "Game.hh"
 # include "Gamer.hpp"
-//# include "IScene.hpp"
 
 namespace Bomberman
 {
@@ -42,6 +41,7 @@ public:
   void			attachObject(Asset3d *);
   void			loadTextures();
   void			startGame();
+  void			gameMenu();
   void			firstMenu();
 
 private:

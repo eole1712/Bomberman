@@ -9,7 +9,7 @@ int main()
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
-  engine.startGame();
+  engine.firstMenu();
   while (engine.update() == true)
     {
       engine.draw();

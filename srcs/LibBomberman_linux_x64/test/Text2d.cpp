@@ -4,7 +4,7 @@
 #include <iostream>
 
 Text2d::Text2d(std::string const& text, int x, int y, int width, int height, std::string const& textureName)
-  : AMenuObject(x, y, width, height, textureName), _text(text)
+  : AMenuObject(x, y, width, height, textureName), _modif(false), _text(text)
 {
   _hidden = false;
 
@@ -70,7 +70,7 @@ void		Text2d::listen(gdl::Input input)
 	      _text.push_back(key[i]);
 	    }
 	  update();
-	  std::cout << "key: " << i << "text:" << _text << std::endl;
+	  //std::cout << "key: " << i << "text:" << _text << std::endl;
 	}
       key_change[i] = input.getKey(key[i]);
     }
@@ -94,4 +94,25 @@ void	Text2d::draw(gdl::BasicShader shader)
 	  (*it)->draw(shader, glm::mat4(), GL_QUADS);
 	}
     }
+}
+
+void	Text2d::setModifiable()
+{
+  _modif = true;
+}
+
+bool	Text2d::isModifiable() const
+{
+  return _modif;
+}
+
+void	Text2d::update(gdl::Input &in)
+{
+  if (_modif)
+    listen(in);
+}
+
+std::string const&	Text2d::getText() const
+{
+  return _text;
 }
