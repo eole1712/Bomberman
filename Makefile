@@ -94,7 +94,7 @@ CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
 CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS)
 
 LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib
-LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL -lSDL2 -ldl -llua -lSDL_mixer
+LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL -lSDL2 -ldl -llua -lvlc
 
 all: $(NAME)
 

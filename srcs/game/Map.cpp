@@ -26,7 +26,6 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
     throw new Exception::InvalidDimensions("Map Constructor");
   this->randomize();
   this->equalize();
-  this->spawnize();
 }
 
 Map::Map(std::string name, unsigned int width, unsigned int height,
@@ -242,57 +241,6 @@ void	Map::addSpawn(unsigned int x, unsigned int y)
   		     this->_rcs->getObject(IObject::EMPTY));
 }
 
-void	Map::menger(unsigned int sizeX, unsigned int sizeY, unsigned int level,
-		    unsigned int saveX, unsigned int saveY, bool first)
-{
-  unsigned int	written = 0;
-  unsigned int	x = 0;
-  unsigned int	y;
-
-  if (!level || !sizeX || !sizeY)
-    return ;
-  std::cout << level << std::endl;
-  if (first)
-    pushSpawn(sizeX / 2 - !(sizeX % 2), sizeY / 2 - !(sizeY % 2), level);
-  else
-    pushSpawn(saveX + sizeX / 3, saveY + sizeY / 3, level);
-  while (x < (sizeX - 1))
-    {
-      y = 0;
-      while (y < (sizeY - 1))
-	{
-	  if (written != 4)
-	    menger(sizeX / 3, sizeY / 3, level - 1, saveX + x, saveY + y, false);
-	  ++written;
-	  y += sizeY / 3;
-	}
-      x += sizeX / 3;
-    }
-}
-
-unsigned int	Map::findLevel()
-{
-  unsigned int	level = 1;
-  unsigned int	res = 9;
-  unsigned int	save = 8;
-
-  if (this->_nbJoueurs <= 1)
-    return (0);
-  while (res < this->_nbJoueurs)
-    {
-      save = save * 8;
-      res += save;
-      ++level;
-    }
-  return (level + 1);
-}
-
-void	Map::spawnize()
-{
-  //menger(this->_width, this->_height, this->findLevel(), 0, 0, true);
-}
-
-
 void		Map::swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny)
 {
   IObject	*obj = getCellValue(x, y);
@@ -329,18 +277,17 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 	{
 	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
 	    {
-	      firstBlood = false;
 	      sound = this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE);
-	      sound->play(0);
-	      delete sound;
+	      sound->play();
+	      firstBlood = false;
 	    }
 	  else
 	    {
 	      if (firstBlood)
 		{
 		  sound = this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD);
-		  sound->play(0);
-		  delete sound;
+		  sound->play();
+		  firstBlood = false;
 		}
 	      player->incScore();
 	    }
