@@ -79,6 +79,20 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
+					    "Player 4",
 					    "Player 4"
   };
 

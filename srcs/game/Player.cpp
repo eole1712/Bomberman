@@ -464,7 +464,7 @@ bool			Player::tryToKill()
 	}
       return false;
     }
-  return true;
+  return false;
 }
 
 // color

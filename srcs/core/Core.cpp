@@ -111,7 +111,7 @@ void		Core::startGame()
   Player	*player;
   Gamer		*tmpGame;
 
-  tmpGame = new Gamer(30, 30, _width / 2, _height);
+  tmpGame = new Gamer(15, 15, _width / 2, _height);
   for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
     {
       player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
