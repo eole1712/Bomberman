@@ -87,7 +87,7 @@ SRCS		+= $(addprefix $(TMPDIR), $(MENUSRCS))
 
 OBJS		= $(SRCS:.cpp=.o)
 
-CXXFLAGS	+= -W -Wall -Werror -Wextra -g -std=c++11
+CXXFLAGS	+= -W -Wall -Werror -Wextra -o3 -std=c++11
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
 CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
