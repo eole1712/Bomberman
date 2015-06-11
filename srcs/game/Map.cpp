@@ -279,6 +279,7 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 	    {
 	      sound = this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE);
 	      sound->play();
+	      firstBlood = false;
 	    }
 	  else
 	    {
@@ -286,6 +287,7 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 		{
 		  sound = this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD);
 		  sound->play();
+		  firstBlood = false;
 		}
 	      player->incScore();
 	    }

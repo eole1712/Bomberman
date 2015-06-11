@@ -27,7 +27,7 @@
 namespace Bomberman
 {
 
-unsigned int const	RessourceStock::nbSounds = 17;
+unsigned int const	RessourceStock::nbSounds = 18;
 unsigned int const	RessourceStock::nbChannels = 10;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
@@ -74,6 +74,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
   _sounds[TWELVE] = "./resources/sound/killstreak/godlike.wav";
   _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.wav";
   _sounds[SUICIDE] = "./resources/sound/suicide.wav";
+  _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
   _sounds[PREPARE1] = "./resources/sound/prepare1.wav";
   _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
   _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
@@ -121,6 +122,7 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   _sounds[TWELVE] = "./resources/sound/killstreak/godlike.wav";
   _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.wav";
   _sounds[SUICIDE] = "./resources/sound/suicide.wav";
+  _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
   _sounds[PREPARE1] = "./resources/sound/prepare1.wav";
   _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
   _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
@@ -160,9 +162,9 @@ SoundManager*		RessourceStock::getSound(SoundType type)
   pos = ((pos >= nbChannels) ? (0) : (pos));
   if (this->_soundsPlaying[pos] != NULL)
     delete (this->_soundsPlaying[pos]);
-  if (type >= 15)
+  if (type >= nbSounds - 2)
     this->_soundsPlaying[pos] = new SoundManager(&this->_audioManager,
-						 this->_sounds[15 + my_random(0, 3)]);
+						 this->_sounds[nbSounds - 2 + my_random(0, 3)]);
   else
     this->_soundsPlaying[pos] = new SoundManager(&this->_audioManager, this->_sounds[type]);
   return (this->_soundsPlaying[pos]);
