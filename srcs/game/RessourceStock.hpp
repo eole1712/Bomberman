@@ -29,6 +29,8 @@ public:
   RessourceStock(const RessourceStock &);
   RessourceStock &operator=(const RessourceStock &);
 
+  void		init();
+
 public:
   IObject	*getObject(IObject::Type) const;
   IObject	*getBuff(IBuff::Type) const;

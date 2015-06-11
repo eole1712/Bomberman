@@ -36,6 +36,7 @@ public:
   Gamer(unsigned int, unsigned int, unsigned int, unsigned int);
   virtual ~Gamer();
 
+  virtual void		init();
   virtual bool		update(gdl::Clock &, gdl::Input &);
   virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&, std::vector<Asset3d*>&,
 			     std::map<Bomberman::IObject::Type, mapAsset>&);
