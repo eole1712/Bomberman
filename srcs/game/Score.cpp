@@ -40,8 +40,7 @@ void		Score::inc(RessourceStock* rcs)
       sound = rcs->getSound(static_cast<RessourceStock::SoundType>(((this->_killStreak < 12)
 								    ? (this->_killStreak + 1)
 								    : (12))));
-      sound->play(0);
-      delete sound;
+      sound->play();
     }
   this->_timer->start();
   this->_score += 100 * pow(2, this->_killStreak);

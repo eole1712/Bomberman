@@ -24,7 +24,6 @@ void			showfps()
 
 int main()
 {
-  AudioManager		audioManager(10);
   Bomberman::Core	engine;
 
   if (!engine.initialize())

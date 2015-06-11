@@ -3,43 +3,30 @@
 # define SOUND_H_
 
 #include <string>
-#include <exception>
-#include <SDL/SDL_mixer.h>
+#include <vlc/vlc.h>
 
 class AudioManager
 {
 public:
-  AudioManager(int nbChannels);
+  AudioManager();
   ~AudioManager();
-private:
-};
 
-class MusicManager
-{
-public:
-  MusicManager(const std::string& file);
-  ~MusicManager();
-
-  void		play(int loop);
-  static void	pause();
-  static void	resume();
-  static void	rewind();
-  static void	volume(int vol);
+  libvlc_instance_t*	getInst() const;
 private:
-  MusicManager();
-  Mix_Music*	_music;
+  libvlc_instance_t*	_inst;
 };
 
 class SoundManager
 {
 public:
-  SoundManager(const std::string& file);
+  SoundManager(AudioManager*, const std::string& file);
   ~SoundManager();
 
-  void		play(int loop);
+  void		play();
 private:
   SoundManager();
-  Mix_Chunk*	_sound;
+  libvlc_media_t*		_media;
+  libvlc_media_player_t*	_mediaPlayer;
 };
 
 #endif /* !SOUND_H_ */
