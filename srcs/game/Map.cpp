@@ -318,13 +318,21 @@ bool		Map::isIn(unsigned int x, unsigned int y) const
 
 void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 {
+  SoundManager*	sound;
+
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
       if (dynamic_cast<Player*>(_rcs->getPlayer(i))->getX() == x &&
-	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y)
+	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y &&
+	  dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill())
 	{
-	  if (dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill() &&
-	      dynamic_cast<Player*>(_rcs->getPlayer(i)) != player)
+	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
+	    {
+	      sound = this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE);
+	      sound->play(0);
+	      delete sound;
+	    }
+	  else
 	    player->incScore();
 	}
     }

@@ -30,7 +30,7 @@ namespace Bomberman
 unsigned int const	RessourceStock::nbSounds = 15;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
-  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _soundManager(10), _sounds(RessourceStock::nbSounds, "")
+  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds, "")
 {
   for (unsigned int i = 0; i < names.size(); ++i)
     {
@@ -76,7 +76,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _soundManager(10), _sounds(RessourceStock::nbSounds, "")
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds, "")
 {
   for (unsigned int i = 0; i < players.size(); ++i)
     _players[i] = players[i];

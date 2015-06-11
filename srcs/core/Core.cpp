@@ -45,6 +45,7 @@ Core::~Core()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
+  delete _game;
 }
 
 void				Core::loadTextures()
