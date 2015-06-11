@@ -43,18 +43,6 @@ namespace Bomberman
     void		moveUp();
     void		moveDown();
 
-  public:
-    bool		isAttack() const;
-    bool		isDefense() const;
-    void		memoriseAttackMode();
-    void		memoriseDefenseMode();
-
-  public:
-    void		memoriseGoal(unsigned int x, unsigned int y);
-    void		resetGoal();
-    int			getGoalX() const;
-    int			getGoalY() const;
-
   protected:
     bool		moveRightCell(float const& elapsedTime);
     bool		moveLeftCell(float const& elapsedTime);
