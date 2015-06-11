@@ -51,16 +51,8 @@ namespace Bomberman
       {
 	if (_moveDir == NONE)
 	  (*_aiAction)(this, &stateMap);
-	if (_moveDir != NONE)
-	  {
-	    if ((this->*(moveBook.at(_moveDir)))(elapsedTime))
-	      {
-		std::cout << "end moving" << std::endl;
-		_moveDir = NONE;
-	      }
-	    else
-	      std::cout << "moving" << std::endl;
-	  }
+	if (_moveDir != NONE && (this->*(moveBook.at(_moveDir)))(elapsedTime))
+	  _moveDir = NONE;
       }
     catch (luabridge::LuaException const& e)
       {
