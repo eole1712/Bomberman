@@ -22,8 +22,7 @@ if (player.isAlive == false)
 then
    return
 end
---   print(map:toString())
-print("player at", player.x, player.y)
+print("player at", player.x, player.y) -- debug
 
 if (#route > 0 and player.x == route[1].x and route[1].y)
 then
@@ -38,14 +37,28 @@ end
 if (map:getCell(player.x, player.y) == UNSAFE and attack == true or
     isTypeInTable(map:getCell(player.x, player.y), { UNSAFE, BLOCK }) and #route == 0)
 then
+   -- danger, run away to safe cell
    runAway(map, player)
 elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
 	map:getCell(player.x, player.y) == SAFE and #route == 0)
 then
    attack = true
 
-   -- get nearest enemy and set to objective
-   route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1), { SAFE, BONUS, DESTROYABLE })
+   local idx = 0
+
+   while (idx < map:getNbPlayers()
+	     and map:getPlayerPosX(idx) == player.x
+	     and map:getPlayerPosY(idx) == player.y)
+   do
+      idx = idx + 1
+   end
+
+   -- get enemy and set route to him
+   if (idx < map:getNbPlayers()) then
+      route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1), { SAFE, BONUS, DESTROYABLE })
+   else
+      print("AI: Error: player target not found")
+   end
 end
 
 local adjCells = {
@@ -63,8 +76,6 @@ local adjCells = {
       shouldMove = function (player, x, y) return y < player.y end },
 }
 
---   print(player.x, player.y, route[1].x, route[1].y, map:getCell(route[1].x, route[1].y),
---	 route[#route].x, route[#route].y)
 for k, v in pairs(adjCells)
 do
    if (#route > 0 and isInMap(map, v.x, v.y) and v.shouldMove(player, route[1].x, route[1].y))
@@ -72,8 +83,8 @@ do
       if (map:getCell(v.x, v.y) == DESTROYABLE and attack)
       then
 	 player:putBomb()
-	 print("putBomb at", player.x, player.y)
-	 route = {} -- empty route so route will be set with an updated map
+	 print("putBomb at", player.x, player.y) -- debug
+	 route = {} -- clean route so the route will be set with an updated map
 	 break
       elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
 	      map:getCell(player.x, player.y) ~= SAFE)
@@ -93,14 +104,15 @@ function runAway(map, player)
 
    if (cell.x ~= -1 and cell.y ~= -1) then
       route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
-      print("safe cell", cell.x, cell.y)
+      print("safe cell", cell.x, cell.y) -- debug
       debugRoute()
    else
       route = {}
-      print "safe cell not found"
+      print "safe cell not found" -- debug
    end
 end
 
+-- back tracking algorithm to seek a cell
 local prevCells = {}
 function findCellByBackTracking(map, x, y, targetCells, blocksCells)
    local toTest = {
@@ -163,7 +175,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 
 	    if (v.x == xStart and v.y == yStart)
 	    then
-	       print "start cell found"
+	       print "start cell found" -- debug
 	       done = true
 	       break
 	    end
@@ -173,13 +185,14 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
       i = i + 1
    end
 
+--[[
    print "--------- debug maincoo"
    for k, v in pairs(mainCoo)
    do
       print(v.x, v.y, v.count)
    end
    print "--------- end"
-
+]]--
 
    local path = { { x = xStart, y = yStart } }
    local count = mainCoo[#mainCoo].count - 1
@@ -264,9 +277,3 @@ function debugRoute()
    end
    print "--------- end"
 end
-
---[[			for i=0,(map:getNbPlayers() -1)
-do
-   print("coo ", map:getPlayerPosX(i), " ", map:getPlayerPosY(i))
-end
-]]--
