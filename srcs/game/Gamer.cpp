@@ -35,8 +35,7 @@ Gamer::Gamer()
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
-					    "Player 4"
-  };
+					    "Player 4"};
 
   std::string			mapName = "de_bra";
   std::vector<std::string>	vec;
@@ -80,18 +79,8 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
-					    "Player 4",
-  					    "",
-					    "",
-					    "",
-					    "",
-					    "",
-					    "",
-					    "",
-					    "",
-					    "",
-					    ""
-};
+					    "Player 4"
+  };
 
   std::string			mapName = "de_bra";
   std::vector<std::string>	vec;
@@ -206,37 +195,35 @@ void		Gamer::draw(gdl::Clock &clock,
   shader.setUniform("view", camera.getView());
   shader.setUniform("projection", camera.getProjection());
   shader.setUniform("color", glm::vec4(1.0));
-
-  // We draw all objects
+  (void)ObjectToAsset;
   for (int x = -1; x <= _width; x++)
     {
       for (int y = -1; y <= _height; y++)
-	{
-	  if (x == -1 || y == -1 || x == _width || y == _height)
-	    {
-	      assets[WALL]->setPosition(glm::vec3(x, 0, y));
-	      assets[WALL]->draw(shader, clock);
-	    }
-	  else
-	    {
-	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
-		->setPosition(glm::vec3(x, 0, y));
-	      if (IObject::MINE <= _map->getCellValue(x, y)->getObjectType() ||
-		  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
-		{
-		  assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
-		  assets[FLOOR]->draw(shader, clock);
-		}
-	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
-		shader.setUniform("color", glm::vec4(0, 1, 0, 0));
-	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
-		->draw(shader, clock);
-	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
-		shader.setUniform("color", glm::vec4(1.0));
-	    }
-	}
+  	{
+  	  if (x == -1 || y == -1 || x == _width || y == _height)
+  	    {
+  	      assets[WALL]->setPosition(glm::vec3(x, 0, y));
+  	      assets[WALL]->draw(shader, clock);
+  	    }
+  	  else
+  	    {
+  	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+  	      	->setPosition(glm::vec3(x, 0, y));
+  	      if (IObject::MINE <= _map->getCellValue(x, y)->getObjectType() ||
+  	      	  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
+  	      	{
+  	      	  assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
+  	      	  assets[FLOOR]->draw(shader, clock);
+  	      	}
+  	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
+  	      	shader.setUniform("color", glm::vec4(0, 1, 0, 0));
+  	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+  	      	->draw(shader, clock);
+  	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
+  	      	shader.setUniform("color", glm::vec4(1.0));
+  	    }
+  	}
     }
-
   for (unsigned int y = 0; y < _stock->getNbPlayer(); y++)
     {
       dynamic_cast<Player *>(_stock->getPlayer(y))->draw(*assets[PLAYER], shader, clock);
