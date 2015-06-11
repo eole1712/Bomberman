@@ -19,6 +19,7 @@ public:
 
 private:
 
+  void	init(unsigned int, unsigned int);
   void	generateForm(unsigned int, unsigned int);
   void	randomize();
   bool	addNoBlocking(unsigned int, unsigned int);

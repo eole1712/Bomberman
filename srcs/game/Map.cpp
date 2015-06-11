@@ -17,13 +17,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects)
 {
-  this->_width = width;
-  this->_height = height;
-  if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 12)
-    throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 10 || this->_width < 10)
-    throw new Exception::InvalidDimensions("Map Constructor");
+  this->init(width, height);
   this->randomize();
   this->equalize();
 }
@@ -32,6 +26,11 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty)
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL)
+{
+  this->init(width, height);
+}
+
+void	Map::init(unsigned int width, unsigned int height)
 {
   this->_width = width;
   this->_height = height;
