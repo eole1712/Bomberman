@@ -10,6 +10,7 @@ EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
 BOMBDIR		= $(GAMEDIR)/bombs/
 GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
+VLCLIB		= $(SRCSDIR)/vlc/
 TMPDIR		= $(GDLDIR)/test/
 VENDORSDIR	= $(SRCSDIR)/vendors/
 LUADIR		= $(VENDORSDIR)/lua-5.3.0/
@@ -90,10 +91,10 @@ OBJS		= $(SRCS:.cpp=.o)
 CXXFLAGS	+= -W -Wall -Werror -Wextra -o3 -std=c++11
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
-CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
+CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(VLCDIR)/include/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
 CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS)
 
-LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib
+LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(VLCDIR)/lib/ -L $(LUADIR)/lib
 LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL -lSDL2 -ldl -llua -lvlc
 
 all: $(NAME)
