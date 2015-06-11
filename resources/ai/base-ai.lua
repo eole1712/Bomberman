@@ -33,6 +33,8 @@ then
    return
 end
 --   print(map:toString())
+print("player at", player.x, player.y)
+
 if (#route > 0 and player.x == route[1].x and route[1].y)
 then
    table.remove(route, 1)
@@ -78,12 +80,11 @@ for k, v in pairs(adjCells)
 do
    if (#route > 0 and isInMap(map, v.x, v.y) and v.shouldMove(player, route[1].x, route[1].y))
    then
-      print(route[1].x, route[1].y)
       if (map:getCell(v.x, v.y) == DESTROYABLE and attack)
       then
 	 player:putBomb()
-	 print("putbomb", player.x, player.y)
-	 runAway(map, player)
+	 print("putBomb at", player.x, player.y)
+	 runAway(map, player) -- to move, map is not clear
       elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
 	      map:getCell(player.x, player.y) ~= SAFE)
       then
@@ -98,17 +99,15 @@ end
 function runAway(map, player)
    attack = false
 
---   local cell = findCellType(map, player.x, player.y, { SAFE, BONUS })
    local cell = findCellByBackTracking(map, player.x, player.y, { SAFE, BONUS }, { BLOCK, DESTROYABLE })
-
-   print(map:toString())
-   print("safe cell: ", cell.x, cell.y) --
-   print("player: ", player.x, player.y)
 
    if (cell.x ~= -1 and cell.y ~= -1) then
       route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
+      print("safe cell", cell.x, cell.y)
+      debugRoute()
    else
       route = {}
+      print "safe cell not found"
    end
 end
 
@@ -124,16 +123,9 @@ function findCellByBackTracking(map, x, y, targetCells, blocksCells)
 
    for k, v in pairs(toTest)
    do
-      if (isInMap(map, v.x, v.y)) then
-	 print("pathfinding:", v.x, v.y, "type", map:getCell(v.x, v.y), isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false)
-      else
-	 print("invalid", v.x, v.y)
-      end
-
       if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false and
 	  isCooInTable(prevCells, v.x, v.y) == false)
       then
-	 print(v.x, v.y, map:getCell(v.x, v.y))
 	 if (isTypeInTable(map:getCell(v.x, v.y), targetCells)) then
 	    prevCells = {}
 	    return { x = v.x, y = v.y, valid = true }
@@ -148,38 +140,6 @@ function findCellByBackTracking(map, x, y, targetCells, blocksCells)
    end
 
    return { x = -1, y = -1, valid = false }
-end
-
--- find nearest cell of type 'type'
--- /!\ to refacto
-function findCellType(map, xStart, yStart, tableType)
-   local i = 1
-   local cell = { x = -1, y = -1 }
-
-   while (cell.x == -1 and cell.y == -1)
-   do
-      if (isInMap(map, xStart + i, yStart) and isTypeInTable(map:getCell(xStart + i, yStart), tableType)) then
-	 cell = { x = xStart + i, y = yStart }
-      elseif (isInMap(map, xStart - i, yStart) and isTypeInTable(map:getCell(xStart - i, yStart), tableType)) then
-	 cell = { x = xStart - i, y = yStart }
-      elseif (isInMap(map, xStart, yStart + i) and isTypeInTable(map:getCell(xStart, yStart + i), tableType)) then
-	 cell = { x = xStart, y = yStart + i }
-      elseif (isInMap(map, xStart, yStart - i) and isTypeInTable(map:getCell(xStart, yStart - i), tableType)) then
-	 cell = { x = xStart, y = yStart - i }
-      elseif (isInMap(map, xStart + i, yStart + i) and isTypeInTable(map:getCell(xStart + i, yStart + i), tableType)) then
-	 cell = { x = xStart + i, y = yStart + i }
-      elseif (isInMap(map, xStart + i, yStart - i) and isTypeInTable(map:getCell(xStart + i, yStart - i), tableType)) then
-	 cell = { x = xStart + i, y = yStart - i }
-      elseif (isInMap(map, xStart - i, yStart + i) and isTypeInTable(map:getCell(xStart - i, yStart + i), tableType)) then
-	 cell = { x = xStart - i, y = yStart + i }
-      elseif (isInMap(map, xStart - i, yStart - i) and isTypeInTable(map:getCell(xStart - i, yStart - i), tableType)) then
-	 cell = { x = xStart - i, y = yStart - i }
-      end
-
-      i = i + 1
-   end
-
-   return cell
 end
 
 -- path finding
@@ -238,14 +198,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
       i = i - 1
    end
 
-   --[[
-   print "start"
-   for k, v in pairs(path)
-   do
-      print(v.x, v.y)
-   end
-   print "end"
-]]--
 return path
 end
 
@@ -302,6 +254,15 @@ function isCooInTable(mainCoo, x, y)
       i = i + 1
    end
    return false
+end
+
+function debugRoute()
+   print "--------- debug route"
+   for k, v in pairs(route)
+   do
+      print(v.x, v.y)
+   end
+   print "--------- end"
 end
 
 --[[			for i=0,(map:getNbPlayers() -1)
