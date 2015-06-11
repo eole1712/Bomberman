@@ -202,7 +202,7 @@ namespace Bomberman
 
     if (bra)
       {
-	pos = glm::vec2(getfX(), getY() - 1.5);
+	pos = glm::vec2(getfX(), getY() - 0.5);
 	bra = false;
       }
     else if (getfX() == pos.x &&
@@ -237,7 +237,7 @@ namespace Bomberman
 
     if (bra)
       {
-	pos = glm::vec2(getX() - 1.5, getfY());
+	pos = glm::vec2(getX() - 0.5, getfY());
 	bra = false;
       }
     else if (getfX() == pos.x &&
