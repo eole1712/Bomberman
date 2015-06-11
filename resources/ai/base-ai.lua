@@ -12,21 +12,11 @@ UNKNOWN = 6
 local route = {}
 local attack = false
 
-local test = 0 -- tmppppppppppppppppppppppppppppppppp
-
 -- ai data table
 -- aiAction is the function called at each frame
 aiData = {
    name = "base-ai",
    aiAction = function(player, map)
-
-		 --[[       		if (test == 0) then
-		 player:moveUp()
-		 test = 1
-		 return 0
-	      else
-		 return 0
-	      end ]]-- tmpppppppppppppppppppppppppppppppp
 
 if (player.isAlive == false)
 then
@@ -42,7 +32,6 @@ end
 
 if (#route > 0 and isAdjacentCell(player.x, player.y, route[1].x, route[1].y) == false)
 then
-   --			print("route error", player.x, player.y, route[1].x, route[1].y)
    route = {}
 end
 
@@ -84,7 +73,8 @@ do
       then
 	 player:putBomb()
 	 print("putBomb at", player.x, player.y)
-	 runAway(map, player) -- to move, map is not clear
+	 route = {} -- empty route so route will be set with an updated map
+	 break
       elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
 	      map:getCell(player.x, player.y) ~= SAFE)
       then
@@ -162,7 +152,8 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 
       for k, v in pairs(toTest)
       do
-	 if (checkCell(map, mainCoo, v.x, v.y, tableType) == true)
+	 if (checkCell(map, mainCoo, v.x, v.y, tableType) == true or
+		v.x == xStart and v.y == yStart)
 	 then
 	    mainCoo[#mainCoo + 1] = {
 	       x = v.x,
@@ -172,6 +163,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 
 	    if (v.x == xStart and v.y == yStart)
 	    then
+	       print "start cell found"
 	       done = true
 	       break
 	    end
@@ -180,6 +172,14 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 
       i = i + 1
    end
+
+   print "--------- debug maincoo"
+   for k, v in pairs(mainCoo)
+   do
+      print(v.x, v.y, v.count)
+   end
+   print "--------- end"
+
 
    local path = { { x = xStart, y = yStart } }
    local count = mainCoo[#mainCoo].count - 1
