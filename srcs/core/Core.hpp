@@ -43,6 +43,7 @@ public:
   void			startGame();
   void			gameMenu();
   void			firstMenu();
+  bool			isOver() const;
 
 private:
   Core(const Core &);
@@ -68,6 +69,7 @@ private:
   gdl::Input			_input;
   gdl::BasicShader		_shader;
   float				_speed;
+  bool				_status;
 
 private:
   std::vector<Asset3d *>	_assets;

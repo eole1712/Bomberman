@@ -34,11 +34,13 @@ namespace Bomberman
 Core::Core()
   : _change(false), _width(1800), _height(900)
 {
+  _status = false;
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
   : _change(false), _width(width), _height(height)
 {
+  _status = false;
 }
 
 Core::~Core()
@@ -162,6 +164,7 @@ void		Core::firstMenu()
   Text2d*	text1 = new Text2d("Load Game", 200, 200, 500, 150, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text2 = new Text2d("Start Game", 200, 350, 500, 150, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text3 = new Text2d("High Scores", 200, 500, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("Quit", 200, 650, 500, 150, "resources/assets/textures/alpha3Blue.tga");
 
   grid->addObject(text1, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
@@ -171,6 +174,9 @@ void		Core::firstMenu()
   });
   grid->addObject(text3, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  });
+  grid->addObject(text4, [this] (void) {
+    this->_status = true;
   });
   _game = grid;
 }
@@ -196,7 +202,6 @@ void		Core::draw()
   _context.flush();
 }
 
-
 gdl::SdlContext		&Core::getContext()
 {
   return _context;
@@ -210,6 +215,11 @@ gdl::Clock		&Core::getClock()
 gdl::BasicShader	&Core::getShader()
 {
   return _shader;
+}
+
+bool			Core::isOver() const
+{
+  return _status;
 }
 
 }
