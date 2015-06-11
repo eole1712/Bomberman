@@ -57,7 +57,7 @@ bool		MyGame::initialize()
 
 
   _assets[DST_BLOCK]->scale(glm::vec3(100));
-  _assets[DST_BLOCK]->translate(glm::vec3(-50, -50 , 0));
+  _assets[DST_BLOCK]->translate(glm::vec3(150, 150 , 0));
   //  _assets[DST_BLOCK]->setPosition(glm::vec3(500, 500, 0));
 
   _assets[PLAYER]->scale(glm::vec3(0.002));

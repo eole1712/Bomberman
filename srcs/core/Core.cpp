@@ -73,6 +73,14 @@ void				Core::loadTextures()
   _assets[SKYBOX]->scale(glm::vec3(5 * (30 + 30) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
   _assets[BONUS]->scale(glm::vec3(0.05));
+  _assets[BOMB]->scale(glm::vec3(100));
+  _assets[BOMB]->translate(glm::vec3(750, 750, 0));
+  _assets[MINE]->scale(glm::vec3(100));
+  _assets[MINE]->translate(glm::vec3(150, 150 , 0));
+  _assets[VIRUS]->scale(glm::vec3(100));
+  _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
+  _assets[BARREL]->scale(glm::vec3(100));
+  _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::MINE] = MINE;

@@ -204,12 +204,13 @@ void		Gamer::draw(gdl::Clock &clock,
 			    std::vector<Asset3d*> &assets,
 			    std::map<Bomberman::IObject::Type, mapAsset>& ObjectToAsset)
 {
+  glm::vec3	tmp;
+
   // Clear the screen
   shader.bind();
   shader.setUniform("view", camera.getView());
   shader.setUniform("projection", camera.getProjection());
   shader.setUniform("color", glm::vec4(1.0));
-  (void)ObjectToAsset;
   for (int x = -1; x <= _width; x++)
     {
       for (int y = -1; y <= _height; y++)
@@ -231,8 +232,14 @@ void		Gamer::draw(gdl::Clock &clock,
   	      	}
   	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
   	      	shader.setUniform("color", glm::vec4(0, 1, 0, 0));
+	      tmp = assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+		->getRotation();
+	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+		->setRotation(glm::vec3(0, 0, 0));
   	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
   	      	->draw(shader, clock);
+	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
+		->setRotation(tmp);
   	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
   	      	shader.setUniform("color", glm::vec4(1.0));
   	    }
@@ -250,6 +257,25 @@ void		Gamer::draw(gdl::Clock &clock,
   assets[SKYBOX]->scale(glm::vec3(1));
 }
 
+void			Gamer::drawPlayerArme(gdl::Clock &clock,
+					      gdl::BasicShader &shader,
+					      std::vector<Asset3d*>&  assets,
+					      Player * player,
+					      std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset)
+
+{
+  IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
+
+  shader.setUniform("view", glm::mat4());
+  shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
+
+  assets[ObjectToAsset[type]]->scale(glm::vec3(-100));
+  assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 870, 0));
+  assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1 ,1), 1);
+  assets[ObjectToAsset[type]]->draw(shader, clock);
+  assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
+}
+
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
 			 std::vector<Asset3d*>& assets,
 			 std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset)
@@ -257,8 +283,10 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
   glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   draw(clock, shader, _camera, assets, ObjectToAsset);
+  drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(0)), ObjectToAsset);
   glViewport(0, 0, 900, 900);
   draw(clock, shader, _camera2, assets, ObjectToAsset);
+  drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
 }
 
 CameraObject		&Gamer::getCamera(unsigned int i)

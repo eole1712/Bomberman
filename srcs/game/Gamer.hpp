@@ -41,7 +41,10 @@ public:
 			     std::map<Bomberman::IObject::Type, mapAsset>&);
   virtual void		drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
 				 std::map<Bomberman::IObject::Type, mapAsset>&);
-  //void			startGame();
+  virtual void		drawPlayerArme(gdl::Clock &clock, gdl::BasicShader &shader,
+				       std::vector<Asset3d*>& assets, Player *player,
+				       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset);
+ //void			startGame();
 
 private:
   Gamer(const Gamer &);
