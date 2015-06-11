@@ -32,12 +32,12 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _width(1800), _height(900)
+  : _change(false), _width(1800), _height(900)
 {
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
-  : _width(width), _height(height)
+  : _change(false), _width(width), _height(height)
 {
 }
 
@@ -118,6 +118,8 @@ void		Core::startGame()
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
+  _prev = _game;
+  _change = true;
   _game = tmpGame;
 }
 
@@ -149,6 +151,8 @@ void		Core::gameMenu()
   gridou->addObject(start, [this] (void) {
     startGame();
   });
+  _prev = _game;
+  _change = true;
   _game = gridou;
 }
 
@@ -176,7 +180,11 @@ bool		Core::update()
   bool ret;
 
   ret = _game->update(_clock, _input);
-
+  if (_change)
+    {
+      _change = false;
+      delete _prev;
+    }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
   return ret;

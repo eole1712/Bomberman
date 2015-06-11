@@ -51,6 +51,8 @@ private:
 private:
   bool						_inGame;
   Bomberman::IScene*				_game;
+  Bomberman::IScene*				_prev;
+  bool						_change;
 
 
 public:
