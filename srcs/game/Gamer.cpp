@@ -35,7 +35,8 @@ Gamer::Gamer()
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
-					    "Player 4"};
+					    "Player 4"
+  };
 
   std::string			mapName = "de_bra";
   std::vector<std::string>	vec;
@@ -79,7 +80,18 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
-					    "Player 4"};
+					    "Player 4",
+  					    "",
+					    "",
+					    "",
+					    "",
+					    "",
+					    "",
+					    "",
+					    "",
+					    "",
+					    ""
+};
 
   std::string			mapName = "de_bra";
   std::vector<std::string>	vec;
@@ -139,19 +151,12 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   // If the escape key is pressed or if the window has been closed we stop the program
   if (input.getKey(SDLK_ESCAPE) || input.getInput(SDL_QUIT))
     return false;
-
-  if (input.getKey(SDLK_RCTRL))
-    {
-      if (space)
-	player->putBomb();
-      space = !space;
-    }
-  if (input.getKey(SDLK_SPACE))
-    {
-      if (space2)
-	player2->putBomb();
-      space2 = !space2;
-    }
+  if (input.getKey(SDLK_RCTRL) != space && !space)
+    player->putBomb();
+  space = input.getKey(SDLK_RCTRL);
+  if (input.getKey(SDLK_SPACE) != space2 && !space2)
+    player2->putBomb();
+  space2 = input.getKey(SDLK_SPACE);
 
   if (input.getKey(SDLK_UP) || input.getKey(SDLK_DOWN))
     {

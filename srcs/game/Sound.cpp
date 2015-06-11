@@ -7,6 +7,8 @@ AudioManager::AudioManager(int nbChannels)
 {
   if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
     {
+      std::cerr << "Audio Manager couldn't start... Try : export SDL_AUDIODRIVER=alsa" << std::endl;
+  std::cout << Mix_GetError() << std::endl;
       throw new std::exception;
     }
   Mix_AllocateChannels(nbChannels);

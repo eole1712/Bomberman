@@ -35,6 +35,7 @@ public:
   virtual void	drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
 			 std::map<Bomberman::IObject::Type, mapAsset>&) = 0;
   virtual bool	update(gdl::Clock &, gdl::Input&) = 0;
+  virtual ~IScene() {}
 };
 
 }
