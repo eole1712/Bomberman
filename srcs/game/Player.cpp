@@ -427,7 +427,7 @@ Bomb::Type		Player::getBombType() const
 
 void			Player::putBomb()
 {
-  if (_map && isAlive() && !isParalyzed() && !zeroBomb())
+  if (_map && isAlive() && !isParalyzed() && !zeroBomb() && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
@@ -440,7 +440,7 @@ void			Player::putBomb()
 
 void			Player::putTimedBomb(unsigned int x, unsigned int y)
 {
-  if (_map)
+  if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
       BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
