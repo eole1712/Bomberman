@@ -125,35 +125,65 @@ void		Core::startGame()
 
 void		Core::gameMenu()
 {
-  MenuGrid*	gridou = new MenuGrid;
+  MenuGrid*	grid = new MenuGrid;
   Text2d*	text1 = new Text2d("Width", 80, 200, 100, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text2 = new Text2d("Height", 80, 300, 100, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text3 = new Text2d("", 200, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text4 = new Text2d("", 200, 300, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	start = new Text2d("Start Game", 200, 600, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	start = new Text2d("Start Game", 200, 700, 500, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiLabel = new Text2d("Number of AI", 80, 400, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiField = new Text2d("", 300, 400, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Label = new Text2d("Player 1", 80, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Label = new Text2d("Player 2", 550, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Field = new Text2d("", 300, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Field = new Text2d("", 775, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
 
   text4->setModifiable();
   text3->setModifiable();
+  aiField->setModifiable();
+  p1Field->setModifiable();
+  p2Field->setModifiable();
   text2->unFocus();
   text1->unFocus();
-  gridou->addObject(text1, [] (void) {
+  p1Label->unFocus();
+  p2Label->unFocus();
+  aiLabel->unFocus();
+  grid->addObject(text1, [] (void) {
     ;
   });
-  gridou->addObject(text2, [] (void) {
+  grid->addObject(text2, [] (void) {
     ;
   });
-  gridou->addObject(text3, [text3] (void) {
+  grid->addObject(start, [this] (void) {
+    startGame();
+  });
+  grid->addObject(aiLabel, [] (void) {
+    ;
+  });
+  grid->addObject(p1Label, [] (void) {
+    ;
+  });
+  grid->addObject(p2Label, [] (void) {
+    ;
+  });
+  grid->addObject(text3, [text3] (void) {
     std::cout << text3->getText() << std::endl;
   });
-  gridou->addObject(text4, [text4] (void) {
+  grid->addObject(text4, [text4] (void) {
     std::cout << text4->getText() << std::endl;
   });
-  gridou->addObject(start, [this] (void) {
-    startGame();
+  grid->addObject(aiField, [aiField] (void) {
+    std::cout << aiField->getText() << std::endl;;
+  });
+  grid->addObject(p1Field, [p1Field] (void) {
+    std::cout << p1Field->getText() << std::endl;;
+  });
+  grid->addObject(p2Field, [p2Field] (void) {
+    std::cout << p2Field->getText() << std::endl;;
   });
   _prev = _game;
   _change = true;
-  _game = gridou;
+  _game = grid;
 }
 
 void		Core::firstMenu()
