@@ -112,29 +112,30 @@ void	Gamer::init()
 
 bool		Gamer::pauseMenu()
 {
-  // Text2d*	save = new Text2d("Save Game", 200, 100, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  // Text2d*	resume = new Text2d("Resume Game", 200, 250, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  // Text2d*	quit = new Text2d("Quit Game", 200, 400, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  // Text2d*	toggleSounds = new Text2d("Toggle Sounds", 200, 550, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  // Text2d*	toggleMusic = new Text2d("Toggle Music", 200, 700, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	save = new Text2d("Save Game", 200, 100, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	resume = new Text2d("Resume Game", 200, 250, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	quit = new Text2d("Quit Game", 200, 400, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	toggleSounds = new Text2d("Toggle Sounds", 200, 550, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	toggleMusic = new Text2d("Toggle Music", 200, 700, 800, 150, "resources/assets/textures/alpha3Blue.tga");
 
-  // _menu = new MenuGrid;
-  // grid->addObject(save, [] (void) {
-  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-  // });
-  // grid->addObject(resume, [] (void) {
-  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-  // });
-  // grid->addObject(quit, [] (void) {
-  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-  // });
-  // grid->addObject(toggleSounds, [] (void) {
-  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-  // });
-  // grid->addObject(toggleMusic, [] (void) {
-  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-  // });
-  return false;
+  _menu = new MenuGrid;
+  _menu->addObject(save, [] (void) {
+    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  });
+  _menu->addObject(resume, [this] (void) {
+    _resume = true;
+  });
+  _menu->addObject(quit, [this] (void) {
+    _quit = true;
+  });
+  _menu->addObject(toggleSounds, [this] (void) {
+    _map->getRcs()->toggleSounds();
+  });
+  _menu->addObject(toggleMusic, [this] (void) {
+    _map->getRcs()->toggleMusic();
+  });
+  std::cout << "pause" << std::endl;
+  return true;
 }
 
 bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
@@ -146,10 +147,17 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   static bool	space2 = false;
 
   // If the escape key is pressed or if the window has been closed we stop the program
+  if (_resume)
+    {
+      _camera.updateView();
+      _resume = false;
+      delete _menu;
+      _menu = NULL;
+    }
+  if (input.getInput(SDL_QUIT) || _quit)
+    return false;
   if (_menu != NULL)
     return _menu->update(clock, input);
-  if (input.getInput(SDL_QUIT) || _quit == true)
-    return false;
   if (input.getKey(SDLK_ESCAPE))
     return pauseMenu();
   if (input.getKey(SDLK_RCTRL) != space && !space)
@@ -254,6 +262,8 @@ void		Gamer::draw(gdl::Clock &clock,
   assets[SKYBOX]->scale(glm::vec3(-1));
   assets[SKYBOX]->draw(shader, clock);
   assets[SKYBOX]->scale(glm::vec3(1));
+  if (_menu)
+    _menu->drawNoBack(shader);
 }
 
 void			Gamer::drawPlayerArme(gdl::Clock &clock,
