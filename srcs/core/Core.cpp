@@ -33,7 +33,7 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1024), _height(768)
+  : _change(false), _width(1800), _height(900)
 {
   _status = false;
 }
