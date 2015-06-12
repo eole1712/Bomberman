@@ -93,7 +93,7 @@ end
 function runAway(map, player)
    attack = false
 
-   local cell = findCellByBackTracking(map, player.x, player.y, { SAFE, BONUS }, { BLOCK, DESTROYABLE })
+   local cell = findCell(map, player.x, player.y, { SAFE, BONUS }, { BLOCK, DESTROYABLE })
 
    if (cell.x ~= -1 and cell.y ~= -1) then
       route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
@@ -107,6 +107,12 @@ end
 
 -- back tracking algorithm to seek a cell
 local prevCells = {}
+
+function findCell(map, x, y, targetCells, blocksCells)
+   prevCells = {}
+   return findCellByBackTracking(map, x, y, targetCells, blocksCells)
+end
+
 function findCellByBackTracking(map, x, y, targetCells, blocksCells)
    local toTest = {
       { x = x + 1, y = y },
@@ -118,9 +124,11 @@ function findCellByBackTracking(map, x, y, targetCells, blocksCells)
 
    for k, v in pairs(toTest)
    do
+      print("bt test", v.x, v.y)
       if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false and
 	  isCooInTable(prevCells, v.x, v.y) == false)
       then
+	 print("bt ok", v.x, v.y)
 	 if (isTypeInTable(map:getCell(v.x, v.y), targetCells)) then
 	    prevCells = {}
 	    return { x = v.x, y = v.y, valid = true }
