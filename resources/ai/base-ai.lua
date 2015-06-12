@@ -11,6 +11,7 @@ UNKNOWN = 6
 -- allows ai to memorise the path
 local route = {}
 local attack = false
+local isDebug = false
 
 -- ai data table
 -- aiAction is the function called at each frame
@@ -22,7 +23,7 @@ if (player.isAlive == false)
 then
    return
 end
-print("player at", player.x, player.y) -- debug
+debug("player at", player.x, player.y) -- debug
 
 if (#route > 0 and player.x == route[1].x and route[1].y)
 then
@@ -50,7 +51,7 @@ then
    if (target.x ~= -1 and target.y ~= -1) then
       route = findPath(map, player.x, player.y, target.x, target.y, { SAFE, BONUS, DESTROYABLE })
    else
-      print("AI: Error: player target not found")
+      debug("AI: Error: player target not found")
    end
 end
 
@@ -76,13 +77,13 @@ do
       if ((map:getCell(v.x, v.y) == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
       then
 	 player:putBomb()
-	 print("putBomb at", player.x, player.y) -- debug
+	 debug("putBomb at", player.x, player.y) -- debug
 	 route = {} -- clean route so the route will be set with an updated map
 	 break
       elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
 	      map:getCell(player.x, player.y) ~= SAFE)
       then
-	 --	    print(v.moveDesc)
+	 --	    debug(v.moveDesc)
 	 v.move(player)
       end
    end
@@ -97,11 +98,11 @@ function runAway(map, player)
 
    if (cell.x ~= -1 and cell.y ~= -1) then
       route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
-      print("safe cell", cell.x, cell.y) -- debug
+      debug("safe cell", cell.x, cell.y) -- debug
       debugRoute()
    else
       route = {}
-      print "safe cell not found" -- debug
+      debug("safe cell not found") -- debug
    end
 end
 
@@ -124,11 +125,11 @@ function findCellByBackTracking(map, x, y, targetCells, blocksCells)
 
    for k, v in pairs(toTest)
    do
-      print("bt test", v.x, v.y)
+      debug("bt test", v.x, v.y)
       if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false and
 	  isCooInTable(prevCells, v.x, v.y) == false)
       then
-	 print("bt ok", v.x, v.y)
+	 debug("bt ok", v.x, v.y)
 	 if (isTypeInTable(map:getCell(v.x, v.y), targetCells)) then
 	    prevCells = {}
 	    return { x = v.x, y = v.y, valid = true }
@@ -176,7 +177,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 
 	    if (v.x == xStart and v.y == yStart)
 	    then
-	       print "start cell found" -- debug
+	       debug("start cell found") -- debug
 	       done = true
 	       break
 	    end
@@ -187,12 +188,12 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
    end
 
 --[[
-   print "--------- debug maincoo"
+   debug "--------- debug maincoo"
    for k, v in pairs(mainCoo)
    do
-      print(v.x, v.y, v.count)
+      debug(v.x, v.y, v.count)
    end
-   print "--------- end"
+   debug "--------- end"
 ]]--
 
    local path = { { x = xStart, y = yStart } }
@@ -304,10 +305,23 @@ function isCooInTable(mainCoo, x, y)
 end
 
 function debugRoute()
-   print "--------- debug route"
+   debug("--------- debug route")
    for k, v in pairs(route)
    do
-      print(v.x, v.y)
+      debug(v.x, v.y)
    end
-   print "--------- end"
+   debug("--------- end")
+end
+
+function debug(...)
+   local arg = {...}
+
+   if (isDebug == false) then
+      return
+   end
+
+   for i,v in ipairs(arg) do
+      io.write(v, "\t")
+   end
+   io.write("\n")
 end
