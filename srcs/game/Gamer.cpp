@@ -164,9 +164,9 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (_twoPlayers && input.getKey(SDLK_q) != input.getKey(SDLK_d))
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
   _map->checkBombsOnMap();
-  for (unsigned int i = 1; i < _stock->getNbPlayer() - 1 ||
-	 (i < _stock->getNbPlayer() && !_twoPlayers); ++i)
+  for (unsigned int i = 1; i < (_stock->getNbPlayer() - (_twoPlayers)) ; ++i)
     dynamic_cast<PlayerAI *>(_stock->getPlayer(i))->doAction(*_map, elsapsedTime);
+
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,

@@ -41,7 +41,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
       if (i == 0 || (size == 2 && i == nbJoueurs - 1))
 	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
-	_players[i] = new PlayerAI("", "resources/ai/base-ai.lua",
+	_players[i] = new PlayerAI("Siri", "resources/ai/base-ai.lua",
 				   Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       reinterpret_cast<Player*>(_players[i])->linkScoreList(scoreList);
     }
