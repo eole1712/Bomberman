@@ -35,13 +35,18 @@ public:
   IObject	*getObject(IObject::Type) const;
   IObject	*getBuff(IBuff::Type) const;
   IObject	*getBomb(Bomb::Type) const;
-  void		initAmbianceSound();
-  void		deleteAmbianceSound();
-  SoundManager	*getAmbianceSound() const;
+  SoundManager	*getMusic() const;
   SoundManager	*getSound(SoundType);
   IObject	*getPlayer(std::string const &) const;
   IObject	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
+
+  bool		isPlayingMusic() const;
+  bool		isPlayingSounds() const;
+  void		initMusic();
+  void		deleteMusic();
+  void		toggleMusic();
+  void		toggleSounds();
 
 private:
   std::vector<IObject *>	_players;
@@ -49,9 +54,12 @@ private:
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
   AudioManager			_audioManager;
-  SoundManager*			_ambianceSound;
+  SoundManager*			_music;
+  SoundManager*			_calm;
   std::vector<std::string>	_sounds;
   std::vector<SoundManager*>	_soundsPlaying;
+  bool				_toggleMusic;
+  bool				_toggleSounds;
 };
 
 }
