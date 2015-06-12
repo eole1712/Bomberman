@@ -30,14 +30,15 @@ namespace Bomberman
 {
 
 Gamer::Gamer()
-  : _width(20), _height(20), _menu(NULL), _camera(90.0, 900, 900), _camera2(90.0, 900, 900)
+  : _width(20), _height(20), _menu(NULL), _quit(false), _resume(false),
+    _camera(90.0, 900, 900), _camera2(90.0, 900, 900)
 {
   this->init();
 }
 
 Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam)
-  : _width(width), _height(height), _menu(NULL), _camera(90.0, widthCam, heightCam),
-    _camera2(90.0, widthCam, heightCam)
+  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false),
+    _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
 {
   this->init();
 }
@@ -111,7 +112,28 @@ void	Gamer::init()
 
 bool		Gamer::pauseMenu()
 {
-  //_menu = new MenuGrid;
+  // Text2d*	save = new Text2d("Save Game", 200, 100, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  // Text2d*	resume = new Text2d("Resume Game", 200, 250, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  // Text2d*	quit = new Text2d("Quit Game", 200, 400, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  // Text2d*	toggleSounds = new Text2d("Toggle Sounds", 200, 550, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  // Text2d*	toggleMusic = new Text2d("Toggle Music", 200, 700, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+
+  // _menu = new MenuGrid;
+  // grid->addObject(save, [] (void) {
+  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  // });
+  // grid->addObject(resume, [] (void) {
+  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  // });
+  // grid->addObject(quit, [] (void) {
+  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  // });
+  // grid->addObject(toggleSounds, [] (void) {
+  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  // });
+  // grid->addObject(toggleMusic, [] (void) {
+  //   std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  // });
   return false;
 }
 
@@ -126,7 +148,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   // If the escape key is pressed or if the window has been closed we stop the program
   if (_menu != NULL)
     return _menu->update(clock, input);
-  if (input.getInput(SDL_QUIT))
+  if (input.getInput(SDL_QUIT) || _quit == true)
     return false;
   if (input.getKey(SDLK_ESCAPE))
     return pauseMenu();
@@ -136,7 +158,6 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (input.getKey(SDLK_SPACE) != space2 && !space2)
     player2->putBomb();
   space2 = input.getKey(SDLK_SPACE);
-
   if (input.getKey(SDLK_UP) || input.getKey(SDLK_DOWN))
     {
       if (input.getKey(SDLK_UP))

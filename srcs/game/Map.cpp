@@ -142,7 +142,7 @@ void	Map::equalize()
 {
   unsigned int	x;
   unsigned int	y = 0;
-  unsigned int	radius;
+  unsigned int	radius = 0;
   bool		check;
 
   switch(this->_difficulty)
