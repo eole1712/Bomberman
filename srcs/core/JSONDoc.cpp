@@ -17,10 +17,11 @@
 #include "DestroyableWall.hpp"
 #include "Spawn.hpp"
 #include "Empty.hpp"
+#include "rapidjson/stringbuffer.h"
 
 JSONDoc::JSONDoc()
 {
-  ;
+  _doc.SetObject();
 }
 
 JSONDoc::JSONDoc(std::string const& name)
@@ -40,7 +41,7 @@ JSONDoc::JSONDoc(std::string const& name)
 
 JSONDoc::~JSONDoc()
 {
-  writeDown(_filename);
+  //writeDown(_filename);
 }
 
 bool		JSONDoc::parse(const std::string &name)
@@ -54,6 +55,14 @@ bool		JSONDoc::parse(const std::string &name)
       is >> str;
       rapidjson::StringStream rs(str.c_str());
       _doc.ParseStream<rapidjson::kParseDefaultFlags, rapidjson::StringStream>(rs);
+      if (_doc.HasParseError()) {
+    	std::cerr << "JSON parse error: " << _doc.GetParseError() << " at : " << _doc.GetErrorOffset() << std::endl;
+	return false;
+      }
+      if (_doc.IsObject())
+	std::cout << "fuck it !" << std::endl;
+      else
+	std::cout << "ok..." << std::endl;
       _filename = name;
       return true;
     }
@@ -62,14 +71,18 @@ bool		JSONDoc::parse(const std::string &name)
 
 void		JSONDoc::writeDown(const std::string &filename)
 {
-  std::ofstream os(filename);
+  std::ofstream os(filename, std::fstream::out | std::fstream::trunc);
 
   if (os.good())
     {
       rapidjson::StringBuffer				sb;
-      rapidjson::PrettyWriter<rapidjson::StringBuffer>	writer(sb);
+      rapidjson::Writer<rapidjson::StringBuffer>	writer(sb);
       _doc.Accept(writer);
       os << sb.GetString();
+    }
+  else
+    {
+      std::cout << "failed to write" << std::endl;
     }
 }
 
@@ -79,14 +92,12 @@ void				JSONDoc::serialize<Bomberman::ScoreList>(const Bomberman::ScoreList &obj
   std::list<std::string>	names = obj.getNames();
   rapidjson::Value		object(rapidjson::kObjectType);
 
-  if (!_doc.IsObject())
-    _doc.SetObject();
   std::for_each(names.cbegin(), names.cend(), [this, &object, &obj] (const std::string& value) {
     rapidjson::Value arr(rapidjson::kArrayType);
     std::for_each(obj.getScore(value).begin(), obj.getScore(value).end(), [this, &arr] (unsigned int score) {
       arr.PushBack(score, _doc.GetAllocator());
     });
-    object.AddMember(value.c_str(), arr, _doc.GetAllocator());
+    object.AddMember(value.c_str() , arr, _doc.GetAllocator());
   });
   _doc.AddMember("Scores", object, _doc.GetAllocator());
 }
@@ -96,16 +107,22 @@ Bomberman::ScoreList*		JSONDoc::unserialize<Bomberman::ScoreList*>(std::string c
 {
   Bomberman::ScoreList*		scores = new Bomberman::ScoreList;
 
-  if (_doc.IsObject() && _doc.HasMember("Scores"))
+  if (_doc.HasMember("Scores"))
     {
+      std::cout << "in docs" << std::endl;
       rapidjson::Value const& object(_doc["Scores"]);
       std::for_each(object.MemberBegin(), object.MemberEnd(), [&scores] (const rapidjson::Value::Member& player) {
 	if (player.value.IsArray())
 	  std::for_each(player.value.Begin(), player.value.End(), [&player, &scores] (const rapidjson::Value& score) {
 	    scores->addScore(player.name.GetString(), score.GetUint());
 	  });
+	else
+	  std::cout << "Nop" << std::endl;
+	std::cout << "dedans" << std::endl;
       });
     }
+  else
+    std::cout << "ah bah n,on" << std::endl;
   return scores;
 }
 

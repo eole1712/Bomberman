@@ -49,33 +49,32 @@ Gamer::~Gamer()
   if (_stock)
     delete (_stock);
   _json.serialize<Bomberman::MapList>(*_mapList);
-  _json.writeDown("./resources/json/Gamedata.json");
-  delete (_mapList);
   _json.serialize<Bomberman::ScoreList>(*_scoreList);
   _json.writeDown("./resources/json/Gamedata.json");
+  delete (_mapList);
   delete (_scoreList);
 }
 
 void	Gamer::init()
 {
-  std::vector<std::string>	nameList = {"Player 1",
-					    "Player 2",
-					    "Player 3",
-					    "Player 4",
-					    "Player 5",
-					    "Player 6",
-					    "Player 7",
-					    "Player 8",
-					    "Player 9",
-					    "Player 10",
-					    "Player 11",
-					    "Player 12",
-					    "Player 13",
-					    "Player 14",
-					    "Player 15",
-					    "Player 16",
-					    "Player 17",
-					    "Player 18"};
+  std::vector<std::string>	nameList = {"Player1",
+					    "Player2",
+					    "Player3",
+					    "Player4",
+					    "Player5",
+					    "Player6",
+					    "Player7",
+					    "Player8",
+					    "Player9",
+					    "Player10",
+					    "Player11",
+					    "Player12",
+					    "Player13",
+					    "Player14",
+					    "Player15",
+					    "Player16",
+					    "Player17",
+					    "Player18"};
   std::string			mapName = "de_bra";
   std::vector<std::string>	vec;
   Player			*player;
