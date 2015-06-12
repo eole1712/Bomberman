@@ -46,6 +46,7 @@ private:
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
   AudioManager			_audioManager;
+  SoundManager*			_ambiance;
   std::vector<std::string>	_sounds;
   std::vector<SoundManager*>	_soundsPlaying;
 };

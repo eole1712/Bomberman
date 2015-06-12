@@ -44,8 +44,10 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
 
 Gamer::~Gamer()
 {
-  delete (_map);
-  delete (_stock);
+  if (_map)
+    delete (_map);
+  if (_stock)
+    delete (_stock);
   _json.serialize<Bomberman::MapList>(*_mapList);
   _json.writeDown("./resources/json/Gamedata.json");
   delete (_mapList);

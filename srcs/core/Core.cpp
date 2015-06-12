@@ -201,6 +201,11 @@ bool		Core::update()
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
+  if (ret == false && _game != NULL)
+    {
+      delete _game;
+      _game = NULL;
+    }
   return ret;
 }
 
