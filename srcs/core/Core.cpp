@@ -66,21 +66,21 @@ void				Core::loadTextures()
   attachObject(new Asset3d("resources/assets/bombs/WindBomb/WindBomb.obj"));
 
   _assets[PLAYER]->scale(glm::vec3(0.002));
-  _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
+  // _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
   // _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   // _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
-  _assets[SKYBOX]->scale(glm::vec3(5 * (30 + 30) / 2));
-  _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
+  // _assets[SKYBOX]->scale(glm::vec3(5 * ( + 30) / 2));
+  // _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
   _assets[BONUS]->scale(glm::vec3(0.05));
-  _assets[BOMB]->scale(glm::vec3(100));
-  _assets[BOMB]->translate(glm::vec3(750, 750, 0));
-  _assets[MINE]->scale(glm::vec3(100));
-  _assets[MINE]->translate(glm::vec3(150, 150 , 0));
-  _assets[VIRUS]->scale(glm::vec3(100));
-  _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
-  _assets[BARREL]->scale(glm::vec3(100));
-  _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
+  // _assets[BOMB]->scale(glm::vec3(100));
+  // _assets[BOMB]->translate(glm::vec3(750, 750, 0));
+  // _assets[MINE]->scale(glm::vec3(100));
+  // _assets[MINE]->translate(glm::vec3(150, 150 , 0));
+  // _assets[VIRUS]->scale(glm::vec3(100));
+  // _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
+  // _assets[BARREL]->scale(glm::vec3(100));
+  // _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::MINE] = MINE;
@@ -120,8 +120,12 @@ void		Core::startGame()
 {
   Player	*player;
   Gamer		*tmpGame;
+  int		x = 15;
+  int		y = 15;
 
-  tmpGame = new Gamer(15, 15, _width / 2, _height);
+  tmpGame = new Gamer(x, y, _width / 2, _height);
+  _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
+  _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
     {
       player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));

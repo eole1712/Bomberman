@@ -227,6 +227,7 @@ void		Gamer::draw(gdl::Clock &clock,
       dynamic_cast<Player *>(_stock->getPlayer(y))->draw(*assets[PLAYER], shader, clock);
     }
   shader.setUniform("color", glm::vec4(1.0));
+  assets[SKYBOX]->rotate(glm::vec3(1, 0, 0), 0.02);
   assets[SKYBOX]->draw(shader, clock);
   assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   assets[SKYBOX]->scale(glm::vec3(-1));
@@ -243,14 +244,23 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
 {
   IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
 
+  if (!player->isAlive())
+    return;
+  if (player->zeroBomb())
+    shader.setUniform("color", glm::vec4(1, 0, 0, 0));
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
 
-  assets[ObjectToAsset[type]]->scale(glm::vec3(-100));
+  if (type == IObject::MINE)
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-300));
+  else
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-100));
   assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 870, 0));
   assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1 ,1), 1);
   assets[ObjectToAsset[type]]->draw(shader, clock);
   assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
+  if (player->zeroBomb())
+    shader.setUniform("color", glm::vec4(1.0));
 }
 
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
