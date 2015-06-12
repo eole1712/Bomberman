@@ -195,6 +195,7 @@ void		MyGame::draw()
   _assets[SKYBOX]->scale(glm::vec3(1));
 
   // 2D TESTS
+  glDisable(GL_DEPTH_TEST);
 
   _shader.setUniform("view", glm::mat4());
   _shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1000.0f, 1000.0f));
@@ -202,6 +203,7 @@ void		MyGame::draw()
   // Text2d	text("15 PONEYROSE petit test", 150, 0, 700, 100, "../assets/textures/alpha2.tga");
   // Text2d	text2("25 PONEYBleus petit test", 150, 100, 800, 100, "../assets/textures/alpha2.tga");
   View2d	lol(400, 600, 200, 200, std::string("../assets/textures/lol.tga"));
+  View2d	lol2(450, 600, 200, 200, std::string("../assets/textures/lol.tga"));
 
   // if (_input.getKey(SDLK_s))
   //   _grid.moveRight();
@@ -213,6 +215,8 @@ void		MyGame::draw()
   // _grid.drawGrid(_shader);
 
   //text.draw(_shader);
+  lol.draw(_shader);
+  lol2.draw(_shader);
   //lol.draw(_shader);
 
   _text->draw(_shader);
@@ -225,5 +229,6 @@ void		MyGame::draw()
   _assets[DST_BLOCK]->rotate(glm::vec3(0, 1 ,0), 1);
   _assets[DST_BLOCK]->draw(_shader, _clock);
 
+  glEnable(GL_DEPTH_TEST);
   _context.flush();
 }
