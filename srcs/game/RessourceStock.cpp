@@ -31,16 +31,18 @@ namespace Bomberman
 unsigned int const	RessourceStock::nbSounds = 18;
 unsigned int const	RessourceStock::nbChannels = 10;
 
-RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
-  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList)
+  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
-  for (unsigned int i = 0; i < names.size(); ++i)
+  unsigned int	size = names.size();
+
+  for (unsigned int i = 0; i < nbJoueurs; ++i)
     {
-      if (i == 0 || i == names.size() - 1)
-	_players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+      if (i == 0 || (size == 2 && i == nbJoueurs - 1))
+	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
-	_players[i] = new PlayerAI(names[i], "resources/ai/base-ai.lua",
-				   Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+	_players[i] = new PlayerAI("", "resources/ai/base-ai.lua",
+				   Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       reinterpret_cast<Player*>(_players[i])->linkScoreList(scoreList);
     }
   this->init();
