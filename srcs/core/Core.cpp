@@ -116,14 +116,17 @@ void		Core::attachObject(Asset3d *obj)
   _assets.push_back(obj);
 }
 
-void		Core::startGame()
+void		Core::startGame(bool twoPlayers)
 {
   Player	*player;
   Gamer		*tmpGame;
   int		x = 15;
   int		y = 15;
 
-  tmpGame = new Gamer(x, y, _width / 2, _height);
+  if (twoPlayers)
+    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers);
+  else
+    tmpGame = new Gamer(x, y, _width, _height, twoPlayers);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
@@ -193,7 +196,7 @@ void		Core::gameMenu()
     std::cout << p2Field->getText() << std::endl;;
   });
     grid->addObject(start, [this] (void) {
-    startGame();
+    startGame(false);
   });
   _prev = _game;
   _change = true;

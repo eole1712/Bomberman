@@ -40,7 +40,7 @@ public:
   virtual void		draw();
   void			attachObject(Asset3d *);
   void			loadTextures();
-  void			startGame();
+  void			startGame(bool twoPlayers = true);
   void			gameMenu();
   void			firstMenu();
   bool			isOver() const;

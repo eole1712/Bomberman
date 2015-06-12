@@ -31,16 +31,18 @@ namespace Bomberman
 unsigned int const	RessourceStock::nbSounds = 18;
 unsigned int const	RessourceStock::nbChannels = 10;
 
-RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
-  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList)
+  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
-  for (unsigned int i = 0; i < names.size(); ++i)
+  unsigned int	size = names.size();
+
+  for (unsigned int i = 0; i < nbJoueurs; ++i)
     {
-      if (i == 0 || i == names.size() - 1)
-	_players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+      if (i == 0 || (size == 2 && i == nbJoueurs - 1))
+	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
-	_players[i] = new PlayerAI(names[i], "resources/ai/base-ai.lua",
-				   Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+	_players[i] = new PlayerAI("Siri", "resources/ai/base-ai.lua",
+				   Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       reinterpret_cast<Player*>(_players[i])->linkScoreList(scoreList);
     }
   this->init();
@@ -99,17 +101,17 @@ void	RessourceStock::init()
   _sounds[THREE] = "./resources/sound/killstreak/killingspree.wav";
   _sounds[FOUR] = "./resources/sound/killstreak/dominating.wav";
   _sounds[FIVE] = "./resources/sound/killstreak/unstoppable.wav";
-  _sounds[SIX] = "./resources/sound/killstreak/megakill.wav";
+  _sounds[SIX] = "./resources/sound/killstreak/megakill.ogg";
   _sounds[SEVEN] = "./resources/sound/killstreak/ultrakill.wav";
   _sounds[EIGHT] = "./resources/sound/killstreak/ludicrouskill.wav";
   _sounds[NINE] = "./resources/sound/killstreak/wickedsick.wav";
   _sounds[TEN] = "./resources/sound/killstreak/monsterkill.wav";
   _sounds[ELEVEN] = "./resources/sound/killstreak/holyshit.wav";
   _sounds[TWELVE] = "./resources/sound/killstreak/godlike.wav";
-  _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.wav";
+  _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.ogg";
   _sounds[SUICIDE] = "./resources/sound/suicide.wav";
   _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
-  _sounds[PREPARE1] = "./resources/sound/prepare1.wav";
+  _sounds[PREPARE1] = "./resources/sound/prepare1.ogg";
   _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
   _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
   _sounds[PREPARE4] = "./resources/sound/prepare4.wav";
