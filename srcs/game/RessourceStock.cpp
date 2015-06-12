@@ -34,12 +34,9 @@ unsigned int const	RessourceStock::nbChannels = 10;
 RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
   : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL)
 {
-  // for (unsigned int i = 0; i < names.size(); ++i)
-  //   _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
   for (unsigned int i = 0; i < names.size(); ++i)
     {
-      _players[i] = new PlayerAI(names[i], "resources/ai/base-ai.lua", Color::HSVtoRGB(1.0 / names.size() * i, 1, 1)); // test ai
-    //      _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
+      _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
       reinterpret_cast<Player*>(_players[i])->linkScoreList(scoreList);
     }
   this->init();
