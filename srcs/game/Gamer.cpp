@@ -237,8 +237,10 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
 
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
-
-  assets[ObjectToAsset[type]]->scale(glm::vec3(-100));
+  if (type == IObject::MINE)
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-300));
+  else
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-100));
   assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 870, 0));
   assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1 ,1), 1);
   assets[ObjectToAsset[type]]->draw(shader, clock);
