@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include "View2d.hpp"
 #include "Text2d.hpp"
 #include "MenuGrid.hpp"
 #include "SDL_events.h"
@@ -77,7 +78,7 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
   glDisable(GL_DEPTH_TEST);
 
   shader.setUniform("view", glm::mat4());
-  shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
     {
       if (!(*it).first->isHidden())
@@ -95,7 +96,7 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
   glDisable(GL_DEPTH_TEST);
 
   shader.setUniform("view", glm::mat4());
-  shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
     {
       if (!(*it).first->isHidden())
@@ -129,7 +130,7 @@ void	MenuGrid::actionOnFocus()
 
 void	MenuGrid::drawFocus(int x, int y, gdl::BasicShader& shader)
 {
-  Text2d	cursor("S", x - 70, y, 50, 50, "resources/assets/textures/alpha3Blue.tga");
+  View2d	cursor(x - 110, y + 10, 100, 100, "resources/assets/textures/bombcursor.tga");
 
   cursor.draw(shader);
 }
