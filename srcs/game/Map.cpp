@@ -319,10 +319,10 @@ void		Map::checkBombsOnMap()
     {
       dynamic_cast<Player*>(_rcs->getPlayer(i))->checkBuffList();
     }
-  if (!this->getRcs()->getAmbianceSound()->isPlaying())
+  if (this->getRcs()->isPlayingMusic() && !this->getRcs()->getMusic()->isPlaying())
     {
-      this->getRcs()->deleteAmbianceSound();
-      this->getRcs()->initAmbianceSound();
+      this->getRcs()->toggleMusic();
+      this->getRcs()->toggleMusic();
     }
 }
 

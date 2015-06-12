@@ -32,7 +32,7 @@ unsigned int const	RessourceStock::nbSounds = 18;
 unsigned int const	RessourceStock::nbChannels = 10;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList* scoreList)
-  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL)
+  : _players(names.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
   for (unsigned int i = 0; i < names.size(); ++i)
     {
@@ -47,7 +47,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
   for (unsigned int i = 0; i < players.size(); ++i)
     _players[i] = players[i];
@@ -65,7 +65,9 @@ RessourceStock::~RessourceStock()
   for (unsigned int i = 0; i < _soundsPlaying.size(); ++i)
     if (_soundsPlaying[i] != NULL)
       delete _soundsPlaying[i];
-  delete _ambianceSound;
+  delete _calm;
+  if (_toggleMusic)
+    delete _music;
 }
 
 void	RessourceStock::init()
@@ -93,7 +95,6 @@ void	RessourceStock::init()
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
   _objects[IObject::FIRE] = NULL;
-  this->initAmbianceSound();
   _sounds[TWO] = "./resources/sound/killstreak/rampage.wav";
   _sounds[THREE] = "./resources/sound/killstreak/killingspree.wav";
   _sounds[FOUR] = "./resources/sound/killstreak/dominating.wav";
@@ -112,6 +113,9 @@ void	RessourceStock::init()
   _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
   _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
   _sounds[PREPARE4] = "./resources/sound/prepare4.wav";
+  _calm = new SoundManager(&_audioManager, "");
+  this->toggleMusic();
+  this->getSound(Bomberman::RessourceStock::PREPARE1)->play();
 }
 
 IObject		*RessourceStock::getObject(IObject::Type type) const
@@ -129,26 +133,17 @@ IObject		*RessourceStock::getBomb(Bomb::Type type) const
   return _bombs[type];
 }
 
-void	RessourceStock::initAmbianceSound()
+SoundManager*	RessourceStock::getMusic() const
 {
-  _ambianceSound = new SoundManager(&_audioManager, "./resources/sound/ambiance.ogg");
-  _ambianceSound->play();
-}
-
-void	RessourceStock::deleteAmbianceSound()
-{
-  delete (_ambianceSound);
-}
-
-SoundManager*	RessourceStock::getAmbianceSound() const
-{
-  return (this->_ambianceSound);
+  return (this->_music);
 }
 
 SoundManager*	RessourceStock::getSound(SoundType type)
 {
   static unsigned int	pos = 0;
 
+  if (!this->_toggleSounds)
+    return (this->_calm);
   ++pos;
   pos = ((pos >= nbChannels) ? (0) : (pos));
   if (this->_soundsPlaying[pos] != NULL)
@@ -181,6 +176,42 @@ IObject		*RessourceStock::getPlayer(unsigned int id) const
 unsigned int	RessourceStock::getNbPlayer() const
 {
   return _players.size();
+}
+
+bool	RessourceStock::isPlayingMusic() const
+{
+  return (this->_toggleMusic);
+}
+
+bool	RessourceStock::isPlayingSounds() const
+{
+  return (this->_toggleSounds);
+}
+
+void	RessourceStock::initMusic()
+{
+  _music = new SoundManager(&_audioManager, "./resources/sound/ambiance.ogg");
+  _music->play();
+  _toggleMusic = true;
+}
+
+void	RessourceStock::deleteMusic()
+{
+  delete (_music);
+  _toggleMusic = false;
+}
+
+void	RessourceStock::toggleMusic()
+{
+  if (this->_toggleMusic)
+    this->deleteMusic();
+  else
+    this->initMusic();
+}
+
+void	RessourceStock::toggleSounds()
+{
+  _toggleSounds = !_toggleSounds;
 }
 
 }
