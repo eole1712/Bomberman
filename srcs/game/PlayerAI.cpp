@@ -1,19 +1,35 @@
 #include <iostream>
+#include <glm/gtx/norm.hpp>
 #include "PlayerAI.hpp"
 #include "LuaError.hpp"
+#include "AIStateMap.hpp"
 
 namespace Bomberman
 {
   /*
+  ** Static variables
+  */
+  const PlayerAI::MoveBook	PlayerAI::moveBook	= PlayerAI::getMoveBook();
+
+  /*
   ** Constructor/Destructor
   */
   PlayerAI::PlayerAI(std::string const& name, std::string const& script) :
-    Player() /* tmp */, LuaScript(script), _aiAction(NULL)
+    Player() /* tmp */, LuaScript(script), _aiAction(NULL), _moveDir(NONE)
   {
     luaObjectInit();
     run();
     loadAIData();
     static_cast<void>(name);
+  }
+
+  PlayerAI::PlayerAI(std::string const& name,
+		     std::string const& script, glm::vec4 color) :
+    Player(name, color), LuaScript(script), _aiAction(NULL), _moveDir(NONE)
+  {
+    luaObjectInit();
+    run();
+    loadAIData();
   }
 
   PlayerAI::~PlayerAI()
@@ -25,13 +41,18 @@ namespace Bomberman
   /*
   ** Public member functions
   */
-  void			PlayerAI::doAction()
+  void			PlayerAI::doAction(Map const& map, float const& elapsedTime)
   {
+    AI::StateMap	stateMap(map);
+
     if (_aiAction == NULL)
       throw std::runtime_error("AI's action is not set");
     try
       {
-	(*_aiAction)(this);
+	if (_moveDir == NONE)
+	  (*_aiAction)(this, &stateMap);
+	if (_moveDir != NONE && (this->*(moveBook.at(_moveDir)))(elapsedTime))
+	  _moveDir = NONE;
       }
     catch (luabridge::LuaException const& e)
       {
@@ -40,144 +61,165 @@ namespace Bomberman
       }
   }
 
-bool			PlayerAI::moveUp(float const & elsapsedTime)
-{
-  static bool		bra = true;
-  static glm::vec2	pos;
-  glm::vec2 		savepos;
-  glm::vec2 		newpos;
+  void			PlayerAI::moveRight()
+  {
+    _moveDir = RIGHT;
+  }
 
-  if (bra)
-    {
-      pos = glm::vec2(getfX(), getY() + 1.5);
-      bra = false;
-    }
-  else if (getfX() == pos.x &&
-	   getfY() == pos.y)
-    return (bra = true);
-  if (getRotation().y == 0 ||
-      rotate((getRotation().y > 180), elsapsedTime, 0))
-    {
-      savepos = glm::vec2(getfX(), getfY());
-      move(0, elsapsedTime);
-      newpos = glm::vec2(getfX(), getfY());
-      if (savepos.y < pos.y && newpos.y >= pos.y)
-	{
-	  setPosition(glm::vec3(pos.x, 0, pos.y));
-	  return (bra = true);
-	}
-      if ((pos - savepos).length() < (pos - newpos).length())
-	{
-	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-	  return (bra = true);
-	}
-    }
-  return (false);
-}
+  void			PlayerAI::moveLeft()
+  {
+    _moveDir = LEFT;
+  }
 
-bool			PlayerAI::moveRight(float const & elsapsedTime)
-{
-  static bool		bra = true;
-  static glm::vec2	pos;
-  glm::vec2 		savepos;
-  glm::vec2 		newpos;
+  void			PlayerAI::moveUp()
+  {
+    _moveDir = UP;
+  }
 
-  if (bra)
-    {
-      pos = glm::vec2(getX() + 1.5, getfY());
-      bra = false;
-    }
-  else if (getfX() == pos.x &&
-	   getfY() == pos.y)
-    return (bra = true);
-  if (getRotation().y == 90 ||
-      rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90))
-    {
-      savepos = glm::vec2(getfX(), getfY());
-      move(90, elsapsedTime);
-      newpos = glm::vec2(getfX(), getfY());
-      if (savepos.x > pos.x && newpos.x <= pos.x)
-	{
-	  setPosition(glm::vec3(pos.x, 0, pos.y));
-	  return (bra = true);
-	}
-      if ((pos - savepos).length() < (pos - newpos).length())
-	{
-	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-	  return (bra = true);
-	}
-    }
-  return false;
-}
+  void			PlayerAI::moveDown()
+  {
+    _moveDir = DOWN;
+  }
 
-bool			PlayerAI::moveDown(float const & elsapsedTime)
-{
-  static bool		bra = true;
-  static glm::vec2	pos;
-  glm::vec2 		savepos;
-  glm::vec2 		newpos;
+  bool			PlayerAI::moveUpCell(float const &elsapsedTime)
+  {
+    static bool		bra = true;
+    static glm::vec2	pos;
+    glm::vec2 		savepos;
+    glm::vec2 		newpos;
 
-  if (bra)
-    {
-      pos = glm::vec2(getfX(), getY() - 1.5);
-      bra = false;
-    }
-  else if (getfX() == pos.x &&
-	   getfY() == pos.y)
-    return (bra = true);
-  if (getRotation().y == 180 ||
-      rotate((getRotation().y < 180), elsapsedTime, 180))
-    {
-      savepos = glm::vec2(getfX(), getfY());
-      move(180, elsapsedTime);
-      newpos = glm::vec2(getfX(), getfY());
-      if (savepos.y > pos.y && newpos.y <= pos.y)
-	{
-	  setPosition(glm::vec3(pos.x, 0, pos.y));
-	  return (bra = true);
-	}
-      if ((pos - savepos).length() < (pos - newpos).length())
-	{
-	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-	  return (bra = true);
-	}
-    }
-  return false;
-}
-bool			PlayerAI::moveLeft(float const & elsapsedTime)
-{
-  static bool		bra = true;
-  static glm::vec2	pos;
-  glm::vec2 		savepos;
-  glm::vec2 		newpos;
+    if (bra)
+      {
+	pos = glm::vec2(getfX(), getY() + 1.5);
+	bra = false;
+      }
+    else if (getfX() == pos.x &&
+	     getfY() == pos.y)
+      return (bra = true);
+    if (getRotation().y == 0 ||
+	rotate((getRotation().y > 180), elsapsedTime, 0))
+      {
+	savepos = glm::vec2(getfX(), getfY());
+	move(0, elsapsedTime);
+	newpos = glm::vec2(getfX(), getfY());
+	if (savepos.y < pos.y && newpos.y >= pos.y)
+	  {
+	    setPosition(glm::vec3(pos.x, 0, pos.y));
+	    return (bra = true);
+	  }
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
+	  {
+	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	    return (bra = true);
+	  }
+      }
+    return (false);
+  }
 
-  if (bra)
-    {
-      pos = glm::vec2(getX() - 1.5, getfY());
-      bra = false;
-    }
-  else if (getfX() == pos.x &&
-	   getfY() == pos.y)
-    return (bra = true);
-  if (getRotation().y == 270 ||
-      rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270))
-    {
-      savepos = glm::vec2(getfX(), getfY());
-      move(270, elsapsedTime);
-      newpos = glm::vec2(getfX(), getfY());
-      if (savepos.x < pos.x && newpos.x >= pos.x)
-	{
-	  setPosition(glm::vec3(pos.x, 0, pos.y));
-	  return (bra = true);
-	}
-      if ((pos - savepos).length() < (pos - newpos).length())
-	{
-	  setPosition(glm::vec3(savepos[0], 0, savepos[1]));
-	  return (bra = true);
-	}
-    }
-  return false;
-}
+  bool			PlayerAI::moveRightCell(float const& elsapsedTime)
+  {
+    static bool		bra = true;
+    static glm::vec2	pos;
+    glm::vec2 		savepos;
+    glm::vec2 		newpos;
+
+    if (bra)
+      {
+	pos = glm::vec2(getX() + 1.5, getfY());
+	bra = false;
+      }
+    else if (getfX() == pos.x &&
+	     getfY() == pos.y)
+      return (bra = true);
+    if (getRotation().y == 90 ||
+	rotate((getRotation().y < 90 || getRotation().y > 270), elsapsedTime, 90))
+      {
+	savepos = glm::vec2(getfX(), getfY());
+	move(90, elsapsedTime);
+	newpos = glm::vec2(getfX(), getfY());
+	if (savepos.x > pos.x && newpos.x <= pos.x)
+	  {
+	    setPosition(glm::vec3(pos.x, 0, pos.y));
+	    return (bra = true);
+	  }
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
+	  {
+	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	    return (bra = true);
+	  }
+      }
+    return false;
+  }
+
+  bool			PlayerAI::moveDownCell(float const& elsapsedTime)
+  {
+    static bool		bra = true;
+    static glm::vec2	pos;
+    glm::vec2 		savepos;
+    glm::vec2 		newpos;
+
+    if (bra)
+      {
+	pos = glm::vec2(getfX(), getY() - 0.5);
+	bra = false;
+      }
+    else if (getfX() == pos.x &&
+	     getfY() == pos.y)
+      return (bra = true);
+    if (getRotation().y == 180 ||
+	rotate((getRotation().y < 180), elsapsedTime, 180))
+      {
+	savepos = glm::vec2(getfX(), getfY());
+	move(180, elsapsedTime);
+	newpos = glm::vec2(getfX(), getfY());
+	if (savepos.y > pos.y && newpos.y <= pos.y)
+	  {
+	    setPosition(glm::vec3(pos.x, 0, pos.y));
+	    return (bra = true);
+	  }
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
+	  {
+	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	    return (bra = true);
+	  }
+      }
+    return false;
+  }
+
+  bool			PlayerAI::moveLeftCell(float const& elsapsedTime)
+  {
+    static bool		bra = true;
+    static glm::vec2	pos;
+    glm::vec2 		savepos;
+    glm::vec2 		newpos;
+
+    if (bra)
+      {
+	pos = glm::vec2(getX() - 0.5, getfY());
+	bra = false;
+      }
+    else if (getfX() == pos.x &&
+	     getfY() == pos.y)
+      return (bra = true);
+    if (getRotation().y == 270 ||
+	rotate((getRotation().y < 270 && getRotation().y >= 90), elsapsedTime, 270))
+      {
+	savepos = glm::vec2(getfX(), getfY());
+	move(270, elsapsedTime);
+	newpos = glm::vec2(getfX(), getfY());
+	if (savepos.x < pos.x && newpos.x >= pos.x)
+	  {
+	    setPosition(glm::vec3(pos.x, 0, pos.y));
+	    return (bra = true);
+	  }
+	if (sqrt(pow(pos.x - savepos.x,2) + pow(pos.y - savepos.y, 2)) <= sqrt(pow(pos.x - newpos.x,2) + pow(pos.y - newpos.y, 2)))
+	  {
+	    setPosition(glm::vec3(savepos[0], 0, savepos[1]));
+	    return (bra = true);
+	  }
+      }
+    return false;
+  }
 
   std::string const&	PlayerAI::getAIName() const
   {
@@ -199,10 +241,29 @@ bool			PlayerAI::moveLeft(float const & elsapsedTime)
       .addProperty("speed", &PlayerAI::getSpeed)
       .addProperty("nbBomb", &PlayerAI::getNbBomb)
       .addProperty("bombType", &PlayerAI::getBombType)
-      .addFunction("putBomb", &PlayerAI::putBomb) /* + move + rotate ? */
+      .addProperty("x", &PlayerAI::getX)
+      .addProperty("y", &PlayerAI::getY)
+      .addFunction("putBomb", &PlayerAI::putBomb)
       .endClass()
       .deriveClass<PlayerAI, Player>("PlayerAI")
       .addProperty("aiName", &PlayerAI::getAIName)
+      .addFunction("moveRight", &PlayerAI::moveRight)
+      .addFunction("moveLeft", &PlayerAI::moveLeft)
+      .addFunction("moveUp", &PlayerAI::moveUp)
+      .addFunction("moveDown", &PlayerAI::moveDown)
+      .endClass()
+      .beginClass<GenericMap<AI::Cell> >("GenericMap")
+      // .addProperty("width", &GenericMap<AI::Cell>::getWidth)
+      // .addProperty("height", &GenericMap<AI::Cell>::getHeight)
+      .endClass()
+      .deriveClass<AI::StateMap, GenericMap<AI::Cell> >("StateMap")
+      .addProperty("width", &AI::StateMap::getIntWidth)
+      .addProperty("height", &AI::StateMap::getIntHeight)
+      .addFunction("toString", &AI::StateMap::toString)
+      .addFunction("getPlayerPosX", &AI::StateMap::getPlayerPosX)
+      .addFunction("getPlayerPosY", &AI::StateMap::getPlayerPosY)
+      .addFunction("getNbPlayers", &AI::StateMap::getNbPlayers)
+      .addFunction("getCell", &AI::StateMap::getIntCell)
       .endClass();
   }
 
@@ -218,5 +279,19 @@ bool			PlayerAI::moveLeft(float const & elsapsedTime)
     if (!data["aiAction"].isFunction())
       throw Exception::LuaError("aiAction specified in aiData is not a function");
     _aiAction = new luabridge::LuaRef(data["aiAction"]);
+  }
+
+  /*
+  ** Static protected methods
+  */
+  PlayerAI::MoveBook	PlayerAI::getMoveBook()
+  {
+    MoveBook		res;
+
+    res[LEFT] = &PlayerAI::moveLeftCell;
+    res[UP] = &PlayerAI::moveUpCell;
+    res[DOWN] = &PlayerAI::moveDownCell;
+    res[RIGHT] = &PlayerAI::moveRightCell;
+    return (res);
   }
 }

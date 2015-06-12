@@ -27,6 +27,8 @@ public:
   Player();
   virtual ~Player();
 
+  void			init();
+
 private:
   Player&		operator=(const Player &);
 
@@ -161,7 +163,7 @@ public:
   virtual Type		getObjectType() const;
   virtual bool		isNull() const;
 
-private:
+protected:
   Map			*_map;
 
 public:

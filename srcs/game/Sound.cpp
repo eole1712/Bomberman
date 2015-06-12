@@ -31,12 +31,18 @@ SoundManager::SoundManager(AudioManager* inst, const std::string& file)
 
 SoundManager::~SoundManager()
 {
+  libvlc_media_player_stop(this->_mediaPlayer);
   libvlc_media_player_release(this->_mediaPlayer);
 }
 
-void		SoundManager::play()
+void	SoundManager::play() const
 {
   libvlc_media_player_play(this->_mediaPlayer);
+}
+
+bool	SoundManager::isPlaying() const
+{
+  return (libvlc_media_player_is_playing(this->_mediaPlayer));
 }
 
 /* !SOUND MANAGER */

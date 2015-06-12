@@ -118,10 +118,17 @@ bool	MenuGrid::update(gdl::Clock &, gdl::Input & in)
   };
   if (in.getKey(SDLK_ESCAPE) || in.getInput(SDL_QUIT))
     return false;
-  for (int i = 0; i < 5; ++i)
+  try {
+    for (int i = 0; i < 5; ++i)
+      {
+	if (in.getKey(idTab[i]) && _prev != idTab[i])
+	  _ftab[i]();
+      }
+  }
+  catch (std::bad_function_call e)
     {
-      if (in.getKey(idTab[i]) && _prev != idTab[i])
-  	_ftab[i]();
+      std::cout << "Error in I/O" << e.what() << std::endl;
+      exit(-1);
     }
   if (!in.getKey(_prev))
     _prev = 0;

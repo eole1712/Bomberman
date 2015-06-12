@@ -32,6 +32,7 @@ private:
   bool		_modif;
   std::string	_text;
   std::vector<gdl::Geometry*>	_geo;
+  float		_size;
 };
 
 #endif /* !TEXT2D */

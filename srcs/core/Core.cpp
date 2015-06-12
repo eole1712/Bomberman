@@ -34,11 +34,13 @@ namespace Bomberman
 Core::Core()
   : _change(false), _width(1800), _height(900)
 {
+  _status = false;
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
   : _change(false), _width(width), _height(height)
 {
+  _status = false;
 }
 
 Core::~Core()
@@ -71,6 +73,14 @@ void				Core::loadTextures()
   _assets[SKYBOX]->scale(glm::vec3(5 * (30 + 30) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
   _assets[BONUS]->scale(glm::vec3(0.05));
+  _assets[BOMB]->scale(glm::vec3(100));
+  _assets[BOMB]->translate(glm::vec3(750, 750, 0));
+  _assets[MINE]->scale(glm::vec3(100));
+  _assets[MINE]->translate(glm::vec3(150, 150 , 0));
+  _assets[VIRUS]->scale(glm::vec3(100));
+  _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
+  _assets[BARREL]->scale(glm::vec3(100));
+  _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::MINE] = MINE;
@@ -111,7 +121,7 @@ void		Core::startGame()
   Player	*player;
   Gamer		*tmpGame;
 
-  tmpGame = new Gamer(30, 30, _width / 2, _height);
+  tmpGame = new Gamer(15, 15, _width / 2, _height);
   for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
     {
       player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
@@ -126,16 +136,16 @@ void		Core::startGame()
 void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-  Text2d*	text1 = new Text2d("Width", 80, 200, 100, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text2 = new Text2d("Height", 80, 300, 100, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text3 = new Text2d("", 200, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text4 = new Text2d("", 200, 300, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	start = new Text2d("Start Game", 200, 700, 500, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiLabel = new Text2d("Number of AI", 80, 400, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiField = new Text2d("", 300, 400, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Label = new Text2d("Player 1", 80, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Label = new Text2d("Player 2", 550, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Field = new Text2d("", 300, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text1 = new Text2d("Width: ", 80, 200, 243, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text2 = new Text2d("Height: ", 80, 300, 280, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("", 325, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("", 380, 300, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	start = new Text2d("Start Game", 200, 600, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiLabel = new Text2d("Number of AI: ", 80, 400, 450, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiField = new Text2d("", 580, 400, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Label = new Text2d("Player1", 25, 550, 250, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Label = new Text2d("Player2", 500, 550, 250, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Field = new Text2d("", 275, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	p2Field = new Text2d("", 775, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
 
   text4->setModifiable();
@@ -153,9 +163,6 @@ void		Core::gameMenu()
   });
   grid->addObject(text2, [] (void) {
     ;
-  });
-  grid->addObject(start, [this] (void) {
-    startGame();
   });
   grid->addObject(aiLabel, [] (void) {
     ;
@@ -181,6 +188,9 @@ void		Core::gameMenu()
   grid->addObject(p2Field, [p2Field] (void) {
     std::cout << p2Field->getText() << std::endl;;
   });
+    grid->addObject(start, [this] (void) {
+    startGame();
+  });
   _prev = _game;
   _change = true;
   _game = grid;
@@ -192,6 +202,7 @@ void		Core::firstMenu()
   Text2d*	text1 = new Text2d("Load Game", 200, 200, 500, 150, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text2 = new Text2d("Start Game", 200, 350, 500, 150, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text3 = new Text2d("High Scores", 200, 500, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("Quit", 200, 650, 500, 150, "resources/assets/textures/alpha3Blue.tga");
 
   grid->addObject(text1, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
@@ -201,6 +212,9 @@ void		Core::firstMenu()
   });
   grid->addObject(text3, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  });
+  grid->addObject(text4, [this] (void) {
+    this->_status = true;
   });
   _game = grid;
 }
@@ -217,6 +231,11 @@ bool		Core::update()
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
+  if (ret == false && _game != NULL)
+    {
+      delete _game;
+      _game = NULL;
+    }
   return ret;
 }
 
@@ -240,6 +259,11 @@ gdl::Clock		&Core::getClock()
 gdl::BasicShader	&Core::getShader()
 {
   return _shader;
+}
+
+bool			Core::isOver() const
+{
+  return _status;
 }
 
 }

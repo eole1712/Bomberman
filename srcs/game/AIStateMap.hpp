@@ -1,6 +1,8 @@
-#ifndef __AIMAP_HPP__
-# define __AIMAP_HPP__
+#ifndef __AISTATEMAP_HPP__
+# define __AISTATEMAP_HPP__
 
+# include <vector>
+# include <utility>
 # include "GenericMap.hpp"
 # include "Map.hpp"
 
@@ -12,11 +14,13 @@ namespace Bomberman
   {
     enum Cell
       {
-	BLOCK,		/* wall + bombs + fire */
+	BLOCK = 0,	/* wall + bombs + fire */
 	DESTROYABLE,
 	SAFE,
 	UNSAFE,
-	PLAYER
+	PLAYER,
+	BONUS,
+	UNKNOWN		/* if the cell hasn't been initialized */
       };
 
     class StateMap : public GenericMap<AI::Cell>
@@ -27,15 +31,32 @@ namespace Bomberman
 
     public:
       StateMap(StateMap const& other);
-      StateMap&	operator=(StateMap const& other);
+      StateMap&		operator=(StateMap const& other);
 
     public:
       StateMap(Bomberman::Map const& map);
 
     public:
-      void	setAICells(Bomberman::Map const& map);
+      std::string	toString() const;
+
+    public:
+      int		getPlayerPosX(unsigned int player) const;
+      int		getPlayerPosY(unsigned int player) const;
+      int		getNbPlayers() const;
+      int		getIntCell(unsigned int x, unsigned int y) const;
+
+    public:
+      void		setAICells(Bomberman::Map const& map);
+      int		getIntWidth() const;
+      int		getIntHeight() const;
+
+    protected:
+      void		clear();
+
+    protected:
+      std::vector<std::pair<int, int> >	_playersCoo;
     };
   }
 }
 
-#endif /* !__AIMAP_HPP__ */
+#endif /* !__AISTATEMAP_HPP__ */

@@ -31,11 +31,16 @@ int main()
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
-  engine.firstMenu();
-  while (engine.update() == true)
+  while (!engine.isOver())
     {
-      showfps();
-      engine.draw();
+      std::cout << "a" << std::endl;
+      engine.firstMenu();
+      std::cout << "b" << std::endl;
+      while (!engine.isOver() && engine.update() == true)
+	{
+	  showfps();
+	  engine.draw();
+	}
     }
   return EXIT_SUCCESS;
 }

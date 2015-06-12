@@ -22,7 +22,8 @@ public:
   SoundManager(AudioManager*, const std::string& file);
   ~SoundManager();
 
-  void		play();
+  void		play() const;
+  bool		isPlaying() const;
 private:
   SoundManager();
   libvlc_media_t*		_media;
