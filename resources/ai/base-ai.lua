@@ -11,7 +11,7 @@ UNKNOWN = 6
 -- allows ai to memorise the path
 local route = {}
 local attack = false
-local isDebug = true
+local isDebug = false
 
 -- ai data table
 -- aiAction is the function called at each frame
