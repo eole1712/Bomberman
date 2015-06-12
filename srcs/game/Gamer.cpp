@@ -60,24 +60,8 @@ Gamer::~Gamer()
 
 void	Gamer::init()
 {
-  std::vector<std::string>	nameList = {"Player1",
-					    "Player2",
-					    "Player3",
-					    "Player4",
-					    "Player5",
-					    "Player6",
-					    "Player7",
-					    "Player8",
-					    "Player9",
-					    "Player10",
-					    "Player11",
-					    "Player12",
-					    "Player13",
-					    "Player14",
-					    "Player15",
-					    "Player16",
-					    "Player17",
-					    "Player18"};
+  std::vector<std::string>	nameList = {"Jacob",
+					    "Pierre"};
   std::string			mapName = "Classic Map";
   std::vector<std::string>	vec;
   Player			*player;
@@ -89,7 +73,7 @@ void	Gamer::init()
   _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
 		: (new ScoreList()));
-  _stock = new RessourceStock(nameList, _scoreList);
+  _stock = new RessourceStock(nameList, 8,_scoreList);
   _map = _mapList->getMap(mapName);
   if (_map == NULL)
     _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
