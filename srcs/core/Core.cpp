@@ -26,6 +26,7 @@
 #include "JSONDoc.hpp"
 #include "MenuGrid.hpp"
 #include "Text2d.hpp"
+#include "View2d.hpp"
 #include "Core.hpp"
 
 namespace Bomberman
@@ -101,6 +102,7 @@ bool				Core::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
@@ -206,11 +208,16 @@ void		Core::gameMenu()
 void		Core::firstMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-  Text2d*	text1 = new Text2d("Load Game", 200, 200, 500, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text2 = new Text2d("Start Game", 200, 350, 500, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text3 = new Text2d("High Scores", 200, 500, 500, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text4 = new Text2d("Quit", 200, 650, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  View2d*	back = new View2d(0, 0, 1800, 1000, "resources/assets/textures/background.tga");
+  View2d*	text1 = new View2d(1100, 325, 500, 101, "resources/assets/textures/load.tga");
+  View2d*	text2 = new View2d(1100, 475, 500, 101, "resources/assets/textures/new.tga");
+  View2d*	text3 = new View2d(1100, 625, 500, 101, "resources/assets/textures/high.tga");
+  View2d*	text4 = new View2d(1100, 775, 500, 101, "resources/assets/textures/quit.tga");
 
+  back->unFocus();
+   grid->addObject(back, [] (void) {
+    ;
+  });
   grid->addObject(text1, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
   });

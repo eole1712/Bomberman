@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include "View2d.hpp"
 #include "Text2d.hpp"
 #include "MenuGrid.hpp"
 #include "SDL_events.h"
@@ -69,13 +70,16 @@ void	 MenuGrid::moveRight()
 
 void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset3d *> &, std::map<Bomberman::IObject::Type, Bomberman::mapAsset>&)
 {
-  glDisable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   //shader.bind();
   // shader.setUniform("view", _camera.getView());
   // shader.setUniform("projection", _camera.getProjection());
+glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glDisable(GL_DEPTH_TEST);
+
   shader.setUniform("view", glm::mat4());
-  shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
     {
       if (!(*it).first->isHidden())
@@ -83,15 +87,19 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
 	  (*it).first->draw(shader);
 	}
       if (_focus == it)
-	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
+	drawFocus((*it).first->getX(), (*it).first->getY(), (*it).first->getHeight(), shader);
     }
+  glDisable(GL_BLEND);
   glEnable(GL_DEPTH_TEST);
 }
 
 void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 {
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glDisable(GL_DEPTH_TEST);
   shader.setUniform("view", glm::mat4());
-  shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
     {
       if (!(*it).first->isHidden())
@@ -99,8 +107,11 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 	  (*it).first->draw(shader);
 	}
       if (_focus == it)
-	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
+	drawFocus((*it).first->getX(), (*it).first->getY(), (*it).first->getHeight(), shader);
     }
+  glEnable(GL_DEPTH_TEST);
+  //std::cout << "ylo" << std::endl;
+  glDisable(GL_BLEND);
 }
 
 void	MenuGrid::addObject(AMenuObject* obj, std::function<void()> func)
@@ -121,9 +132,10 @@ void	MenuGrid::actionOnFocus()
   (*_focus).second();
 }
 
-void	MenuGrid::drawFocus(int x, int y, gdl::BasicShader& shader)
+void	MenuGrid::drawFocus(int x, int y, int height, gdl::BasicShader& shader)
 {
-  Text2d	cursor("S", x - 70, y, 50, 50, "resources/assets/textures/alpha3Blue.tga");
+  View2d	cursor(x - (height + 10), y, height, height, "resources/assets/textures/bombcursor.tga");
+
 
   cursor.draw(shader);
 }

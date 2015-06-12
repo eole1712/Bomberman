@@ -16,6 +16,7 @@ public:
   virtual void		draw(gdl::BasicShader shader) = 0;
   virtual int		getX();
   virtual int		getY();
+  virtual int		getHeight();
   virtual void		update(gdl::Input&) = 0;
   void			unFocus();
   bool			isFocusable();

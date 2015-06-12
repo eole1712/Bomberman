@@ -14,6 +14,8 @@ class Text2d : public AMenuObject
 {
 public:
   Text2d(std::string const& text, int x, int y, int width, int height, std::string const& textureName);
+  Text2d(std::string const& text, int x, int y, int width, int height, std::string const& textureName, int size);
+
   virtual ~Text2d();
 
   void	update();

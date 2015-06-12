@@ -4,7 +4,17 @@
 #include <iostream>
 
 Text2d::Text2d(std::string const& text, int x, int y, int width, int height, std::string const& textureName)
-  : AMenuObject(x, y, width, height, textureName), _modif(false), _text(text), _size(1)
+  : AMenuObject(x, y, width, height, textureName), _modif(false), _text(text), _size((1.0f / 40.0f) * height)
+{
+  _hidden = false;
+
+  if (!_texture.load(textureName.c_str()))
+    std::cout << "failed to load " << textureName << std::endl;;
+  update();
+}
+
+Text2d::Text2d(std::string const& text, int x, int y, int width, int height, std::string const& textureName, int size)
+  : AMenuObject(x, y, width, height, textureName), _modif(false), _text(text), _size(size)
 {
   _hidden = false;
 
@@ -25,12 +35,24 @@ void		Text2d::update()
     {
       _geo.push_back(new gdl::Geometry);
 
-      _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size), _y, 0));
+      _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size),
+				    _y,
+				    0));
       _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
-				    _y, 0));
+				    _y,
+				    0));
       _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
-				    _y + 40 * _size, 0));
-      _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size), _y + 40 * _size, 0));
+				    _y + 40 * _size,
+				    0));
+      _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size),
+				    _y + 40 * _size,
+				    0));
+
+      // _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size), _y, 0));
+      // _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
+      // _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
+      // _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size), _y + 40 * _size, 0));
+
       _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i), 1.0f));
       _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 1.0f));
       _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 0.0f));
