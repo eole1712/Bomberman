@@ -218,6 +218,7 @@ void		Gamer::draw(gdl::Clock &clock,
       dynamic_cast<Player *>(_stock->getPlayer(y))->draw(*assets[PLAYER], shader, clock);
     }
   shader.setUniform("color", glm::vec4(1.0));
+  assets[SKYBOX]->rotate(glm::vec3(1, 0, 0), 0.02);
   assets[SKYBOX]->draw(shader, clock);
   assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   assets[SKYBOX]->scale(glm::vec3(-1));
