@@ -86,7 +86,9 @@ glEnable(GL_BLEND);
 	{
 	  (*it).first->draw(shader);
 	}
-      if (_focus == it)
+      if (_focus == it
+	   && (*it).first->showFocus()
+	  )
 	drawFocus((*it).first->getX(), (*it).first->getY(), (*it).first->getHeight(), shader);
     }
   glDisable(GL_BLEND);
@@ -102,7 +104,7 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
     {
-      if (!(*it).first->isHidden())
+      if (!(*it).first->isHidden() && (*it).first->showFocus())
 	{
 	  (*it).first->draw(shader);
 	}

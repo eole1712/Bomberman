@@ -145,23 +145,28 @@ void		Core::startGame(bool twoPlayers)
 void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-  Text2d*	text1 = new Text2d("Width: ", 80, 200, 243, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text2 = new Text2d("Height: ", 80, 300, 280, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text3 = new Text2d("", 325, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text4 = new Text2d("", 380, 300, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	start = new Text2d("Start Game", 200, 600, 500, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiLabel = new Text2d("Number of AI: ", 80, 400, 450, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiField = new Text2d("", 580, 400, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Label = new Text2d("Player1", 25, 550, 250, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Label = new Text2d("Player2", 500, 550, 250, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Field = new Text2d("", 275, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Field = new Text2d("", 775, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text1 = new Text2d("Width: ", 80, 50, 500, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text2 = new Text2d("Height: ", 80, 125, 500, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("", 525, 50, 700, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("", 525, 125, 700, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	start = new Text2d("Start Game", 700, 700, 500, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiLabel = new Text2d("Number of AI: ", 80, 200, 500, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiField = new Text2d("", 600, 200, 200, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Label = new Text2d("Player1", 80, 275, 300, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Label = new Text2d("Player2", 950, 275, 300, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Field = new Text2d("", 400, 275, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Field = new Text2d("", 1300, 275, 400, 50, "resources/assets/textures/alpha3Blue.tga");
 
   text4->setModifiable();
   text3->setModifiable();
   aiField->setModifiable();
   p1Field->setModifiable();
   p2Field->setModifiable();
+  text4->hideFocus();
+  text3->hideFocus();
+  aiField->hideFocus();
+  p1Field->hideFocus();
+  p2Field->hideFocus();
   text2->unFocus();
   text1->unFocus();
   p1Label->unFocus();
@@ -245,11 +250,6 @@ bool		Core::update()
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
-  // if (ret == false && _game != NULL)
-  //   {
-  //     delete _game;
-  //     _game = NULL;
-  //   }
   if (!ret)
     _status = true;
   return ret;

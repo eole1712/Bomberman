@@ -99,11 +99,11 @@ void	Gamer::init()
 
 bool		Gamer::pauseMenu()
 {
-  Text2d*	save = new Text2d("Save Game", 200, 100, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	resume = new Text2d("Resume Game", 200, 250, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	quit = new Text2d("Quit Game", 200, 400, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	toggleSounds = new Text2d("Toggle Sounds", 200, 550, 800, 150, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	toggleMusic = new Text2d("Toggle Music", 200, 700, 800, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	save = new Text2d("Save Game", 200, 100, 800, 75, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	resume = new Text2d("Resume Game", 200, 250, 800, 75, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	quit = new Text2d("Quit Game", 200, 400, 800, 75, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	toggleSounds = new Text2d("Toggle Sounds", 200, 550, 800, 75, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	toggleMusic = new Text2d("Toggle Music", 200, 700, 800, 75, "resources/assets/textures/alpha3Blue.tga");
 
   _menu = new MenuGrid;
   _menu->addObject(save, [] (void) {
