@@ -15,7 +15,8 @@ unsigned int		my_random(int const min, int max)
       || (fd == -1 && (fd = open("/dev/urandom", O_RDONLY)) == -1))
     return (min);
   max++;
-  read(fd, &result, 4);
+  if (read(fd, &result, 4) == -1)
+    return (min);
   return (result % (max - min) + min);
 }
 
