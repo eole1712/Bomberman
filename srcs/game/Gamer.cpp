@@ -235,8 +235,13 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
 {
   IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
 
+  if (!player->isAlive())
+    return;
+  if (player->zeroBomb())
+    shader.setUniform("color", glm::vec4(1, 0, 0, 0));
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
+
   if (type == IObject::MINE)
     assets[ObjectToAsset[type]]->scale(glm::vec3(-300));
   else
@@ -245,6 +250,8 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1 ,1), 1);
   assets[ObjectToAsset[type]]->draw(shader, clock);
   assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
+  if (player->zeroBomb())
+    shader.setUniform("color", glm::vec4(1.0));
 }
 
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
