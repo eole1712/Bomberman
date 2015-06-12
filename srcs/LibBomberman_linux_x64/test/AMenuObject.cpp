@@ -1,10 +1,13 @@
 #include "AMenuObject.hpp"
+#include <iostream>
 
 AMenuObject::AMenuObject(int x, int y, int width, int height, std::string const& texName)
   : _x(x), _y(y), _width(width), _height(height), _focusable(true)
 {
   _hidden = false;
-  _texture.load(texName);
+  if (!_texture.load(texName))
+    std::cerr << "failed to build : " << texName << std::endl;;
+
 }
 
 AMenuObject::~AMenuObject()
