@@ -85,11 +85,52 @@ void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
   void		Virus::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
 					  int y, unsigned int range) const
   {
-    static_cast<void>(map);
-    static_cast<void>(realMap);
-    static_cast<void>(x);
-    static_cast<void>(y);
-    static_cast<void>(range);
+    IBomb*	classic = dynamic_cast<IBomb*>(realMap->getRcs()->getBomb(CLASSIC));
+
+    for (int i = x; i >= 0 ; --i)
+      {
+	if (i == 0 ||
+	    realMap->getCellValue(i - 1, y)->getObjectType() == IObject::DESTROYABLEWALL ||
+	    realMap->getCellValue(i - 1, y)->getObjectType() == IObject::WALL ||
+	    realMap->getCellValue(i, y)->getObjectType() == IObject::PLAYER)
+	  {
+	    classic->setBlastRangeToMap(map, realMap, i, y, range);
+	    break;
+	  }
+      }
+    for (unsigned int i = x; i < realMap->getWidth() ; ++i)
+      {
+	if (i == (realMap->getWidth() - 1) ||
+	    realMap->getCellValue(i + 1, y)->getObjectType() == IObject::DESTROYABLEWALL ||
+	    realMap->getCellValue(i + 1, y)->getObjectType() == IObject::WALL ||
+	    realMap->getCellValue(i, y)->getObjectType() == IObject::PLAYER)
+	  {
+	    classic->setBlastRangeToMap(map, realMap, i, y, range);
+	    break;
+	  }
+      }
+    for (int i = y; i >= 0 ; --i)
+      {
+	if (i == 0 ||
+	    realMap->getCellValue(x, i - 1)->getObjectType() == IObject::DESTROYABLEWALL ||
+	    realMap->getCellValue(x, i - 1)->getObjectType() == IObject::WALL ||
+	    realMap->getCellValue(x, i)->getObjectType() == IObject::PLAYER)
+	  {
+	    classic->setBlastRangeToMap(map, realMap, x, i, range);
+	    break;
+	  }
+      }
+    for (unsigned int i = y; i < realMap->getHeight() ; ++i)
+      {
+	if (i == (realMap->getHeight() - 1) ||
+	    realMap->getCellValue(x, i + 1)->getObjectType() == IObject::DESTROYABLEWALL ||
+	    realMap->getCellValue(x, i + 1)->getObjectType() == IObject::WALL ||
+	    realMap->getCellValue(x, i)->getObjectType() == IObject::PLAYER)
+	  {
+	    classic->setBlastRangeToMap(map, realMap, x, i, range);
+	    break;
+	  }
+      }
   }
 
 IBomb*		Virus::clone() const
