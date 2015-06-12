@@ -17,22 +17,20 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects)
 {
-  this->_width = width;
-  this->_height = height;
-  if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 12)
-    throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 10 || this->_width < 10)
-    throw new Exception::InvalidDimensions("Map Constructor");
+  this->init(width, height);
   this->randomize();
   this->equalize();
-  this->spawnize();
 }
 
 Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty)
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL)
+{
+  this->init(width, height);
+}
+
+void	Map::init(unsigned int width, unsigned int height)
 {
   this->_width = width;
   this->_height = height;
@@ -242,57 +240,6 @@ void	Map::addSpawn(unsigned int x, unsigned int y)
   		     this->_rcs->getObject(IObject::EMPTY));
 }
 
-void	Map::menger(unsigned int sizeX, unsigned int sizeY, unsigned int level,
-		    unsigned int saveX, unsigned int saveY, bool first)
-{
-  unsigned int	written = 0;
-  unsigned int	x = 0;
-  unsigned int	y;
-
-  if (!level || !sizeX || !sizeY)
-    return ;
-  std::cout << level << std::endl;
-  if (first)
-    pushSpawn(sizeX / 2 - !(sizeX % 2), sizeY / 2 - !(sizeY % 2), level);
-  else
-    pushSpawn(saveX + sizeX / 3, saveY + sizeY / 3, level);
-  while (x < (sizeX - 1))
-    {
-      y = 0;
-      while (y < (sizeY - 1))
-	{
-	  if (written != 4)
-	    menger(sizeX / 3, sizeY / 3, level - 1, saveX + x, saveY + y, false);
-	  ++written;
-	  y += sizeY / 3;
-	}
-      x += sizeX / 3;
-    }
-}
-
-unsigned int	Map::findLevel()
-{
-  unsigned int	level = 1;
-  unsigned int	res = 9;
-  unsigned int	save = 8;
-
-  if (this->_nbJoueurs <= 1)
-    return (0);
-  while (res < this->_nbJoueurs)
-    {
-      save = save * 8;
-      res += save;
-      ++level;
-    }
-  return (level + 1);
-}
-
-void	Map::spawnize()
-{
-  //menger(this->_width, this->_height, this->findLevel(), 0, 0, true);
-}
-
-
 void		Map::swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny)
 {
   IObject	*obj = getCellValue(x, y);
@@ -318,14 +265,28 @@ bool		Map::isIn(unsigned int x, unsigned int y) const
 
 void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 {
+  static bool	firstBlood = true;
+
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
       if (dynamic_cast<Player*>(_rcs->getPlayer(i))->getX() == x &&
-	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y)
+	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y &&
+	  dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill())
 	{
-	  if (dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill() &&
-	      dynamic_cast<Player*>(_rcs->getPlayer(i)) != player)
-	    player->incScore();
+	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
+	    {
+	      this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
+	      firstBlood = false;
+	    }
+	  else
+	    {
+	      if (firstBlood)
+		{
+		  this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD)->play();
+		  firstBlood = false;
+		}
+	      player->incScore();
+	    }
 	}
     }
 }
@@ -357,6 +318,11 @@ void		Map::checkBombsOnMap()
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
       dynamic_cast<Player*>(_rcs->getPlayer(i))->checkBuffList();
+    }
+  if (!this->getRcs()->getAmbianceSound()->isPlaying())
+    {
+      this->getRcs()->deleteAmbianceSound();
+      this->getRcs()->initAmbianceSound();
     }
 }
 

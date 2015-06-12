@@ -25,45 +25,13 @@ Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 Player::Player(std::string const &name, glm::vec4 color)
   : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
 {
-  _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
-  _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
-  _buffOn[IBuff::INC_BOMB] = &Player::incBomb;
-  _buffOn[IBuff::INC_RANGE] = &Player::incRange;
-  _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
-  _buffOn[IBuff::PARALYZED] = &Player::paralyze;
-  _buffOn[IBuff::SHIELD] = &Player::incShield;
-  _buffOn[IBuff::WEAPON] = &Player::randWeapon;
-
-  _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
-  _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
-  _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
-  _buffOff[IBuff::INC_RANGE] = &Player::decRange;
-  _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
-  _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
-  _buffOff[IBuff::SHIELD] = &Player::decShield;
-  _buffOff[IBuff::WEAPON] = &Player::randWeapon;
+  this->init();
 }
 
 Player::Player()
   : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
 {
-  _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
-  _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
-  _buffOn[IBuff::INC_BOMB] = &Player::incBomb;
-  _buffOn[IBuff::INC_RANGE] = &Player::incRange;
-  _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
-  _buffOn[IBuff::PARALYZED] = &Player::paralyze;
-  _buffOn[IBuff::SHIELD] = &Player::incShield;
-  _buffOn[IBuff::WEAPON] = &Player::randWeapon;
-
-  _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
-  _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
-  _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
-  _buffOff[IBuff::INC_RANGE] = &Player::decRange;
-  _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
-  _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
-  _buffOff[IBuff::SHIELD] = &Player::decShield;
-  _buffOff[IBuff::WEAPON] = &Player::randWeapon;
+  this->init();
 }
 
 Player::~Player()
@@ -72,6 +40,27 @@ Player::~Player()
     delete *it;
   if (_scoreList != NULL)
     _scoreList->addScore(getName(), getScore().getValue());
+}
+
+void	Player::init()
+{
+  _buffOn[IBuff::INC_SPEED] = &Player::incSpeed;
+  _buffOn[IBuff::DEC_SPEED] = &Player::decSpeed;
+  _buffOn[IBuff::INC_BOMB] = &Player::incBomb;
+  _buffOn[IBuff::INC_RANGE] = &Player::incRange;
+  _buffOn[IBuff::NO_BOMB] = &Player::disableAttack;
+  _buffOn[IBuff::PARALYZED] = &Player::paralyze;
+  _buffOn[IBuff::SHIELD] = &Player::incShield;
+  _buffOn[IBuff::WEAPON] = &Player::randWeapon;
+
+  _buffOff[IBuff::INC_SPEED] = &Player::decSpeed;
+  _buffOff[IBuff::DEC_SPEED] = &Player::incSpeed;
+  _buffOff[IBuff::INC_BOMB] = &Player::decBomb;
+  _buffOff[IBuff::INC_RANGE] = &Player::decRange;
+  _buffOff[IBuff::NO_BOMB] = &Player::enableAttack;
+  _buffOff[IBuff::PARALYZED] = &Player::unparalyze;
+  _buffOff[IBuff::SHIELD] = &Player::decShield;
+  _buffOff[IBuff::WEAPON] = &Player::randWeapon;
 }
 
 // getters
@@ -427,7 +416,7 @@ Bomb::Type		Player::getBombType() const
 
 void			Player::putBomb()
 {
-  if (_map && isAlive() && !isParalyzed() && !zeroBomb())
+  if (_map && isAlive() && !isParalyzed() && !zeroBomb() && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
@@ -440,7 +429,7 @@ void			Player::putBomb()
 
 void			Player::putTimedBomb(unsigned int x, unsigned int y)
 {
-  if (_map)
+  if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
       BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
@@ -464,7 +453,7 @@ bool			Player::tryToKill()
 	}
       return false;
     }
-  return true;
+  return false;
 }
 
 // color

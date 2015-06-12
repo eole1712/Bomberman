@@ -22,12 +22,10 @@
 # include "JSONDoc.hpp"
 # include "Game.hh"
 # include "Gamer.hpp"
-# include "IScene.hpp"
 
 namespace Bomberman
 {
 
-class Gamer;
 class IScene;
 
 class Core : public gdl::Game
@@ -43,6 +41,9 @@ public:
   void			attachObject(Asset3d *);
   void			loadTextures();
   void			startGame();
+  void			gameMenu();
+  void			firstMenu();
+  bool			isOver() const;
 
 private:
   Core(const Core &);
@@ -51,6 +52,8 @@ private:
 private:
   bool						_inGame;
   Bomberman::IScene*				_game;
+  Bomberman::IScene*				_prev;
+  bool						_change;
 
 
 public:
@@ -66,6 +69,7 @@ private:
   gdl::Input			_input;
   gdl::BasicShader		_shader;
   float				_speed;
+  bool				_status;
 
 private:
   std::vector<Asset3d *>	_assets;

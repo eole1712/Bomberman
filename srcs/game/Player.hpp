@@ -27,6 +27,8 @@ public:
   Player();
   virtual ~Player();
 
+  void			init();
+
 private:
   Player&		operator=(const Player &);
 

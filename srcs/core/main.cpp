@@ -1,5 +1,27 @@
 #include "Core.hpp"
 
+void			showfps()
+{
+  static unsigned int	lasttime = 0;
+  static unsigned int	nbframe = 0;
+  unsigned int		curtime;
+  unsigned int		fps;
+  static unsigned int	maxfps = 0;
+
+  curtime = (unsigned)time(NULL);
+  if ((fps = curtime - lasttime) > 0)
+    {
+      fps = nbframe / fps;
+      if (maxfps < fps)
+	maxfps = fps;
+      printf("%d fps - %d max\n", fps, maxfps);
+      lasttime = curtime;
+      nbframe = 0;
+    }
+  else
+    nbframe++;
+}
+
 int main()
 {
   Bomberman::Core	engine;
@@ -9,10 +31,16 @@ int main()
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
-  engine.startGame();
-  while (engine.update() == true)
+  while (!engine.isOver())
     {
-      engine.draw();
+      std::cout << "a" << std::endl;
+      engine.firstMenu();
+      std::cout << "b" << std::endl;
+      while (!engine.isOver() && engine.update() == true)
+	{
+	  showfps();
+	  engine.draw();
+	}
     }
   return EXIT_SUCCESS;
 }

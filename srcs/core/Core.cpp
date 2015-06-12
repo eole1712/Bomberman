@@ -24,25 +24,30 @@
 #include "Player.hpp"
 #include "PlayerAI.hpp"
 #include "JSONDoc.hpp"
+#include "MenuGrid.hpp"
+#include "Text2d.hpp"
 #include "Core.hpp"
 
 namespace Bomberman
 {
 
 Core::Core()
-  : _width(1024), _height(768)
+  : _change(false), _width(1800), _height(900)
 {
+  _status = false;
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
-  : _width(width), _height(height)
+  : _change(false), _width(width), _height(height)
 {
+  _status = false;
 }
 
 Core::~Core()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
+  delete _game;
 }
 
 void				Core::loadTextures()
@@ -68,6 +73,14 @@ void				Core::loadTextures()
   _assets[SKYBOX]->scale(glm::vec3(5 * (30 + 30) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
   _assets[BONUS]->scale(glm::vec3(0.05));
+  _assets[BOMB]->scale(glm::vec3(100));
+  _assets[BOMB]->translate(glm::vec3(750, 750, 0));
+  _assets[MINE]->scale(glm::vec3(100));
+  _assets[MINE]->translate(glm::vec3(150, 150 , 0));
+  _assets[VIRUS]->scale(glm::vec3(100));
+  _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
+  _assets[BARREL]->scale(glm::vec3(100));
+  _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::MINE] = MINE;
@@ -89,7 +102,6 @@ bool				Core::initialize()
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
-  std::cout << "passé" << std::endl;
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
@@ -109,22 +121,91 @@ void		Core::startGame()
   Player	*player;
   Gamer		*tmpGame;
 
-  tmpGame = new Gamer(30, 30, _width / 2, _height);
+  tmpGame = new Gamer(15, 15, _width / 2, _height);
   for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
     {
       player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
+  _prev = _game;
+  _change = true;
   _game = tmpGame;
+}
+
+void		Core::gameMenu()
+{
+  MenuGrid*	gridou = new MenuGrid;
+  Text2d*	text1 = new Text2d("Width: ", 80, 200, 243, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text2 = new Text2d("Height: ", 80, 300, 280, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("", 280, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("", 380, 300, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	start = new Text2d("Start Game", 200, 600, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+
+  text4->setModifiable();
+  text3->setModifiable();
+  text2->unFocus();
+  text1->unFocus();
+  gridou->addObject(text1, [] (void) {
+    ;
+  });
+  gridou->addObject(text2, [] (void) {
+    ;
+  });
+  gridou->addObject(text3, [text3] (void) {
+    std::cout << text3->getText() << std::endl;
+  });
+  gridou->addObject(text4, [text4] (void) {
+    std::cout << text4->getText() << std::endl;
+  });
+  gridou->addObject(start, [this] (void) {
+    startGame();
+  });
+  _prev = _game;
+  _change = true;
+  _game = gridou;
+}
+
+void		Core::firstMenu()
+{
+  MenuGrid*	grid = new MenuGrid;
+  Text2d*	text1 = new Text2d("Load Game", 200, 200, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text2 = new Text2d("Start Game", 200, 350, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("High Scores", 200, 500, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("Quit", 200, 650, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+
+  grid->addObject(text1, [] (void) {
+    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  });
+  grid->addObject(text2, [this, &grid] (void) {
+    this->gameMenu();
+  });
+  grid->addObject(text3, [] (void) {
+    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  });
+  grid->addObject(text4, [this] (void) {
+    this->_status = true;
+  });
+  _game = grid;
 }
 
 bool		Core::update()
 {
-  bool ret = _game->update(_clock, _input);
+  bool ret;
 
+  ret = _game->update(_clock, _input);
+  if (_change)
+    {
+      _change = false;
+      delete _prev;
+    }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
+  if (ret == false && _game != NULL)
+    {
+      delete _game;
+      _game = NULL;
+    }
   return ret;
 }
 
@@ -133,7 +214,6 @@ void		Core::draw()
   _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
 }
-
 
 gdl::SdlContext		&Core::getContext()
 {
@@ -148,6 +228,11 @@ gdl::Clock		&Core::getClock()
 gdl::BasicShader	&Core::getShader()
 {
   return _shader;
+}
+
+bool			Core::isOver() const
+{
+  return _status;
 }
 
 }

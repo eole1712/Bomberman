@@ -11,6 +11,7 @@ public:
   virtual ~View2d();
 
   void	draw(gdl::BasicShader shader);
+  void	update(gdl::Input&);
 private:
   View2d();
 private:

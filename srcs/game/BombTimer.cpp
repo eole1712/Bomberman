@@ -82,6 +82,7 @@ bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 	  return false;
 	}
       _bomb->explose(x, y, map, getRange(), _player);
+      map->getRcs()->getSound(Bomberman::RessourceStock::EXPLOSE)->play();
       _player->incBomb();
       return true;
     }

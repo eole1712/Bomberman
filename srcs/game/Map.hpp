@@ -19,6 +19,7 @@ public:
 
 private:
 
+  void	init(unsigned int, unsigned int);
   void	generateForm(unsigned int, unsigned int);
   void	randomize();
   bool	addNoBlocking(unsigned int, unsigned int);
@@ -26,9 +27,6 @@ private:
   void	equalize();
   void	pushSpawn(unsigned int, unsigned int, unsigned int);
   void	addSpawn(unsigned int, unsigned int);
-  void	menger(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, bool);
-  unsigned int	findLevel();
-  void	spawnize();
 
 public:
   enum e_difficulty	{ EASY = 7, MEDIUM, DIFFICULT };

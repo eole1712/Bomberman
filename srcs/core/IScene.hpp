@@ -8,7 +8,6 @@
 # include "Input.hh"
 # include "BasicShader.hh"
 # include "IObject.hpp"
-# include "Core.hpp"
 # include "Clock.hh"
 
 namespace Bomberman
@@ -31,6 +30,8 @@ namespace Bomberman
 class IScene
 {
 public:
+  IScene() {}
+  virtual ~IScene() {}
   virtual void	drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
 			 std::map<Bomberman::IObject::Type, mapAsset>&) = 0;
   virtual bool	update(gdl::Clock &, gdl::Input&) = 0;
