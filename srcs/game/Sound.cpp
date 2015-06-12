@@ -22,27 +22,36 @@ libvlc_instance_t*	AudioManager::getInst() const
 /* !AUDIOMANAGER */
 /* SOUND MANAGER */
 
-SoundManager::SoundManager(AudioManager* inst, const std::string& file)
+SoundManager::SoundManager(AudioManager* audioManager, const std::string& file)
 {
-  this->_media = libvlc_media_new_path(inst->getInst(), file.c_str());
-  this->_mediaPlayer = libvlc_media_player_new_from_media(this->_media);
-  libvlc_media_release(this->_media);
+  if (file != "")
+    {
+      this->_media = libvlc_media_new_path(audioManager->getInst(), file.c_str());
+      this->_mediaPlayer = libvlc_media_player_new_from_media(this->_media);
+      libvlc_media_release(this->_media);
+    }
+  else
+    this->_mediaPlayer = NULL;
 }
 
 SoundManager::~SoundManager()
 {
-  libvlc_media_player_stop(this->_mediaPlayer);
-  libvlc_media_player_release(this->_mediaPlayer);
+  if (this->_mediaPlayer != NULL)
+    {
+      libvlc_media_player_stop(this->_mediaPlayer);
+      libvlc_media_player_release(this->_mediaPlayer);
+    }
 }
 
 void	SoundManager::play() const
 {
-  libvlc_media_player_play(this->_mediaPlayer);
+  if (this->_mediaPlayer != NULL)
+    libvlc_media_player_play(this->_mediaPlayer);
 }
 
 bool	SoundManager::isPlaying() const
 {
-  return (libvlc_media_player_is_playing(this->_mediaPlayer));
+  return (this->_mediaPlayer != NULL && libvlc_media_player_is_playing(this->_mediaPlayer));
 }
 
 /* !SOUND MANAGER */

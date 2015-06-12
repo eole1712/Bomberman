@@ -32,7 +32,7 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1024), _height(768)
+  : _change(false), _width(1800), _height(900)
 {
   _status = false;
 }
@@ -66,21 +66,21 @@ void				Core::loadTextures()
   attachObject(new Asset3d("resources/assets/bombs/WindBomb/WindBomb.obj"));
 
   _assets[PLAYER]->scale(glm::vec3(0.002));
-  _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
+  // _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
   // _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
   // _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
-  _assets[SKYBOX]->scale(glm::vec3(5 * (30 + 30) / 2));
-  _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
+  // _assets[SKYBOX]->scale(glm::vec3(5 * ( + 30) / 2));
+  // _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
   _assets[BONUS]->scale(glm::vec3(0.05));
-  _assets[BOMB]->scale(glm::vec3(100));
-  _assets[BOMB]->translate(glm::vec3(750, 750, 0));
-  _assets[MINE]->scale(glm::vec3(100));
-  _assets[MINE]->translate(glm::vec3(150, 150 , 0));
-  _assets[VIRUS]->scale(glm::vec3(100));
-  _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
-  _assets[BARREL]->scale(glm::vec3(100));
-  _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
+  // _assets[BOMB]->scale(glm::vec3(100));
+  // _assets[BOMB]->translate(glm::vec3(750, 750, 0));
+  // _assets[MINE]->scale(glm::vec3(100));
+  // _assets[MINE]->translate(glm::vec3(150, 150 , 0));
+  // _assets[VIRUS]->scale(glm::vec3(100));
+  // _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
+  // _assets[BARREL]->scale(glm::vec3(100));
+  // _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::MINE] = MINE;
@@ -116,12 +116,19 @@ void		Core::attachObject(Asset3d *obj)
   _assets.push_back(obj);
 }
 
-void		Core::startGame()
+void		Core::startGame(bool twoPlayers)
 {
   Player	*player;
   Gamer		*tmpGame;
+  int		x = 15;
+  int		y = 15;
 
-  tmpGame = new Gamer(15, 15, _width / 2, _height);
+  if (twoPlayers)
+    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers);
+  else
+    tmpGame = new Gamer(x, y, _width, _height, twoPlayers);
+  _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
+  _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
     {
       player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
@@ -135,35 +142,65 @@ void		Core::startGame()
 
 void		Core::gameMenu()
 {
-  MenuGrid*	gridou = new MenuGrid;
+  MenuGrid*	grid = new MenuGrid;
   Text2d*	text1 = new Text2d("Width: ", 80, 200, 243, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text2 = new Text2d("Height: ", 80, 300, 280, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text3 = new Text2d("", 280, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("", 325, 200, 200, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text4 = new Text2d("", 380, 300, 200, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	start = new Text2d("Start Game", 200, 600, 500, 150, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiLabel = new Text2d("Number of AI: ", 80, 400, 450, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiField = new Text2d("", 580, 400, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Label = new Text2d("Player1", 25, 550, 250, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Label = new Text2d("Player2", 500, 550, 250, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Field = new Text2d("", 275, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Field = new Text2d("", 775, 550, 200, 100, "resources/assets/textures/alpha3Blue.tga");
 
   text4->setModifiable();
   text3->setModifiable();
+  aiField->setModifiable();
+  p1Field->setModifiable();
+  p2Field->setModifiable();
   text2->unFocus();
   text1->unFocus();
-  gridou->addObject(text1, [] (void) {
+  p1Label->unFocus();
+  p2Label->unFocus();
+  aiLabel->unFocus();
+  grid->addObject(text1, [] (void) {
     ;
   });
-  gridou->addObject(text2, [] (void) {
+  grid->addObject(text2, [] (void) {
     ;
   });
-  gridou->addObject(text3, [text3] (void) {
+  grid->addObject(aiLabel, [] (void) {
+    ;
+  });
+  grid->addObject(p1Label, [] (void) {
+    ;
+  });
+  grid->addObject(p2Label, [] (void) {
+    ;
+  });
+  grid->addObject(text3, [text3] (void) {
     std::cout << text3->getText() << std::endl;
   });
-  gridou->addObject(text4, [text4] (void) {
+  grid->addObject(text4, [text4] (void) {
     std::cout << text4->getText() << std::endl;
   });
-  gridou->addObject(start, [this] (void) {
-    startGame();
+  grid->addObject(aiField, [aiField] (void) {
+    std::cout << aiField->getText() << std::endl;;
+  });
+  grid->addObject(p1Field, [p1Field] (void) {
+    std::cout << p1Field->getText() << std::endl;;
+  });
+  grid->addObject(p2Field, [p2Field] (void) {
+    std::cout << p2Field->getText() << std::endl;;
+  });
+    grid->addObject(start, [this] (void) {
+    startGame(false);
   });
   _prev = _game;
   _change = true;
-  _game = gridou;
+  _game = grid;
 }
 
 void		Core::firstMenu()
@@ -201,11 +238,13 @@ bool		Core::update()
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
-  if (ret == false && _game != NULL)
-    {
-      delete _game;
-      _game = NULL;
-    }
+  // if (ret == false && _game != NULL)
+  //   {
+  //     delete _game;
+  //     _game = NULL;
+  //   }
+  if (!ret)
+    _status = true;
   return ret;
 }
 
@@ -214,6 +253,7 @@ void		Core::draw()
   _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
 }
+
 
 gdl::SdlContext		&Core::getContext()
 {

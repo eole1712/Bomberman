@@ -23,6 +23,7 @@
 # include "JSONDoc.hpp"
 # include "Text2d.hpp"
 # include "IScene.hpp"
+# include "MenuGrid.hpp"
 
 //# include "Core.hpp"
 
@@ -33,7 +34,7 @@ class Gamer : public IScene
 {
 public:
   Gamer();
-  Gamer(unsigned int, unsigned int, unsigned int, unsigned int);
+  Gamer(unsigned int, unsigned int, unsigned int, unsigned int, bool);
   virtual ~Gamer();
 
   virtual void		init();
@@ -45,7 +46,8 @@ public:
   virtual void		drawPlayerArme(gdl::Clock &clock, gdl::BasicShader &shader,
 				       std::vector<Asset3d*>& assets, Player *player,
 				       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset);
- //void			startGame();
+  bool			pauseMenu();
+  //void			startGame();
 
 private:
   Gamer(const Gamer &);
@@ -58,6 +60,10 @@ private:
   int				_width;
   int				_height;
   JSONDoc			_json;
+  MenuGrid*			_menu;
+  bool				_quit;
+  bool				_resume;
+  bool				_twoPlayers;
 
 private:
   CameraObject			_camera;

@@ -34,9 +34,9 @@ bool		Mine::isNull() const
   return false;
 }
 
-void		Mine::explose(int x, int y, Map *map, unsigned int, Player *player) const
+void		Mine::explose(int x, int y, Map *map, unsigned int r, Player *player) const
 {
-  isOtherBomb(map, x, y, player, x, y);
+  exploseCase(map, x, y, r, player, x, y);
 }
 
   void		Mine::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
