@@ -33,7 +33,9 @@ int main()
     }
   while (!engine.isOver())
     {
+      std::cout << "a" << std::endl;
       engine.firstMenu();
+      std::cout << "b" << std::endl;
       while (!engine.isOver() && engine.update() == true)
 	{
 	  showfps();

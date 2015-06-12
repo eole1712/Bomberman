@@ -29,6 +29,8 @@ public:
   RessourceStock(const RessourceStock &);
   RessourceStock &operator=(const RessourceStock &);
 
+  void		init();
+
 public:
   IObject	*getObject(IObject::Type) const;
   IObject	*getBuff(IBuff::Type) const;
@@ -44,6 +46,7 @@ private:
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
   AudioManager			_audioManager;
+  SoundManager*			_ambiance;
   std::vector<std::string>	_sounds;
   std::vector<SoundManager*>	_soundsPlaying;
 };

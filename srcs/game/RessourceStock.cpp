@@ -38,47 +38,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, ScoreList*
       _players[i] = new Player(names[i], Color::HSVtoRGB(1.0 / names.size() * i, 1, 1));
       reinterpret_cast<Player*>(_players[i])->linkScoreList(scoreList);
     }
-  _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
-  _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
-  _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;
-  _buffs[IBuff::INC_RANGE] = new Buff::IncRange;
-  _buffs[IBuff::NO_BOMB] = new Buff::NoBomb;
-  _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
-  _buffs[IBuff::SHIELD] = new Buff::Shield;
-  _buffs[IBuff::WEAPON] = new Buff::Weapon;
-  _bombs[Bomb::CLASSIC] = new Bomb::Classic;
-  _bombs[Bomb::VIRUS] = new Bomb::Virus;
-  _bombs[Bomb::MINE] = new Bomb::Mine;
-  _bombs[Bomb::BARREL] = new Bomb::Barrel;
-  _objects[IObject::BOMB] = NULL;
-  _objects[IObject::BARREL] = NULL;
-  _objects[IObject::MINE] = NULL;
-  _objects[IObject::VIRUS] = NULL;
-  _objects[IObject::PLAYER] = NULL;
-  _objects[IObject::BONUS] = NULL;
-  _objects[IObject::WALL] = new Wall;
-  _objects[IObject::DESTROYABLEWALL] = new DestroyableWall;
-  _objects[IObject::SPAWN] = new Spawn;
-  _objects[IObject::EMPTY] = new Empty;
-  _objects[IObject::FIRE] = NULL;
-  _sounds[TWO] = "./resources/sound/killstreak/rampage.wav";
-  _sounds[THREE] = "./resources/sound/killstreak/killingspree.wav";
-  _sounds[FOUR] = "./resources/sound/killstreak/dominating.wav";
-  _sounds[FIVE] = "./resources/sound/killstreak/unstoppable.wav";
-  _sounds[SIX] = "./resources/sound/killstreak/megakill.wav";
-  _sounds[SEVEN] = "./resources/sound/killstreak/ultrakill.wav";
-  _sounds[EIGHT] = "./resources/sound/killstreak/ludicrouskill.wav";
-  _sounds[NINE] = "./resources/sound/killstreak/wickedsick.wav";
-  _sounds[TEN] = "./resources/sound/killstreak/monsterkill.wav";
-  _sounds[ELEVEN] = "./resources/sound/killstreak/holyshit.wav";
-  _sounds[TWELVE] = "./resources/sound/killstreak/godlike.wav";
-  _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.wav";
-  _sounds[SUICIDE] = "./resources/sound/suicide.wav";
-  _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
-  _sounds[PREPARE1] = "./resources/sound/prepare1.wav";
-  _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
-  _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
-  _sounds[PREPARE4] = "./resources/sound/prepare4.wav";
+  this->init();
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
@@ -86,47 +46,7 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
 {
   for (unsigned int i = 0; i < players.size(); ++i)
     _players[i] = players[i];
-  _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
-  _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
-  _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;
-  _buffs[IBuff::INC_RANGE] = new Buff::IncRange;
-  _buffs[IBuff::NO_BOMB] = new Buff::NoBomb;
-  _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
-  _buffs[IBuff::SHIELD] = new Buff::Shield;
-  _buffs[IBuff::WEAPON] = new Buff::Weapon;
-  _bombs[Bomb::CLASSIC] = new Bomb::Classic;
-  _bombs[Bomb::VIRUS] = new Bomb::Virus;
-  _bombs[Bomb::MINE] = new Bomb::Mine;
-  _bombs[Bomb::BARREL] = new Bomb::Barrel;
-  _objects[IObject::BOMB] = NULL;
-  _objects[IObject::BARREL] = NULL;
-  _objects[IObject::MINE] = NULL;
-  _objects[IObject::VIRUS] = NULL;
-  _objects[IObject::PLAYER] = NULL;
-  _objects[IObject::BONUS] = NULL;
-  _objects[IObject::WALL] = new Wall;
-  _objects[IObject::DESTROYABLEWALL] = new DestroyableWall;
-  _objects[IObject::SPAWN] = new Spawn;
-  _objects[IObject::EMPTY] = new Empty;
-  _objects[IObject::FIRE] = NULL;
-  _sounds[TWO] = "./resources/sound/killstreak/rampage.wav";
-  _sounds[THREE] = "./resources/sound/killstreak/killingspree.wav";
-  _sounds[FOUR] = "./resources/sound/killstreak/dominating.wav";
-  _sounds[FIVE] = "./resources/sound/killstreak/unstoppable.wav";
-  _sounds[SIX] = "./resources/sound/killstreak/megakill.wav";
-  _sounds[SEVEN] = "./resources/sound/killstreak/ultrakill.wav";
-  _sounds[EIGHT] = "./resources/sound/killstreak/ludicrouskill.wav";
-  _sounds[NINE] = "./resources/sound/killstreak/wickedsick.wav";
-  _sounds[TEN] = "./resources/sound/killstreak/monsterkill.wav";
-  _sounds[ELEVEN] = "./resources/sound/killstreak/holyshit.wav";
-  _sounds[TWELVE] = "./resources/sound/killstreak/godlike.wav";
-  _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.wav";
-  _sounds[SUICIDE] = "./resources/sound/suicide.wav";
-  _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
-  _sounds[PREPARE1] = "./resources/sound/prepare1.wav";
-  _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
-  _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
-  _sounds[PREPARE4] = "./resources/sound/prepare4.wav";
+  this->init();
 }
 
 RessourceStock::~RessourceStock()
@@ -137,6 +57,57 @@ RessourceStock::~RessourceStock()
     delete _buffs[i];
   for (unsigned int i = 0; i < _objects.size(); ++i)
     delete _objects[i];
+  for (unsigned int i = 0; i < _soundsPlaying.size(); ++i)
+    if (_soundsPlaying[i] != NULL)
+      delete _soundsPlaying[i];
+  delete _ambiance;
+}
+
+void	RessourceStock::init()
+{
+  _buffs[IBuff::INC_SPEED] = new Buff::IncSpeed;
+  _buffs[IBuff::DEC_SPEED] = new Buff::DecSpeed;
+  _buffs[IBuff::INC_BOMB] = new Buff::IncBomb;
+  _buffs[IBuff::INC_RANGE] = new Buff::IncRange;
+  _buffs[IBuff::NO_BOMB] = new Buff::NoBomb;
+  _buffs[IBuff::PARALYZED] = new Buff::Paralyzed;
+  _buffs[IBuff::SHIELD] = new Buff::Shield;
+  _buffs[IBuff::WEAPON] = new Buff::Weapon;
+  _bombs[Bomb::CLASSIC] = new Bomb::Classic;
+  _bombs[Bomb::VIRUS] = new Bomb::Virus;
+  _bombs[Bomb::MINE] = new Bomb::Mine;
+  _bombs[Bomb::BARREL] = new Bomb::Barrel;
+  _objects[IObject::BOMB] = NULL;
+  _objects[IObject::BARREL] = NULL;
+  _objects[IObject::MINE] = NULL;
+  _objects[IObject::VIRUS] = NULL;
+  _objects[IObject::PLAYER] = NULL;
+  _objects[IObject::BONUS] = NULL;
+  _objects[IObject::WALL] = new Wall;
+  _objects[IObject::DESTROYABLEWALL] = new DestroyableWall;
+  _objects[IObject::SPAWN] = new Spawn;
+  _objects[IObject::EMPTY] = new Empty;
+  _objects[IObject::FIRE] = NULL;
+  _ambiance = new SoundManager(&_audioManager, "./resources/sound/ambiance.ogg");
+  _ambiance->play();
+  _sounds[TWO] = "./resources/sound/killstreak/rampage.wav";
+  _sounds[THREE] = "./resources/sound/killstreak/killingspree.wav";
+  _sounds[FOUR] = "./resources/sound/killstreak/dominating.wav";
+  _sounds[FIVE] = "./resources/sound/killstreak/unstoppable.wav";
+  _sounds[SIX] = "./resources/sound/killstreak/megakill.wav";
+  _sounds[SEVEN] = "./resources/sound/killstreak/ultrakill.wav";
+  _sounds[EIGHT] = "./resources/sound/killstreak/ludicrouskill.wav";
+  _sounds[NINE] = "./resources/sound/killstreak/wickedsick.wav";
+  _sounds[TEN] = "./resources/sound/killstreak/monsterkill.wav";
+  _sounds[ELEVEN] = "./resources/sound/killstreak/holyshit.wav";
+  _sounds[TWELVE] = "./resources/sound/killstreak/godlike.wav";
+  _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.wav";
+  _sounds[SUICIDE] = "./resources/sound/suicide.wav";
+  _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
+  _sounds[PREPARE1] = "./resources/sound/prepare1.wav";
+  _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
+  _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
+  _sounds[PREPARE4] = "./resources/sound/prepare4.wav";
 }
 
 IObject		*RessourceStock::getObject(IObject::Type type) const

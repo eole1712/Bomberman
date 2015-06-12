@@ -17,13 +17,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects)
 {
-  this->_width = width;
-  this->_height = height;
-  if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 12)
-    throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 10 || this->_width < 10)
-    throw new Exception::InvalidDimensions("Map Constructor");
+  this->init(width, height);
   this->randomize();
   this->equalize();
 }
@@ -32,6 +26,11 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty)
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL)
+{
+  this->init(width, height);
+}
+
+void	Map::init(unsigned int width, unsigned int height)
 {
   this->_width = width;
   this->_height = height;
@@ -266,7 +265,6 @@ bool		Map::isIn(unsigned int x, unsigned int y) const
 
 void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 {
-  SoundManager*	sound;
   static bool	firstBlood = true;
 
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
@@ -277,16 +275,14 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 	{
 	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
 	    {
-	      sound = this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE);
-	      sound->play();
+	      this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
 	      firstBlood = false;
 	    }
 	  else
 	    {
 	      if (firstBlood)
 		{
-		  sound = this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD);
-		  sound->play();
+		  this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD)->play();
 		  firstBlood = false;
 		}
 	      player->incScore();
