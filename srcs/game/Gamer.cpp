@@ -61,21 +61,7 @@ void	Gamer::init()
   std::vector<std::string>	nameList = {"Player 1",
 					    "Player 2",
 					    "Player 3",
-					    "Player 4",
-					    "Player 5",
-					    "Player 6",
-					    "Player 7",
-					    "Player 8",
-					    "Player 9",
-					    "Player 10",
-					    "Player 11",
-					    "Player 12",
-					    "Player 13",
-					    "Player 14",
-					    "Player 15",
-					    "Player 16",
-					    "Player 17",
-					    "Player 18"};
+					    "Player 4"};
   std::string			mapName = "de_bra";
   std::vector<std::string>	vec;
   Player			*player;
@@ -112,7 +98,7 @@ void	Gamer::init()
 
 bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
 {
-  Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
+  PlayerAI	*player = dynamic_cast<PlayerAI *>(_stock->getPlayer(0));
   Player	*player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
   float		elsapsedTime = static_cast<float>(clock.getElapsed()) * 60;
   static bool	space = false;
@@ -150,18 +136,20 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
 
   _map->checkBombsOnMap();
+  player->doAction(*_map, elsapsedTime);
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
-  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
+  /*  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
+  */
   _camera.updateView();
-  _camera2.updateView();
+  //  _camera2.updateView();
   return true;
 }
 
@@ -247,13 +235,13 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
 			 std::vector<Asset3d*>& assets,
 			 std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset)
 {
-  glViewport(900, 0, 900, 900);
+  //  glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   draw(clock, shader, _camera, assets, ObjectToAsset);
   drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(0)), ObjectToAsset);
-  glViewport(0, 0, 900, 900);
-  draw(clock, shader, _camera2, assets, ObjectToAsset);
-  drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
+  //  glViewport(0, 0, 900, 900);
+  //  draw(clock, shader, _camera2, assets, ObjectToAsset);
+  //  drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
 }
 
 CameraObject		&Gamer::getCamera(unsigned int i)
