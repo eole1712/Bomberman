@@ -44,7 +44,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
 	{
-	  _players[i] = new PlayerAI("AI " + Conversion::typeToString<unsigned int>(ai_id), "resources/ai/base-ai.lua",
+	  _players[i] = new PlayerAI("AI" + Conversion::typeToString<unsigned int>(ai_id), "resources/ai/base-ai.lua",
 				     Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
 	  ++ai_id;
 	}
