@@ -73,6 +73,7 @@ void	Gamer::init()
   _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
 		: (new ScoreList()));
+  std::cout << "SIZE :" << nameList.size() << std::endl;
   _stock = new RessourceStock(nameList, 8,_scoreList);
   _map = _mapList->getMap(mapName);
   if (_map == NULL)
