@@ -11,7 +11,7 @@ UNKNOWN = 6
 -- allows ai to memorise the path
 local route = {}
 local attack = false
-local isDebug = false
+local isDebug = true
 
 -- ai data table
 -- aiAction is the function called at each frame
@@ -225,22 +225,25 @@ function checkCell(map, mainCoo, x, y, tableType)
    return false
 end
 
--- target enemy
+-- target closest enemy
 function targetEnemy(map, player)
    local idx = 0
+   local res = { x = -1, y = -1 }
 
-   while (idx < map:getNbPlayers()
-	     and map:getPlayerPosX(idx) == player.x
-	     and map:getPlayerPosY(idx) == player.y)
+   while (idx < map:getNbPlayers())
    do
+      if ((x == -1 or y == -1 or
+	   (math.abs(player.x - map:getPlayerPosX(idx)) + 
+	    math.abs(player.y - map:getPlayerPosY(idx)) < 
+	       (math.abs(player.x - res.x) + math.abs(player.y - res.y))))
+	     and (player.x ~= map:getPlayerPosX(idx) and player.y ~= map:getPlayerPosY(idx))) then
+	 res = { x = map:getPlayerPosX(idx), y = map:getPlayerPosY(idx) }
+      end
+
       idx = idx + 1
    end
 
-   if (idx < map:getNbPlayers()) then
-      return { x = map:getPlayerPosX(idx), y = map:getPlayerPosY(idx) }
-   else
-      return { x = -1, y = -1 }
-   end
+   return res
 end
 
 -- checks whether an enemy is on x and y
