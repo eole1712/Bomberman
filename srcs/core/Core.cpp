@@ -101,13 +101,13 @@ bool				Core::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
-
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
     return false;
-  loadTextures();
   _shader.bind();
+  _shader.setUniform("color", glm::vec4(1.0));
+  loadTextures();
   return true;
 }
 

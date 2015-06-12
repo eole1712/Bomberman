@@ -173,8 +173,13 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (_twoPlayers && input.getKey(SDLK_q) != input.getKey(SDLK_d))
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
   _map->checkBombsOnMap();
-  for (unsigned int i = 1; i < (_stock->getNbPlayer() - (_twoPlayers)) ; ++i)
-    dynamic_cast<PlayerAI *>(_stock->getPlayer(i))->doAction(*_map, elsapsedTime);
+  for (unsigned int i = 0; i < _stock->getNbPlayer() ; ++i)
+    {
+      PlayerAI*	ai = NULL;
+
+      if ((ai = dynamic_cast<PlayerAI *>(_stock->getPlayer(i))) != NULL)
+	ai->doAction(*_map, elsapsedTime);
+    }
 
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
@@ -198,19 +203,25 @@ void		Gamer::draw(gdl::Clock &clock,
 			    gdl::BasicShader &shader,
 			    CameraObject &camera,
 			    std::vector<Asset3d*> &assets,
-			    std::map<Bomberman::IObject::Type, mapAsset>& ObjectToAsset)
+			    std::map<Bomberman::IObject::Type, mapAsset>& ObjectToAsset,
+			    Player *player)
 {
   glm::vec3	tmp;
+  glm::vec3	bra;
+  Player	*drawPlayer;
 
   // Clear the screen
   shader.bind();
   shader.setUniform("view", camera.getView());
   shader.setUniform("projection", camera.getProjection());
   shader.setUniform("color", glm::vec4(1.0));
-  for (int x = -1; x <= _width; x++)
+  for (double x = -1; x <= _width; x++)
     {
-      for (int y = -1; y <= _height; y++)
+      for (double y = -1; y <= _height; y++)
   	{
+	  bra = glm::rotate(glm::vec3(x, 0, y) - player->getPosition(), -(player->getRotation().y), glm::vec3(0, 1, 0));
+	  if (bra.z < -5)
+	    continue;
   	  if (x == -1 || y == -1 || x == _width || y == _height)
   	    {
   	      assets[WALL]->setPosition(glm::vec3(x, 0, y));
@@ -241,9 +252,12 @@ void		Gamer::draw(gdl::Clock &clock,
   	    }
   	}
     }
-  for (unsigned int y = 0; y < _stock->getNbPlayer(); y++)
+  for (unsigned int i = 0; i < _stock->getNbPlayer(); i++)
     {
-      dynamic_cast<Player *>(_stock->getPlayer(y))->draw(*assets[PLAYER], shader, clock);
+      drawPlayer = dynamic_cast<Player *>(_stock->getPlayer(i));
+      bra = glm::rotate(drawPlayer->getPosition() - player->getPosition(), -(player->getRotation().y), glm::vec3(0, 1, 0));
+      if (bra.z > -5)
+	drawPlayer->draw(*assets[PLAYER], shader, clock);
     }
   shader.setUniform("color", glm::vec4(1.0));
   assets[SKYBOX]->rotate(glm::vec3(1, 0, 0), 0.02);
@@ -291,12 +305,12 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
   if (_twoPlayers)
     glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  draw(clock, shader, _camera, assets, ObjectToAsset);
+  draw(clock, shader, _camera, assets, ObjectToAsset, dynamic_cast<Player *>(_stock->getPlayer(0)));
   drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(0)), ObjectToAsset);
   if (_twoPlayers)
     {
       glViewport(0, 0, 900, 900);
-      draw(clock, shader, _camera2, assets, ObjectToAsset);
+      draw(clock, shader, _camera2, assets, ObjectToAsset, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)));
       drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
     }
 }

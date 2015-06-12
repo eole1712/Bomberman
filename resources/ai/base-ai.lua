@@ -11,6 +11,7 @@ UNKNOWN = 6
 -- allows ai to memorise the path
 local route = {}
 local attack = false
+local isDebug = false
 
 -- ai data table
 -- aiAction is the function called at each frame
@@ -22,7 +23,7 @@ if (player.isAlive == false)
 then
    return
 end
-print("player at", player.x, player.y) -- debug
+debug("player at", player.x, player.y) 
 
 if (#route > 0 and player.x == route[1].x and route[1].y)
 then
@@ -44,20 +45,13 @@ elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
 then
    attack = true
 
-   local idx = 0
-
-   while (idx < map:getNbPlayers()
-	     and map:getPlayerPosX(idx) == player.x
-	     and map:getPlayerPosY(idx) == player.y)
-   do
-      idx = idx + 1
-   end
-
    -- get enemy and set route to him
-   if (idx < map:getNbPlayers()) then
-      route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1), { SAFE, BONUS, DESTROYABLE })
+   local target = targetEnemy(map, player)
+
+   if (target.x ~= -1 and target.y ~= -1) then
+      route = findPath(map, player.x, player.y, target.x, target.y, { SAFE, BONUS, DESTROYABLE })
    else
-      print("AI: Error: player target not found")
+      debug("AI: Error: player target not found")
    end
 end
 
@@ -80,16 +74,16 @@ for k, v in pairs(adjCells)
 do
    if (#route > 0 and isInMap(map, v.x, v.y) and v.shouldMove(player, route[1].x, route[1].y))
    then
-      if (map:getCell(v.x, v.y) == DESTROYABLE and attack)
+      if ((map:getCell(v.x, v.y) == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
       then
 	 player:putBomb()
-	 print("putBomb at", player.x, player.y) -- debug
+	 debug("putBomb at", player.x, player.y) 
 	 route = {} -- clean route so the route will be set with an updated map
 	 break
       elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
 	      map:getCell(player.x, player.y) ~= SAFE)
       then
-	 --	    print(v.moveDesc)
+	 --	    debug(v.moveDesc)
 	 v.move(player)
       end
    end
@@ -100,20 +94,26 @@ end
 function runAway(map, player)
    attack = false
 
-   local cell = findCellByBackTracking(map, player.x, player.y, { SAFE, BONUS }, { BLOCK, DESTROYABLE })
+   local cell = findCell(map, player.x, player.y, { SAFE, BONUS }, { BLOCK, DESTROYABLE })
 
    if (cell.x ~= -1 and cell.y ~= -1) then
       route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
-      print("safe cell", cell.x, cell.y) -- debug
+      debug("safe cell", cell.x, cell.y) 
       debugRoute()
    else
       route = {}
-      print "safe cell not found" -- debug
+      debug("safe cell not found") 
    end
 end
 
 -- back tracking algorithm to seek a cell
 local prevCells = {}
+
+function findCell(map, x, y, targetCells, blocksCells)
+   prevCells = {}
+   return findCellByBackTracking(map, x, y, targetCells, blocksCells)
+end
+
 function findCellByBackTracking(map, x, y, targetCells, blocksCells)
    local toTest = {
       { x = x + 1, y = y },
@@ -125,9 +125,11 @@ function findCellByBackTracking(map, x, y, targetCells, blocksCells)
 
    for k, v in pairs(toTest)
    do
+      debug("bt test", v.x, v.y)
       if (isInMap(map, v.x, v.y) and isTypeInTable(map:getCell(v.x, v.y), blocksCells) == false and
 	  isCooInTable(prevCells, v.x, v.y) == false)
       then
+	 debug("bt ok", v.x, v.y)
 	 if (isTypeInTable(map:getCell(v.x, v.y), targetCells)) then
 	    prevCells = {}
 	    return { x = v.x, y = v.y, valid = true }
@@ -175,7 +177,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 
 	    if (v.x == xStart and v.y == yStart)
 	    then
-	       print "start cell found" -- debug
+	       debug("start cell found") 
 	       done = true
 	       break
 	    end
@@ -186,12 +188,12 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
    end
 
 --[[
-   print "--------- debug maincoo"
+   debug "------- maincoo"
    for k, v in pairs(mainCoo)
    do
-      print(v.x, v.y, v.count)
+      debug(v.x, v.y, v.count)
    end
-   print "--------- end"
+   debug "--------- end"
 ]]--
 
    local path = { { x = xStart, y = yStart } }
@@ -220,6 +222,42 @@ function checkCell(map, mainCoo, x, y, tableType)
       return true
    end
 
+   return false
+end
+
+-- target closest enemy
+function targetEnemy(map, player)
+   local idx = 0
+   local res = { x = -1, y = -1 }
+
+   while (idx < map:getNbPlayers())
+   do
+      if ((x == -1 or y == -1 or
+	   (math.abs(player.x - map:getPlayerPosX(idx)) + 
+	    math.abs(player.y - map:getPlayerPosY(idx)) < 
+	       (math.abs(player.x - res.x) + math.abs(player.y - res.y))))
+	     and (player.x ~= map:getPlayerPosX(idx) and player.y ~= map:getPlayerPosY(idx))) then
+	 res = { x = map:getPlayerPosX(idx), y = map:getPlayerPosY(idx) }
+      end
+
+      idx = idx + 1
+   end
+
+   return res
+end
+
+-- checks whether an enemy is on x and y
+function isEnemy(map, x, y)
+   local idx = 0
+
+   while (idx < map:getNbPlayers())
+   do
+      if (x == map:getPlayerPosX(idx) and y == map:getPlayerPosY(idx)) then
+	 return true
+      end
+
+      idx = idx + 1
+   end
    return false
 end
 
@@ -270,10 +308,23 @@ function isCooInTable(mainCoo, x, y)
 end
 
 function debugRoute()
-   print "--------- debug route"
+   debug("--------- debug route")
    for k, v in pairs(route)
    do
-      print(v.x, v.y)
+      debug(v.x, v.y)
    end
-   print "--------- end"
+   debug("--------- end")
+end
+
+function debug(...)
+   local arg = {...}
+
+   if (isDebug == false) then
+      return
+   end
+
+   for i,v in ipairs(arg) do
+      io.write(v, "\t")
+   end
+   io.write("\n")
 end
