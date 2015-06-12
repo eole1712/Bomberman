@@ -35,6 +35,11 @@ int	AMenuObject::getY()
   return _y;
 }
 
+int	AMenuObject::getHeight()
+{
+  return _height;
+}
+
 bool	AMenuObject::isFocusable()
 {
   return _focusable;

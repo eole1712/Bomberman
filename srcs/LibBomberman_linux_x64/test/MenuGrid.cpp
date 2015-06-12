@@ -86,7 +86,7 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
 	  (*it).first->draw(shader);
 	}
       if (_focus == it)
-	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
+	drawFocus((*it).first->getX(), (*it).first->getY(), (*it).first->getHeight(), shader);
     }
   glEnable(GL_DEPTH_TEST);
 }
@@ -104,7 +104,7 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 	  (*it).first->draw(shader);
 	}
       if (_focus == it)
-	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
+	drawFocus((*it).first->getX(), (*it).first->getY(), (*it).first->getHeight(), shader);
     }
   glEnable(GL_DEPTH_TEST);
 
@@ -128,9 +128,10 @@ void	MenuGrid::actionOnFocus()
   (*_focus).second();
 }
 
-void	MenuGrid::drawFocus(int x, int y, gdl::BasicShader& shader)
+void	MenuGrid::drawFocus(int x, int y, int height, gdl::BasicShader& shader)
 {
-  View2d	cursor(x - 110, y + 10, 100, 100, "resources/assets/textures/bombcursor.tga");
+  View2d	cursor(x - (height + 10), y, height, height, "resources/assets/textures/bombcursor.tga");
+
 
   cursor.draw(shader);
 }
