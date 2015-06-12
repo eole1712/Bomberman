@@ -33,13 +33,15 @@ Gamer::Gamer()
   : _width(20), _height(20), _menu(NULL), _quit(false), _resume(false),
     _camera(90.0, 900, 900), _camera2(90.0, 900, 900)
 {
+  _twoPlayers = true;
   this->init();
 }
 
-Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam)
+Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers)
   : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false),
     _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
 {
+  _twoPlayers = twoPlayers;
   this->init();
 }
 
@@ -76,7 +78,7 @@ void	Gamer::init()
 					    "Player16",
 					    "Player17",
 					    "Player18"};
-  std::string			mapName = "de_bra";
+  std::string			mapName = "Classic Map";
   std::vector<std::string>	vec;
   Player			*player;
   Player			*player2;
@@ -155,7 +157,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (input.getKey(SDLK_RCTRL) != space && !space)
     player->putBomb();
   space = input.getKey(SDLK_RCTRL);
-  if (input.getKey(SDLK_SPACE) != space2 && !space2)
+  if (_twoPlayers && input.getKey(SDLK_SPACE) != space2 && !space2)
     player2->putBomb();
   space2 = input.getKey(SDLK_SPACE);
   if (input.getKey(SDLK_UP) || input.getKey(SDLK_DOWN))
@@ -165,8 +167,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       else
 	player->move(180 + player->getRotation().y, elsapsedTime);
     }
-
-  if (input.getKey(SDLK_z) || input.getKey(SDLK_s))
+  if (_twoPlayers && (input.getKey(SDLK_z) || input.getKey(SDLK_s)))
     {
       if (input.getKey(SDLK_z))
 	player2->move(player2->getRotation().y, elsapsedTime);
@@ -176,23 +177,27 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
 
   if (input.getKey(SDLK_RIGHT) != input.getKey(SDLK_LEFT))
     player->Player::rotate(input.getKey(SDLK_LEFT), elsapsedTime);
-  if (input.getKey(SDLK_q) != input.getKey(SDLK_d))
+  if (_twoPlayers && input.getKey(SDLK_q) != input.getKey(SDLK_d))
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
   _map->checkBombsOnMap();
-  for (unsigned int i = 1; i < _stock->getNbPlayer() - 1; ++i)
+  for (unsigned int i = 1; i < _stock->getNbPlayer() - 1 ||
+	 (i < _stock->getNbPlayer() && !_twoPlayers); ++i)
     dynamic_cast<PlayerAI *>(_stock->getPlayer(i))->doAction(*_map, elsapsedTime);
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
-  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
+  _camera.updateView();
+  if (_twoPlayers)
+    {
+      _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(3.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
-  _camera.updateView();
-  _camera2.updateView();
+      _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
+      _camera2.updateView();
+    }
   return true;
 }
 
@@ -288,13 +293,17 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
 			 std::vector<Asset3d*>& assets,
 			 std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset)
 {
-  glViewport(900, 0, 900, 900);
+  if (_twoPlayers)
+    glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   draw(clock, shader, _camera, assets, ObjectToAsset);
   drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(0)), ObjectToAsset);
-  glViewport(0, 0, 900, 900);
-  draw(clock, shader, _camera2, assets, ObjectToAsset);
-  drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
+  if (_twoPlayers)
+    {
+      glViewport(0, 0, 900, 900);
+      draw(clock, shader, _camera2, assets, ObjectToAsset);
+      drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
+    }
 }
 
 CameraObject		&Gamer::getCamera(unsigned int i)

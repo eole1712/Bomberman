@@ -34,7 +34,7 @@ class Gamer : public IScene
 {
 public:
   Gamer();
-  Gamer(unsigned int, unsigned int, unsigned int, unsigned int);
+  Gamer(unsigned int, unsigned int, unsigned int, unsigned int, bool);
   virtual ~Gamer();
 
   virtual void		init();
@@ -63,6 +63,7 @@ private:
   MenuGrid*			_menu;
   bool				_quit;
   bool				_resume;
+  bool				_twoPlayers;
 
 private:
   CameraObject			_camera;
