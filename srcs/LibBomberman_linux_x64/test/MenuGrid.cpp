@@ -69,11 +69,13 @@ void	 MenuGrid::moveRight()
 
 void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset3d *> &, std::map<Bomberman::IObject::Type, Bomberman::mapAsset>&)
 {
-  glDisable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   //shader.bind();
   // shader.setUniform("view", _camera.getView());
   // shader.setUniform("projection", _camera.getProjection());
+
+  glDisable(GL_DEPTH_TEST);
+
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
@@ -90,6 +92,8 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
 
 void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 {
+  glDisable(GL_DEPTH_TEST);
+
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
@@ -101,6 +105,8 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
       if (_focus == it)
 	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
     }
+  glEnable(GL_DEPTH_TEST);
+
 }
 
 void	MenuGrid::addObject(AMenuObject* obj, std::function<void()> func)

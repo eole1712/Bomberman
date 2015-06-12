@@ -102,6 +102,9 @@ bool				Core::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
       || !_shader.build())
