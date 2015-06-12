@@ -30,13 +30,13 @@ namespace Bomberman
 {
 
 Gamer::Gamer()
-  : _width(20), _height(20), _camera(90.0, 900, 900), _camera2(90.0, 900, 900)
+  : _width(20), _height(20), _menu(NULL), _camera(90.0, 900, 900), _camera2(90.0, 900, 900)
 {
   this->init();
 }
 
 Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam)
-  : _width(width), _height(height), _camera(90.0, widthCam, heightCam),
+  : _width(width), _height(height), _menu(NULL), _camera(90.0, widthCam, heightCam),
     _camera2(90.0, widthCam, heightCam)
 {
   this->init();
@@ -109,6 +109,12 @@ void	Gamer::init()
   _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
 }
 
+bool		Gamer::pauseMenu()
+{
+  //_menu = new MenuGrid;
+  return false;
+}
+
 bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
 {
   Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
@@ -118,8 +124,12 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   static bool	space2 = false;
 
   // If the escape key is pressed or if the window has been closed we stop the program
-  if (input.getKey(SDLK_ESCAPE) || input.getInput(SDL_QUIT))
+  if (_menu != NULL)
+    return _menu->update(clock, input);
+  if (input.getInput(SDL_QUIT))
     return false;
+  if (input.getKey(SDLK_ESCAPE))
+    return pauseMenu();
   if (input.getKey(SDLK_RCTRL) != space && !space)
     player->putBomb();
   space = input.getKey(SDLK_RCTRL);
@@ -147,7 +157,6 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
     player->Player::rotate(input.getKey(SDLK_LEFT), elsapsedTime);
   if (input.getKey(SDLK_q) != input.getKey(SDLK_d))
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
-
   _map->checkBombsOnMap();
   for (unsigned int i = 1; i < _stock->getNbPlayer() - 1; ++i)
     dynamic_cast<PlayerAI *>(_stock->getPlayer(i))->doAction(*_map, elsapsedTime);
