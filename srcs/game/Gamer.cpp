@@ -86,12 +86,12 @@ void	Gamer::init()
   player = dynamic_cast<Player *>(_stock->getPlayer(0));
   player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
-		      + glm::rotate(glm::vec3(3.5, 4, 0),
+		      + glm::rotate(glm::vec3(2.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
   _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
-		      + glm::rotate(glm::vec3(3.5, 4, 0),
+		      + glm::rotate(glm::vec3(2.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
@@ -182,7 +182,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
     }
 
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
-		      + glm::rotate(glm::vec3(3.5, 4, 0),
+		      + glm::rotate(glm::vec3(2.5, 4, 0),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
@@ -190,7 +190,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (_twoPlayers)
     {
       _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
-		      + glm::rotate(glm::vec3(3.5, 4, 0),
+		      + glm::rotate(glm::vec3(2.5, 4, 0),
 				    player2->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
       _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
@@ -207,7 +207,7 @@ void		Gamer::draw(gdl::Clock &clock,
 			    Player *player)
 {
   glm::vec3	tmp;
-  glm::vec3	bra;
+  glm::vec3	pos;
   Player	*drawPlayer;
 
   // Clear the screen
@@ -215,48 +215,52 @@ void		Gamer::draw(gdl::Clock &clock,
   shader.setUniform("view", camera.getView());
   shader.setUniform("projection", camera.getProjection());
   shader.setUniform("color", glm::vec4(1.0));
-  for (double x = -1; x <= _width; x++)
+  pos.y = 0;
+  for (pos.x = -1; pos.x <= _width; pos.x++)
     {
-      for (double y = -1; y <= _height; y++)
+      for (pos.z = -1; pos.z <= _height; pos.z++)
   	{
-	  bra = glm::rotate(glm::vec3(x, 0, y) - player->getPosition(), -(player->getRotation().y), glm::vec3(0, 1, 0));
-	  if (bra.z < -5)
-	    continue;
-  	  if (x == -1 || y == -1 || x == _width || y == _height)
-  	    {
-  	      assets[WALL]->setPosition(glm::vec3(x, 0, y));
-  	      assets[WALL]->draw(shader, clock);
-  	    }
-  	  else
-  	    {
-  	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
-  	      	->setPosition(glm::vec3(x, 0, y));
-  	      if (IObject::MINE <= _map->getCellValue(x, y)->getObjectType() ||
-  	      	  IObject::BONUS == _map->getCellValue(x, y)->getObjectType())
-  	      	{
-  	      	  assets[FLOOR]->setPosition(glm::vec3(x, 0, y));
-  	      	  assets[FLOOR]->draw(shader, clock);
-  	      	}
-  	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
-  	      	shader.setUniform("color", glm::vec4(0, 1, 0, 0));
-	      tmp = assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
-		->getRotation();
-	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
-		->setRotation(glm::vec3(0, 0, 0));
-  	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
-  	      	->draw(shader, clock);
-	      assets[ObjectToAsset[_map->getCellValue(x, y)->getObjectType()]]
-		->setRotation(tmp);
-  	      if (IObject::MINE == _map->getCellValue(x, y)->getObjectType())
-  	      	shader.setUniform("color", glm::vec4(1.0));
-  	    }
-  	}
+	  tmp = glm::rotate(pos - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
+	  // Frustrum culling
+	  if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 13)
+	    {
+	      if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
+		{
+		  assets[WALL]->setPosition(glm::vec3(pos.x, 0, pos.z));
+		  assets[WALL]->draw(shader, clock);
+		}
+	      else
+		{
+		  assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
+		    ->setPosition(pos);
+		  if (IObject::MINE <= _map->getCellValue(pos.x, pos.z)->getObjectType() ||
+		      IObject::BONUS == _map->getCellValue(pos.x, pos.z)->getObjectType())
+		    {
+		      assets[FLOOR]->setPosition(pos);
+		      assets[FLOOR]->draw(shader, clock);
+		    }
+		  if (IObject::MINE == _map->getCellValue(pos.x, pos.z)->getObjectType())
+		    shader.setUniform("color", glm::vec4(0, 1, 0, 0));
+		  tmp = assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
+		    ->getRotation();
+		  assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
+		    ->setRotation(glm::vec3(0, 0, 0));
+		  assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
+		    ->draw(shader, clock);
+		  assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
+		    ->setRotation(tmp);
+		  if (IObject::MINE == _map->getCellValue(pos.x, pos.z)->getObjectType())
+		    shader.setUniform("color", glm::vec4(1.0));
+		}
+	    }
+	}
     }
   for (unsigned int i = 0; i < _stock->getNbPlayer(); i++)
     {
       drawPlayer = dynamic_cast<Player *>(_stock->getPlayer(i));
-      bra = glm::rotate(drawPlayer->getPosition() - player->getPosition(), -(player->getRotation().y), glm::vec3(0, 1, 0));
-      if (bra.z > -5)
+      tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
+      // Frustrum culling
+      if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 12)
 	drawPlayer->draw(*assets[PLAYER], shader, clock);
     }
   shader.setUniform("color", glm::vec4(1.0));
