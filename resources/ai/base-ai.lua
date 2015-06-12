@@ -23,7 +23,7 @@ if (player.isAlive == false)
 then
    return
 end
-debug("player at", player.x, player.y) 
+debug("player at", player.x, player.y)
 
 if (#route > 0 and player.x == route[1].x and route[1].y)
 then
@@ -77,7 +77,7 @@ do
       if ((map:getCell(v.x, v.y) == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
       then
 	 player:putBomb()
-	 debug("putBomb at", player.x, player.y) 
+	 debug("putBomb at", player.x, player.y)
 	 route = {} -- clean route so the route will be set with an updated map
 	 break
       elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
@@ -98,11 +98,11 @@ function runAway(map, player)
 
    if (cell.x ~= -1 and cell.y ~= -1) then
       route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
-      debug("safe cell", cell.x, cell.y) 
+      debug("safe cell", cell.x, cell.y)
       debugRoute()
    else
       route = {}
-      debug("safe cell not found") 
+      debug("safe cell not found")
    end
 end
 
@@ -177,7 +177,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 
 	    if (v.x == xStart and v.y == yStart)
 	    then
-	       debug("start cell found") 
+	       debug("start cell found")
 	       done = true
 	       break
 	    end
@@ -232,11 +232,11 @@ function targetEnemy(map, player)
 
    while (idx < map:getNbPlayers())
    do
-      if ((x == -1 or y == -1 or
-	   (math.abs(player.x - map:getPlayerPosX(idx)) + 
-	    math.abs(player.y - map:getPlayerPosY(idx)) < 
-	       (math.abs(player.x - res.x) + math.abs(player.y - res.y))))
-	     and (player.x ~= map:getPlayerPosX(idx) and player.y ~= map:getPlayerPosY(idx))) then
+      if ((player.x ~= map:getPlayerPosX(idx) and player.y ~= map:getPlayerPosY(idx)) and
+	    (res.x == -1 or res.y == -1 or
+		(math.abs(player.x - map:getPlayerPosX(idx)) +
+		    math.abs(player.y - map:getPlayerPosY(idx)) <
+		 (math.abs(player.x - res.x) + math.abs(player.y - res.y))))) then
 	 res = { x = map:getPlayerPosX(idx), y = map:getPlayerPosY(idx) }
       end
 
