@@ -74,7 +74,8 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
   //shader.bind();
   // shader.setUniform("view", _camera.getView());
   // shader.setUniform("projection", _camera.getProjection());
-
+glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDisable(GL_DEPTH_TEST);
 
   shader.setUniform("view", glm::mat4());
@@ -88,13 +89,15 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
       if (_focus == it)
 	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
     }
+  glDisable(GL_BLEND);
   glEnable(GL_DEPTH_TEST);
 }
 
 void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 {
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDisable(GL_DEPTH_TEST);
-
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1.0f, 1.0f));
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
@@ -107,7 +110,8 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
     }
   glEnable(GL_DEPTH_TEST);
-
+  //std::cout << "ylo" << std::endl;
+  glDisable(GL_BLEND);
 }
 
 void	MenuGrid::addObject(AMenuObject* obj, std::function<void()> func)
