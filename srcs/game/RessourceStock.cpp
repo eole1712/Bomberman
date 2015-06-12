@@ -60,7 +60,7 @@ RessourceStock::~RessourceStock()
   for (unsigned int i = 0; i < _soundsPlaying.size(); ++i)
     if (_soundsPlaying[i] != NULL)
       delete _soundsPlaying[i];
-  delete _ambiance;
+  delete _ambianceSound;
 }
 
 void	RessourceStock::init()
@@ -88,8 +88,7 @@ void	RessourceStock::init()
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
   _objects[IObject::FIRE] = NULL;
-  _ambiance = new SoundManager(&_audioManager, "./resources/sound/ambiance.ogg");
-  _ambiance->play();
+  this->initAmbianceSound();
   _sounds[TWO] = "./resources/sound/killstreak/rampage.wav";
   _sounds[THREE] = "./resources/sound/killstreak/killingspree.wav";
   _sounds[FOUR] = "./resources/sound/killstreak/dominating.wav";
@@ -125,7 +124,23 @@ IObject		*RessourceStock::getBomb(Bomb::Type type) const
   return _bombs[type];
 }
 
-SoundManager*		RessourceStock::getSound(SoundType type)
+void	RessourceStock::initAmbianceSound()
+{
+  _ambianceSound = new SoundManager(&_audioManager, "./resources/sound/ambiance.ogg");
+  _ambianceSound->play();
+}
+
+void	RessourceStock::deleteAmbianceSound()
+{
+  delete (_ambianceSound);
+}
+
+SoundManager*	RessourceStock::getAmbianceSound() const
+{
+  return (this->_ambianceSound);
+}
+
+SoundManager*	RessourceStock::getSound(SoundType type)
 {
   static unsigned int	pos = 0;
 

@@ -319,6 +319,11 @@ void		Map::checkBombsOnMap()
     {
       dynamic_cast<Player*>(_rcs->getPlayer(i))->checkBuffList();
     }
+  if (!this->getRcs()->getAmbianceSound()->isPlaying())
+    {
+      this->getRcs()->deleteAmbianceSound();
+      this->getRcs()->initAmbianceSound();
+    }
 }
 
 void		Map::addBomb(BombTimer *bomb)

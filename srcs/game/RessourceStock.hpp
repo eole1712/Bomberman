@@ -35,6 +35,9 @@ public:
   IObject	*getObject(IObject::Type) const;
   IObject	*getBuff(IBuff::Type) const;
   IObject	*getBomb(Bomb::Type) const;
+  void		initAmbianceSound();
+  void		deleteAmbianceSound();
+  SoundManager	*getAmbianceSound() const;
   SoundManager	*getSound(SoundType);
   IObject	*getPlayer(std::string const &) const;
   IObject	*getPlayer(unsigned int) const;
@@ -46,7 +49,7 @@ private:
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
   AudioManager			_audioManager;
-  SoundManager*			_ambiance;
+  SoundManager*			_ambianceSound;
   std::vector<std::string>	_sounds;
   std::vector<SoundManager*>	_soundsPlaying;
 };
