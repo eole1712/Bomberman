@@ -14,7 +14,7 @@ void			showfps()
       fps = nbframe / fps;
       if (maxfps < fps)
 	maxfps = fps;
-      printf("%d fps - %d max\n", fps, maxfps);
+      //      printf("%d fps - %d max\n", fps, maxfps);
       lasttime = curtime;
       nbframe = 0;
     }
@@ -33,9 +33,7 @@ int main()
     }
   while (!engine.isOver())
     {
-      std::cout << "a" << std::endl;
       engine.firstMenu();
-      std::cout << "b" << std::endl;
       while (!engine.isOver() && engine.update() == true)
 	{
 	  showfps();

@@ -74,6 +74,7 @@ void		Barrel::explose(int x, int y, Map *map, unsigned int range, Player *player
 void		Barrel::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
 					   int y, unsigned int range) const
 {
+  dynamic_cast<IBomb*>(realMap->getRcs()->getBomb(CLASSIC))->setBlastRangeToMap(map, realMap, x, y, range);
   for (struct {int x; int y; unsigned int r;} s = {x - 1, y - 1, 1};
        s.x >= 0 && s.y >= 0 && s.r < range;
        --s.x, --s.y, ++s.r)

@@ -44,18 +44,11 @@ elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
 then
    attack = true
 
-   local idx = 0
-
-   while (idx < map:getNbPlayers()
-	     and map:getPlayerPosX(idx) == player.x
-	     and map:getPlayerPosY(idx) == player.y)
-   do
-      idx = idx + 1
-   end
-
    -- get enemy and set route to him
-   if (idx < map:getNbPlayers()) then
-      route = findPath(map, player.x, player.y, map:getPlayerPosX(1), map:getPlayerPosY(1), { SAFE, BONUS, DESTROYABLE })
+   local target = targetEnemy(map, player)
+
+   if (target.x ~= -1 and target.y ~= -1) then
+      route = findPath(map, player.x, player.y, target.x, target.y, { SAFE, BONUS, DESTROYABLE })
    else
       print("AI: Error: player target not found")
    end
@@ -80,7 +73,7 @@ for k, v in pairs(adjCells)
 do
    if (#route > 0 and isInMap(map, v.x, v.y) and v.shouldMove(player, route[1].x, route[1].y))
    then
-      if (map:getCell(v.x, v.y) == DESTROYABLE and attack)
+      if ((map:getCell(v.x, v.y) == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
       then
 	 player:putBomb()
 	 print("putBomb at", player.x, player.y) -- debug
@@ -220,6 +213,39 @@ function checkCell(map, mainCoo, x, y, tableType)
       return true
    end
 
+   return false
+end
+
+-- target enemy
+function targetEnemy(map, player)
+   local idx = 0
+
+   while (idx < map:getNbPlayers()
+	     and map:getPlayerPosX(idx) == player.x
+	     and map:getPlayerPosY(idx) == player.y)
+   do
+      idx = idx + 1
+   end
+
+   if (idx < map:getNbPlayers()) then
+      return { x = map:getPlayerPosX(idx), y = map:getPlayerPosY(idx) }
+   else
+      return { x = -1, y = -1 }
+   end
+end
+
+-- checks whether an enemy is on x and y
+function isEnemy(map, x, y)
+   local idx = 0
+
+   while (idx < map:getNbPlayers())
+   do
+      if (x == map:getPlayerPosX(idx) and y == map:getPlayerPosY(idx)) then
+	 return true
+      end
+
+      idx = idx + 1
+   end
    return false
 end
 
