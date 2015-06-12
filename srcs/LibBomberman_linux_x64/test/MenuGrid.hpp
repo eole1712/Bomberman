@@ -16,6 +16,7 @@ public:
   void	moveRight();
   virtual void	drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
 			 std::map<Bomberman::IObject::Type, Bomberman::mapAsset>&);
+  void		drawNoBack(gdl::BasicShader &);
   void	drawFocus(int x, int y, gdl::BasicShader&);
   void	addObject(AMenuObject*, std::function<void()>);
   void	actionOnFocus();

@@ -86,6 +86,21 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
     }
 }
 
+void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
+{
+  shader.setUniform("view", glm::mat4());
+  shader.setUniform("projection", glm::ortho(0.0f, 1000.0f, 1000.0f, 0.0f, -1.0f, 1.0f));
+  for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
+    {
+      if (!(*it).first->isHidden())
+	{
+	  (*it).first->draw(shader);
+	}
+      if (_focus == it)
+	drawFocus((*it).first->getX(), (*it).first->getY(), shader);
+    }
+}
+
 void	MenuGrid::addObject(AMenuObject* obj, std::function<void()> func)
 {
   _elems.push_back(std::pair<AMenuObject*, std::function<void()> >(obj, func));
@@ -116,9 +131,9 @@ bool	MenuGrid::update(gdl::Clock &, gdl::Input & in)
   static int idTab[] = {
     SDLK_UP, SDLK_TAB, SDLK_DOWN, SDLK_RETURN
   };
-  if (in.getKey(SDLK_ESCAPE) || in.getInput(SDL_QUIT))
-    return false;
-    for (int i = 0; i < 4; ++i)
+  // if (in.getKey(SDLK_ESCAPE) || in.getInput(SDL_QUIT))
+  //   return false;
+  for (int i = 0; i < 4; ++i)
       {
 	try {
 	  if (in.getKey(idTab[i]) && _prev != idTab[i])
