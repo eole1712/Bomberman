@@ -36,7 +36,7 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1440), _height(800)
+  : _change(false), _width(1800), _height(900)
 {
   _status = false;
 }
@@ -165,17 +165,16 @@ void				Core::intro()
   delete tmpGame;
 }
 
-void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2)
+void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2,
+				unsigned int x, unsigned int y, unsigned int nbAI)
 {
   Player	*player;
   Gamer		*tmpGame;
-  int		x = 20;
-  int		y = 20;
 
   if (twoPlayers)
-    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, 8);
+    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, nbAI + 2);
   else
-    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, 8);
+    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, nbAI + 1);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
@@ -354,10 +353,15 @@ void		Core::gameMenu()
   grid->addObject(p2Field, [p2Field] (void) {
     std::cout << p2Field->getText() << std::endl;;
   });
-  grid->addObject(start, [this, p1Field, p2Field] (void) {
+  grid->addObject(start, [this, p1Field, p2Field, map_height, map_width, aiField, pField] (void) {
     /// START GAME
-    startGame(false, p1Field->getText(), p2Field->getText());
+    int height = Conversion::stringToType<int>(map_height->getText());
+    int width = Conversion::stringToType<int>(map_width->getText());
+    int ai = Conversion::stringToType<int>(aiField->getText());
+    bool players = Conversion::stringToType<int>(pField->getText()) == 1 ? false : true;
+    startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai);
   });
+  std::cout << "OK" << std::endl;
   grid->addObject(back, [this] (void) {
     firstMenu();
   });
