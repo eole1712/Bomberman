@@ -22,7 +22,7 @@ void	Animation::setSpeed(unsigned int const speed)
 void	Animation::setAnim(unsigned int const startframe,
 			   unsigned int const endframe,
 			   bool loop,
-			   unsigned int const speed, bool waitExtend = false)
+			   unsigned int const speed, bool waitExtend)
 {
   Queue	anim;
 
