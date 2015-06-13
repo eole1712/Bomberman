@@ -42,12 +42,14 @@ namespace Bomberman
   Gamer::Gamer()
     : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(4), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
   {
+_json = new JSONDoc;
     this->init();
   }
 
   Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
     : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
   {
+	_json = new JSONDoc;
     this->init();
   }
 
@@ -57,11 +59,12 @@ namespace Bomberman
       delete (_map);
     if (_stock)
       delete (_stock);
-    _json.serialize<Bomberman::MapList>(*_mapList);
-    _json.serialize<Bomberman::ScoreList>(*_scoreList);
-    _json.writeDown("./resources/json/Gamedata.json");
+    _json->serialize<Bomberman::MapList>(*_mapList);
+    _json->serialize<Bomberman::ScoreList>(*_scoreList);
+    _json->writeDown("./resources/json/Gamedata.json");
     delete (_mapList);
     delete (_scoreList);
+    delete _json;
   }
 
   void	Gamer::init()
@@ -73,11 +76,11 @@ namespace Bomberman
     Player			*player;
     Player			*player2;
 
-    _mapList = ((_json.parse("./resources/json/Gamedata.json"))
-		? (_json.unserialize<Bomberman::MapList*>())
+    _mapList = ((_json->parse("./resources/json/Gamedata.json"))
+		? (_json->unserialize<Bomberman::MapList*>())
 		: (new MapList()));
-    _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
-		  ? (_json.unserialize<Bomberman::ScoreList*>())
+    _scoreList = ((_json->parse("./resources/json/Gamedata.json"))
+		  ? (_json->unserialize<Bomberman::ScoreList*>())
 		  : (new ScoreList()));
     _stock = new RessourceStock(nameList, _nbPlayers, _scoreList, _twoPlayers, _intro);
     _map = _mapList->getMap(mapName);
@@ -102,6 +105,16 @@ namespace Bomberman
     _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
   }
 
+Bomberman::Map*		Gamer::getMap() const
+{
+  return _map;
+}
+
+Bomberman::RessourceStock*	Gamer::getRessourceStock() const
+{
+  return _stock;
+}
+
   bool		Gamer::pauseMenu()
   {
     Text2d*	save = new Text2d("Save Game", 200, 100, 800, 75, "resources/assets/textures/alpha3Blue.tga");
@@ -111,9 +124,11 @@ namespace Bomberman
     Text2d*	toggleMusic = new Text2d("Toggle Music", 200, 700, 800, 75, "resources/assets/textures/alpha3Blue.tga");
 
     _menu = new MenuGrid;
-    _menu->addObject(save, [] (void) {
-	std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-      });
+    _menu->addObject(save, [this] (void) {
+      //std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+      JSONDoc *j = new JSONDoc;
+      j->serialize(*this);
+    });
     _menu->addObject(resume, [this] (void) {
 	_resume = true;
       });
@@ -307,8 +322,6 @@ Player		*Gamer::randAlivePlayer() const
     assets[SKYBOX]->scale(glm::vec3(-1));
     assets[SKYBOX]->draw(shader, clock);
     assets[SKYBOX]->scale(glm::vec3(1));
-    if (_menu)
-      _menu->drawNoBack(shader);
   }
 
   void			Gamer::drawPlayerArme(gdl::Clock &clock,
@@ -334,6 +347,7 @@ Player		*Gamer::randAlivePlayer() const
     assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1, 1), 1);
     assets[ObjectToAsset[type]]->draw(shader, clock);
     assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
+
     for (unsigned int i = 1; i < player->getNbBomb(); i++)
       {
 	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) + angle) * M_PI) / 180;
@@ -372,6 +386,9 @@ Player		*Gamer::randAlivePlayer() const
 	draw(clock, shader, _camera2, assets, ObjectToAsset, player);
 	drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
       }
+    glViewport(0, 0, 1800, 900);
+    if (_menu)
+      _menu->drawNoBack(shader);
   }
 
   CameraObject		&Gamer::getCamera(unsigned int i)

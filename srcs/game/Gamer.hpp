@@ -27,6 +27,7 @@
 # include "ThreadPool.hpp"
 # include "PlayerAI.hpp"
 
+class JSONDoc;
 //# include "Core.hpp"
 
 namespace Bomberman
@@ -43,6 +44,8 @@ public:
 public:
   virtual void		init();
   virtual bool		update(gdl::Clock &, gdl::Input &);
+  Bomberman::Map*	getMap() const;
+  Bomberman::RessourceStock* getRessourceStock() const;
   virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&, std::vector<Asset3d*>&,
 			     std::map<Bomberman::IObject::Type, mapAsset>&, Player *player);
   virtual void		drawAll(gdl::Clock &, gdl::BasicShader &, std::vector<Asset3d*>&,
@@ -60,6 +63,7 @@ private:
 
 public:
   CameraObject			&getCamera(unsigned int);
+  bool				is2Players();
 
 protected:
   void				updateCamera();
@@ -86,7 +90,7 @@ public:
 private:
   int				_width;
   int				_height;
-  JSONDoc			_json;
+  JSONDoc*			_json;
   MenuGrid*			_menu;
   bool				_quit;
   bool				_resume;

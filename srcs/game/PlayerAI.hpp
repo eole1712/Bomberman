@@ -36,6 +36,7 @@ namespace Bomberman
   public:
     void		doAction(AI::StateMap const* stateMap, float const elapsedTime);
     std::string const&	getAIName() const;
+    virtual bool		isIA() const;
 
   public:
     void		moveRight();

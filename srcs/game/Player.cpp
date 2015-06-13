@@ -79,6 +79,11 @@ float   		Player::getSpeed() const
   return _speed;
 }
 
+bool			Player::isIA() const
+{
+  std::cout << "player" << std::endl;
+  return false;
+}
 
 // check status
 

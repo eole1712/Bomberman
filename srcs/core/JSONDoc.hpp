@@ -7,10 +7,12 @@
 #include "ScoreList.hpp"
 #include "Player.hpp"
 #include "MapList.hpp"
+#include "Gamer.hpp"
 
 namespace Bomberman
 {
 class MapList;
+class Gamer;
 }
 
 class JSONDoc
@@ -61,5 +63,12 @@ void			JSONDoc::serialize<Bomberman::Map>(const Bomberman::Map& obj);
 
 template<>
 Bomberman::Map*		JSONDoc::unserialize<Bomberman::Map*>(std::string const& name) const;
+
+template<>
+void			JSONDoc::serialize<Bomberman::Gamer>(const Bomberman::Gamer& obj);
+
+template<>
+Bomberman::Gamer*	JSONDoc::unserialize<Bomberman::Gamer*>(std::string const& name) const;
+
 
 #endif /* !JSONDOC_H_ */

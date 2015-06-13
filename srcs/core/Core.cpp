@@ -265,8 +265,6 @@ void		Core::gameMenu()
     int			value;
 
     value = Conversion::stringToType<int>(map_width->getText()) + 1;
-    if (value >= 99)
-      value = 99;
     map_width->setText(Conversion::typeToString(value));
   });
 
@@ -296,8 +294,6 @@ void		Core::gameMenu()
     int			value;
 
     value = Conversion::stringToType<int>(map_height->getText()) + 1;
-    if (value >= 99)
-      value = 99;
 
     map_height->setText(Conversion::typeToString(value));
   });

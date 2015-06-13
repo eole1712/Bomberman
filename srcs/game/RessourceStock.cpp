@@ -33,7 +33,7 @@ unsigned int const	RessourceStock::nbSounds = 20;
 unsigned int const	RessourceStock::nbChannels = 10;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer, bool intro)
-  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(twoPlayer)
 {
   unsigned int	size = names.size();
   unsigned int	ai_id = 1;
@@ -48,16 +48,24 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 				     Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
 	  ++ai_id;
 	}
-      reinterpret_cast<Player*>(_players[i])->linkScoreList(scoreList);
+      dynamic_cast<Player*>(_players[i])->linkScoreList(scoreList);
     }
   this->init();
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(true)
 {
+  unsigned int		nb;
+
+  nb = 0;
   for (unsigned int i = 0; i < players.size(); ++i)
-    _players[i] = players[i];
+    {
+      _players[i] = players[i];
+      if (dynamic_cast<Player*>(_players[i])->isIA())
+	nb++;
+    }
+  _twoPlayers = nb == 2 ? true : false;
   this->init();
 }
 
@@ -165,21 +173,23 @@ SoundManager*	RessourceStock::getSound(SoundType type)
   return (this->_soundsPlaying[pos]);
 }
 
-IObject		*RessourceStock::getPlayer(std::string const &name) const
+Player		*RessourceStock::getPlayer(std::string const &name) const
 {
+  Bomberman::Player* play;
+
   for (unsigned int i = 0; i < _players.size(); ++i)
     {
-      if ((dynamic_cast<Player *>(_players[i])->getName()) == name)
-	  return _players[i];
+      if (((play = dynamic_cast<Player *>(_players[i]))->getName()) == name)
+	  return play;
     }
   return NULL; //EXCEPTION???
 }
 
-IObject		*RessourceStock::getPlayer(unsigned int id) const
+Player		*RessourceStock::getPlayer(unsigned int id) const
 {
   if (id >= _players.size())
     return NULL; //EXCEPTION???
-  return _players[id];
+  return dynamic_cast<Bomberman::Player*>(_players[id]);
 }
 
 unsigned int	RessourceStock::getNbPlayer() const
