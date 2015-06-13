@@ -60,6 +60,11 @@ void	AMenuObject::unFocus()
   _focusable = false;
 }
 
+void	AMenuObject::reFocus()
+{
+  _focusable = true;
+}
+
 void	AMenuObject::setDynamic()
 {
   _dynamic = true;

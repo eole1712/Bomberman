@@ -51,7 +51,9 @@ MenuGrid::MenuGrid(std::string const& texName)
 
 MenuGrid::~MenuGrid()
 {
-  ;
+  std::for_each(_elems.begin(), _elems.end(), [] (std::pair<AMenuObject*, std::function<void()> >& elem){
+    delete elem.first;
+    });
 }
 
 void	MenuGrid::moveLeft()
