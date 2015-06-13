@@ -45,6 +45,10 @@ public:
   unsigned int	getNbPlayer() const;
 
   unsigned int	countAlivePlayers();
+  bool		isPlayerOneAlive() const;
+  bool		isPlayerTwoAlive() const;
+  void		killPlayerOne();
+  void		killPlayerTwo();
   bool		isPlayingMusic() const;
   bool		isPlayingSounds() const;
   void		initMusic();
@@ -65,6 +69,8 @@ private:
   std::vector<SoundManager*>	_soundsPlaying;
   bool				_toggleMusic;
   bool				_toggleSounds;
+  bool				_playerOneAlive;
+  bool				_playerTwoAlive;
   bool				_twoPlayers;
 };
 

@@ -42,14 +42,14 @@ namespace Bomberman
   Gamer::Gamer()
     : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(4), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
   {
-_json = new JSONDoc;
+    _json = new JSONDoc;
     this->init();
   }
 
   Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
     : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
   {
-	_json = new JSONDoc;
+    _json = new JSONDoc;
     this->init();
   }
 
@@ -157,6 +157,8 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
 	delete _menu;
 	_menu = NULL;
       }
+    if (!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive())
+      _quit = true;
     if (_quit || _map->hasToQuit())
       return false;
     if (_menu != NULL)

@@ -33,7 +33,7 @@ unsigned int const	RessourceStock::nbSounds = 20;
 unsigned int const	RessourceStock::nbChannels = 10;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer, bool intro)
-  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(twoPlayer)
+  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _playerOneAlive(true), _playerTwoAlive(twoPlayer), _twoPlayers(twoPlayer)
 {
   unsigned int	size = names.size();
   unsigned int	ai_id = 1;
@@ -54,7 +54,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(true)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
   unsigned int		nb;
 
@@ -66,6 +66,8 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
 	nb++;
     }
   _twoPlayers = nb == 2 ? true : false;
+  _playerOneAlive = dynamic_cast<Player*>(_players[0])->isAlive();
+  _playerTwoAlive = _twoPlayers && dynamic_cast<Player*>(_players[_players.size() - 1])->isAlive();
   this->init();
 }
 
@@ -211,6 +213,26 @@ unsigned int	RessourceStock::countAlivePlayers()
 		 : (_winner));
     }
   return (alivePlayers);
+}
+
+bool	RessourceStock::isPlayerOneAlive() const
+{
+  return _playerOneAlive;
+}
+
+bool	RessourceStock::isPlayerTwoAlive() const
+{
+  return _playerTwoAlive;
+}
+
+void	RessourceStock::killPlayerOne()
+{
+  _playerOneAlive = false;
+}
+
+void	RessourceStock::killPlayerTwo()
+{
+  _playerTwoAlive = false;
 }
 
 bool	RessourceStock::isPlayingMusic() const
