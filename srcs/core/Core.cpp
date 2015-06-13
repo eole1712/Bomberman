@@ -4,6 +4,7 @@
 #include <map>
 #include <math.h>
 #include <iostream>
+#include <sstream>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
@@ -28,6 +29,7 @@
 #include "Text2d.hpp"
 #include "View2d.hpp"
 #include "Core.hpp"
+#include "StringConversion.hpp"
 
 namespace Bomberman
 {
@@ -147,8 +149,8 @@ void		Core::gameMenu()
   MenuGrid*	grid = new MenuGrid;
   Text2d*	text1 = new Text2d("Width: ", 80, 50, 500, 50, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	text2 = new Text2d("Height: ", 80, 125, 500, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text3 = new Text2d("", 525, 50, 700, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text4 = new Text2d("", 525, 125, 700, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text3 = new Text2d("25", 525, 50, 700, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	text4 = new Text2d("25", 525, 125, 700, 50, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	start = new Text2d("Start Game", 700, 700, 500, 100, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	aiLabel = new Text2d("Number of AI: ", 80, 200, 500, 50, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	aiField = new Text2d("", 600, 200, 200, 50, "resources/assets/textures/alpha3Blue.tga");
@@ -172,6 +174,8 @@ void		Core::gameMenu()
   p1Label->unFocus();
   p2Label->unFocus();
   aiLabel->unFocus();
+  text3->setDynamic();
+  text4->setDynamic();
   grid->addObject(text1, [] (void) {
     ;
   });
@@ -187,11 +191,37 @@ void		Core::gameMenu()
   grid->addObject(p2Label, [] (void) {
     ;
   });
-  grid->addObject(text3, [text3] (void) {
-    std::cout << text3->getText() << std::endl;
+  grid->addDynObject(text3, [] (void) {
+  },
+  [text3] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(text3->getText()) - 1;
+    std::cout << value << std::endl;
+    text3->setText(Conversion::typeToString(value));
+  },
+  [text3] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(text3->getText()) + 1;
+    std::cout << value << std::endl;
+    text3->setText(Conversion::typeToString(value));
   });
-  grid->addObject(text4, [text4] (void) {
-    std::cout << text4->getText() << std::endl;
+  grid->addDynObject(text4, [] (void) {
+  },
+  [text4] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(text4->getText()) - 1;
+    std::cout << value << std::endl;
+    text4->setText(Conversion::typeToString(value));
+  },
+  [text4] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(text4->getText()) + 1;
+    std::cout << value << std::endl;
+    text4->setText(Conversion::typeToString(value));
   });
   grid->addObject(aiField, [aiField] (void) {
     std::cout << aiField->getText() << std::endl;;

@@ -26,6 +26,7 @@ public:
   void	setModifiable();
   void	update(gdl::Input&);
   std::string const& getText() const;
+  void		setText(std::string const&);
 private:
 
   Text2d();

@@ -142,3 +142,9 @@ std::string const&	Text2d::getText() const
 {
   return _text;
 }
+
+void			Text2d::setText(const std::string & str)
+{
+  _text = str;
+  update();
+}
