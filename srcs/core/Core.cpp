@@ -257,11 +257,11 @@ void		Core::gameMenu()
     mapY = Conversion::stringToType<int>(map_height->getText());
 
     value = Conversion::stringToType<int>(map_width->getText()) - 1;
-    if (value <= 5)
-      value = 5;
+    if (value <= 10)
+      value = 10;
 
     if (nbAI + nbPlayer >= (mapY * value / 16))
-      nbAI = (mapY * value / 16);
+      nbAI = (mapY * value / 16) - nbPlayer;
     aiField->setText(Conversion::typeToString(nbAI));
 
     std::cout << value << std::endl;
@@ -289,11 +289,11 @@ void		Core::gameMenu()
     mapX = Conversion::stringToType<int>(map_width->getText());
     value = Conversion::stringToType<int>(map_height->getText()) - 1;
 
-    if (value <= 5)
-      value = 5;
+    if (value <= 10)
+      value = 10;
 
     if (nbAI + nbPlayer >= (mapX * value / 16))
-      nbAI = (mapX * value / 16);
+      nbAI = (mapX * value / 16) - nbPlayer;
     aiField->setText(Conversion::typeToString(nbAI));
 
     map_height->setText(Conversion::typeToString(value));
@@ -330,7 +330,7 @@ void		Core::gameMenu()
     mapY = Conversion::stringToType<int>(map_height->getText());
     value = Conversion::stringToType<int>(aiField->getText()) + 1;
     if (value + nbPlayer >= (mapX * mapY / 16))
-      value = (mapX * mapY / 16);
+      value = (mapX * mapY / 16) - nbPlayer;
     aiField->setText(Conversion::typeToString(value));
   });
   grid->addDynObject(pField, [pField] (void) {
@@ -378,11 +378,11 @@ void		Core::gameMenu()
       }
 
 
-    nbAI = Conversion::stringToType<int>(pField->getText());
+    nbAI = Conversion::stringToType<int>(aiField->getText());
     mapX = Conversion::stringToType<int>(map_width->getText());
     mapY = Conversion::stringToType<int>(map_height->getText());
-    if (value + nbAI >= (mapX * mapY / 16))
-      nbAI = (mapX * mapY / 16);
+    if (value + nbAI > (mapX * mapY / 16))
+      nbAI = (mapX * mapY / 16) - value;
     aiField->setText(Conversion::typeToString(nbAI));
 
 
