@@ -208,8 +208,6 @@ void		Core::gameMenu()
   View2d*	p2TextBackGround = new View2d(1110, 660, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
   View2d*	back = new View2d(1500, 820, 250, 60, "resources/assets/textures/menu_2_back.tga");
 
-
-
   p1Field->setModifiable();
 
   p2Field->setModifiable();
@@ -220,12 +218,6 @@ void		Core::gameMenu()
   p2TextBackGround->setHidden(true);
 
   p1TextBackGround->unFocus();
-
-  // map_width->hideFocus();
-  // map_height->hideFocus();
-  // aiField->hideFocus();
-  // p1Field->hideFocus();
-  // p2Field->hideFocus();
 
   aiField->setDynamic();
   pField->setDynamic();
@@ -313,13 +305,18 @@ void		Core::gameMenu()
   grid->addDynObject(aiField, [aiField] (void) {
     std::cout << aiField->getText() << std::endl;;
   },
-  [aiField] (void) {
+  [aiField, pField] (void) {
     int			value;
+    int			nbPlayer;
 
     value = Conversion::stringToType<int>(aiField->getText()) - 1;
+    nbPlayer = Conversion::stringToType<int>(pField->getText());
+
     if (value <= 0)
-      value = 0;
+      value = 0 + (nbPlayer == 1);
+
     aiField->setText(Conversion::typeToString(value));
+
   },
   [aiField, map_width, map_height, pField] (void) {
     int			value;
@@ -338,9 +335,11 @@ void		Core::gameMenu()
   grid->addDynObject(pField, [pField] (void) {
     std::cout << pField->getText() << std::endl;;
   },
-  [pField, p2TextBackGround, p2Field] (void) {
+  [pField, p2TextBackGround, p2Field, aiField] (void) {
     int			value;
+    int			nbAI;
 
+    nbAI = Conversion::stringToType<int>(aiField->getText());
     value = Conversion::stringToType<int>(pField->getText()) - 1;
     if (value <= 1)
       {
@@ -355,7 +354,10 @@ void		Core::gameMenu()
 	p2Field->setHidden(false);
 	p2Field->reFocus();
 	value = 2;
-      }    pField->setText(Conversion::typeToString(value));
+      }
+    pField->setText(Conversion::typeToString(value));
+    if (nbAI == 0)
+      aiField->setText("1");
   },
   [pField, p2TextBackGround, p2Field, aiField, map_width, map_height] (void) {
     int			value;
@@ -420,8 +422,8 @@ void		Core::firstMenu()
 {
   MenuGrid*	grid = new MenuGrid;
   View2d*	back = new View2d(0, 0, 1800, 1000, "resources/assets/textures/background.tga");
-  View2d*	text1 = new View2d(1100, 325, 500, 101, "resources/assets/textures/load.tga");
-  View2d*	text2 = new View2d(1100, 475, 500, 101, "resources/assets/textures/new.tga");
+  View2d*	text1 = new View2d(1100, 475, 500, 101, "resources/assets/textures/load.tga");
+  View2d*	text2 = new View2d(1100, 325, 500, 101, "resources/assets/textures/new.tga");
   View2d*	text3 = new View2d(1100, 625, 500, 101, "resources/assets/textures/high.tga");
   View2d*	text4 = new View2d(1100, 775, 500, 101, "resources/assets/textures/quit.tga");
 
@@ -429,11 +431,11 @@ void		Core::firstMenu()
    grid->addObject(back, [] (void) {
     ;
   });
-  grid->addObject(text1, [] (void) {
-    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-  });
   grid->addObject(text2, [this, &grid] (void) {
     this->gameMenu();
+  });
+  grid->addObject(text1, [] (void) {
+    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
   });
   grid->addObject(text3, [] (void) {
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
