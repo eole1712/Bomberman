@@ -282,8 +282,6 @@ namespace Bomberman
     assets[SKYBOX]->scale(glm::vec3(-1));
     assets[SKYBOX]->draw(shader, clock);
     assets[SKYBOX]->scale(glm::vec3(1));
-    if (_menu)
-      _menu->drawNoBack(shader);
   }
 
   void			Gamer::drawPlayerArme(gdl::Clock &clock,
@@ -338,6 +336,9 @@ namespace Bomberman
 	draw(clock, shader, _camera2, assets, ObjectToAsset, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)));
 	drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
       }
+    glViewport(0, 0, 1800, 900);
+    if (_menu)
+      _menu->drawNoBack(shader);
   }
 
   CameraObject		&Gamer::getCamera(unsigned int i)
