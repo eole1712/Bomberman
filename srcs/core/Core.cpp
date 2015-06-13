@@ -30,6 +30,7 @@
 #include "View2d.hpp"
 #include "Core.hpp"
 #include "StringConversion.hpp"
+#include "my_random.hpp"
 
 namespace Bomberman
 {
@@ -120,22 +121,63 @@ void		Core::attachObject(Asset3d *obj)
   _assets.push_back(obj);
 }
 
+void				Core::intro()
+{
+  Player	*player;
+  Gamer		*tmpGame;
+
+  tmpGame = new Gamer;
+  _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
+  _assets[SKYBOX]->setPosition(glm::vec3(15 / 2, 0, 15 / 2));
+  for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+    {
+      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
+      player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
+					_assets[PLAYER]->getAnimationSpeed());
+    }
+
+  Timer		timer(15000000);
+  unsigned int id = 0;
+  unsigned int x  = 1;
+
+  player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(0));
+  while (tmpGame->update(_clock, _input))
+    {
+      if (timer.isFinished())
+	break;
+      if (timer.getElapsedTime() > (x * 3000000) || !player->isAlive())
+	{
+	  id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
+	  player = dynamic_cast<Player *>
+	    (tmpGame->getRcs()->getPlayer(id));
+	  x += 1;
+	}
+      tmpGame->updateRandCamera(player);
+      _context.updateClock(_clock);
+      _context.updateInputs(_input);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      tmpGame->draw(_clock, _shader, tmpGame->getCamera(0), _assets, _ObjectToAsset, player);
+      _context.flush();
+    }
+  delete tmpGame;
+}
+
 void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2)
 {
   Player	*player;
   Gamer		*tmpGame;
-  int		x = 15;
-  int		y = 15;
+  int		x = 20;
+  int		y = 20;
 
   if (twoPlayers)
-    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2);
+    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, 8);
   else
-    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2);
+    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, 8);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
-  for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
+  for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
+      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
@@ -147,84 +189,161 @@ void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const&
 void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-  Text2d*	text1 = new Text2d("Width: ", 80, 50, 500, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text2 = new Text2d("Height: ", 80, 125, 500, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text3 = new Text2d("25", 525, 50, 700, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	text4 = new Text2d("25", 525, 125, 700, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	start = new Text2d("Start Game", 700, 700, 500, 100, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiLabel = new Text2d("Number of AI: ", 80, 200, 500, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiField = new Text2d("", 600, 200, 200, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Label = new Text2d("Player1", 80, 275, 300, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Label = new Text2d("Player2", 950, 275, 300, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Field = new Text2d("", 400, 275, 400, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Field = new Text2d("", 1300, 275, 400, 50, "resources/assets/textures/alpha3Blue.tga");
 
-  text4->setModifiable();
-  text3->setModifiable();
-  aiField->setModifiable();
+  View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_2_background.tga");
+
+  Text2d*	map_height = new Text2d("25", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	map_width = new Text2d("25", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiField = new Text2d("1", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	pField = new Text2d("1", 1485, 480, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Field = new Text2d("player_1", 1115, 600, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Field = new Text2d("player_2", 1115, 660, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  View2d*	start = new View2d(1065, 720, 350, 50, "resources/assets/textures/menu_2_start.tga");
+  View2d*	p1TextBackGround = new View2d(1110, 600, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
+  View2d*	p2TextBackGround = new View2d(1110, 660, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
+  View2d*	back = new View2d(1500, 820, 250, 60, "resources/assets/textures/menu_2_back.tga");
+
+
+
   p1Field->setModifiable();
+
   p2Field->setModifiable();
-  text4->hideFocus();
-  text3->hideFocus();
-  aiField->hideFocus();
-  p1Field->hideFocus();
-  p2Field->hideFocus();
-  text2->unFocus();
-  text1->unFocus();
-  p1Label->unFocus();
-  p2Label->unFocus();
-  aiLabel->unFocus();
-  text3->setDynamic();
-  text4->setDynamic();
-  grid->addObject(text1, [] (void) {
+  p2Field->unFocus();
+  p2Field->setHidden(true);
+
+  p2TextBackGround->unFocus();
+  p2TextBackGround->setHidden(true);
+
+  p1TextBackGround->unFocus();
+
+  // map_width->hideFocus();
+  // map_height->hideFocus();
+  // aiField->hideFocus();
+  // p1Field->hideFocus();
+  // p2Field->hideFocus();
+
+  aiField->setDynamic();
+  pField->setDynamic();
+  map_height->setDynamic();
+  map_width->setDynamic();
+
+  background->unFocus();
+
+  grid->addObject(background, [] (void) {
     ;
   });
-  grid->addObject(text2, [] (void) {
+
+  grid->addObject(p1TextBackGround, [] (void) {
     ;
   });
-  grid->addObject(aiLabel, [] (void) {
+
+  grid->addObject(p2TextBackGround, [] (void) {
     ;
   });
-  grid->addObject(p1Label, [] (void) {
-    ;
-  });
-  grid->addObject(p2Label, [] (void) {
-    ;
-  });
-  grid->addDynObject(text3, [] (void) {
+
+  grid->addDynObject(map_width, [] (void) {
   },
-  [text3] (void) {
+  [map_width] (void) {
     int			value;
 
-    value = Conversion::stringToType<int>(text3->getText()) - 1;
+    value = Conversion::stringToType<int>(map_width->getText()) - 1;
+    if (value <= 5)
+      value = 5;
+
     std::cout << value << std::endl;
-    text3->setText(Conversion::typeToString(value));
+    map_width->setText(Conversion::typeToString(value));
   },
-  [text3] (void) {
+  [map_width] (void) {
     int			value;
 
-    value = Conversion::stringToType<int>(text3->getText()) + 1;
-    std::cout << value << std::endl;
-    text3->setText(Conversion::typeToString(value));
+    value = Conversion::stringToType<int>(map_width->getText()) + 1;
+    if (value >= 99)
+      value = 99;
+    map_width->setText(Conversion::typeToString(value));
   });
-  grid->addDynObject(text4, [] (void) {
+
+  grid->addDynObject(map_height, [] (void) {
   },
-  [text4] (void) {
+  [map_height] (void) {
     int			value;
 
-    value = Conversion::stringToType<int>(text4->getText()) - 1;
-    std::cout << value << std::endl;
-    text4->setText(Conversion::typeToString(value));
+    value = Conversion::stringToType<int>(map_height->getText()) - 1;
+    if (value <= 5)
+      value = 5;
+
+
+    map_height->setText(Conversion::typeToString(value));
   },
-  [text4] (void) {
+  [map_height] (void) {
     int			value;
 
-    value = Conversion::stringToType<int>(text4->getText()) + 1;
-    std::cout << value << std::endl;
-    text4->setText(Conversion::typeToString(value));
+    value = Conversion::stringToType<int>(map_height->getText()) + 1;
+    if (value >= 99)
+      value = 99;
+
+    map_height->setText(Conversion::typeToString(value));
   });
-  grid->addObject(aiField, [aiField] (void) {
+
+  grid->addDynObject(aiField, [aiField] (void) {
     std::cout << aiField->getText() << std::endl;;
+  },
+  [aiField] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(aiField->getText()) - 1;
+    if (value <= 0)
+      value = 0;
+    aiField->setText(Conversion::typeToString(value));
+  },
+  [aiField] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(aiField->getText()) + 1;
+    if (value >= 999)
+      value = 999;
+    aiField->setText(Conversion::typeToString(value));
+  });
+  grid->addDynObject(pField, [pField] (void) {
+    std::cout << pField->getText() << std::endl;;
+  },
+  [pField, p2TextBackGround, p2Field] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(pField->getText()) - 1;
+    if (value <= 1)
+      {
+	p2TextBackGround->setHidden(true);
+	p2Field->setHidden(true);
+	p2Field->unFocus();
+	value = 1;
+      }
+    else
+      {
+	p2TextBackGround->setHidden(false);
+	p2Field->setHidden(false);
+	p2Field->reFocus();
+	value = 2;
+      }    pField->setText(Conversion::typeToString(value));
+  },
+  [pField, p2TextBackGround, p2Field] (void) {
+    int			value;
+
+    value = Conversion::stringToType<int>(pField->getText()) + 1;
+    if (value <= 1)
+      {
+	p2TextBackGround->setHidden(true);
+	p2Field->setHidden(true);
+	p2Field->unFocus();
+	value = 1;
+      }
+    else
+      {
+	p2TextBackGround->setHidden(false);
+	p2Field->setHidden(false);
+	p2Field->reFocus();
+	value = 2;
+      }
+    pField->setText(Conversion::typeToString(value));
   });
   grid->addObject(p1Field, [p1Field] (void) {
     std::cout << p1Field->getText() << std::endl;;
@@ -236,6 +355,12 @@ void		Core::gameMenu()
     /// START GAME
     startGame(false, p1Field->getText(), p2Field->getText());
   });
+  grid->addObject(back, [this] (void) {
+    firstMenu();
+  });
+
+
+
   _prev = _game;
   _change = true;
   _game = grid;

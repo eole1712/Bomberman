@@ -29,10 +29,10 @@
 namespace Bomberman
 {
 
-unsigned int const	RessourceStock::nbSounds = 18;
+unsigned int const	RessourceStock::nbSounds = 20;
 unsigned int const	RessourceStock::nbChannels = 10;
 
-RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer)
+RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer, bool intro)
   : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
   unsigned int	size = names.size();
@@ -40,7 +40,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 
   for (unsigned int i = 0; i < nbJoueurs; ++i)
     {
-      if (i == 0 || (size == 2 && twoPlayer && i == (nbJoueurs - 1)))
+      if (!intro && (i == 0 || (size == 2 && twoPlayer && i == (nbJoueurs - 1))))
 	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
 	{
@@ -116,6 +116,8 @@ void	RessourceStock::init()
   _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.ogg";
   _sounds[SUICIDE] = "./resources/sound/suicide.wav";
   _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
+  _sounds[PICKUP] = "./resources/sound/pickup_buff.ogg";
+  _sounds[HITSHIELD] = "./resources/sound/hit_shield.ogg";
   _sounds[PREPARE1] = "./resources/sound/prepare1.ogg";
   _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
   _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
@@ -183,6 +185,15 @@ IObject		*RessourceStock::getPlayer(unsigned int id) const
 unsigned int	RessourceStock::getNbPlayer() const
 {
   return _players.size();
+}
+
+unsigned int	RessourceStock::countAlivePlayers() const
+{
+  unsigned int	alivePlayers = 0;
+
+  for (unsigned int i = 0; i < _players.size(); ++i)
+    alivePlayers += dynamic_cast<Player*>(_players[i])->isAlive();
+  return (alivePlayers);
 }
 
 bool	RessourceStock::isPlayingMusic() const

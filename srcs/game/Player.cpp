@@ -154,6 +154,7 @@ void			Player::decShield()
 {
   if (_shield > 0)
     _shield--;
+  _map->getRcs()->getSound(Bomberman::RessourceStock::HITSHIELD)->play();
 }
 
 void			Player::resetShield()
@@ -332,6 +333,10 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     return ;
   speedbra = _speed * elsapsedTime;
   pos = glm::rotate(glm::vec3(0, 0, 0.06), direction, glm::vec3(0, 1, 0)) * speedbra;
+  if (pos.x > 1)
+    pos.x = 1;
+  if (pos.z > 1)
+    pos.z = 1;
   npos = getPosition() + pos;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
@@ -351,6 +356,7 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     {
       addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
       _map->killObject(getX(), getY());
+      _map->getRcs()->getSound(Bomberman::RessourceStock::PICKUP)->play();
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
     {

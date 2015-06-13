@@ -18,12 +18,13 @@ class RessourceStock
 {
 public:
   enum SoundType { TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE,
-		   FIRSTBLOOD, SUICIDE, EXPLOSE, PREPARE1, PREPARE2, PREPARE3, PREPARE4 };
+		   FIRSTBLOOD, SUICIDE, EXPLOSE, PICKUP, HITSHIELD,
+		   PREPARE1, PREPARE2, PREPARE3, PREPARE4 };
 
   static unsigned int const	nbSounds;
   static unsigned int const	nbChannels;
 
-  RessourceStock(std::vector<std::string> const &, unsigned int, ScoreList*, bool);
+  RessourceStock(std::vector<std::string> const &, unsigned int, ScoreList*, bool, bool intro = false);
   RessourceStock(std::vector<Bomberman::Player*> const& players);
   virtual ~RessourceStock();
   RessourceStock(const RessourceStock &);
@@ -41,6 +42,7 @@ public:
   IObject	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
 
+  unsigned int	countAlivePlayers() const;
   bool		isPlayingMusic() const;
   bool		isPlayingSounds() const;
   void		initMusic();

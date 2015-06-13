@@ -15,7 +15,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty,
 	 RessourceStock* objects)
   : GenericMap<IObject*>(width, height), _name(name),
-    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects)
+    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects), _quit(false)
 {
   this->init(width, height);
   this->randomize();
@@ -25,7 +25,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
 Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty)
   : GenericMap<IObject*>(width, height), _name(name),
-    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL)
+    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL), _quit(false)
 {
   this->init(width, height);
 }
@@ -35,10 +35,10 @@ void	Map::init(unsigned int width, unsigned int height)
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 12)
-    throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 10 || this->_width < 10)
-    throw new Exception::InvalidDimensions("Map Constructor");
+      || this->_nbJoueurs > this->_width * this->_height / 16)
+    this->_nbJoueurs = this->_width * this->_height / 16;
+  this->_width = ((this->_width < 10) ? (10) : (this->_width));
+  this->_height = ((this->_height < 10) ? (10) : (this->_height));
 }
 
 void	Map::generateForm(unsigned int x, unsigned int y)
@@ -62,7 +62,7 @@ void	Map::randomize()
       x = 0;
       while (x < this->_width)
 	{
-	  if (my_random(2, 10) > this->_difficulty)
+	  if (my_random(4, 10) > this->_difficulty)
 	    this->setCellValue(x, y, this->_rcs->getObject(IObject::EMPTY));
 	  else
 	    this->setCellValue(x, y, this->_rcs->getObject(IObject::DESTROYABLEWALL));
@@ -258,12 +258,17 @@ RessourceStock	*Map::getRcs() const
   return _rcs;
 }
 
+bool		Map::hasToQuit() const
+{
+  return (this->_quit);
+}
+
 bool		Map::isIn(unsigned int x, unsigned int y) const
 {
   return (x < getHeight() && y < getWidth());
 }
 
-void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
+void		Map::killPlayers(unsigned int x, unsigned int y, Player *player)
 {
   static bool	firstBlood = true;
 
@@ -275,7 +280,7 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 	{
 	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
 	    {
-	      this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
+	      _rcs->getSound(Bomberman::RessourceStock::SUICIDE)->play();
 	      firstBlood = false;
 	    }
 	  else
@@ -287,6 +292,8 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 		}
 	      player->incScore();
 	    }
+	  if (this->getRcs()->countAlivePlayers() < 2)
+	    this->_quit = true;;
 	}
     }
 }

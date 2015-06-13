@@ -41,7 +41,7 @@ private:
 public:
   Gamer();
   Gamer(unsigned int, unsigned int, unsigned int, unsigned int,
-	bool, std::string const&, std::string const&);
+	bool, std::string const&, std::string const&, unsigned int);
   virtual ~Gamer();
 
 public:
@@ -55,6 +55,7 @@ public:
 				       std::vector<Asset3d*>& assets, Player *player,
 				       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset);
   bool			pauseMenu();
+  void			updateRandCamera(Player *);
 
 private:
   Gamer(const Gamer &);
@@ -80,6 +81,10 @@ protected:
   bool				handleKeyToP2Down(const float elapsedTime, gdl::Input& input);
   bool				handleKeyToP2Left(const float elapsedTime, gdl::Input& input);
   bool				handleKeyToP2Right(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToQuit(const float elapsedTime, gdl::Input& input);
+
+public:
+  RessourceStock*		getRcs() const;
 
 public:
   static bool			updateAI(AIData data);
@@ -92,9 +97,11 @@ private:
   bool				_quit;
   bool				_resume;
   bool				_twoPlayers;
+  bool				_intro;
   std::string			_player1;
   std::string			_player2;
   AI::StateMap			_stateMap;
+  unsigned int			_nbPlayers;
 
 private:
   CameraObject			_camera;
@@ -114,7 +121,9 @@ protected:
   typedef std::map<int, HandleKey>	HandleKeyBook;
 
   static const HandleKeyBook	handleKeyBook;
+  static const HandleKeyBook	handleKeyBookIntro;
   static Gamer::HandleKeyBook	getHandleKeyBook();
+  static Gamer::HandleKeyBook	getHandleKeyBookIntro();
 };
 
 }

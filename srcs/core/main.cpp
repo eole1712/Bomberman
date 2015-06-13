@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Core.hpp"
 
 void			showfps()
@@ -14,7 +15,7 @@ void			showfps()
       fps = nbframe / fps;
       if (maxfps < fps)
 	maxfps = fps;
-      //      printf("%d fps - %d max\n", fps, maxfps);
+      std::cout << fps << " from " << maxfps << std::endl;
       lasttime = curtime;
       nbframe = 0;
     }
@@ -31,12 +32,13 @@ int main()
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
+  //  engine.intro();
   engine.firstMenu();
   while (!engine.isOver())
     {
       while (!engine.isOver() && engine.update() == true)
 	{
-	  showfps();
+	  //showfps();
 	  engine.draw();
 	}
     }
