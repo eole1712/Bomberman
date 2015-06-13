@@ -33,7 +33,7 @@ unsigned int const	RessourceStock::nbSounds = 20;
 unsigned int const	RessourceStock::nbChannels = 10;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer, bool intro)
-  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(twoPlayer)
 {
   unsigned int	size = names.size();
   unsigned int	ai_id = 1;
@@ -54,10 +54,18 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(true)
 {
+  unsigned int		nb;
+
+  nb = 0;
   for (unsigned int i = 0; i < players.size(); ++i)
-    _players[i] = players[i];
+    {
+      _players[i] = players[i];
+      if (!_players[i]->isIA())
+	nb++;
+    }
+  _twoPlayers = nb == 2 ? true : false;
   this->init();
 }
 

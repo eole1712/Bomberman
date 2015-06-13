@@ -65,6 +65,7 @@ private:
   std::vector<SoundManager*>	_soundsPlaying;
   bool				_toggleMusic;
   bool				_toggleSounds;
+  bool				_twoPlayers;
 };
 
 }
