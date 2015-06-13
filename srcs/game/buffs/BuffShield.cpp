@@ -20,7 +20,7 @@ namespace Buff
   */
   int			Shield::getDuration() const
   {
-    return (5);
+    return (IBuff::infinite);
   }
 
   IBuff::Type		Shield::getBuffType() const

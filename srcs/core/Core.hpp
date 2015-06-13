@@ -44,6 +44,7 @@ public:
   void			gameMenu();
   void			firstMenu();
   bool			isOver() const;
+  void			intro();
 
 private:
   Core(const Core &);

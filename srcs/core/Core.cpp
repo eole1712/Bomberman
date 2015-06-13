@@ -30,6 +30,7 @@
 #include "View2d.hpp"
 #include "Core.hpp"
 #include "StringConversion.hpp"
+#include "my_random.hpp"
 
 namespace Bomberman
 {
@@ -120,22 +121,63 @@ void		Core::attachObject(Asset3d *obj)
   _assets.push_back(obj);
 }
 
+void				Core::intro()
+{
+  Player	*player;
+  Gamer		*tmpGame;
+
+  tmpGame = new Gamer;
+  _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
+  _assets[SKYBOX]->setPosition(glm::vec3(15 / 2, 0, 15 / 2));
+  for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+    {
+      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
+      player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
+					_assets[PLAYER]->getAnimationSpeed());
+    }
+
+  Timer		timer(15000000);
+  unsigned int id = 0;
+  unsigned int x  = 1;
+
+  player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(0));
+  while (tmpGame->update(_clock, _input))
+    {
+      if (timer.isFinished())
+	break;
+      if (timer.getElapsedTime() > (x * 3000000) || !player->isAlive())
+	{
+	  id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
+	  player = dynamic_cast<Player *>
+	    (tmpGame->getRcs()->getPlayer(id));
+	  x += 1;
+	}
+      tmpGame->updateRandCamera(player);
+      _context.updateClock(_clock);
+      _context.updateInputs(_input);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      tmpGame->draw(_clock, _shader, tmpGame->getCamera(0), _assets, _ObjectToAsset, player);
+      _context.flush();
+    }
+  delete tmpGame;
+}
+
 void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2)
 {
   Player	*player;
   Gamer		*tmpGame;
-  int		x = 15;
-  int		y = 15;
+  int		x = 20;
+  int		y = 20;
 
   if (twoPlayers)
-    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2);
+    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, 8);
   else
-    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2);
+    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, 8);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
-  for (unsigned int i = 0; i < tmpGame->_stock->getNbPlayer(); ++i)
+  for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(tmpGame->_stock->getPlayer(i));
+      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
