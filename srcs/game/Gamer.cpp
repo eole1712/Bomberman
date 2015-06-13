@@ -37,9 +37,9 @@ Gamer::Gamer()
   this->init();
 }
 
-Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers)
-  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false),
-    _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
+Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2)
+  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _player1(p1),
+    _player2(p2), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
 {
   _twoPlayers = twoPlayers;
   this->init();
@@ -60,8 +60,8 @@ Gamer::~Gamer()
 
 void	Gamer::init()
 {
-  std::vector<std::string>	nameList = {"Jacob",
-					    "Pierre"};
+  std::vector<std::string>	nameList = {_player1,
+					    _player2};
   std::string			mapName = "Classic Map";
   std::vector<std::string>	vec;
   Player			*player;

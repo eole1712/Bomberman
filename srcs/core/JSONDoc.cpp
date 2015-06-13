@@ -92,6 +92,9 @@ void				JSONDoc::serialize<Bomberman::ScoreList>(const Bomberman::ScoreList &obj
   std::list<std::string>	names = obj.getNames();
   rapidjson::Value		object(rapidjson::kObjectType);
 
+
+  while (_doc.HasMember("Scores"))
+    _doc.RemoveMember("Scores");
   std::for_each(names.cbegin(), names.cend(), [this, &object, &obj] (const std::string& value) {
     rapidjson::Value arr(rapidjson::kArrayType);
     std::for_each(obj.getScore(value).begin(), obj.getScore(value).end(), [this, &arr] (unsigned int score) {
@@ -109,16 +112,12 @@ Bomberman::ScoreList*		JSONDoc::unserialize<Bomberman::ScoreList*>(std::string c
 
   if (_doc.HasMember("Scores"))
     {
-      std::cout << "in docs" << std::endl;
       rapidjson::Value const& object(_doc["Scores"]);
       std::for_each(object.MemberBegin(), object.MemberEnd(), [&scores] (const rapidjson::Value::Member& player) {
 	if (player.value.IsArray())
 	  std::for_each(player.value.Begin(), player.value.End(), [&player, &scores] (const rapidjson::Value& score) {
 	    scores->addScore(player.name.GetString(), score.GetUint());
 	  });
-	else
-	  std::cout << "Nop" << std::endl;
-	std::cout << "dedans" << std::endl;
       });
     }
   else
@@ -132,6 +131,8 @@ void		JSONDoc::serialize<Bomberman::MapList>(const Bomberman::MapList &obj)
   std::unordered_map<std::string, std::pair<unsigned int, unsigned int> > list = obj.getMapList();
   rapidjson::Value		object(rapidjson::kObjectType);
 
+  while (_doc.HasMember("Maps"))
+    _doc.RemoveMember("Maps");
   if (!_doc.IsObject())
     _doc.SetObject();
   std::for_each(list.cbegin(), list.cend(), [this, &obj, &object] (std::pair<std::string, std::pair<unsigned int, unsigned int> > const& value) {

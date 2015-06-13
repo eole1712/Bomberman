@@ -34,7 +34,8 @@ class Gamer : public IScene
 {
 public:
   Gamer();
-  Gamer(unsigned int, unsigned int, unsigned int, unsigned int, bool);
+  Gamer(unsigned int, unsigned int, unsigned int, unsigned int,
+	bool, std::string const&, std::string const&);
   virtual ~Gamer();
 
   virtual void		init();
@@ -64,6 +65,8 @@ private:
   bool				_quit;
   bool				_resume;
   bool				_twoPlayers;
+  std::string			_player1;
+  std::string			_player2;
 
 private:
   CameraObject			_camera;
