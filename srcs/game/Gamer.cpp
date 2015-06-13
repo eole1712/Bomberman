@@ -40,7 +40,7 @@ namespace Bomberman
   ** Constructor/Destructors
   */
   Gamer::Gamer()
-    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(8), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900), _thpool(new AIPool(&Gamer::updateAI, 10))
+    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(4), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900), _thpool(new AIPool(&Gamer::updateAI, 10))
   {
     this->init();
   }
@@ -294,7 +294,7 @@ namespace Bomberman
     IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
     static int		angle = 0;
 
-    if (!player->isAlive() || player->zeroBomb())
+    if (!player->isAlive() || player->zeroBomb() || player->isParalyzed())
       return;
     shader.setUniform("view", glm::mat4());
     shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
