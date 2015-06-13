@@ -17,7 +17,7 @@ Asset3d::Asset3d(std::string const &filename)
   framecount = 0;
   while (framecount < gdl::Model::getAnimationFrameNumber(0)
 	 && (ss << framecount)
-	 && gdl::Model::createSubAnim(0, ss.str(), framecount, framecount + 1))
+	 && gdl::Model::createSubAnim(0, ss.str(), framecount, framecount))
     {
       ss.str("");
       framecount++;

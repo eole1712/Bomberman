@@ -81,7 +81,7 @@ namespace Bomberman
     _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 		  ? (_json.unserialize<Bomberman::ScoreList*>())
 		  : (new ScoreList()));
-    _stock = new RessourceStock(nameList, 8, _scoreList, _twoPlayers);
+    _stock = new RessourceStock(nameList, 3, _scoreList, _twoPlayers);
     _map = _mapList->getMap(mapName);
     if (_map == NULL)
       _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
@@ -144,10 +144,12 @@ namespace Bomberman
 	delete _menu;
 	_menu = NULL;
       }
-    if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
+    if (_quit)
       return false;
     if (_menu != NULL)
       return _menu->update(clock, input);
+    if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
+      return false;
     _map->checkBombsOnMap();
     updateAI(elapsedTime);
     updateCamera();
@@ -211,7 +213,7 @@ namespace Bomberman
 	for (pos.z = -1; pos.z <= _height; pos.z++)
 	  {
 	    tmp = glm::rotate(pos - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-	    if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 13)
+	    if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15)
 	      {
 		if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
 		  {
@@ -248,7 +250,7 @@ namespace Bomberman
       {
 	drawPlayer = dynamic_cast<Player *>(_stock->getPlayer(i));
 	tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-	if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 12)
+	if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15)
 	  drawPlayer->draw(*assets[PLAYER], shader, clock);
       }
     shader.setUniform("color", glm::vec4(1.0));
@@ -270,6 +272,7 @@ namespace Bomberman
 
   {
     IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
+    static int		angle = 0;
 
     if (!player->isAlive() || player->zeroBomb())
       return;
@@ -284,10 +287,9 @@ namespace Bomberman
     assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1, 1), 1);
     assets[ObjectToAsset[type]]->draw(shader, clock);
     assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
-
     for (unsigned int i = 1; i < player->getNbBomb(); i++)
       {
-	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) ) * M_PI) / 180;
+	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) + angle) * M_PI) / 180;
 	int x1 = 820 + 50 * cos(a);
 	int y1 = 840 + 50 * sin(a);
 
@@ -296,6 +298,7 @@ namespace Bomberman
 	assets[ObjectToAsset[type]]->draw(shader, clock);
 	assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
       }
+    angle = (angle + 1) % 360;
   }
 
   void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
