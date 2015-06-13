@@ -23,13 +23,13 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
 {
   this->init();
 }
 
 Player::Player()
-  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
+  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(glm::vec4(1)), _scoreList(NULL), animation()
 {
   this->init();
 }
@@ -168,6 +168,17 @@ void			Player::resetShield()
   {
     return _bomb;
   }
+
+  bool			Player::getPutBombStatus() const
+  {
+    return _putBombStatus;
+  }
+
+  void			Player::setPutBombStatus(bool status)
+  {
+    _putBombStatus = status;
+  }
+
 
 void			Player::incBomb()
 {
