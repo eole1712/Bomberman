@@ -73,7 +73,7 @@ void	Gamer::init()
   _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
 		: (new ScoreList()));
-  _stock = new RessourceStock(nameList, 8,_scoreList);
+  _stock = new RessourceStock(nameList, 1, _scoreList);
   _map = _mapList->getMap(mapName);
   if (_map == NULL)
     _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
@@ -280,23 +280,32 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
 {
   IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
 
-  if (!player->isAlive())
+  if (!player->isAlive() || player->zeroBomb())
     return;
-  if (player->zeroBomb())
-    shader.setUniform("color", glm::vec4(1, 0, 0, 0));
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
 
   if (type == IObject::MINE)
-    assets[ObjectToAsset[type]]->scale(glm::vec3(-300 * (!_twoPlayers ? 0.80 : 1)));
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-300 * (!_twoPlayers ? 0.60 : 1)));
   else
-    assets[ObjectToAsset[type]]->scale(glm::vec3(-100 * (!_twoPlayers ? 0.80 : 1)));
-  assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 870, 0));
-  assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1 ,1), 1);
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-100 * (!_twoPlayers ? 0.60  : 1)));
+  assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 820, 0));
+  assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1, 1), 1);
   assets[ObjectToAsset[type]]->draw(shader, clock);
   assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
-  if (player->zeroBomb())
-    shader.setUniform("color", glm::vec4(1.0));
+
+  for (unsigned int i = 1; i < player->getNbBomb(); i++)
+    {
+      std::cout << player->getNbBomb() << std::endl;
+      double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) ) * M_PI) / 180;
+      int x1 = 820 + 50 * cos(a);
+      int y1 = 820 + 50 * sin(a);
+
+      assets[ObjectToAsset[type]]->setPosition(glm::vec3(x1, y1, 0));
+      assets[ObjectToAsset[type]]->scale(glm::vec3(-35));
+      assets[ObjectToAsset[type]]->draw(shader, clock);
+      assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
+    }
 }
 
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
