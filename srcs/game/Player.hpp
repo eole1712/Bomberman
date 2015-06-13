@@ -49,6 +49,7 @@ public:
   bool			zeroBomb() const;
   bool			canAbsorb() const;
   bool			isPlaced() const;
+  virtual bool		isIA() const;
 
 private:
   bool			_isAlive;

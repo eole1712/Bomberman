@@ -40,8 +40,8 @@ public:
   IObject	*getBomb(Bomb::Type) const;
   SoundManager	*getMusic() const;
   SoundManager	*getSound(SoundType);
-  IObject	*getPlayer(std::string const &) const;
-  IObject	*getPlayer(unsigned int) const;
+  Player	*getPlayer(std::string const &) const;
+  Player	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
 
   unsigned int	countAlivePlayers();
