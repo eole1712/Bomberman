@@ -81,7 +81,7 @@ namespace Bomberman
     _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 		  ? (_json.unserialize<Bomberman::ScoreList*>())
 		  : (new ScoreList()));
-    _stock = new RessourceStock(nameList, 8, _scoreList);
+    _stock = new RessourceStock(nameList, 8, _scoreList, _twoPlayers);
     _map = _mapList->getMap(mapName);
     if (_map == NULL)
       _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
@@ -277,10 +277,10 @@ namespace Bomberman
     shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
 
     if (type == IObject::MINE)
-      assets[ObjectToAsset[type]]->scale(glm::vec3(-300 * (!_twoPlayers ? 0.60 : 1)));
+      assets[ObjectToAsset[type]]->scale(glm::vec3(-300 * 0.60));
     else
-      assets[ObjectToAsset[type]]->scale(glm::vec3(-100 * (!_twoPlayers ? 0.60  : 1)));
-    assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 820, 0));
+      assets[ObjectToAsset[type]]->scale(glm::vec3(-100 * 0.60));
+    assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 850, 0));
     assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1, 1), 1);
     assets[ObjectToAsset[type]]->draw(shader, clock);
     assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
@@ -289,7 +289,7 @@ namespace Bomberman
       {
 	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) ) * M_PI) / 180;
 	int x1 = 820 + 50 * cos(a);
-	int y1 = 820 + 50 * sin(a);
+	int y1 = 840 + 50 * sin(a);
 
 	assets[ObjectToAsset[type]]->setPosition(glm::vec3(x1, y1, 0));
 	assets[ObjectToAsset[type]]->scale(glm::vec3(-35));
