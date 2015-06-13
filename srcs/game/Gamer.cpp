@@ -73,7 +73,6 @@ void	Gamer::init()
   _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 	      ? (_json.unserialize<Bomberman::ScoreList*>())
 		: (new ScoreList()));
-  std::cout << "SIZE :" << nameList.size() << std::endl;
   _stock = new RessourceStock(nameList, 8,_scoreList);
   _map = _mapList->getMap(mapName);
   if (_map == NULL)
@@ -173,7 +172,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (_twoPlayers && input.getKey(SDLK_q) != input.getKey(SDLK_d))
     player2->Player::rotate(input.getKey(SDLK_q), elsapsedTime);
   _map->checkBombsOnMap();
-  for (unsigned int i = 0; i < _stock->getNbPlayer() ; ++i)
+  for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
     {
       PlayerAI*	ai = NULL;
 
@@ -221,7 +220,6 @@ void		Gamer::draw(gdl::Clock &clock,
       for (pos.z = -1; pos.z <= _height; pos.z++)
   	{
 	  tmp = glm::rotate(pos - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-	  // Frustrum culling
 	  if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 13)
 	    {
 	      if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
@@ -259,7 +257,6 @@ void		Gamer::draw(gdl::Clock &clock,
     {
       drawPlayer = dynamic_cast<Player *>(_stock->getPlayer(i));
       tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-      // Frustrum culling
       if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 12)
 	drawPlayer->draw(*assets[PLAYER], shader, clock);
     }
@@ -291,9 +288,9 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
 
   if (type == IObject::MINE)
-    assets[ObjectToAsset[type]]->scale(glm::vec3(-300));
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-300 * (!_twoPlayers ? 0.80 : 1)));
   else
-    assets[ObjectToAsset[type]]->scale(glm::vec3(-100));
+    assets[ObjectToAsset[type]]->scale(glm::vec3(-100 * (!_twoPlayers ? 0.80 : 1)));
   assets[ObjectToAsset[type]]->setPosition(glm::vec3(820, 870, 0));
   assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1 ,1), 1);
   assets[ObjectToAsset[type]]->draw(shader, clock);

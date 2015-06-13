@@ -40,7 +40,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 
   for (unsigned int i = 0; i < nbJoueurs; ++i)
     {
-      if (i == 0 || (size == 2 && i == nbJoueurs - 1))
+      if (i == 0 || (size == 2 && names[1] != "" && (i == (nbJoueurs - 1))))
 	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
 	{
