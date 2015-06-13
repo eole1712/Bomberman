@@ -40,19 +40,21 @@ namespace Bomberman
   ** Constructor/Destructors
   */
   Gamer::Gamer()
-    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(8), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
+    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(4), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900), _thpool(new AIPool(&Gamer::updateAI, 10))
   {
     this->init();
   }
 
-Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
-  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
+  Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
+    : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam), _thpool(new AIPool(&Gamer::updateAI, 10))
   {
     this->init();
   }
 
   Gamer::~Gamer()
   {
+    if (_thpool != NULL)
+      delete (_thpool);
     if (_map)
       delete (_map);
     if (_stock)
@@ -149,12 +151,12 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
     if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
       return false;
     _map->checkBombsOnMap();
-    updateAI(elapsedTime);
+    updateAllAI(elapsedTime);
     updateCamera();
     return true;
   }
 
-  void				Gamer::updateCamera()
+  void		Gamer::updateCamera()
   {
     Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
 
@@ -180,12 +182,12 @@ Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, uns
       }
   }
 
-RessourceStock*			Gamer::getRcs() const
-{
-  return _stock;
-}
+  RessourceStock*			Gamer::getRcs() const
+  {
+    return _stock;
+  }
 
-void				Gamer::updateRandCamera(Player *player)
+  void				Gamer::updateRandCamera(Player *player)
   {
     _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 			+ glm::rotate(glm::vec3(2.5, 4, 0),
@@ -195,14 +197,17 @@ void				Gamer::updateRandCamera(Player *player)
     _camera.updateView();
   }
 
-  void				Gamer::updateAI(const float elapsedTime)
+  void		Gamer::updateAllAI(const float elapsedTime)
   {
+    if (!_thpool->isEmpty())
+      return ;
+    _stateMap = AI::StateMap(*_map);
     for (unsigned int i = 0; i < _stock->getNbPlayer() ; ++i)
       {
 	PlayerAI*	ai = NULL;
 
 	if ((ai = dynamic_cast<PlayerAI *>(_stock->getPlayer(i))) != NULL)
-	  ai->doAction(*_map, elapsedTime);
+	  _thpool->addTask(AIData(ai, &_stateMap, elapsedTime));
       }
   }
 
@@ -289,7 +294,7 @@ void				Gamer::updateRandCamera(Player *player)
     IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
     static int		angle = 0;
 
-    if (!player->isAlive() || player->zeroBomb())
+    if (!player->isAlive() || player->zeroBomb() || player->isParalyzed())
       return;
     shader.setUniform("view", glm::mat4());
     shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
@@ -338,6 +343,12 @@ void				Gamer::updateRandCamera(Player *player)
     if (i == 0)
       return _camera;
     return _camera2;
+  }
+
+  bool			Gamer::updateAI(AIData data)
+  {
+    std::get<0>(data)->doAction(std::get<1>(data), std::get<2>(data));
+    return true;
   }
 
   /*
@@ -533,7 +544,7 @@ void				Gamer::updateRandCamera(Player *player)
     return book;
   }
 
-Gamer::HandleKeyBook	Gamer::getHandleKeyBookIntro()
+  Gamer::HandleKeyBook	Gamer::getHandleKeyBookIntro()
   {
     HandleKeyBook	book;
 

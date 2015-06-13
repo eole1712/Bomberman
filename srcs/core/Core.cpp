@@ -36,7 +36,7 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1800), _height(900)
+  : _change(false), _width(1440), _height(800)
 {
   _status = false;
 }
@@ -145,11 +145,14 @@ void				Core::intro()
     {
       if (timer.isFinished())
 	break;
-      if (timer.getElapsedTime() > (x * 3000000) || !player->isAlive())
+      if (timer.getElapsedTime() > (x * 3000000))
 	{
-	  id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
-	  player = dynamic_cast<Player *>
-	    (tmpGame->getRcs()->getPlayer(id));
+	  do
+	    {
+	      id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
+	      player = dynamic_cast<Player *>
+		(tmpGame->getRcs()->getPlayer(id));
+	    } while (!player->isAlive() && tmpGame->getRcs()->countAlivePlayers() > 0);
 	  x += 1;
 	}
       tmpGame->updateRandCamera(player);
@@ -393,7 +396,7 @@ void		Core::gameMenu()
   });
   grid->addObject(start, [this, p1Field, p2Field] (void) {
     /// START GAME
-    startGame(true, p1Field->getText(), p2Field->getText());
+    startGame(false, p1Field->getText(), p2Field->getText());
   });
   grid->addObject(back, [this] (void) {
     firstMenu();
@@ -456,7 +459,6 @@ void		Core::draw()
   _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
 }
-
 
 gdl::SdlContext		&Core::getContext()
 {

@@ -32,7 +32,7 @@ int main()
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
-  engine.intro();
+  //  engine.intro();
   engine.firstMenu();
   while (!engine.isOver())
     {
