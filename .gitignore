@@ -2,5 +2,4 @@
 *.o
 *#
 bomberman
-resources/assets/marvin.fbm/Main_texture_diffuse2.tga
 *.json
