@@ -32,7 +32,7 @@ namespace Bomberman
 unsigned int const	RessourceStock::nbSounds = 18;
 unsigned int const	RessourceStock::nbChannels = 10;
 
-RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList)
+RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer)
   : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
   unsigned int	size = names.size();
@@ -40,7 +40,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 
   for (unsigned int i = 0; i < nbJoueurs; ++i)
     {
-      if (i == 0 || (size == 2 && names[1] != "" && (i == (nbJoueurs - 1))))
+      if (i == 0 || (size == 2 && twoPlayer && i == (nbJoueurs - 1)))
 	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
 	{

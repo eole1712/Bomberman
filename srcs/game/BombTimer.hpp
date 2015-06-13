@@ -50,11 +50,12 @@ private:
   unsigned int	_y;
 
 public:
-  void		setFinished();
+  void		setFinished(bool byPlayer = false);
 
 private:
   bool		_isFinished;
   bool		_isVirus;
+  bool		_byPlayer;
 
 public:
   IObject::Type	getObjectType() const;

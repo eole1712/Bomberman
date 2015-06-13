@@ -2,7 +2,7 @@
 #include <iostream>
 
 AMenuObject::AMenuObject(int x, int y, int width, int height, std::string const& texName)
-  : _x(x), _y(y), _width(width), _height(height), _focusable(true), _fShowable(true)
+  : _x(x), _y(y), _width(width), _height(height), _focusable(true), _fShowable(true), _dynamic(false)
 {
   _hidden = false;
   if (!_texture.load(texName))
@@ -25,32 +25,32 @@ void	AMenuObject::hideFocus()
   _fShowable = false;
 }
 
-bool	AMenuObject::isHidden()
+bool	AMenuObject::isHidden() const
 {
   return _hidden;
 }
 
-int	AMenuObject::getX()
+int	AMenuObject::getX() const
 {
   return _x;
 }
 
-int	AMenuObject::getY()
+int	AMenuObject::getY() const
 {
   return _y;
 }
 
-int	AMenuObject::getHeight()
+int	AMenuObject::getHeight() const
 {
   return _height;
 }
 
-bool	AMenuObject::isFocusable()
+bool	AMenuObject::isFocusable() const
 {
   return _focusable;
 }
 
-bool	AMenuObject::showFocus()
+bool	AMenuObject::showFocus() const
 {
   return _fShowable;
 }
@@ -58,4 +58,14 @@ bool	AMenuObject::showFocus()
 void	AMenuObject::unFocus()
 {
   _focusable = false;
+}
+
+void	AMenuObject::setDynamic()
+{
+  _dynamic = true;
+}
+
+bool	AMenuObject::isDynamic() const
+{
+  return _dynamic;
 }

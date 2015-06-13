@@ -63,33 +63,22 @@ void		Text2d::update()
 
 void		Text2d::listen(gdl::Input input)
 {
-  char		key;
-  static bool	key_change[64] =
+  int		key;
+  static bool	key_change[27] =
     {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0
+      0, 0, 0, 0, 0, 0, 0
     };
-
-  for (unsigned int i = 0; i < 64; i++)
+  for (unsigned int i = 0; i < 27; i++)
     {
       if (i < 26)
 	key = 'a' + i;
-      else if (i < 52)
-	key = 'A' + i - 26;
-      else if (i < 62)
-	key = '0' + i - 52;
-      else if (i < 63)
-	key = ' ';
       else
 	key = SDLK_BACKSPACE;
       if (input.getKey(key) != key_change[i] && key_change[i] == 1)
 	{
-	  if (i == 63)
+	  if (i == 26)
 	    {
 	      if (!_text.empty())
 		_text.pop_back();
@@ -141,4 +130,10 @@ void	Text2d::update(gdl::Input &in)
 std::string const&	Text2d::getText() const
 {
   return _text;
+}
+
+void			Text2d::setText(const std::string & str)
+{
+  _text = str;
+  update();
 }

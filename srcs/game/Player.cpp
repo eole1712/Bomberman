@@ -320,7 +320,7 @@ void			Player::setY(float y)
   setPosition(glm::vec3(getPosition().x, 0, y));
 }
 
-void			Player::move(float const & direction, float const & elsapsedTime)
+void			Player::move(const float & direction, float const & elsapsedTime)
 {
   glm::vec3		pos;
   glm::vec3		npos;
@@ -358,20 +358,19 @@ void			Player::move(float const & direction, float const & elsapsedTime)
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::MINE)
     {
-      dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
+      dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished(true);
     }
   if (animation->queueEmpty())
     {
-      animation->setAnim(10, 34, false, animation->getDefaultSpeed() / (getSpeed() + 0.3));
-      animation->setAnim(34, 55, false, animation->getDefaultSpeed() / getSpeed());
-      animation->setAnim(55, 119, false, animation->getDefaultSpeed() / (getSpeed() + 0.3));
+      animation->setAnim(10, 34, false,
+			 animation->getDefaultSpeed() / (getSpeed() + 0.5));
+      animation->setAnim(34, 55, false, animation->getDefaultSpeed() / getSpeed(), true);
+      animation->setAnim(55, 119, false,
+			 animation->getDefaultSpeed() / (getSpeed() + 0.5));
     }
-  else
-    {
-      animFrame = animation->getFrame();
-      if (animFrame >= 34 && animFrame < 55)
-      	animation->extend();
-    }
+  animFrame = animation->getFrame();
+  if (animFrame >= 34 && animFrame < 55)
+    animation->extend();
 }
 
 bool			Player::rotate(bool const & direction,

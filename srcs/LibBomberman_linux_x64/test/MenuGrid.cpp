@@ -33,6 +33,20 @@ MenuGrid::MenuGrid(std::string const& texName)
       }
   };
   _ftab[3] = std::bind(&MenuGrid::actionOnFocus, this);
+  _ftab[4] = [this] () {
+    if ((*_focus).first->isDynamic())
+      {
+	(*_fnFocus).first();
+      }
+    _prev = SDLK_LEFT;
+  };
+  _ftab[5] = [this] () {
+    if ((*_focus).first->isDynamic())
+      {
+	(*_fnFocus).second();
+      }
+    _prev = SDLK_RIGHT;
+  };
 }
 
 MenuGrid::~MenuGrid()
@@ -45,6 +59,7 @@ void	MenuGrid::moveLeft()
   static unsigned int	nbTries = 0;
 
   _focus = _focus == _elems.begin() ? _elems.end() - 1 : _focus - 1;
+  _fnFocus = _fnFocus == _funcs.begin() ? _funcs.end() - 1 : _fnFocus - 1;
   if (!(*_focus).first->isFocusable() && nbTries++ <= _elems.size())
     moveLeft();
   if (nbTries > _elems.size())
@@ -57,6 +72,7 @@ void	 MenuGrid::moveRight()
   static unsigned int	nbTries = 0;
 
   _focus = _focus + 1 == _elems.end() ? _elems.begin() : _focus + 1;
+  _fnFocus = _fnFocus + 1 == _funcs.end() ? _funcs.begin() : _fnFocus + 1;
   if (!(*_focus).first->isFocusable() && nbTries <= _elems.size())
     {
       moveRight();
@@ -117,19 +133,46 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 void	MenuGrid::addObject(AMenuObject* obj, std::function<void()> func)
 {
   _elems.push_back(std::pair<AMenuObject*, std::function<void()> >(obj, func));
-  for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
+  _funcs.push_back(std::pair<std::function<void()>, std::function<void()> >([] () {}, [] () {}));
+  std::vector<std::pair< std::function<void()>, std::function<void()> > >::iterator it2 = _funcs.begin();
+  for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin();
+       it != _elems.end();
+       ++it)
     {
       if ((*it).first->isFocusable())
 	{
 	  _focus = it;
+	  _fnFocus = it2;
 	  break;
 	}
+      ++it2;
+    }
+}
+
+
+void	MenuGrid::addDynObject(AMenuObject* obj, std::function<void()> enter, std::function<void()> left, std::function<void()> right)
+{
+  _elems.push_back(std::pair<AMenuObject*, std::function<void()> >(obj, enter));
+  _funcs.push_back(std::pair<std::function<void()>, std::function<void()> >(left, right));
+  std::vector<std::pair< std::function<void()>, std::function<void()> > >::iterator it2 = _funcs.begin();
+  for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin();
+       it != _elems.end();
+       ++it)
+    {
+      if ((*it).first->isFocusable())
+	{
+	  _focus = it;
+	  _fnFocus = it2;
+	  break;
+	}
+      ++it2;
     }
 }
 
 void	MenuGrid::actionOnFocus()
 {
   (*_focus).second();
+  _prev = SDLK_RETURN;
 }
 
 void	MenuGrid::drawFocus(int x, int y, int height, gdl::BasicShader& shader)
@@ -143,11 +186,10 @@ void	MenuGrid::drawFocus(int x, int y, int height, gdl::BasicShader& shader)
 bool	MenuGrid::update(gdl::Clock &, gdl::Input & in)
 {
   static int idTab[] = {
-    SDLK_UP, SDLK_TAB, SDLK_DOWN, SDLK_RETURN
+    SDLK_UP, SDLK_TAB, SDLK_DOWN,
+    SDLK_RETURN, SDLK_LEFT, SDLK_RIGHT
   };
-  // if (in.getKey(SDLK_ESCAPE) || in.getInput(SDL_QUIT))
-  //   return false;
-  for (int i = 0; i < 4; ++i)
+  for (int i = 0; i < 6; ++i)
       {
 	try {
 	  if (in.getKey(idTab[i]) && _prev != idTab[i])

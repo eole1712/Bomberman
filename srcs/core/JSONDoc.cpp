@@ -173,6 +173,7 @@ void						JSONDoc::serialize<Bomberman::Player>(const Bomberman::Player &obj)
       rapidjson::Value playArray(rapidjson::kArrayType);
       _doc.AddMember("Players", playArray, _doc.GetAllocator());
     }
+  //std::for_each(, _InputIterator __last, _Function __f)
   rapidjson::Value player(rapidjson::kObjectType);
   player.AddMember("name", obj.getName().c_str(), _doc.GetAllocator());
   player.AddMember("xPos", obj.getfX(), _doc.GetAllocator());

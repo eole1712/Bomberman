@@ -5,7 +5,7 @@ namespace Bomberman
 {
 
 BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
-  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY()), _isFinished(false), _isVirus(false)
+  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY()), _isFinished(false), _isVirus(false), _byPlayer(false)
 {
   if (bomb->getBombType() == Bomb::MINE)
     {
@@ -16,7 +16,7 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
 }
 
 BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time, unsigned int x, unsigned int y, bool isVirus)
-  : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y), _isFinished(false), _isVirus(isVirus)
+  : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y), _isFinished(false), _isVirus(isVirus), _byPlayer(false)
 {
   if (!_isVirus && bomb->getBombType() == Bomb::MINE)
     {
@@ -66,16 +66,18 @@ unsigned int	BombTimer::getY() const
   return _y;
 }
 
-void		BombTimer::setFinished()
+void		BombTimer::setFinished(bool byPlayer)
 {
   _isFinished = true;
+  _byPlayer = byPlayer;
 }
 
 bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 {
   if (isFinished() || _isFinished)
     {
-      if (_isFinished == true && _bomb->getBombType() == Bomb::MINE && getElapsedTime() < 3000000)
+      if (_isFinished == true &&
+	  (_byPlayer && _bomb->getBombType() == Bomb::MINE && getElapsedTime() < 3000000))
 	{
 	  _isFinished = false;
 	  return false;
