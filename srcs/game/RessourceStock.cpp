@@ -29,7 +29,7 @@
 namespace Bomberman
 {
 
-unsigned int const	RessourceStock::nbSounds = 18;
+unsigned int const	RessourceStock::nbSounds = 20;
 unsigned int const	RessourceStock::nbChannels = 10;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer, bool intro)
@@ -116,6 +116,8 @@ void	RessourceStock::init()
   _sounds[FIRSTBLOOD] = "./resources/sound/firstblood.ogg";
   _sounds[SUICIDE] = "./resources/sound/suicide.wav";
   _sounds[EXPLOSE] = "./resources/sound/explose.ogg";
+  _sounds[PICKUP] = "./resources/sound/pickup_buff.ogg";
+  _sounds[HITSHIELD] = "./resources/sound/hit_shield.ogg";
   _sounds[PREPARE1] = "./resources/sound/prepare1.ogg";
   _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
   _sounds[PREPARE3] = "./resources/sound/prepare3.wav";

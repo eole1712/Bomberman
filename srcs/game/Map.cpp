@@ -36,9 +36,9 @@ void	Map::init(unsigned int width, unsigned int height)
   this->_height = height;
   if (this->_nbJoueurs == 0
       || this->_nbJoueurs > this->_width * this->_height / 16)
-    throw new Exception::InvalidNbPlayers("Map Constructor");
-  if (this->_height < 10 || this->_width < 10)
-    throw new Exception::InvalidDimensions("Map Constructor");
+    this->_nbJoueurs = this->_width * this->_height / 16;
+  this->_width = ((this->_width < 10) ? (10) : (this->_width));
+  this->_height = ((this->_height < 10) ? (10) : (this->_height));
 }
 
 void	Map::generateForm(unsigned int x, unsigned int y)
@@ -280,7 +280,7 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player)
 	{
 	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
 	    {
-	      this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
+	      _rcs->getSound(Bomberman::RessourceStock::SUICIDE)->play();
 	      firstBlood = false;
 	    }
 	  else
