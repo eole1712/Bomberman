@@ -32,13 +32,14 @@ int main()
       std::cout << "Initialize failed" << std::endl;
       return (EXIT_FAILURE);
     }
-  //  engine.intro();
+  engine.intro();
   engine.firstMenu();
+  std::cout << "OK" << std::endl;
   while (!engine.isOver())
     {
       while (!engine.isOver() && engine.update() == true)
 	{
-	  //showfps();
+	  // showfps();
 	  engine.draw();
 	}
     }

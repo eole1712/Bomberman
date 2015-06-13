@@ -72,7 +72,7 @@ public:
     int		ret;
     void*	tmpRetValue;
 
- if ((ret = pthread_join(_thread, &tmpRetValue)) != 0)
+    if ((ret = pthread_join(_thread, &tmpRetValue)) != 0)
       throw Exception::ThreadError(strerror(ret));
     _retValue = *(static_cast<S*>(tmpRetValue));
   }
