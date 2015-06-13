@@ -62,7 +62,7 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   for (unsigned int i = 0; i < players.size(); ++i)
     {
       _players[i] = players[i];
-      if (!_players[i]->isIA())
+      if (dynamic_cast<Player*>(_players[i])->isIA())
 	nb++;
     }
   _twoPlayers = nb == 2 ? true : false;
