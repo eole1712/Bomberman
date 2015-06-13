@@ -145,11 +145,14 @@ void				Core::intro()
     {
       if (timer.isFinished())
 	break;
-      if (timer.getElapsedTime() > (x * 3000000) || !player->isAlive())
+      if (timer.getElapsedTime() > (x * 3000000))
 	{
-	  id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
-	  player = dynamic_cast<Player *>
-	    (tmpGame->getRcs()->getPlayer(id));
+	  do
+	    {
+	      id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
+	      player = dynamic_cast<Player *>
+		(tmpGame->getRcs()->getPlayer(id));
+	    } while (!player->isAlive() && tmpGame->getRcs()->countAlivePlayers() > 0);
 	  x += 1;
 	}
       tmpGame->updateRandCamera(player);
@@ -416,7 +419,6 @@ void		Core::draw()
   _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
 }
-
 
 gdl::SdlContext		&Core::getContext()
 {
