@@ -47,6 +47,7 @@ MenuGrid::MenuGrid(std::string const& texName)
       }
     _prev = SDLK_RIGHT;
   };
+  _prev = SDLK_RETURN;
 }
 
 MenuGrid::~MenuGrid()

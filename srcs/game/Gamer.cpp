@@ -40,14 +40,14 @@ namespace Bomberman
   ** Constructor/Destructors
   */
   Gamer::Gamer()
-    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(4), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
+    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(4), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
   {
 _json = new JSONDoc;
     this->init();
   }
 
   Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
-    : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
+    : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
   {
 	_json = new JSONDoc;
     this->init();
@@ -169,12 +169,31 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     return true;
   }
 
+Player		*Gamer::randAlivePlayer() const
+{
+  unsigned int	id = 0;
+  Player	*player = NULL;
+
+  do
+    {
+      id = (id + 1) % getRcs()->getNbPlayer();
+      player = dynamic_cast<Player *>
+	(getRcs()->getPlayer(id));
+    } while (!player->isAlive() && getRcs()->countAlivePlayers() > 0);
+  return player;
+}
+
   void		Gamer::updateCamera()
   {
     Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
 
-    if (player == NULL)
-      throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+    if (!player->isAlive())
+      {
+	if ((!_spect || !_spect->isAlive()) && (_spect = randAlivePlayer()) == NULL)
+	  return;
+	if (_spect && _spect->isAlive())
+	  player = _spect;
+      }
     _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 			+ glm::rotate(glm::vec3(2.5, 4, 0),
 				      player->getRotation().y + 90,
@@ -184,8 +203,13 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     if (_twoPlayers)
       {
 	player = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
-	if (player == NULL)
-	  throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+	if (!player->isAlive())
+	  {
+	    if ((!_spect || !_spect->isAlive()) && (_spect = randAlivePlayer()) == NULL)
+	      return;
+	    if (_spect && _spect->isAlive())
+	      player = _spect;
+	  }
 	_camera2.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 			     + glm::rotate(glm::vec3(2.5, 4, 0),
 					   player->getRotation().y + 90,
@@ -297,8 +321,6 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     assets[SKYBOX]->scale(glm::vec3(-1));
     assets[SKYBOX]->draw(shader, clock);
     assets[SKYBOX]->scale(glm::vec3(1));
-    if (_menu)
-      _menu->drawNoBack(shader);
   }
 
   void			Gamer::drawPlayerArme(gdl::Clock &clock,
@@ -346,14 +368,26 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     if (_twoPlayers)
       glViewport(900, 0, 900, 900);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    draw(clock, shader, _camera, assets, ObjectToAsset, dynamic_cast<Player *>(_stock->getPlayer(0)));
-    drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(0)), ObjectToAsset);
+
+    Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
+
+    if (!player->isAlive() && _spect && _spect->isAlive())
+      player = _spect;
+    draw(clock, shader, _camera, assets, ObjectToAsset, player);
+    drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
     if (_twoPlayers)
       {
+	Player	*player = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+
+	if (!player->isAlive() && _spect && _spect->isAlive())
+	  player = _spect;
 	glViewport(0, 0, 900, 900);
-	draw(clock, shader, _camera2, assets, ObjectToAsset, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)));
-	drawPlayerArme(clock, shader, assets, dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1)), ObjectToAsset);
+	draw(clock, shader, _camera2, assets, ObjectToAsset, player);
+	drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
       }
+    glViewport(0, 0, 1800, 900);
+    if (_menu)
+      _menu->drawNoBack(shader);
   }
 
   CameraObject		&Gamer::getCamera(unsigned int i)

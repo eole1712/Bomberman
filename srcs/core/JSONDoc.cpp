@@ -61,10 +61,6 @@ bool		JSONDoc::parse(const std::string &name)
     	std::cerr << "JSON parse error: " << _doc.GetParseError() << " at : " << _doc.GetErrorOffset() << std::endl;
 	return false;
       }
-      if (_doc.IsObject())
-	std::cout << "fuck it !" << std::endl;
-      else
-	std::cout << "ok..." << std::endl;
       _filename = name;
       return true;
     }

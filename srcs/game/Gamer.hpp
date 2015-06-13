@@ -55,6 +55,7 @@ public:
 				       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset);
   bool			pauseMenu();
   void			updateRandCamera(Player *);
+  Player*		randAlivePlayer() const;
 
 private:
   Gamer(const Gamer &);
@@ -99,6 +100,7 @@ private:
   std::string			_player2;
   AI::StateMap			_stateMap;
   unsigned int			_nbPlayers;
+  Player*			_spect;
 
 private:
   CameraObject			_camera;

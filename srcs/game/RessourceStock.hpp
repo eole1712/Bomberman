@@ -21,6 +21,8 @@ public:
 		   FIRSTBLOOD, SUICIDE, EXPLOSE, PICKUP, HITSHIELD,
 		   PREPARE1, PREPARE2, PREPARE3, PREPARE4 };
 
+  enum PlayerType { PLAYER1, PLAYER2, IA };
+
   static unsigned int const	nbSounds;
   static unsigned int const	nbChannels;
 
@@ -42,7 +44,7 @@ public:
   Player	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
 
-  unsigned int	countAlivePlayers() const;
+  unsigned int	countAlivePlayers();
   bool		isPlayingMusic() const;
   bool		isPlayingSounds() const;
   void		initMusic();
@@ -55,6 +57,7 @@ private:
   std::vector<IObject *>	_buffs;
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;
+  PlayerType			_winner;
   AudioManager			_audioManager;
   SoundManager*			_music;
   SoundManager*			_calm;
