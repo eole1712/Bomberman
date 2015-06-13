@@ -5,9 +5,8 @@ namespace Bomberman
 {
 
 BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
-  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY()), _isFinished(false)
+  : Timer(bomb->getDuration() * 1000000), _player(player), _range(range), _bomb(bomb), _x(_player->getX()), _y(_player->getY()), _isFinished(false), _isVirus(false)
 {
-  std::cout << bomb->getClassName() << std::endl;
   if (bomb->getBombType() == Bomb::MINE)
     {
       player->incBomb();
@@ -16,10 +15,10 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
   start();
 }
 
-BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time, unsigned int x, unsigned int y)
-  : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y), _isFinished(false)
+BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time, unsigned int x, unsigned int y, bool isVirus)
+  : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y), _isFinished(false), _isVirus(isVirus)
 {
-  if (bomb->getBombType() == Bomb::MINE)
+  if (!_isVirus && bomb->getBombType() == Bomb::MINE)
     {
       player->incBomb();
     }
@@ -83,14 +82,15 @@ bool		BombTimer::finish(unsigned int x, unsigned int y, Map *map)
 	}
       _bomb->explose(x, y, map, getRange(), _player);
       map->getRcs()->getSound(Bomberman::RessourceStock::EXPLOSE)->play();
-      _player->incBomb();
+      if (!_isVirus)
+	_player->incBomb();
       return true;
     }
   return false;
 }
 
-  void		BombTimer::setBlastRangeToMap(AI::StateMap* map, Map const* realMap) const
-  {
-    _bomb->setBlastRangeToMap(map, realMap, _x, _y, _range);
-  }
+void		BombTimer::setBlastRangeToMap(AI::StateMap* map, Map const* realMap) const
+{
+  _bomb->setBlastRangeToMap(map, realMap, _x, _y, _range);
+}
 }

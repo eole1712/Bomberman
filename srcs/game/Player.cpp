@@ -10,7 +10,6 @@
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-
 #include "my_random.hpp"
 
 namespace Bomberman
@@ -187,7 +186,8 @@ void			Player::incBomb()
 
 void			Player::decBomb()
 {
-  _bomb--;
+  if (_bomb > 0)
+    _bomb--;
 }
 
 void			Player::resetBomb()
@@ -219,7 +219,6 @@ void			Player::unparalyze()
 
 void			Player::randWeapon()
 {
-  std::cout << "Rand Bomb"  << std::endl;
   setBombType((Bomb::Type)(my_random(1, Bomb::nbBomb - 1)));
 }
 
@@ -443,11 +442,10 @@ void			Player::putTimedBomb(unsigned int x, unsigned int y)
   if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
-      BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
+      BombTimer		*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y, true);
 
       _map->addBomb(bombT);
       _map->setCellValue(x, y, bombT);
-      decBomb();
     }
 }
 
