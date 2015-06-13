@@ -144,10 +144,12 @@ namespace Bomberman
 	delete _menu;
 	_menu = NULL;
       }
-    if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
+    if (_quit)
       return false;
     if (_menu != NULL)
       return _menu->update(clock, input);
+    if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
+      return false;
     _map->checkBombsOnMap();
     updateAI(elapsedTime);
     updateCamera();
