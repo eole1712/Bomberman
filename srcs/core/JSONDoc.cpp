@@ -18,6 +18,8 @@
 #include "Spawn.hpp"
 #include "Empty.hpp"
 #include "rapidjson/stringbuffer.h"
+#include "rapidjson/rapidjson.h"
+#include "PlayerAI.hpp"
 
 JSONDoc::JSONDoc()
 {
@@ -173,7 +175,6 @@ void						JSONDoc::serialize<Bomberman::Player>(const Bomberman::Player &obj)
       rapidjson::Value playArray(rapidjson::kArrayType);
       _doc.AddMember("Players", playArray, _doc.GetAllocator());
     }
-  //std::for_each(, _InputIterator __last, _Function __f)
   rapidjson::Value player(rapidjson::kObjectType);
   player.AddMember("name", obj.getName().c_str(), _doc.GetAllocator());
   player.AddMember("xPos", obj.getfX(), _doc.GetAllocator());
@@ -181,6 +182,7 @@ void						JSONDoc::serialize<Bomberman::Player>(const Bomberman::Player &obj)
   player.AddMember("red", obj.getColor()[0], _doc.GetAllocator());
   player.AddMember("green", obj.getColor()[1], _doc.GetAllocator());
   player.AddMember("blue", obj.getColor()[2], _doc.GetAllocator());
+  player.AddMember("IA", true, _doc.GetAllocator());
   if (!buffList.empty())
     {
       rapidjson::Value buffArray(rapidjson::kArrayType);
@@ -229,6 +231,7 @@ Bomberman::Player*				JSONDoc::unserialize<Bomberman::Player*>(std::string const
 		std::cerr << "Bad file format, do not modify the files by hand !" << std::endl;
 	      }
 	  }
+	//_doc["Players"].Erase(it);
       }
     }
   return NULL;
@@ -239,34 +242,22 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
 {
   static std::function<void(unsigned int x, unsigned int y, Bomberman::IObject*, rapidjson::Value&)> func_tab[] =
     {
-      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
-	Bomberman::BombTimer* bomb = dynamic_cast<Bomberman::BombTimer*>(obj);
-	rapidjson::Value cube(rapidjson::kObjectType);
-	cube.AddMember("posX", x, _doc.GetAllocator());
-	cube.AddMember("posY", y, _doc.GetAllocator());
-	cube.AddMember("type", "bomb", _doc.GetAllocator());
-	cube.AddMember("typeId", 0, _doc.GetAllocator());
-	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
-	cube.AddMember("range", bomb->getRange(), _doc.GetAllocator());
-	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
-	cube.AddMember("bombType", bomb->getBombType()->getClassName().c_str(), _doc.GetAllocator());
-	map.PushBack(cube, _doc.GetAllocator());
-      },
-      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
-	rapidjson::Value cube(rapidjson::kObjectType);
-	cube.AddMember("posX", x, _doc.GetAllocator());
-	cube.AddMember("posY", y, _doc.GetAllocator());
-	cube.AddMember("type", "player", _doc.GetAllocator());
-	cube.AddMember("typeId", 1, _doc.GetAllocator());
-	cube.AddMember("name", dynamic_cast<Bomberman::Player*>(obj)->getName().c_str(), _doc.GetAllocator());
-	map.PushBack(cube, _doc.GetAllocator());
+      [] (unsigned int, unsigned int, Bomberman::IObject*, rapidjson::Value&) -> void {
+	throw std::runtime_error("Player on map");
+	// rapidjson::Value cube(rapidjson::kObjectType);
+      	// cube.AddMember("posX", x, _doc.GetAllocator());
+      	// cube.AddMember("posY", y, _doc.GetAllocator());
+      	// cube.AddMember("type", "player", _doc.GetAllocator());
+      	// cube.AddMember("typeId", 1, _doc.GetAllocator());
+      	// cube.AddMember("name", dynamic_cast<Bomberman::Player*>(obj)->getName().c_str(), _doc.GetAllocator());
+      	// map.PushBack(cube, _doc.GetAllocator());
       },
       [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
 	rapidjson::Value cube(rapidjson::kObjectType);
 	cube.AddMember("posX", x, _doc.GetAllocator());
 	cube.AddMember("posY", y, _doc.GetAllocator());
 	cube.AddMember("type", "bonus", _doc.GetAllocator());
-	cube.AddMember("typeId", 2, _doc.GetAllocator());
+	cube.AddMember("typeId", 1, _doc.GetAllocator());
 	cube.AddMember("bonusType", dynamic_cast<Bomberman::IBuff*>(obj)->getClassName().c_str(), _doc.GetAllocator());
 	map.PushBack(cube, _doc.GetAllocator());
       },
@@ -275,7 +266,7 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
 	cube.AddMember("posX", x, _doc.GetAllocator());
 	cube.AddMember("posY", y, _doc.GetAllocator());
 	cube.AddMember("type", "wall", _doc.GetAllocator());
-	cube.AddMember("typeId", 3, _doc.GetAllocator());
+	cube.AddMember("typeId", 2, _doc.GetAllocator());
 	map.PushBack(cube, _doc.GetAllocator());
       },
       [this] (unsigned int x, unsigned int y, Bomberman::IObject*, rapidjson::Value& map) -> void {
@@ -283,25 +274,103 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
 	cube.AddMember("posX", x, _doc.GetAllocator());
 	cube.AddMember("posY", y, _doc.GetAllocator());
 	cube.AddMember("type", "destrWall", _doc.GetAllocator());
-	cube.AddMember("typeId", 4, _doc.GetAllocator());
+	cube.AddMember("typeId", 3, _doc.GetAllocator());
 	map.PushBack(cube, _doc.GetAllocator());
       },
-       [this] (unsigned int x, unsigned int y, Bomberman::IObject*, rapidjson::Value& map) -> void {
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject*, rapidjson::Value& map) -> void {
 	rapidjson::Value cube(rapidjson::kObjectType);
 	cube.AddMember("posX", x, _doc.GetAllocator());
 	cube.AddMember("posY", y, _doc.GetAllocator());
 	cube.AddMember("type", "spawn", _doc.GetAllocator());
-	cube.AddMember("typeId", 5, _doc.GetAllocator());
+	cube.AddMember("typeId", 4, _doc.GetAllocator());
 	map.PushBack(cube, _doc.GetAllocator());
       },
-       [this] (unsigned int x, unsigned int y, Bomberman::IObject*, rapidjson::Value& map) -> void {
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject*, rapidjson::Value& map) -> void {
 	rapidjson::Value cube(rapidjson::kObjectType);
 	cube.AddMember("posX", x, _doc.GetAllocator());
 	cube.AddMember("posY", y, _doc.GetAllocator());
 	cube.AddMember("type", "empty", _doc.GetAllocator());
-	cube.AddMember("typeId", 6, _doc.GetAllocator());
+	cube.AddMember("typeId", 5, _doc.GetAllocator());
 	map.PushBack(cube, _doc.GetAllocator());
-      }
+      },
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
+	Bomberman::Fire* bomb = dynamic_cast<Bomberman::Fire*>(obj);
+	rapidjson::Value cube(rapidjson::kObjectType);
+	cube.AddMember("posX", x, _doc.GetAllocator());
+	cube.AddMember("posY", y, _doc.GetAllocator());
+	cube.AddMember("type", "fire", _doc.GetAllocator());
+	cube.AddMember("typeId", 6, _doc.GetAllocator());
+	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
+	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+      },
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
+	Bomberman::BombTimer* bomb = dynamic_cast<Bomberman::BombTimer*>(obj);
+	rapidjson::Value cube(rapidjson::kObjectType);
+	cube.AddMember("posX", x, _doc.GetAllocator());
+	cube.AddMember("posY", y, _doc.GetAllocator());
+	cube.AddMember("type", "mine", _doc.GetAllocator());
+	cube.AddMember("typeId", 7, _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
+	cube.AddMember("range", bomb->getRange(), _doc.GetAllocator());
+	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
+	cube.AddMember("bombType", bomb->getBombType()->getClassName().c_str(), _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+      },
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
+	Bomberman::BombTimer* bomb = dynamic_cast<Bomberman::BombTimer*>(obj);
+	rapidjson::Value cube(rapidjson::kObjectType);
+	cube.AddMember("posX", x, _doc.GetAllocator());
+	cube.AddMember("posY", y, _doc.GetAllocator());
+	cube.AddMember("type", "bomb", _doc.GetAllocator());
+	cube.AddMember("typeId", 8, _doc.GetAllocator());
+	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
+	cube.AddMember("range", bomb->getRange(), _doc.GetAllocator());
+	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
+	cube.AddMember("bombType", bomb->getBombType()->getClassName().c_str(), _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+      },
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
+	Bomberman::BombTimer* bomb = dynamic_cast<Bomberman::BombTimer*>(obj);
+	rapidjson::Value cube(rapidjson::kObjectType);
+	cube.AddMember("posX", x, _doc.GetAllocator());
+	cube.AddMember("posY", y, _doc.GetAllocator());
+	cube.AddMember("type", "barrel", _doc.GetAllocator());
+	cube.AddMember("typeId", Bomberman::IObject::BARREL, _doc.GetAllocator());
+	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
+	cube.AddMember("range", bomb->getRange(), _doc.GetAllocator());
+	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
+	cube.AddMember("bombType", bomb->getBombType()->getClassName().c_str(), _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+      },
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
+	Bomberman::BombTimer* bomb = dynamic_cast<Bomberman::BombTimer*>(obj);
+	rapidjson::Value cube(rapidjson::kObjectType);
+	cube.AddMember("posX", x, _doc.GetAllocator());
+	cube.AddMember("posY", y, _doc.GetAllocator());
+	cube.AddMember("type", "barrel", _doc.GetAllocator());
+	cube.AddMember("typeId", Bomberman::IObject::BARREL, _doc.GetAllocator());
+	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
+	cube.AddMember("range", bomb->getRange(), _doc.GetAllocator());
+	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
+	cube.AddMember("bombType", bomb->getBombType()->getClassName().c_str(), _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+      },
+      [this] (unsigned int x, unsigned int y, Bomberman::IObject* obj, rapidjson::Value& map) -> void {
+	Bomberman::BombTimer* bomb = dynamic_cast<Bomberman::BombTimer*>(obj);
+	rapidjson::Value cube(rapidjson::kObjectType);
+	cube.AddMember("posX", x, _doc.GetAllocator());
+	cube.AddMember("posY", y, _doc.GetAllocator());
+	cube.AddMember("type", "barrel", _doc.GetAllocator());
+	cube.AddMember("typeId", Bomberman::IObject::VIRUS, _doc.GetAllocator());
+	cube.AddMember("owner", dynamic_cast<Bomberman::Player*>(bomb->getPlayer())->getName().c_str(), _doc.GetAllocator());
+	cube.AddMember("range", bomb->getRange(), _doc.GetAllocator());
+	cube.AddMember("timer", bomb->getElapsedTime(), _doc.GetAllocator());
+	cube.AddMember("bombType", bomb->getBombType()->getClassName().c_str(), _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+	map.PushBack(cube, _doc.GetAllocator());
+      },
     };
 
   rapidjson::Value			object(rapidjson::kObjectType);
@@ -311,6 +380,8 @@ void					JSONDoc::serialize<Bomberman::Map>(Bomberman::Map const& obj)
 
   if (!_doc.IsObject())
     _doc.SetObject();
+  if (_doc.HasMember("map"))
+    _doc.RemoveMember("map");
   object.AddMember("name", obj.getName().c_str(), _doc.GetAllocator());
   object.AddMember("nbPlayers", obj.getNumberPlayers(), _doc.GetAllocator());
   object.AddMember("difficulty", obj.getDiff(), _doc.GetAllocator());
@@ -350,16 +421,18 @@ Bomberman::Map*				JSONDoc::unserialize<Bomberman::Map*>(std::string const& name
 	  }
 	return new Bomberman::BombTimer(player, obj["range"].GetUint(), fac->generate(obj["bombType"].GetString()));
       },
-      [this, &players] (rapidjson::Value const& obj) -> Bomberman::IObject* {
-	Bomberman::Player* ret;
-	for (std::vector<Bomberman::Player*>::iterator it =  players.begin(); it != players.end(); ++it)
-	  {
-	    if (obj["name"].GetString() == (*it)->getName())
-	      return (*it);
-	  }
-	ret = unserialize<Bomberman::Player*>(obj["name"].GetString());
-	players.push_back(ret);
-	return ret;
+      [] (rapidjson::Value const& obj) -> Bomberman::IObject* {
+	(void)obj;
+	throw std::runtime_error("Player on map");
+	// Bomberman::Player* ret;
+	// for (std::vector<Bomberman::Player*>::iterator it =  players.begin(); it != players.end(); ++it)
+	//   {
+	//     if (obj["name"].GetString() == (*it)->getName())
+	//       return (*it);
+	//   }
+	// ret = unserialize<Bomberman::Player*>(obj["name"].GetString());
+	// players.push_back(ret);
+	// return ret;
       },
       [] (rapidjson::Value const& obj) -> Bomberman::IObject* {
       	SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
@@ -398,4 +471,37 @@ Bomberman::Map*				JSONDoc::unserialize<Bomberman::Map*>(std::string const& name
 	}
     }
   return NULL;
+}
+
+
+template<>
+void	JSONDoc::serialize(const Bomberman::Gamer& obj)
+{
+  Bomberman::RessourceStock*	rs;
+  Bomberman::Map*		map;
+
+  if (_doc.HasMember("Players"))
+    _doc.RemoveMember("Players");
+  rs = obj.getRessourceStock();
+  map = obj.getMap();
+  for (unsigned int i = 0; i < rs->getNbPlayer(); ++i)
+    {
+      serialize<Bomberman::Player>(*rs->getPlayer(i));
+      if (!dynamic_cast<Bomberman::PlayerAI*>(rs->getPlayer(i))
+	  // !rs->getPlayer(i)->isIA()
+	  )
+	{
+	  rapidjson::Value & object(_doc["Players"]);
+	  for (rapidjson::Value::ValueIterator it = object.Begin(); it != object.End(); ++it)
+	    {
+	      rapidjson::Value& player = *it;
+	      if (player.HasMember("IA"))
+		player["IA"] = false;
+	    }
+	}
+      else
+	std::cout << "ia" << std::endl;
+    }
+  serialize(*map);
+  writeDown("SavedDatas.json");
 }

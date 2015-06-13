@@ -59,6 +59,12 @@ namespace Bomberman
       }
   }
 
+bool		PlayerAI::isIA() const
+{
+  std::cout << "a bot" << std::endl;
+  return true;
+}
+
   void			PlayerAI::moveRight()
   {
     _moveDir = RIGHT;
