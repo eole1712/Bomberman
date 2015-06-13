@@ -221,7 +221,8 @@ Player		*Gamer::randAlivePlayer() const
 
   void		Gamer::updateAllAI(const float elapsedTime)
   {
-    _stateMap = AI::StateMap(*_map);
+    if (_nbPlayers - (_twoPlayers + 1) > 0)
+      _stateMap = AI::StateMap(*_map);
     for (unsigned int i = 0; i < _stock->getNbPlayer() ; ++i)
       {
 	PlayerAI*	ai = NULL;
