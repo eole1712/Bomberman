@@ -62,7 +62,7 @@ void	Map::randomize()
       x = 0;
       while (x < this->_width)
 	{
-	  if (my_random(2, 10) > this->_difficulty)
+	  if (my_random(4, 10) > this->_difficulty)
 	    this->setCellValue(x, y, this->_rcs->getObject(IObject::EMPTY));
 	  else
 	    this->setCellValue(x, y, this->_rcs->getObject(IObject::DESTROYABLEWALL));
@@ -287,6 +287,8 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 		}
 	      player->incScore();
 	    }
+	  // if (this->getRcs()->countAlivePlayers() < 2)
+	  //   ;
 	}
     }
 }

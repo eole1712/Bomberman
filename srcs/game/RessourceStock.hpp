@@ -41,6 +41,7 @@ public:
   IObject	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
 
+  unsigned int	countAlivePlayers() const;
   bool		isPlayingMusic() const;
   bool		isPlayingSounds() const;
   void		initMusic();

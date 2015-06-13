@@ -185,6 +185,15 @@ unsigned int	RessourceStock::getNbPlayer() const
   return _players.size();
 }
 
+unsigned int	RessourceStock::countAlivePlayers() const
+{
+  unsigned int	alivePlayers = 0;
+
+  for (unsigned int i = 0; i < _players.size(); ++i)
+    alivePlayers += dynamic_cast<Player*>(_players[i])->isAlive();
+  return (alivePlayers);
+}
+
 bool	RessourceStock::isPlayingMusic() const
 {
   return (this->_toggleMusic);
