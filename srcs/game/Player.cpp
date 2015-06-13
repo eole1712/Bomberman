@@ -332,6 +332,10 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     return ;
   speedbra = _speed * elsapsedTime;
   pos = glm::rotate(glm::vec3(0, 0, 0.06), direction, glm::vec3(0, 1, 0)) * speedbra;
+  if (pos.x > 1)
+    pos.x = 1;
+  if (pos.z > 1)
+    pos.z = 1;
   npos = getPosition() + pos;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
