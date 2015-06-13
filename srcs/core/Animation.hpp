@@ -18,7 +18,7 @@ virtual ~Animation();
   void		setAnim(unsigned int const startframe,
 			unsigned int const endframe,
 			bool loop,
-			unsigned int const speed);
+			unsigned int const speed, bool waitExtend = false);
 
   void		setSpeed(unsigned int const speed);
 
@@ -28,6 +28,7 @@ virtual ~Animation();
 
 
   void		extend();
+  void		reverse();
 
   bool		queueEmpty() const;
   void		queuePop();

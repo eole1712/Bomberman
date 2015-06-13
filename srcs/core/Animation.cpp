@@ -22,7 +22,7 @@ void	Animation::setSpeed(unsigned int const speed)
 void	Animation::setAnim(unsigned int const startframe,
 			   unsigned int const endframe,
 			   bool loop,
-			   unsigned int const speed)
+			   unsigned int const speed, bool waitExtend = false)
 {
   Queue	anim;
 
@@ -41,7 +41,7 @@ void	Animation::setAnim(unsigned int const startframe,
     anim.total = anim.end - anim.start;
   else
     anim.total = anim.start - anim.end;
-  anim.endTime = anim.total;
+  anim.endTime = (waitExtend) ? 5 : anim.total;
   anim.loop = loop;
   anim.speed = speed;
   if (!_animationQueue.empty()
@@ -74,10 +74,15 @@ void		Animation::extend()
 
   if (!_animationQueue.empty())
     {
+
       anim = _animationQueue.front();
       time = _timer.getElapsedTime() / anim.speed;
-      if (anim.endTime < time && anim.endTime + (anim.speed * 30) < time)
-	anim.endTime += 60;
+      if (anim.endTime > time && anim.endTime < time + 5)
+	{
+	  anim.endTime += 5;
+	  _animationQueue.pop_front();
+	  _animationQueue.push_front(anim);
+	}
     }
 }
 
@@ -97,6 +102,22 @@ void		Animation::queuePop()
     _animationQueue.pop_back();
 }
 
+void		Animation::reverse()
+{
+  unsigned int	tmp;
+  Queue		anim;
+
+  if (!_animationQueue.empty())
+    {
+      anim = _animationQueue.front();
+      tmp = anim.end;
+      anim.end = anim.start;
+      anim.start = tmp;
+      _animationQueue.pop_front();
+      _animationQueue.push_front(anim);
+    }
+}
+
 unsigned int	Animation::getFrame()
 {
   uintmax_t	time;
@@ -107,7 +128,7 @@ unsigned int	Animation::getFrame()
     return 0;
   anim = _animationQueue.front();
   time = _timer.getElapsedTime() / anim.speed;
-  while (!_animationQueue.empty() && !anim.loop && anim.endTime < time)
+  while (!_animationQueue.empty() && !anim.loop && anim.endTime <= time)
     {
       _timer.reset((time - anim.endTime) * anim.speed);
       _animationQueue.pop_front();
@@ -122,7 +143,7 @@ unsigned int	Animation::getFrame()
   if (anim.start < anim.end)
     frame = anim.start + time % anim.total;
   else
-    frame = anim.end + anim.total - (time % (anim.total));
+    frame = anim.end + anim.total - time % anim.total;
   return frame;
 }
 
