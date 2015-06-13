@@ -16,7 +16,7 @@ namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 1.0;
+unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
@@ -129,13 +129,13 @@ void			Player::resetRange()
 
 void			Player::incSpeed()
 {
-  _speed += 0.3;
+  _speed += 0.5;
 }
 
 void			Player::decSpeed()
 {
-  if (_speed >= 1.3)
-    _speed -= 0.3;
+  if (_speed >= 1.5)
+    _speed -= 0.5;
 }
 
 void			Player::resetSpeed()
@@ -532,14 +532,17 @@ void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
 {
   if (isAlive())
     {
-      shader.setUniform("color", getColor());
       asset.setPosition(this->getPosition() + glm::vec3(-0.5, 0, -0.5));
       asset.setRotation(this->getRotation());
       if (isParalyzed())
-	asset.draw(shader, clock);
+	shader.setUniform("alpha", glm::vec4(0.2, 0.76, 1, 0.5));
       else
-	asset.draw(shader, clock, *this->animation);
-      shader.setUniform("color", glm::vec4(1.0));
+	shader.setUniform("color", getColor());
+      asset.draw(shader, clock, *this->animation);
+      if (isParalyzed())
+	shader.setUniform("alpha", glm::vec4(0));
+      else
+	shader.setUniform("color", glm::vec4(0));
     }
 }
 
