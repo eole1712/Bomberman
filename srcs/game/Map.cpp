@@ -15,7 +15,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty,
 	 RessourceStock* objects)
   : GenericMap<IObject*>(width, height), _name(name),
-    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects)
+    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects), _quit(false)
 {
   this->init(width, height);
   this->randomize();
@@ -25,7 +25,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
 Map::Map(std::string name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty)
   : GenericMap<IObject*>(width, height), _name(name),
-    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL)
+    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL), _quit(false)
 {
   this->init(width, height);
 }
@@ -35,7 +35,7 @@ void	Map::init(unsigned int width, unsigned int height)
   this->_width = width;
   this->_height = height;
   if (this->_nbJoueurs == 0
-      || this->_nbJoueurs > this->_width * this->_height / 12)
+      || this->_nbJoueurs > this->_width * this->_height / 16)
     throw new Exception::InvalidNbPlayers("Map Constructor");
   if (this->_height < 10 || this->_width < 10)
     throw new Exception::InvalidDimensions("Map Constructor");
@@ -258,12 +258,17 @@ RessourceStock	*Map::getRcs() const
   return _rcs;
 }
 
+bool		Map::hasToQuit() const
+{
+  return (this->_quit);
+}
+
 bool		Map::isIn(unsigned int x, unsigned int y) const
 {
   return (x < getHeight() && y < getWidth());
 }
 
-void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
+void		Map::killPlayers(unsigned int x, unsigned int y, Player *player)
 {
   static bool	firstBlood = true;
 
@@ -287,8 +292,8 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player) const
 		}
 	      player->incScore();
 	    }
-	  // if (this->getRcs()->countAlivePlayers() < 2)
-	  //   ;
+	  if (this->getRcs()->countAlivePlayers() < 2)
+	    this->_quit = true;;
 	}
     }
 }

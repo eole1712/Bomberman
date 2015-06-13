@@ -144,7 +144,7 @@ namespace Bomberman
 	delete _menu;
 	_menu = NULL;
       }
-    if (_quit)
+    if (_quit || _map->hasToQuit())
       return false;
     if (_menu != NULL)
       return _menu->update(clock, input);

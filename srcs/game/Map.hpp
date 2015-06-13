@@ -59,10 +59,11 @@ public:
   std::string const&	getName() const;
   unsigned int		getNumberPlayers() const;
   e_difficulty		getDiff() const;
+  bool			hasToQuit() const;
 
 public:
   bool		isIn(unsigned int x, unsigned int y) const;
-  void		killPlayers(unsigned int x, unsigned int y, Player *) const;
+  void		killPlayers(unsigned int x, unsigned int y, Player *);
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
   void		addFire(Player*, unsigned int, unsigned int);
@@ -77,6 +78,7 @@ private:
   std::list<t_spawn>	_spawnList;
   std::list<BombTimer*>	_bombs;
   std::list<Fire*>	_firebox;
+  bool			_quit;
 };
 
 }
