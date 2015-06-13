@@ -348,6 +348,7 @@ Player		*Gamer::randAlivePlayer() const
     assets[ObjectToAsset[type]]->draw(shader, clock);
     assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
 
+    if (type == IObject::BOMB)
     for (unsigned int i = 1; i < player->getNbBomb(); i++)
       {
 	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) + angle) * M_PI) / 180;
