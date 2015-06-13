@@ -22,7 +22,7 @@ glm::vec4		Color::HSVtoRGB(double h, double s, double v)
   vpqt[2] = v * (1 - s * f);
   vpqt[3] = v * (1 - s * (1 - f));
   return glm::vec4(vpqt[vpqtToRgb[i][0]], vpqt[vpqtToRgb[i][1]],
-		   vpqt[vpqtToRgb[i][2]], 0);
+		   vpqt[vpqtToRgb[i][2]], 1);
 }
 
 }

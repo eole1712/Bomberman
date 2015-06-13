@@ -34,10 +34,6 @@ namespace Bomberman
 
 class Gamer : public IScene
 {
-private:
-  typedef std::tuple<PlayerAI*, AI::StateMap*, float>	AIData;
-  typedef ThreadPool<AIData, bool>			AIPool;
-
 public:
   Gamer();
   Gamer(unsigned int, unsigned int, unsigned int, unsigned int,
@@ -86,9 +82,6 @@ protected:
 public:
   RessourceStock*		getRcs() const;
 
-public:
-  static bool			updateAI(AIData data);
-
 private:
   int				_width;
   int				_height;
@@ -112,9 +105,6 @@ public:
   Bomberman::ScoreList*		_scoreList;
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
-
-private:
-  AIPool*			_thpool;
 
 protected:
   typedef bool	(Gamer::*HandleKey)(const float elapsedTime, gdl::Input& input);
