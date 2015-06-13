@@ -358,7 +358,7 @@ void			Player::move(float const & direction, float const & elsapsedTime)
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::MINE)
     {
-      dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished();
+      dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished(true);
     }
   if (animation->queueEmpty())
     {
