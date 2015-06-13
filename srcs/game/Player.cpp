@@ -10,7 +10,6 @@
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-
 #include "my_random.hpp"
 
 namespace Bomberman
@@ -23,13 +22,13 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
 {
   this->init();
 }
 
 Player::Player()
-  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _bombType(dftBombType), _color(glm::vec4(1))
+  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(glm::vec4(1)), _scoreList(NULL), animation()
 {
   this->init();
 }
@@ -169,6 +168,17 @@ void			Player::resetShield()
     return _bomb;
   }
 
+  bool			Player::getPutBombStatus() const
+  {
+    return _putBombStatus;
+  }
+
+  void			Player::setPutBombStatus(bool status)
+  {
+    _putBombStatus = status;
+  }
+
+
 void			Player::incBomb()
 {
   _bomb++;
@@ -176,7 +186,8 @@ void			Player::incBomb()
 
 void			Player::decBomb()
 {
-  _bomb--;
+  if (_bomb > 0)
+    _bomb--;
 }
 
 void			Player::resetBomb()
@@ -208,7 +219,6 @@ void			Player::unparalyze()
 
 void			Player::randWeapon()
 {
-  std::cout << "Rand Bomb"  << std::endl;
   setBombType((Bomb::Type)(my_random(1, Bomb::nbBomb - 1)));
 }
 
@@ -432,11 +442,10 @@ void			Player::putTimedBomb(unsigned int x, unsigned int y)
   if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
-      BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y);
+      BombTimer		*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y, true);
 
       _map->addBomb(bombT);
       _map->setCellValue(x, y, bombT);
-      decBomb();
     }
 }
 

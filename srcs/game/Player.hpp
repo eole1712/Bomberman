@@ -97,6 +97,13 @@ private:
   static const unsigned int dftBomb;
 
 public:
+  bool			getPutBombStatus() const;
+  void			setPutBombStatus(bool status);
+
+private:
+  bool			_putBombStatus;
+
+public:
   void			paralyze();
   void			unparalyze();
 

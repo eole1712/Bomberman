@@ -233,7 +233,8 @@ void		Core::gameMenu()
     std::cout << p2Field->getText() << std::endl;;
   });
   grid->addObject(start, [this, p1Field, p2Field] (void) {
-    startGame(false, p1Field->getText(), p2Field->getText());
+    /// START GAME
+    startGame(true, p1Field->getText(), p2Field->getText());
   });
   _prev = _game;
   _change = true;

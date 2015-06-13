@@ -65,7 +65,6 @@ void	MenuGrid::moveLeft()
   if (nbTries > _elems.size())
     _focus = _elems.end();
   nbTries = 0;
-  std::cout << nbTries << std::endl;
 }
 
 void	 MenuGrid::moveRight()
@@ -81,7 +80,6 @@ void	 MenuGrid::moveRight()
   if (nbTries > _elems.size())
     _focus = _elems.end();
    nbTries = 0;
-  std::cout << nbTries << std::endl;
 }
 
 void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset3d *> &, std::map<Bomberman::IObject::Type, Bomberman::mapAsset>&)

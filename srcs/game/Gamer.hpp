@@ -38,6 +38,7 @@ public:
 	bool, std::string const&, std::string const&);
   virtual ~Gamer();
 
+public:
   virtual void		init();
   virtual bool		update(gdl::Clock &, gdl::Input &);
   virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&, std::vector<Asset3d*>&,
@@ -48,14 +49,31 @@ public:
 				       std::vector<Asset3d*>& assets, Player *player,
 				       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset);
   bool			pauseMenu();
-  //void			startGame();
 
 private:
   Gamer(const Gamer &);
-  Gamer &operator=(const Gamer &);
+  Gamer				&operator=(const Gamer &);
 
 public:
   CameraObject			&getCamera(unsigned int);
+
+protected:
+  void				updateCamera();
+  void				updateAI(const float elapsedTime);
+
+protected:
+  bool				handleKeyEvents(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToPause(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP1Up(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP1Down(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP1Left(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP1Right(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP2Up(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP2Down(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP2Left(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyToP2Right(const float elapsedTime, gdl::Input& input);
 
 private:
   int				_width;
@@ -77,6 +95,13 @@ public:
   Bomberman::ScoreList*		_scoreList;
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
+
+protected:
+  typedef bool	(Gamer::*HandleKey)(const float elapsedTime, gdl::Input& input);
+  typedef std::map<int, HandleKey>	HandleKeyBook;
+
+  static const HandleKeyBook	handleKeyBook;
+  static Gamer::HandleKeyBook	getHandleKeyBook();
 };
 
 }
