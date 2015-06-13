@@ -187,12 +187,19 @@ unsigned int	RessourceStock::getNbPlayer() const
   return _players.size();
 }
 
-unsigned int	RessourceStock::countAlivePlayers() const
+unsigned int	RessourceStock::countAlivePlayers()
 {
   unsigned int	alivePlayers = 0;
 
   for (unsigned int i = 0; i < _players.size(); ++i)
-    alivePlayers += dynamic_cast<Player*>(_players[i])->isAlive();
+    {
+      alivePlayers += dynamic_cast<Player*>(_players[i])->isAlive();
+      _winner = ((dynamic_cast<Player*>(_players[i])->isAlive())
+		 ? ((i == 0)
+		    ? (PLAYER1)
+		    : ((i == _players.size() - 1) ? (PLAYER2) : (IA)))
+		 : (_winner));
+    }
   return (alivePlayers);
 }
 
