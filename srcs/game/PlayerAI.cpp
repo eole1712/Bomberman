@@ -41,16 +41,14 @@ namespace Bomberman
   /*
   ** Public member functions
   */
-  void			PlayerAI::doAction(Map const& map, float const& elapsedTime)
+  void			PlayerAI::doAction(AI::StateMap const* stateMap, float const elapsedTime)
   {
-    AI::StateMap	stateMap(map);
-
     if (_aiAction == NULL)
       throw std::runtime_error("AI's action is not set");
     try
       {
 	if (_moveDir == NONE)
-	  (*_aiAction)(this, &stateMap);
+	  (*_aiAction)(this, stateMap);
 	if (_moveDir != NONE && (this->*(moveBook.at(_moveDir)))(elapsedTime))
 	  _moveDir = NONE;
       }

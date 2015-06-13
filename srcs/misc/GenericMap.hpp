@@ -57,11 +57,18 @@ public:
 
   void			copy(GenericMap const& other)
   {
+    unsigned int	i = 0;
+
     _width = other._width;
     _height = other._height;
     if (_map != NULL)
       delete[] (_map);
     _map = new T[_width * _height];
+    while (i < _width * _height)
+      {
+	_map[i] = other._map[i];
+	++i;
+      }
   }
 
   void			setCellValue(const unsigned int x,

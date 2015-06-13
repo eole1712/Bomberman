@@ -2,6 +2,7 @@
 #ifndef GAME_H_
 # define GAME_H_
 
+# include <tuple>
 # include <vector>
 # include <map>
 # include "SdlContext.hh"
@@ -12,7 +13,6 @@
 # include "OpenGL.hh"
 # include "Asset3d.hpp"
 # include "CameraObject.hpp"
-
 # include "RessourceStock.hpp"
 # include "Map.hpp"
 # include "ScoreList.hpp"
@@ -24,6 +24,8 @@
 # include "Text2d.hpp"
 # include "IScene.hpp"
 # include "MenuGrid.hpp"
+# include "ThreadPool.hpp"
+# include "PlayerAI.hpp"
 
 //# include "Core.hpp"
 
@@ -32,6 +34,10 @@ namespace Bomberman
 
 class Gamer : public IScene
 {
+private:
+  typedef std::tuple<PlayerAI*, AI::StateMap*, float>	AIData;
+  typedef ThreadPool<AIData, bool>			AIPool;
+
 public:
   Gamer();
   Gamer(unsigned int, unsigned int, unsigned int, unsigned int,
@@ -59,7 +65,7 @@ public:
 
 protected:
   void				updateCamera();
-  void				updateAI(const float elapsedTime);
+  void				updateAllAI(const float elapsedTime);
 
 protected:
   bool				handleKeyEvents(const float elapsedTime, gdl::Input& input);
@@ -75,6 +81,9 @@ protected:
   bool				handleKeyToP2Left(const float elapsedTime, gdl::Input& input);
   bool				handleKeyToP2Right(const float elapsedTime, gdl::Input& input);
 
+public:
+  static bool			updateAI(AIData data);
+
 private:
   int				_width;
   int				_height;
@@ -85,6 +94,7 @@ private:
   bool				_twoPlayers;
   std::string			_player1;
   std::string			_player2;
+  AI::StateMap			_stateMap;
 
 private:
   CameraObject			_camera;
@@ -95,6 +105,9 @@ public:
   Bomberman::ScoreList*		_scoreList;
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
+
+private:
+  AIPool*			_thpool;
 
 protected:
   typedef bool	(Gamer::*HandleKey)(const float elapsedTime, gdl::Input& input);

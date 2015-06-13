@@ -32,6 +32,7 @@ namespace Bomberman
     StateMap&	StateMap::operator=(StateMap const& other)
     {
       GenericMap<Cell>::operator=(other);
+      _playersCoo = other._playersCoo;
       return (*this);
     }
 

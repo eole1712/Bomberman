@@ -34,7 +34,7 @@ namespace Bomberman
     PlayerAI&		operator=(PlayerAI const& other);
 
   public:
-    void		doAction(Map const& map, float const& elapsedTime);
+    void		doAction(AI::StateMap const* stateMap, float const elapsedTime);
     std::string const&	getAIName() const;
 
   public:

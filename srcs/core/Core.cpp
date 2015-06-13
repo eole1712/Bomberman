@@ -35,7 +35,7 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1800), _height(900)
+  : _change(false), _width(1440), _height(800)
 {
   _status = false;
 }
@@ -234,7 +234,7 @@ void		Core::gameMenu()
   });
   grid->addObject(start, [this, p1Field, p2Field] (void) {
     /// START GAME
-    startGame(true, p1Field->getText(), p2Field->getText());
+    startGame(false, p1Field->getText(), p2Field->getText());
   });
   _prev = _game;
   _change = true;

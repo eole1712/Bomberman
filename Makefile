@@ -15,6 +15,8 @@ TMPDIR		= $(GDLDIR)/test/
 VENDORSDIR	= $(SRCSDIR)/vendors/
 LUADIR		= $(VENDORSDIR)/lua-5.3.0/
 LUABDIR		= $(VENDORSDIR)/LuaBridge/
+THREADDIR	= $(SRCSDIR)/threading/
+
 LUAINCS		= $(LUADIR)/include/
 
 CORESRCS	= main.cpp		\
@@ -73,27 +75,36 @@ MISCSRCS	= Timer.cpp		\
 		  StringConversion.cpp	\
 		  LuaScript.cpp		\
 
+THREADSRCS	= Mutex.cpp		\
+		  CondVar.cpp		\
+		  ScopedLock.cpp	\
+
 EXCEPTSRCS	= ResourceUnavailable.cpp	\
 		  LuaError.cpp			\
 		  InvalidNbPlayers.cpp		\
 		  InvalidDimensions.cpp		\
+		  CondVarError.cpp		\
+		  MutexError.cpp		\
+		  ThreadError.cpp		\
+		  SafeQueueFinished.cpp		\
 
 SRCS		+= $(addprefix $(COREDIR), $(CORESRCS))
 SRCS		+= $(addprefix $(GAMEDIR), $(GAMESRCS))
 SRCS		+= $(addprefix $(MISCDIR), $(MISCSRCS))
 SRCS		+= $(addprefix $(BUFFDIR), $(BUFFSRCS))
 SRCS		+= $(addprefix $(BOMBDIR), $(BOMBSRCS))
+SRCS		+= $(addprefix $(THREADDIR), $(THREADSRCS))
 SRCS		+= $(addprefix $(EXCEPTDIR), $(EXCEPTSRCS))
 SRCS		+= $(addprefix $(TMPDIR), $(MENUSRCS))
 
 OBJS		= $(SRCS:.cpp=.o)
 
-CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -O3 -march=native \
-		   -ftree-vectorize -ffast-math
+CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -O3 -march=native
+CXXFLAGS	+= -ftree-vectorize -ffast-math -g
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
 CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(VLCDIR)/include/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
-CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS)
+CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS) -I./$(THREADDIR)
 
 LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(VLCDIR)/lib/ -L $(LUADIR)/lib
 LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL -lSDL2 -ldl -llua -lvlc

@@ -44,7 +44,6 @@ elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
 	map:getCell(player.x, player.y) == SAFE and #route == 0)
 then
    attack = true
-
    -- get enemy and set route to him
    local target = targetEnemy(map, player)
 
