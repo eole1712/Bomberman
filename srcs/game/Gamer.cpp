@@ -247,7 +247,10 @@ namespace Bomberman
 			assets[FLOOR]->draw(shader, clock);
 		      }
 		    if (IObject::MINE == _map->getCellValue(pos.x, pos.z)->getObjectType())
-		      shader.setUniform("color", glm::vec4(0, 1, 0, 0));
+		      {
+			glDisable(GL_BLEND);
+			shader.setUniform("color", glm::vec4(0, 1, 0, 0));
+		      }
 		    tmp = assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
 		      ->getRotation();
 		    assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
@@ -257,7 +260,10 @@ namespace Bomberman
 		    assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
 		      ->setRotation(tmp);
 		    if (IObject::MINE == _map->getCellValue(pos.x, pos.z)->getObjectType())
-		      shader.setUniform("color", glm::vec4(1.0));
+		      {
+			glEnable(GL_BLEND);
+			shader.setUniform("color", glm::vec4(1.0));
+		      }
 		  }
 	      }
 	  }

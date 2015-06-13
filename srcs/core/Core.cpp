@@ -36,7 +36,7 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1440), _height(800)
+  : _change(false), _width(1800), _height(900)
 {
   _status = false;
 }
@@ -105,6 +105,8 @@ bool				Core::initialize()
     return false;
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   if (!_shader.load("resources/shaders/basic.fp", GL_FRAGMENT_SHADER)
       || !_shader.load("resources/shaders/basic.vp", GL_VERTEX_SHADER)
@@ -112,6 +114,7 @@ bool				Core::initialize()
     return false;
   _shader.bind();
   _shader.setUniform("color", glm::vec4(1.0));
+  _shader.setUniform("aplha", glm::vec4(0));
   loadTextures();
   return true;
 }
@@ -246,12 +249,23 @@ void		Core::gameMenu()
 
   grid->addDynObject(map_width, [] (void) {
   },
-  [map_width] (void) {
+  [aiField, map_width, map_height, pField] (void) {
     int			value;
+    int			mapY;
+    int			nbPlayer;
+    int			nbAI;
+
+    nbAI = Conversion::stringToType<int>(aiField->getText());
+    nbPlayer = Conversion::stringToType<int>(pField->getText());
+    mapY = Conversion::stringToType<int>(map_height->getText());
 
     value = Conversion::stringToType<int>(map_width->getText()) - 1;
-    if (value <= 5)
-      value = 5;
+    if (value <= 10)
+      value = 10;
+
+    if (nbAI + nbPlayer >= (mapY * value / 16))
+      nbAI = (mapY * value / 16) - nbPlayer;
+    aiField->setText(Conversion::typeToString(nbAI));
 
     std::cout << value << std::endl;
     map_width->setText(Conversion::typeToString(value));
@@ -267,13 +281,23 @@ void		Core::gameMenu()
 
   grid->addDynObject(map_height, [] (void) {
   },
-  [map_height] (void) {
+  [aiField, map_width, map_height, pField] (void) {
     int			value;
+    int			mapX;
+    int			nbPlayer;
+    int			nbAI;
 
+    nbAI = Conversion::stringToType<int>(aiField->getText());
+    nbPlayer = Conversion::stringToType<int>(pField->getText());
+    mapX = Conversion::stringToType<int>(map_width->getText());
     value = Conversion::stringToType<int>(map_height->getText()) - 1;
-    if (value <= 5)
-      value = 5;
 
+    if (value <= 10)
+      value = 10;
+
+    if (nbAI + nbPlayer >= (mapX * value / 16))
+      nbAI = (mapX * value / 16) - nbPlayer;
+    aiField->setText(Conversion::typeToString(nbAI));
 
     map_height->setText(Conversion::typeToString(value));
   },
@@ -298,12 +322,18 @@ void		Core::gameMenu()
       value = 0;
     aiField->setText(Conversion::typeToString(value));
   },
-  [aiField] (void) {
+  [aiField, map_width, map_height, pField] (void) {
     int			value;
+    int			mapX;
+    int			mapY;
+    int			nbPlayer;
 
+    nbPlayer = Conversion::stringToType<int>(pField->getText());
+    mapX = Conversion::stringToType<int>(map_width->getText());
+    mapY = Conversion::stringToType<int>(map_height->getText());
     value = Conversion::stringToType<int>(aiField->getText()) + 1;
-    if (value >= 999)
-      value = 999;
+    if (value + nbPlayer >= (mapX * mapY / 16))
+      value = (mapX * mapY / 16) - nbPlayer;
     aiField->setText(Conversion::typeToString(value));
   });
   grid->addDynObject(pField, [pField] (void) {
@@ -328,8 +358,11 @@ void		Core::gameMenu()
 	value = 2;
       }    pField->setText(Conversion::typeToString(value));
   },
-  [pField, p2TextBackGround, p2Field] (void) {
+  [pField, p2TextBackGround, p2Field, aiField, map_width, map_height] (void) {
     int			value;
+    int			mapX;
+    int			mapY;
+    int			nbAI;
 
     value = Conversion::stringToType<int>(pField->getText()) + 1;
     if (value <= 1)
@@ -346,6 +379,16 @@ void		Core::gameMenu()
 	p2Field->reFocus();
 	value = 2;
       }
+
+
+    nbAI = Conversion::stringToType<int>(aiField->getText());
+    mapX = Conversion::stringToType<int>(map_width->getText());
+    mapY = Conversion::stringToType<int>(map_height->getText());
+    if (value + nbAI > (mapX * mapY / 16))
+      nbAI = (mapX * mapY / 16) - value;
+    aiField->setText(Conversion::typeToString(nbAI));
+
+
     pField->setText(Conversion::typeToString(value));
   });
   grid->addObject(p1Field, [p1Field] (void) {
