@@ -25,6 +25,7 @@
 #include "JSONDoc.hpp"
 #include "Gamer.hpp"
 #include "Core.hpp"
+#include "my_random.hpp"
 
 namespace Bomberman
 {
@@ -33,23 +34,20 @@ namespace Bomberman
   ** Static variables
   */
   const Gamer::HandleKeyBook	Gamer::handleKeyBook	= Gamer::getHandleKeyBook();
+  const Gamer::HandleKeyBook	Gamer::handleKeyBookIntro	= Gamer::getHandleKeyBookIntro();
 
   /*
   ** Constructor/Destructors
   */
   Gamer::Gamer()
-    : _width(20), _height(20), _menu(NULL), _quit(false), _resume(false),
-      _camera(90.0, 900, 900), _camera2(90.0, 900, 900)
+    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(8), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
   {
-    _twoPlayers = true;
     this->init();
   }
 
-  Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2)
-    : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _player1(p1),
-      _player2(p2), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
+Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
+  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
   {
-    _twoPlayers = twoPlayers;
     this->init();
   }
 
@@ -81,7 +79,7 @@ namespace Bomberman
     _scoreList = ((_json.parse("./resources/json/Gamedata.json"))
 		  ? (_json.unserialize<Bomberman::ScoreList*>())
 		  : (new ScoreList()));
-    _stock = new RessourceStock(nameList, 3, _scoreList, _twoPlayers);
+    _stock = new RessourceStock(nameList, _nbPlayers, _scoreList, _twoPlayers, _intro);
     _map = _mapList->getMap(mapName);
     if (_map == NULL)
       _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
@@ -171,6 +169,8 @@ namespace Bomberman
     if (_twoPlayers)
       {
 	player = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+	if (player == NULL)
+	  throw std::runtime_error("Got a null value instead of a player from RessourceStock");
 	_camera2.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 			     + glm::rotate(glm::vec3(2.5, 4, 0),
 					   player->getRotation().y + 90,
@@ -178,6 +178,21 @@ namespace Bomberman
 	_camera2.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
 	_camera2.updateView();
       }
+  }
+
+RessourceStock*			Gamer::getRcs() const
+{
+  return _stock;
+}
+
+void				Gamer::updateRandCamera(Player *player)
+  {
+    _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
+			+ glm::rotate(glm::vec3(2.5, 4, 0),
+				      player->getRotation().y + 90,
+				      glm::vec3(0, 1, 0)));
+    _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+    _camera.updateView();
   }
 
   void				Gamer::updateAI(const float elapsedTime)
@@ -339,7 +354,10 @@ namespace Bomberman
 	(player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) != NULL &&
 	player->getPutBombStatus())
       player->setPutBombStatus(false);
-    for (HandleKeyBook::const_iterator it = handleKeyBook.begin(); it != handleKeyBook.end(); ++it)
+
+    HandleKeyBook	const	*book = (_intro) ?  &handleKeyBookIntro : &handleKeyBook;
+
+    for (HandleKeyBook::const_iterator it = book->begin(); it != book->end(); ++it)
       {
 	if (input.getKey(it->first) && (this->*(it->second))(elapsedTime, input) == false)
 	  return false;
@@ -484,6 +502,13 @@ namespace Bomberman
     return true;
   }
 
+  bool				Gamer::handleKeyToQuit(const float, gdl::Input& input)
+  {
+    if (input.getKey(SDLK_ESCAPE) || input.getKey(SDLK_SPACE))
+      return false;
+    return true;
+  }
+
   /*
   ** Static member functions
   */
@@ -505,6 +530,15 @@ namespace Bomberman
     book[SDLK_a] = &Gamer::handleKeyToP2Left;
     book[SDLK_q] = &Gamer::handleKeyToP2Left;
     book[SDLK_d] = &Gamer::handleKeyToP2Right;
+    return book;
+  }
+
+Gamer::HandleKeyBook	Gamer::getHandleKeyBookIntro()
+  {
+    HandleKeyBook	book;
+
+    book[SDLK_ESCAPE] = &Gamer::handleKeyToQuit;
+    book[SDLK_SPACE] = &Gamer::handleKeyToQuit;
     return book;
   }
 }

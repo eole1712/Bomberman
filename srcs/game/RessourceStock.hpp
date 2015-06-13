@@ -23,7 +23,7 @@ public:
   static unsigned int const	nbSounds;
   static unsigned int const	nbChannels;
 
-  RessourceStock(std::vector<std::string> const &, unsigned int, ScoreList*, bool);
+  RessourceStock(std::vector<std::string> const &, unsigned int, ScoreList*, bool, bool intro = false);
   RessourceStock(std::vector<Bomberman::Player*> const& players);
   virtual ~RessourceStock();
   RessourceStock(const RessourceStock &);

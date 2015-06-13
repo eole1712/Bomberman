@@ -88,7 +88,7 @@ SRCS		+= $(addprefix $(TMPDIR), $(MENUSRCS))
 
 OBJS		= $(SRCS:.cpp=.o)
 
-CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -O3 -march=native \
+CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -g3 -march=native \
 		   -ftree-vectorize -ffast-math
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
