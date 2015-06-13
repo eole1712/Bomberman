@@ -19,6 +19,7 @@ public:
   virtual int		getHeight() const;
   virtual void		update(gdl::Input&) = 0;
   void			unFocus();
+  void			reFocus();
   void			hideFocus();
   bool			isFocusable() const;
   bool			showFocus() const;
