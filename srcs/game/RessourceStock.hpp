@@ -18,7 +18,8 @@ class RessourceStock
 {
 public:
   enum SoundType { TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE,
-		   FIRSTBLOOD, SUICIDE, EXPLOSE, PREPARE1, PREPARE2, PREPARE3, PREPARE4 };
+		   FIRSTBLOOD, SUICIDE, EXPLOSE, PICKUP, HITSHIELD,
+		   PREPARE1, PREPARE2, PREPARE3, PREPARE4 };
 
   static unsigned int const	nbSounds;
   static unsigned int const	nbChannels;

@@ -154,6 +154,7 @@ void			Player::decShield()
 {
   if (_shield > 0)
     _shield--;
+  _map->getRcs()->getSound(Bomberman::RessourceStock::HITSHIELD)->play();
 }
 
 void			Player::resetShield()
@@ -355,6 +356,7 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     {
       addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
       _map->killObject(getX(), getY());
+      _map->getRcs()->getSound(Bomberman::RessourceStock::PICKUP)->play();
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
     {

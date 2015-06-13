@@ -280,7 +280,7 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player)
 	{
 	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
 	    {
-	      this->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
+	      _rcs->getSound(Bomberman::RessourceStock::SUICIDE)->play();
 	      firstBlood = false;
 	    }
 	  else
