@@ -211,7 +211,7 @@ namespace Bomberman
 	for (pos.z = -1; pos.z <= _height; pos.z++)
 	  {
 	    tmp = glm::rotate(pos - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-	    if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 13)
+	    if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 14)
 	      {
 		if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
 		  {
@@ -248,7 +248,7 @@ namespace Bomberman
       {
 	drawPlayer = dynamic_cast<Player *>(_stock->getPlayer(i));
 	tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-	if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 12)
+	if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 14)
 	  drawPlayer->draw(*assets[PLAYER], shader, clock);
       }
     shader.setUniform("color", glm::vec4(1.0));
