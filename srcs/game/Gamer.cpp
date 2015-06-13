@@ -270,6 +270,7 @@ namespace Bomberman
 
   {
     IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
+    static int		angle = 0;
 
     if (!player->isAlive() || player->zeroBomb())
       return;
@@ -284,10 +285,9 @@ namespace Bomberman
     assets[ObjectToAsset[type]]->rotate(glm::vec3(1, 1, 1), 1);
     assets[ObjectToAsset[type]]->draw(shader, clock);
     assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
-
     for (unsigned int i = 1; i < player->getNbBomb(); i++)
       {
-	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) ) * M_PI) / 180;
+	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) + angle) * M_PI) / 180;
 	int x1 = 820 + 50 * cos(a);
 	int y1 = 840 + 50 * sin(a);
 
@@ -296,6 +296,7 @@ namespace Bomberman
 	assets[ObjectToAsset[type]]->draw(shader, clock);
 	assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
       }
+    angle = (angle + 1) % 360;
   }
 
   void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
