@@ -354,7 +354,6 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
     {
-      std::cout << dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY()))->getClassName() << std::endl;
       addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
       _map->killObject(getX(), getY());
       _map->getRcs()->getSound(Bomberman::RessourceStock::PICKUP)->play();
