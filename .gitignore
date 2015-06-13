@@ -3,4 +3,4 @@
 *#
 bomberman
 resources/assets/marvin.fbm/Main_texture_diffuse2.tga
-resources/jsons/Gamedata.json
+*.json
