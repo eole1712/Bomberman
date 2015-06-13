@@ -289,7 +289,7 @@ void				Gamer::updateRandCamera(Player *player)
     IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
     static int		angle = 0;
 
-    if (!player->isAlive() || player->zeroBomb())
+    if (!player->isAlive() || player->zeroBomb() || player->isParalyzed())
       return;
     shader.setUniform("view", glm::mat4());
     shader.setUniform("projection", glm::ortho(0.0f, 900.0f, 900.0f, 0.0f, -900.0f, 900.0f));
