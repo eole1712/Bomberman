@@ -431,7 +431,7 @@ void			Player::putTimedBomb(unsigned int x, unsigned int y)
   if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
-      BombTimer       *bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y, true);
+      BombTimer		*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y, true);
 
       _map->addBomb(bombT);
       _map->setCellValue(x, y, bombT);
