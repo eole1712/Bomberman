@@ -179,7 +179,6 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       if ((ai = dynamic_cast<PlayerAI *>(_stock->getPlayer(i))) != NULL)
 	ai->doAction(*_map, elsapsedTime);
     }
-
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(2.5, 4, 0),
 				    player->getRotation().y + 90,
@@ -296,7 +295,6 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
 
   for (unsigned int i = 1; i < player->getNbBomb(); i++)
     {
-      std::cout << player->getNbBomb() << std::endl;
       double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) ) * M_PI) / 180;
       int x1 = 820 + 50 * cos(a);
       int y1 = 820 + 50 * sin(a);
