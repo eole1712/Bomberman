@@ -248,8 +248,6 @@ void		Core::gameMenu()
     if (nbAI + nbPlayer >= (mapY * value / 16))
       nbAI = (mapY * value / 16) - nbPlayer;
     aiField->setText(Conversion::typeToString(nbAI));
-
-    std::cout << value << std::endl;
     map_width->setText(Conversion::typeToString(value));
   },
   [map_width] (void) {
