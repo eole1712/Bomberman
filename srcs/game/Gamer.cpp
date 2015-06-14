@@ -188,8 +188,8 @@ bool		Gamer::pauseMenu()
       });
     _menu->addObject(save, [this] (void) {
       //std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-      JSONDoc *j = new JSONDoc;
-      j->serialize(*this);
+      JSONDoc j;
+      j.serialize(*this);
     });
     _menu->addObject(quit, [this] (void) {
 	_quit = true;
