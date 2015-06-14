@@ -159,7 +159,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       delete _menu;
       _menu = NULL;
     }
-  if (!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive())
+  if ((!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive()) || _map->hasToQuit())
     {
       if (endTimer == NULL)
   	endTimer = new Timer(3 * 1000000);
@@ -169,7 +169,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   	  _quit = true;
   	}
     }
-  if (!_intro && (_quit || _map->hasToQuit()))
+  if (!_intro && _quit)
     return false;
   if (_menu != NULL)
     return _menu->update(clock, input);
