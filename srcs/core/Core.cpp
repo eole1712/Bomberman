@@ -70,21 +70,8 @@ void				Core::loadTextures()
   attachObject(new Asset3d("resources/assets/bombs/WindBomb/WindBomb.obj"));
 
   _assets[PLAYER]->scale(glm::vec3(0.002));
-  // _assets[PLAYER]->translate(glm::vec3(3.5, 0, 3.5));
   _assets[BOMB]->translate(glm::vec3(-0.5, -0.5, 0));
-  // _assets[SKYBOX]->scale(glm::vec3(10.5 * (_height + _width) / 2));
-  // _assets[SKYBOX]->setPosition(glm::vec3(_width / 2, 0, _height / 2));
-  // _assets[SKYBOX]->scale(glm::vec3(5 * ( + 30) / 2));
-  // _assets[SKYBOX]->setPosition(glm::vec3(30 / 2, 0, 30 / 2));
   _assets[BONUS]->scale(glm::vec3(0.05));
-  // _assets[BOMB]->scale(glm::vec3(100));
-  // _assets[BOMB]->translate(glm::vec3(750, 750, 0));
-  // _assets[MINE]->scale(glm::vec3(100));
-  // _assets[MINE]->translate(glm::vec3(150, 150 , 0));
-  // _assets[VIRUS]->scale(glm::vec3(100));
-  // _assets[VIRUS]->translate(glm::vec3(150, 150 , 0));
-  // _assets[BARREL]->scale(glm::vec3(100));
-  // _assets[BARREL]->translate(glm::vec3(150, 150 , 0));
 
   _ObjectToAsset[IObject::BOMB] = BOMB;
   _ObjectToAsset[IObject::MINE] = MINE;
@@ -124,11 +111,15 @@ void		Core::attachObject(Asset3d *obj)
   _assets.push_back(obj);
 }
 
+// 959 / 388
+// 551 / 112
+
 void				Core::intro()
 {
   Player	*player;
   Gamer		*tmpGame;
-  View2d*	intro = new View2d(0, 0, 1800, 900, "resources/assets/textures/intro.tga");
+  View2d*	intro = new View2d(0, 0, 741, 300, "resources/assets/textures/intro_1.tga");
+  View2d*	intro2 = new View2d(580, 670, 639, 130, "resources/assets/textures/intro_2.tga");
 
   tmpGame = new Gamer;
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
@@ -141,6 +132,7 @@ void				Core::intro()
     }
 
   Timer		timer(30000000);
+  unsigned int	x = 1;
 
   while (tmpGame->update(_clock, _input))
     {
@@ -154,6 +146,13 @@ void				Core::intro()
       _shader.setUniform("view", glm::mat4());
       _shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1000.0f, 1000.0f));
       intro->draw(_shader);
+
+      if (timer.getElapsedTime() > 400000 * x)
+	{
+	  intro2->setHidden(!intro2->isHidden());
+	  x += 1;
+	}
+      intro2->draw(_shader);
       _context.flush();
     }
   delete intro;
