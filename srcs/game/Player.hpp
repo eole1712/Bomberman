@@ -49,6 +49,8 @@ public:
   bool			zeroBomb() const;
   bool			canAbsorb() const;
   bool			isPlaced() const;
+  bool			isPlayerOne() const;
+  bool			isPlayerTwo() const;
   virtual bool		isIA() const;
 
 private:

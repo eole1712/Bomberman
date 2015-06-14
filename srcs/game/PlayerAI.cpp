@@ -227,7 +227,6 @@ bool		PlayerAI::isIA() const
   {
     getGlobalNamespace(_state)
       .beginClass<Player>("Player")
-      .addConstructor<void (*)(void)>()
       .addProperty("name", &PlayerAI::getName)
       .addProperty("isAlive", &PlayerAI::isAlive)
       .addProperty("isParalyzed", &PlayerAI::isParalyzed)

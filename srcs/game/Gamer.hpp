@@ -56,6 +56,7 @@ public:
   bool			pauseMenu();
   void			updateRandCamera();
   Player*		randAlivePlayer() const;
+  void			drawEndGame(gdl::BasicShader &shader, Player *player);
 
 private:
   Gamer(const Gamer &);

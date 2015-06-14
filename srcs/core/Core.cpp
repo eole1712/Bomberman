@@ -155,7 +155,6 @@ void				Core::intro()
       _shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1000.0f, 1000.0f));
       intro->draw(_shader);
       _context.flush();
-
     }
   delete intro;
   delete tmpGame;

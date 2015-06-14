@@ -26,6 +26,7 @@
 #include "Gamer.hpp"
 #include "Core.hpp"
 #include "my_random.hpp"
+#include "View2d.hpp"
 
 namespace Bomberman
 {
