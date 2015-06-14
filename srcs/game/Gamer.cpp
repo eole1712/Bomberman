@@ -446,7 +446,29 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
 	assets[ObjectToAsset[type]]->draw(shader, clock);
 	assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
       }
+  showHeart(shader, player);
   angle = (angle + 1) % 360;
+}
+
+void		Gamer::showHeart(gdl::BasicShader &shader, Player *player)
+{
+  static View2d	*heart = new View2d(0, 0, 1800, 900, "resources/assets/textures/heart.tga");
+
+
+  if (!player->isAlive())
+    return;
+  shader.setUniform("view", glm::mat4());
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
+
+  unsigned int x = 100;
+  unsigned int y = 750;
+
+  for (unsigned int i = 0; i <= player->getShield(); i++)
+    {
+      heart->update(x, y, 1800 / (_twoPlayers ? 2 : 1), 900);
+      heart->draw(shader);
+      x += 100;
+    }
 }
 
 void		Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
@@ -461,6 +483,7 @@ void		Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
   win->draw(shader);
+  delete win;
 }
 
 void		Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
@@ -475,6 +498,7 @@ void		Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
   lose->draw(shader);
+  delete lose;
 }
 
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,

@@ -38,6 +38,7 @@ public:
 public:
   std::string const&	getName() const;
   unsigned int		getRange() const;
+  unsigned int		getShield() const;
   float			getSpeed() const;
 
 private:
@@ -187,7 +188,7 @@ public:
 
 public:
 	int			getId() const;
-	void		setId(int); 
+	void		setId(int);
  	Timer*		getDeadTimer() const;
 
 private:
