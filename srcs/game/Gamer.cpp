@@ -135,8 +135,8 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     soundON->setHidden(!(_map->getRcs()->isPlayingSounds()));
     soundOFF->setHidden((_map->getRcs()->isPlayingSounds()));
 
-    viewON->setHidden(_viewMode);
-    viewOFF->setHidden(!_viewMode);
+    viewON->setHidden(!_viewMode);
+    viewOFF->setHidden(_viewMode);
 
     _menu = new MenuGrid;
     _menu->addObject(background, [] (void){
@@ -147,8 +147,8 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
       });
     _menu->addObject(view, [this, viewON, viewOFF] (void) {
       _viewMode = !_viewMode;
-      viewON->setHidden(_viewMode);
-      viewOFF->setHidden(!_viewMode);
+      viewON->setHidden(!_viewMode);
+      viewOFF->setHidden(_viewMode);
       });
     _menu->addObject(sound, [this, soundON, soundOFF] (void) {
       _map->getRcs()->toggleSounds();
