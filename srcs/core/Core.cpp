@@ -389,7 +389,7 @@ void		Core::gameMenu()
     startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai);
   });
   grid->addObject(back, [this] (void) {
-    scoreMenu();
+    firstMenu();
   });
 
 
@@ -455,8 +455,8 @@ void		Core::firstMenu()
       }
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
   });
-  grid->addObject(text3, [] (void) {
-    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  grid->addObject(text3, [this] (void) {
+    scoreMenu();
   });
   grid->addObject(text4, [this] (void) {
     this->_status = true;
