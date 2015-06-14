@@ -417,7 +417,7 @@ void		Core::gameMenu()
 void		Core::firstMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-  View2d*	back = new View2d(0, 0, 1800, 1000, "resources/assets/textures/background.tga");
+  View2d*	back = new View2d(0, 0, 1800, 900, "resources/assets/textures/background.tga");
   View2d*	text1 = new View2d(1100, 475, 500, 101, "resources/assets/textures/load.tga");
   View2d*	text2 = new View2d(1100, 325, 500, 101, "resources/assets/textures/new.tga");
   View2d*	text3 = new View2d(1100, 625, 500, 101, "resources/assets/textures/high.tga");
