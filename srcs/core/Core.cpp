@@ -139,26 +139,13 @@ void				Core::intro()
 					_assets[PLAYER]->getAnimationSpeed());
     }
 
-  Timer		timer(60000000);
-  // unsigned int id = 0;
-  // unsigned int x  = 1;
+  Timer		timer(30000000);
 
-  player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(0));
   while (tmpGame->update(_clock, _input))
     {
       if (timer.isFinished())
 	break;
-      // if (timer.getElapsedTime() > (x * 3000000))
-      // 	{
-      // 	  do
-      // 	    {
-      // 	      id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
-      // 	      player = dynamic_cast<Player *>
-      // 		(tmpGame->getRcs()->getPlayer(id));
-      // 	    } while (!player->isAlive() && tmpGame->getRcs()->countAlivePlayers() > 0);
-      // 	  x += 1;
-      // 	}
-      tmpGame->updateRandCamera(player);
+      tmpGame->updateRandCamera();
       _context.updateClock(_clock);
       _context.updateInputs(_input);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
