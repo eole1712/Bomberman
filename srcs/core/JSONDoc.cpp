@@ -17,8 +17,8 @@
 #include "DestroyableWall.hpp"
 #include "Spawn.hpp"
 #include "Empty.hpp"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/rapidjson.h"
+#include "stringbuffer.h"
+#include "rapidjson.h"
 #include "PlayerAI.hpp"
 
 JSONDoc::JSONDoc()
