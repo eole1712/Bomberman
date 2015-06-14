@@ -199,12 +199,12 @@ void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_2_background.tga");
-  Text2d*	map_height = new Text2d("20", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	map_width = new Text2d("20", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiField = new Text2d("10", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	pField = new Text2d("1", 1485, 480, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Field = new Text2d("Player1", 1115, 600, 400, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Field = new Text2d("Player2", 1115, 660, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	map_height = new Text2d("20", 1475, 360, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	map_width = new Text2d("20", 1475, 300, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	aiField = new Text2d("10", 1475, 420, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	pField = new Text2d("1", 1485, 480, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	p1Field = new Text2d("Player1", 1115, 600, 400, 50, "resources/assets/textures/police.tga");
+  Text2d*	p2Field = new Text2d("Player2", 1115, 660, 400, 50, "resources/assets/textures/police.tga");
   View2d*	start = new View2d(1065, 720, 350, 50, "resources/assets/textures/menu_2_start.tga");
   View2d*	p1TextBackGround = new View2d(1110, 600, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
   View2d*	p2TextBackGround = new View2d(1110, 660, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
@@ -471,7 +471,7 @@ void		Core::scoreMenu()
 	  top[i] = new Text2d((top5[i].first + std::string(14 - top5[i].first.size() - lengthCalc(top5[i].second), ' ')
 			       + Conversion::typeToString<unsigned int>(top5[i].second)),
 			      410, 280 + (i * ((i < 3) ? (110) : (102))), 1200, 55,
-			      "resources/assets/textures/alpha3Blue.tga");
+			      "resources/assets/textures/police.tga");
 	  top[i]->unFocus();
 	  grid->addObject(top[i], [] (void) {});
 	}

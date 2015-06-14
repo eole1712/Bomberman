@@ -47,10 +47,10 @@ void		Text2d::update()
       _geo[i]->pushVertex(glm::vec3(_x + i * (22.50 * _size),
 				    _y + 40 * _size,
 				    0));
-      _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i), 1.0f));
-      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 1.0f));
-      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 0.0f));
-      _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i), 0.0f));
+      _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i) + 0.0003f, 1.0f));
+      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1) - 0.0003f, 1.0f));
+      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1) - 0.0003f, 0.0f));
+      _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i) + 0.0003f, 0.0f));
       _geo[i]->build();
     }
 }
