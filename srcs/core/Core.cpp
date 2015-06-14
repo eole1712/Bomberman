@@ -557,6 +557,11 @@ bool		Core::update()
       _change = false;
       delete _prev;
     }
+  else if (!ret)
+    {
+      _prev = _game;
+      _change = true;
+    }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
   return ret;
