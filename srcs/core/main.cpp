@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 #include "Core.hpp"
 
 void			showfps()
@@ -23,23 +24,29 @@ void			showfps()
     nbframe++;
 }
 
-int main()
+int			main()
 {
   Bomberman::Core	engine;
 
-  if (!engine.initialize())
+  try
     {
-      std::cout << "Initialize failed" << std::endl;
-      return (EXIT_FAILURE);
-    }
-  engine.intro();
-  while (!engine.isOver())
-    {
-      engine.firstMenu();
-      while (!engine.isOver() && engine.update() == true)
+      if (!engine.initialize())
 	{
-	  engine.draw();
+	  std::cout << "Initialize failed" << std::endl;
+	  return (EXIT_FAILURE);
 	}
+      engine.intro();
+      while (!engine.isOver())
+	{
+	  engine.firstMenu();
+	  while (!engine.isOver() && engine.update() == true)
+	    engine.draw();
+	}
+    }
+  catch (std::exception const& e)
+    {
+      std::cerr << "Error: " << e.what() << std::endl;
+      return EXIT_FAILURE;
     }
   return EXIT_SUCCESS;
 }

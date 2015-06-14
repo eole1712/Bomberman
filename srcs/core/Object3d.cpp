@@ -1,4 +1,3 @@
-
 #include "Object3d.hpp"
 
 Object3d::Object3d()

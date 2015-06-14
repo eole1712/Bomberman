@@ -52,12 +52,12 @@ MenuGrid::MenuGrid(std::string const& texName)
 
 MenuGrid::~MenuGrid()
 {
-  std::for_each(_elems.begin(), _elems.end(), [] (std::pair<AMenuObject*, std::function<void()> >& elem){
-    delete elem.first;
+  std::for_each(_elems.begin(), _elems.end(), [] (std::pair<AMenuObject*, std::function<void()> >& elem) {
+      delete elem.first;
     });
 }
 
-void	MenuGrid::moveLeft()
+void			MenuGrid::moveLeft()
 {
   static unsigned int	nbTries = 0;
 
@@ -70,7 +70,7 @@ void	MenuGrid::moveLeft()
   nbTries = 0;
 }
 
-void	 MenuGrid::moveRight()
+void			 MenuGrid::moveRight()
 {
   static unsigned int	nbTries = 0;
 
@@ -85,7 +85,9 @@ void	 MenuGrid::moveRight()
    nbTries = 0;
 }
 
-void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset3d *> &, std::map<Bomberman::IObject::Type, Bomberman::mapAsset>&)
+void			MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader,
+					  std::vector<Asset3d *> &,
+					  std::map<Bomberman::IObject::Type, Bomberman::mapAsset>&)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glDisable(GL_DEPTH_TEST);
@@ -95,12 +97,8 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin(); it != _elems.end(); ++it)
     {
       if (!(*it).first->isHidden())
-	{
-	  (*it).first->draw(shader);
-	}
-      if (_focus == it
-	   && (*it).first->showFocus()
-	  )
+	(*it).first->draw(shader);
+      if (_focus == it && (*it).first->showFocus())
 	drawFocus((*it).first->getX(), (*it).first->getY(), (*it).first->getHeight(), shader);
     }
   glEnable(GL_DEPTH_TEST);
@@ -125,9 +123,11 @@ void	MenuGrid::drawNoBack(gdl::BasicShader &shader)
 
 void	MenuGrid::addObject(AMenuObject* obj, std::function<void()> func)
 {
+  std::vector<std::pair< std::function<void()>, std::function<void()> > >::iterator it2;
+
   _elems.push_back(std::pair<AMenuObject*, std::function<void()> >(obj, func));
   _funcs.push_back(std::pair<std::function<void()>, std::function<void()> >([] () {}, [] () {}));
-  std::vector<std::pair< std::function<void()>, std::function<void()> > >::iterator it2 = _funcs.begin();
+  it2 = _funcs.begin();
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin();
        it != _elems.end();
        ++it)
@@ -145,9 +145,11 @@ void	MenuGrid::addObject(AMenuObject* obj, std::function<void()> func)
 
 void	MenuGrid::addDynObject(AMenuObject* obj, std::function<void()> enter, std::function<void()> left, std::function<void()> right)
 {
+  std::vector<std::pair< std::function<void()>, std::function<void()> > >::iterator it2;
+
   _elems.push_back(std::pair<AMenuObject*, std::function<void()> >(obj, enter));
   _funcs.push_back(std::pair<std::function<void()>, std::function<void()> >(left, right));
-  std::vector<std::pair< std::function<void()>, std::function<void()> > >::iterator it2 = _funcs.begin();
+  it2 = _funcs.begin();
   for (std::vector<std::pair<AMenuObject*, std::function<void()> > >::iterator it = _elems.begin();
        it != _elems.end();
        ++it)
@@ -168,37 +170,37 @@ void	MenuGrid::actionOnFocus()
   _prev = SDLK_RETURN;
 }
 
-void	MenuGrid::drawFocus(int x, int y, int height, gdl::BasicShader& shader)
+void		MenuGrid::drawFocus(int x, int y, int height, gdl::BasicShader& shader)
 {
   View2d	cursor(x - (height + 10), y, height, height, "resources/assets/textures/bombcursor.tga");
-
 
   cursor.draw(shader);
 }
 
-bool	MenuGrid::update(gdl::Clock &, gdl::Input & in)
+bool		MenuGrid::update(gdl::Clock &, gdl::Input & in)
 {
-  static int idTab[] = {
+  static int	idTab[] = {
     SDLK_UP, SDLK_TAB, SDLK_DOWN,
     SDLK_RETURN, SDLK_LEFT, SDLK_RIGHT
   };
+
   for (int i = 0; i < 6; ++i)
-      {
-	try {
-	  if (in.getKey(idTab[i]) && _prev != idTab[i])
-	    _ftab[i]();
-	}
-	catch (std::bad_function_call e)
-	  {
-	    std::cout << "Error in I/O" << e.what() << std::endl;
-	  }
+    {
+      try {
+	if (in.getKey(idTab[i]) && _prev != idTab[i])
+	  _ftab[i]();
       }
+      catch (std::bad_function_call e)
+	{
+	  std::cout << "Error in I/O" << e.what() << std::endl;
+	}
+    }
   if (!in.getKey(_prev))
     _prev = 0;
   std::for_each(_elems.begin(), _elems.end(), [&in, this] (std::pair<AMenuObject*, std::function<void()> >& button) {
-    if (button.first == (*_focus).first)
-      button.first->update(in);
-  });
+      if (button.first == (*_focus).first)
+	button.first->update(in);
+    });
   _camera.updateView();
   return true;
 }
