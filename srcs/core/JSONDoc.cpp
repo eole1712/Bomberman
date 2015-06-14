@@ -600,6 +600,7 @@ Bomberman::Gamer *JSONDoc::unserialize<Bomberman::Gamer*>(std::string const&) co
 {
   Bomberman::Gamer* game;
   Bomberman::Map* map = unserialize<Bomberman::Map*>("");
+  Bomberman::ScoreList* scoreList = unserialize<Bomberman::ScoreList*>("");
   std::vector<Bomberman::Player*> players;
   Bomberman::RessourceStock* rc;
   int nbPlayers = 0;
@@ -628,7 +629,8 @@ Bomberman::Gamer *JSONDoc::unserialize<Bomberman::Gamer*>(std::string const&) co
   else
     sList = j.unserialize<Bomberman::ScoreList*>();
   rc = new Bomberman::RessourceStock(players, sList);
-  game = new Bomberman::Gamer(map->getWidth(), map->getHeight(), 1800, 900, (!nbPlayers == 1), "", "", players.size());
+  game = new Bomberman::Gamer(map->getWidth(), map->getHeight(), 1800, 900, (!nbPlayers == 1), "", "",
+			      players.size(), map, scoreList);
   game->setRcs(rc);
   map->setRcs(rc);
   for (std::vector<Bomberman::Player*>::iterator it = players.begin(); it != players.end(); ++it)
