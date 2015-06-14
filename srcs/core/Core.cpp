@@ -288,7 +288,6 @@ void		Core::gameMenu()
   });
 
   grid->addDynObject(aiField, [aiField] (void) {
-    std::cout << aiField->getText() << std::endl;;
   },
   [aiField, pField] (void) {
     int			value;
@@ -318,7 +317,6 @@ void		Core::gameMenu()
     aiField->setText(Conversion::typeToString(value));
   });
   grid->addDynObject(pField, [pField] (void) {
-    std::cout << pField->getText() << std::endl;;
   },
   [pField, p2TextBackGround, p2Field, aiField] (void) {
     int			value;
@@ -378,10 +376,8 @@ void		Core::gameMenu()
     pField->setText(Conversion::typeToString(value));
   });
   grid->addObject(p1Field, [p1Field] (void) {
-    std::cout << p1Field->getText() << std::endl;;
   });
   grid->addObject(p2Field, [p2Field] (void) {
-    std::cout << p2Field->getText() << std::endl;;
   });
   grid->addObject(start, [this, p1Field, p2Field, map_height, map_width, aiField, pField] (void) {
     /// START GAME
