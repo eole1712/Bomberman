@@ -380,6 +380,7 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
     {
+      dynamic_cast<Fire*>(_map->getCellValue(getX(), getY()))->getPlayer()->incScore();
       _map->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
       tryToKill();
     }
