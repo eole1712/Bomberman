@@ -82,7 +82,7 @@ void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
   void		Virus::setBlastRangeToMap(AI::StateMap* map, Map const* realMap, int x,
 					  int y, unsigned int range) const
   {
-    IBomb*	classic = dynamic_cast<IBomb*>(realMap->getRcs()->getBomb(CLASSIC));
+    IBomb*	classic = realMap->getRcs()->getBomb(CLASSIC);
 
     for (int i = x; i >= 0 ; --i)
       {
