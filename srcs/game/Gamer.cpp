@@ -261,7 +261,7 @@ void		Gamer::updateCamera()
     }
 }
 
-RessourceStock*	Gamer::getRcs() const
+RessourceStock*		Gamer::getRcs() const
 {
   return _stock;
 }
