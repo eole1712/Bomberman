@@ -53,6 +53,7 @@ public:
   void		toggleSounds();
   Player*	getPlayerOne() const;
   Player*	getPlayerTwo() const;
+  Player*	getWinner() const;
 
 private:
   std::vector<Player *>		_players;
