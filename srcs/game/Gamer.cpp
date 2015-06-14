@@ -148,6 +148,7 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
   bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   {
     float		elapsedTime = static_cast<float>(clock.getElapsed()) * 60;
+    static Timer*	endTimer = NULL;
 
     // If the escape key is pressed or if the window has been closed we stop the program
     if (_resume)
@@ -158,7 +159,15 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
 	_menu = NULL;
       }
     if (!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive())
-      _quit = true;
+      {
+	if (endTimer == NULL)
+	  endTimer = new Timer(3 * 1000000);
+	if (endTimer->isFinished())
+	  {
+	    delete endTimer;
+	    _quit = true;
+	  }
+      }
     if (_quit || _map->hasToQuit())
       return false;
     if (_menu != NULL)
