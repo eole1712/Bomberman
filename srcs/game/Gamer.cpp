@@ -255,7 +255,7 @@ void		Gamer::updateCamera()
     }
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(((_viewMode) ? glm::vec3(2.5, 4, 0) :
-				     glm::vec3(0.0001, 10, 0)),
+				     glm::vec3(0.0001, 8, 0)),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
@@ -272,7 +272,7 @@ void		Gamer::updateCamera()
 	}
 	_camera2.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 			     + glm::rotate(((_viewMode) ? glm::vec3(2.5, 4, 0) :
-					    glm::vec3(0.0001, 10, 0)),
+					    glm::vec3(0.0001, 8, 0)),
 					   player->getRotation().y + 90,
 					   glm::vec3(0, 1, 0)));
 	_camera2.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
@@ -338,7 +338,7 @@ void		Gamer::draw(gdl::Clock &clock,
 	    tmp = glm::rotate(pos - player->getPosition(),
 			      -player->getRotation().y, glm::vec3(0, 1, 0));
 	  if (player == NULL
-	      || (!_viewMode && tmp.x > -21 && tmp.x < 21 && tmp.z > -21 && tmp.z < 21)
+	      || (!_viewMode && tmp.x > -9 && tmp.x < 9 && tmp.z > -9 && tmp.z < 9)
 	      || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	    {
 	      if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
@@ -385,7 +385,7 @@ void		Gamer::draw(gdl::Clock &clock,
 	tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(),
 			  -player->getRotation().y, glm::vec3(0, 1, 0));
       if (player == NULL
-	  || (!_viewMode && tmp.x > -21 && tmp.x < 21 && tmp.z > -21 && tmp.z < 21)
+	  || (!_viewMode && tmp.x > -9 && tmp.x < 9 && tmp.z > -9 && tmp.z < 9)
 	  || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	drawPlayer->draw(*assets[PLAYER], shader, clock);
     }
