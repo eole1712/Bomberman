@@ -541,7 +541,7 @@ bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input,
 						       bool end)
 {
   Player*			player;
-*
+
   if (!input.getKey(SDLK_RCTRL) && (player = (_stock->getPlayer(0))) != NULL &&
       player->getPutBombStatus())
     player->setPutBombStatus(false);
