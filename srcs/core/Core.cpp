@@ -135,7 +135,7 @@ void				Core::intro()
   _assets[SKYBOX]->setPosition(glm::vec3(15 / 2, 0, 15 / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
+      player = tmpGame->getRcs()->getPlayer(i);
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
@@ -174,7 +174,7 @@ void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const&
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
+      player = tmpGame->getRcs()->getPlayer(i);
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }

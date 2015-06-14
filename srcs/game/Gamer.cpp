@@ -89,11 +89,11 @@ void	Gamer::init()
     _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
   for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(_stock->getPlayer(i));
+      player = _stock->getPlayer(i);
       player->initGame(_map);
     }
-  player = dynamic_cast<Player *>(_stock->getPlayer(0));
-  player2 = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+  player = _stock->getPlayer(0);
+  player2 = _stock->getPlayer(_stock->getNbPlayer() - 1);
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
 		      + glm::rotate(glm::vec3(2.5, 4, 0),
 				    player->getRotation().y + 90,
@@ -162,12 +162,12 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive())
     {
       if (endTimer == NULL)
-	endTimer = new Timer(3 * 1000000);
+  	endTimer = new Timer(3 * 1000000);
       if (endTimer->isFinished())
-	{
-	  delete endTimer;
-	  _quit = true;
-	}
+  	{
+  	  delete endTimer;
+  	  _quit = true;
+  	}
     }
   if (!_intro && (_quit || _map->hasToQuit()))
     return false;
@@ -189,15 +189,14 @@ Player		*Gamer::randAlivePlayer() const
   do
     {
       id = (id + 1) % getRcs()->getNbPlayer();
-      player = dynamic_cast<Player *>
-	(getRcs()->getPlayer(id));
+      player = getRcs()->getPlayer(id);
     } while (!player->isAlive() && getRcs()->countAlivePlayers() > 0);
   return player;
 }
 
 void		Gamer::updateCamera()
 {
-  Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
+  Player	*player = _stock->getPlayer(0);
 
   if (!player->isAlive() && player->getDeadTimer()->isFinished())
     {
@@ -214,7 +213,7 @@ void		Gamer::updateCamera()
   _camera.updateView();
   if (_twoPlayers)
     {
-      player = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+      player = _stock->getPlayer(_stock->getNbPlayer() - 1);
       if (!player->isAlive() && player->getDeadTimer()->isFinished())
 	{
 	  if ((!_spect || !_spect->isAlive()) && (_spect = randAlivePlayer()) == NULL)
@@ -329,7 +328,7 @@ void		Gamer::draw(gdl::Clock &clock,
     }
   for (unsigned int i = 0; i < _stock->getNbPlayer(); i++)
     {
-      drawPlayer = dynamic_cast<Player *>(_stock->getPlayer(i));
+      drawPlayer = _stock->getPlayer(i);
       if (player)
 	tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(),
 			  -player->getRotation().y, glm::vec3(0, 1, 0));
@@ -408,7 +407,7 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
     glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
+  Player	*player = _stock->getPlayer(0);
 
   if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
     player = _spect;
@@ -417,7 +416,7 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
   drawEndGame(shader, player);
   if (_twoPlayers)
     {
-      Player	*player = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+      Player	*player = _stock->getPlayer(_stock->getNbPlayer() - 1);
 
       if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
 	player = _spect;
@@ -445,11 +444,11 @@ bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input)
 {
   Player*			player;
 
-  if (!input.getKey(SDLK_RCTRL) && (player = dynamic_cast<Player*>(_stock->getPlayer(0))) != NULL &&
+  if (!input.getKey(SDLK_RCTRL) && (player = (_stock->getPlayer(0))) != NULL &&
       player->getPutBombStatus())
     player->setPutBombStatus(false);
   if (_twoPlayers && !input.getKey(SDLK_SPACE) &&
-      (player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) != NULL &&
+      (player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) != NULL &&
       player->getPutBombStatus())
     player->setPutBombStatus(false);
 
@@ -477,7 +476,7 @@ bool				Gamer::handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input)
 
   static_cast<void>(elapsedTime);
   static_cast<void>(input);
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
+  if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   if (!player->getPutBombStatus())
     {
@@ -495,7 +494,7 @@ bool				Gamer::handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input)
   static_cast<void>(input);
   if (!_twoPlayers)
     return true;
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   if (!player->getPutBombStatus())
     {
@@ -511,7 +510,7 @@ bool				Gamer::handleKeyToP1Up(const float elapsedTime, gdl::Input& input)
 
   static_cast<void>(elapsedTime);
   static_cast<void>(input);
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
+  if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(player->getRotation().y, elapsedTime);
   return (true);
@@ -523,7 +522,7 @@ bool				Gamer::handleKeyToP1Down(const float elapsedTime, gdl::Input& input)
 
   static_cast<void>(input);
   static_cast<void>(elapsedTime);
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
+  if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(180 + player->getRotation().y, elapsedTime);
   return (true);
@@ -535,7 +534,7 @@ bool				Gamer::handleKeyToP1Left(const float elapsedTime, gdl::Input& input)
 
   if (input.getKey(SDLK_RIGHT))
     return true;
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
+  if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->Player::rotate(true, elapsedTime);
   return true;
@@ -547,7 +546,7 @@ bool				Gamer::handleKeyToP1Right(const float elapsedTime, gdl::Input& input)
 
   if (input.getKey(SDLK_LEFT))
     return true;
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
+  if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->Player::rotate(false, elapsedTime);
   return true;
@@ -558,7 +557,7 @@ bool				Gamer::handleKeyToP2Up(const float elapsedTime, gdl::Input& input)
   Player*			player;
 
   static_cast<void>(input);
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(player->getRotation().y, elapsedTime);
   return true;
@@ -569,7 +568,7 @@ bool				Gamer::handleKeyToP2Down(const float elapsedTime, gdl::Input& input)
   Player*			player;
 
   static_cast<void>(input);
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(180 + player->getRotation().y, elapsedTime);
   return true;
@@ -582,7 +581,7 @@ bool				Gamer::handleKeyToP2Left(const float elapsedTime, gdl::Input& input)
   static_cast<void>(input);
   if (input.getKey(SDLK_d))
     return true;
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->Player::rotate(true, elapsedTime);
   return true;
@@ -594,7 +593,7 @@ bool				Gamer::handleKeyToP2Right(const float elapsedTime, gdl::Input& input)
 
   if (input.getKey(SDLK_q) || input.getKey(SDLK_a))
     return true;
-  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->Player::rotate(false, elapsedTime);
   return true;

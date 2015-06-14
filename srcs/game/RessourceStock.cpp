@@ -48,7 +48,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 				     Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
 	  ++ai_id;
 	}
-      dynamic_cast<Player*>(_players[i])->linkScoreList(scoreList);
+      _players[i]->linkScoreList(scoreList);
     }
   this->init();
 }
@@ -62,12 +62,12 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
   for (unsigned int i = 0; i < players.size(); ++i)
     {
       _players[i] = players[i];
-      if (dynamic_cast<Player*>(_players[i])->isIA())
+      if (_players[i]->isIA())
 	nb++;
     }
   _twoPlayers = nb == 2 ? true : false;
-  _playerOneAlive = dynamic_cast<Player*>(_players[0])->isAlive();
-  _playerTwoAlive = _twoPlayers && dynamic_cast<Player*>(_players[_players.size() - 1])->isAlive();
+  _playerOneAlive = _players[0]->isAlive();
+  _playerTwoAlive = _twoPlayers && _players[_players.size() - 1]->isAlive();
   this->init();
 }
 
@@ -181,8 +181,8 @@ Player		*RessourceStock::getPlayer(std::string const &name) const
 
   for (unsigned int i = 0; i < _players.size(); ++i)
     {
-      if (((play = dynamic_cast<Player *>(_players[i]))->getName()) == name)
-	  return play;
+      if (_players[i]->getName() == name)
+	return play;
     }
   return NULL; //EXCEPTION???
 }
@@ -191,7 +191,7 @@ Player		*RessourceStock::getPlayer(unsigned int id) const
 {
   if (id >= _players.size())
     return NULL; //EXCEPTION???
-  return dynamic_cast<Bomberman::Player*>(_players[id]);
+  return _players[id];
 }
 
 unsigned int	RessourceStock::getNbPlayer() const
@@ -205,12 +205,12 @@ unsigned int	RessourceStock::countAlivePlayers()
 
   for (unsigned int i = 0; i < _players.size(); ++i)
     {
-      alivePlayers += dynamic_cast<Player*>(_players[i])->isAlive();
-      _winner = ((dynamic_cast<Player*>(_players[i])->isAlive())
+      alivePlayers += _players[i]->isAlive();
+      _winner = _players[i]->isAlive()
 		 ? ((i == 0)
 		    ? (PLAYER1)
 		    : ((i == _players.size() - 1) ? (PLAYER2) : (IA)))
-		 : (_winner));
+		 : (_winner);
     }
   return (alivePlayers);
 }
@@ -269,6 +269,16 @@ void	RessourceStock::toggleMusic()
 void	RessourceStock::toggleSounds()
 {
   _toggleSounds = !_toggleSounds;
+}
+
+Player	*RessourceStock::getPlayerOne() const
+{
+  return _players[0];
+}
+
+Player	*RessourceStock::getPlayerTwo() const
+{
+  return _players[_players.size() - 1];
 }
 
 }
