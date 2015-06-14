@@ -19,7 +19,7 @@ unsigned int const	Player::dftRange = 3;
 float const		Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
-Bomb::Type const	Player::dftBombType = Bomb::VIRUS;
+Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
   : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
@@ -133,14 +133,14 @@ void			Player::resetRange()
 
 void			Player::incSpeed()
 {
-  if (_speed <= 2.5)
-  _speed += 0.5;
+  if (_speed < 1.6)
+  _speed += 0.2;
 }
 
 void			Player::decSpeed()
 {
-  if (_speed >= 1.5)
-    _speed -= 0.5;
+  if (_speed > 0.6)
+    _speed -= 0.2;
 }
 
 void			Player::resetSpeed()
