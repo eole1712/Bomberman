@@ -472,10 +472,6 @@ bool			Player::tryToKill()
 	decShield();
       else
 	{
-	  if (isPlayerOne())
-	    this->_map->getRcs()->killPlayerOne();
-	  else if (isPlayerTwo())
-	    this->_map->getRcs()->killPlayerTwo();
 	  _isAlive = false;
 	  _timeDead = new Timer(5000000);
 	  return true;
