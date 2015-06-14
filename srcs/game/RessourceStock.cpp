@@ -177,12 +177,10 @@ SoundManager*	RessourceStock::getSound(SoundType type)
 
 Player		*RessourceStock::getPlayer(std::string const &name) const
 {
-  Bomberman::Player* play;
-
   for (unsigned int i = 0; i < _players.size(); ++i)
     {
       if (_players[i]->getName() == name)
-	return play;
+	_players[i];
     }
   return NULL; //EXCEPTION???
 }

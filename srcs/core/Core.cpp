@@ -157,7 +157,7 @@ void				Core::intro()
       _context.flush();
     }
   delete intro;
-  delete tmpGame;
+  _game = tmpGame;
 }
 
 void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2,
@@ -392,9 +392,9 @@ void		Core::gameMenu()
     int width = Conversion::stringToType<int>(map_width->getText());
     int ai = Conversion::stringToType<int>(aiField->getText());
     bool players = Conversion::stringToType<int>(pField->getText()) == 1 ? false : true;
+
     startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai);
   });
-  std::cout << "OK" << std::endl;
   grid->addObject(back, [this] (void) {
     firstMenu();
   });
@@ -431,6 +431,8 @@ void		Core::firstMenu()
   grid->addObject(text4, [this] (void) {
     this->_status = true;
   });
+  _prev = _game;
+  _change = true;
   _game = grid;
 }
 
@@ -446,8 +448,6 @@ bool		Core::update()
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
-  if (!ret)
-    _status = true;
   return ret;
 }
 
