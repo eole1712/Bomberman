@@ -114,7 +114,7 @@ void				Gamer::setRcs(Bomberman::RessourceStock *rcs)
   _stock = rcs;
 }
 
-bool		Gamer::pauseMenu()
+bool				Gamer::pauseMenu()
   {
     View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_3_background.tga");
 
@@ -193,7 +193,7 @@ bool		Gamer::pauseMenu()
     _menu->addObject(quit, [this] (void) {
 	_quit = true;
       });
-    std::cout << "pause" << std::endl;
+    _map->pauseBombs();
     return true;
   }
 
@@ -208,6 +208,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       _resume = false;
       delete _menu;
       _menu = NULL;
+      _map->continueBombs();
     }
   if ((!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive()) || _map->hasToQuit())
     {
@@ -481,11 +482,11 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
 			       std::vector<Asset3d*>& assets,
 			       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset)
 {
+  Player	*player = _stock->getPlayer(0);
+
   if (_twoPlayers)
     glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  Player	*player = _stock->getPlayer(0);
 
   if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
     player = _spect;
@@ -494,7 +495,7 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
   drawEndGame(shader, player);
   if (_twoPlayers)
     {
-      Player	*player = _stock->getPlayer(_stock->getNbPlayer() - 1);
+      player = _stock->getPlayer(_stock->getNbPlayer() - 1);
 
       if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
 	player = _spect;

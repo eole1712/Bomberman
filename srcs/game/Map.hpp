@@ -10,7 +10,7 @@
 
 namespace Bomberman
 {
-  class RessourceStock;
+class RessourceStock;
 class Map : public GenericMap<IObject*>
 {
 public:
@@ -20,14 +20,14 @@ public:
 
 private:
 
-  void	init(unsigned int, unsigned int);
-  void	generateForm(unsigned int, unsigned int);
-  void	randomize();
-  bool	addNoBlocking(unsigned int, unsigned int);
-  bool	checkDensity(unsigned int, unsigned int, unsigned int) const;
-  void	equalize();
-  void	pushSpawn(unsigned int, unsigned int, unsigned int);
-  TwoInt	addSpawn(unsigned int, unsigned int);
+  void			init(unsigned int, unsigned int);
+  void			generateForm(unsigned int, unsigned int);
+  void			randomize();
+  bool			addNoBlocking(unsigned int, unsigned int);
+  bool			checkDensity(unsigned int, unsigned int, unsigned int) const;
+  void			equalize();
+  void			pushSpawn(unsigned int, unsigned int, unsigned int);
+  TwoInt		addSpawn(unsigned int, unsigned int);
 
 public:
   enum e_difficulty	{ EASY = 7, MEDIUM, DIFFICULT };
@@ -63,13 +63,17 @@ public:
   bool			hasToQuit() const;
 
 public:
-  bool		isIn(unsigned int x, unsigned int y) const;
-  void		killPlayers(unsigned int x, unsigned int y, Player *);
-  void		checkBombsOnMap();
-  void		addBomb(BombTimer*);
-  void		addFire(Fire*);
-  void		addFire(Player*, unsigned int, unsigned int);
-  void		addFire(Player*, unsigned int, unsigned int, float);
+  bool			isIn(unsigned int x, unsigned int y) const;
+  void			killPlayers(unsigned int x, unsigned int y, Player *);
+  void			checkBombsOnMap();
+  void			addBomb(BombTimer*);
+  void			addFire(Fire*);
+  void			addFire(Player*, unsigned int, unsigned int);
+  void			addFire(Player*, unsigned int, unsigned int, float);
+
+public:
+  void			pauseBombs();
+  void			continueBombs();
 
 private:
   std::string		_name;

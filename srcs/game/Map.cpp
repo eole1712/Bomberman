@@ -371,6 +371,22 @@ void		Map::addFire(Player *player, unsigned int x, unsigned int y, float time)
     }
 }
 
+  void			Map::pauseBombs()
+  {
+    for (std::list<BombTimer*>::iterator it = _bombs.begin();
+	 it != _bombs.end();
+	 ++it)
+      (*it)->stop();
+  }
+
+  void			Map::continueBombs()
+  {
+    for (std::list<BombTimer*>::iterator it = _bombs.begin();
+	 it != _bombs.end();
+	 ++it)
+      (*it)->start();
+  }
+
 unsigned int		Map::getNumberPlayers() const
 {
   return _nbJoueurs;
