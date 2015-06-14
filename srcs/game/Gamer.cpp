@@ -42,15 +42,15 @@ const Gamer::HandleKeyBook	Gamer::handleKeyBookIntro	= Gamer::getHandleKeyBookIn
 ** Constructor/Destructors
 */
 Gamer::Gamer(Map* map, ScoreList* scoreList)
-  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _viewMode(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900), _map(map), _scoreList(scoreList)
+  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _viewMode(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900), _map(map), _scoreList(scoreList), _god(false)
 {
   this->init(scoreList);
 }
 
 Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam,
 	     bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers,
-	     Map* map, ScoreList* scoreList)
-  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _viewMode(true),_player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam), _map(map), _scoreList(scoreList)
+	     Map* map, ScoreList* scoreList, bool god)
+  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _viewMode(true),_player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam), _map(map), _scoreList(scoreList), _god(god)
 {
   this->init(scoreList);
 }
@@ -73,7 +73,7 @@ void	Gamer::init(ScoreList* scoreList)
 
   _stock = new RessourceStock(nameList, _nbPlayers, scoreList, _twoPlayers, _intro);
   if (_map == NULL)
-    _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
+    _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock, _god);
   for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
     {
       player = _stock->getPlayer(i);
@@ -235,7 +235,8 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
     return false;
   _map->checkBombsOnMap();
-  updateAllAI(elapsedTime);
+  if (_map->isGod())
+    updateAllAI(elapsedTime);
   updateCamera();
   return true;
 }

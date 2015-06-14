@@ -41,8 +41,8 @@ public:
   };
 
   Map();
-  Map(std::string const&, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
-  Map(std::string const&, unsigned int, unsigned int, unsigned int, e_difficulty);
+  Map(std::string const&, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *, bool god = false);
+  Map(std::string const&, unsigned int, unsigned int, unsigned int, e_difficulty, bool god = false);
   virtual ~Map() {};
 
 public:
@@ -75,6 +75,9 @@ public:
   void			pauseBombs();
   void			continueBombs();
 
+public:
+  bool			isGod() const;
+
 private:
   std::string		_name;
   unsigned int		_order;
@@ -85,6 +88,7 @@ private:
   std::list<BombTimer*>	_bombs;
   std::list<Fire*>	_firebox;
   bool			_quit;
+  bool			_god;
 };
 
 }

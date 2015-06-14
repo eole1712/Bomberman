@@ -37,7 +37,7 @@ public:
   Gamer(Map*, ScoreList*);
   Gamer(unsigned int, unsigned int, unsigned int, unsigned int,
 	bool, std::string const&, std::string const&, unsigned int,
-	Map*, ScoreList*);
+	Map*, ScoreList*, bool god = false);
   virtual ~Gamer();
 
 public:
@@ -120,6 +120,7 @@ public:
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
   Bomberman::ScoreList*		_scoreList;
+  bool				_god;
 
 protected:
   typedef bool	(Gamer::*HandleKey)(const float elapsedTime, gdl::Input& input);

@@ -9,12 +9,14 @@ namespace Bomberman
 {
 
 Map::Map()
-{}
+{
+  _god = false;
+}
 
 Map::Map(std::string const& name, unsigned int width, unsigned int height, unsigned int nbJoueurs, e_difficulty difficulty,
-	 RessourceStock* objects)
+	 RessourceStock* objects, bool god)
   : GenericMap<IObject*>(width, height), _name(name),
-    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects), _quit(false)
+    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects), _quit(false), _god(god)
 {
   this->init(width, height);
   this->randomize();
@@ -22,9 +24,9 @@ Map::Map(std::string const& name, unsigned int width, unsigned int height, unsig
 }
 
 Map::Map(std::string const& name, unsigned int width, unsigned int height,
-	 unsigned int nbJoueurs, e_difficulty difficulty)
+	 unsigned int nbJoueurs, e_difficulty difficulty, bool god)
   : GenericMap<IObject*>(width, height), _name(name),
-    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL), _quit(false)
+    _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL), _quit(false), _god(god)
 {
   this->init(width, height);
 }
@@ -88,6 +90,11 @@ void	Map::randomize()
   	}
       y = y + 2;
     }
+}
+
+bool	Map::isGod() const
+{
+  return _god;
 }
 
 bool	Map::addNoBlocking(unsigned int x, unsigned int y)
