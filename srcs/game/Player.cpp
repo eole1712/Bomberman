@@ -16,7 +16,7 @@ namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 1;
+float const		Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::VIRUS;
@@ -81,7 +81,6 @@ float   		Player::getSpeed() const
 
 bool			Player::isIA() const
 {
-  std::cout << "player" << std::endl;
   return false;
 }
 
@@ -134,6 +133,7 @@ void			Player::resetRange()
 
 void			Player::incSpeed()
 {
+  if (_speed <= 2.5)
   _speed += 0.5;
 }
 
@@ -293,7 +293,6 @@ void			Player::initGame(Map *map)
 	  setPosition(glm::vec3(two.first + 0.5, 0, two.second + 0.5));
 	  _isPlaced = true;
 	}
-      std::cout << getX() << " " << getY() <<  std::endl;
     }
 }
 

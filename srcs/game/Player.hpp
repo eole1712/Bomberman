@@ -73,8 +73,8 @@ public:
   void			resetSpeed();
 
 private:
-  unsigned int		_speed;
-  static const unsigned int dftSpeed;
+  float			_speed;
+  static const float	dftSpeed;
 
 public:
   void			incShield();

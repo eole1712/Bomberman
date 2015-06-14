@@ -61,7 +61,6 @@ namespace Bomberman
 
 bool		PlayerAI::isIA() const
 {
-  std::cout << "a bot" << std::endl;
   return true;
 }
 

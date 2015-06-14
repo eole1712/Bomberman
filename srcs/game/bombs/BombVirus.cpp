@@ -36,6 +36,7 @@ bool		Virus::isNull() const
 
 void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
 {
+  map->killObject(x, y);
   for (int i = x; i >= 0 ; --i)
     {
       if (i == 0 ||
