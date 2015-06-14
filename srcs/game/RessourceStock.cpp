@@ -33,7 +33,7 @@ unsigned int const	RessourceStock::nbSounds = 20;
 unsigned int const	RessourceStock::nbChannels = 10;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer, bool intro)
-  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(twoPlayer)
+  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _winner(NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true), _twoPlayers(twoPlayer)
 {
   unsigned int	size = names.size();
   unsigned int	ai_id = 1;
@@ -52,10 +52,11 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
       _players[i]->linkScoreList(scoreList);
     }
   this->init();
+  toggleSounds();
 }
 
 RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _winner(NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
   unsigned int		nb;
 
@@ -202,6 +203,7 @@ unsigned int	RessourceStock::countAlivePlayers()
 {
   unsigned int	alivePlayers = 0;
 
+  _winner = NULL;
   for (unsigned int i = 0; i < _players.size(); ++i)
     {
       alivePlayers += _players[i]->isAlive();
@@ -210,6 +212,11 @@ unsigned int	RessourceStock::countAlivePlayers()
 		 : (_winner));
     }
   return (alivePlayers);
+}
+
+Player		*RessourceStock::getWinner() const
+{
+  return _winner;
 }
 
 bool	RessourceStock::isPlayerOneAlive() const
