@@ -30,7 +30,7 @@ namespace Bomberman
 {
 
 unsigned int const	RessourceStock::nbSounds = 20;
-unsigned int const	RessourceStock::nbChannels = 10;
+unsigned int const	RessourceStock::nbChannels = 5;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs,
 			       ScoreList* scoreList, bool twoPlayer, bool intro)
@@ -58,7 +58,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
   this->init();
 }
 
-RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
+RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players, ScoreList * scoreList)
   : _players(players.size(), NULL),
     _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _winner(NULL),
     _sounds(nbSounds + 2), _soundsTime(nbSounds + 2), _soundsPlaying(nbChannels, std::make_pair(nullptr, nullptr)),
@@ -72,6 +72,7 @@ RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
       _players[i] = players[i];
       if (_players[i]->isIA())
 	nb++;
+      _players[i]->linkScoreList(scoreList);
     }
   _twoPlayers = nb == 2 ? true : false;
   this->init();
@@ -199,7 +200,7 @@ SoundManager*	RessourceStock::getSound(SoundType type)
 
   if (!this->_toggleSounds)
     return (this->_calm);
-  for (i = 0 ; i < _players.size() ; ++i)
+  for (i = 0 ; i < nbChannels ; ++i)
     {
       if (this->_soundsPlaying[i].first == nullptr)
 	break;
@@ -212,6 +213,8 @@ SoundManager*	RessourceStock::getSound(SoundType type)
 	  break;
 	}
     }
+  if (i >= nbChannels)
+    return (this->_calm);
   if (type >= nbSounds - 2)
     sound = nbSounds - 2 + my_random(0, 3);
   else

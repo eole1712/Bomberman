@@ -104,7 +104,17 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
   return _stock;
 }
 
-  bool		Gamer::pauseMenu()
+void				Gamer::setMap(Bomberman::Map * map)
+{
+  _map = map;
+}
+
+void				Gamer::setRcs(Bomberman::RessourceStock *rcs)
+{
+  _stock = rcs;
+}
+
+bool		Gamer::pauseMenu()
   {
     View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_3_background.tga");
 

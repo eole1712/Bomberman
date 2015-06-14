@@ -25,10 +25,6 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time
       player->incBomb();
     }
   player->setBombType(Bomb::CLASSIC);
-//usleep(60000);
-std::cout << getElapsedTime() << std::endl;
-std::cout << _time.count() << std::endl;
-  //start();
 }
 
 BombTimer::~BombTimer()
