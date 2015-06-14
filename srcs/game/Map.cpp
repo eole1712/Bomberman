@@ -255,7 +255,6 @@ void		Map::killObject(unsigned int x, unsigned int y)
 
 RessourceStock	*Map::getRcs() const
 {
-  std::cout << _rcs << std::endl;
   return _rcs;
 }
 
