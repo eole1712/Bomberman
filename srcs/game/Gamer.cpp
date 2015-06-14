@@ -182,7 +182,6 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   float		elapsedTime = static_cast<float>(clock.getElapsed()) * 60;
   static Timer*	endTimer = NULL;
 
-  // If the escape key is pressed or if the window has been closed we stop the program
   if (_resume)
     {
       _camera.updateView();
@@ -193,7 +192,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if ((!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive()) || _map->hasToQuit())
     {
       if (endTimer == NULL)
-  	endTimer = new Timer(5000000);
+  	endTimer = new Timer(4000000);
       if (endTimer->isFinished())
   	{
   	  delete endTimer;
@@ -416,10 +415,24 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   angle = (angle + 1) % 360;
 }
 
+void		Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
+{
+  if (!player->isAlive() || !_map->hasToQuit() || _map->getRcs()->getWinner() != player)
+    return;
+
+  View2d*	win = !_twoPlayers ?
+    new View2d(0, 0, 1800, 900, "resources/assets/textures/win1p.tga") :
+    new View2d(0, 0, 900, 900, "resources/assets/textures/win2p.tga");
+
+  shader.setUniform("view", glm::mat4());
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
+  win->draw(shader);
+}
+
 void		Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
 {
   if (player->isAlive() || player->getDeadTimer()->isFinished())
-    return;
+    return drawEndWin(shader, player);
 
   View2d*	lose = !_twoPlayers ?
     new View2d(0, 0, 1800, 900, "resources/assets/textures/lose1p.tga") :
