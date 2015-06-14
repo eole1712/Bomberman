@@ -65,6 +65,12 @@ public:
   CameraObject			&getCamera(unsigned int);
   bool				is2Players();
 
+public:
+  void				setRcs(RessourceStock*);
+  void				setMap(Map*);
+  void				setWidth(unsigned int);
+  void				setHeight(unsigned int);
+
 protected:
   void				updateCamera();
   void				updateAllAI(const float elapsedTime);

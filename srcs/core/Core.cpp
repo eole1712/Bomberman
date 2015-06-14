@@ -430,7 +430,24 @@ void		Core::firstMenu()
   grid->addObject(text2, [this, &grid] (void) {
     this->gameMenu();
   });
-  grid->addObject(text1, [] (void) {
+  grid->addObject(text1, [this] (void) {
+    Gamer *tmpGame = NULL;
+    Player* player;
+    JSONDoc j;
+    if (j.parse("resources/SavedDatas.json"))
+      {
+	std::cout << "Ca marche" << std::endl;
+	tmpGame = j.unserialize<Bomberman::Gamer*>("");
+    for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+      {
+	player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
+	player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
+					  _assets[PLAYER]->getAnimationSpeed());
+      }
+    _prev = _game;
+    _change = true;
+    _game = tmpGame;
+      }
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
   });
   grid->addObject(text3, [] (void) {

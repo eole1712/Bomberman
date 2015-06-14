@@ -53,16 +53,22 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
   this->init();
 }
 
-RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
+RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players, ScoreList *scoreList)
   : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
 {
+
+
   for (unsigned int i = 0; i < players.size(); ++i)
-    _players[i] = players[i];
+    {
+      _players[i] = players[i];
+      dynamic_cast<Player*>(_players[i])->linkScoreList(scoreList);
+    }
   this->init();
 }
 
 RessourceStock::~RessourceStock()
 {
+  std::cout << "delete of rs" << std::endl;
   for (unsigned int i = 0; i < _players.size(); ++i)
     delete _players[i];
   for (unsigned int i = 0; i < _buffs.size(); ++i)
@@ -169,7 +175,8 @@ Player		*RessourceStock::getPlayer(std::string const &name) const
 {
   Bomberman::Player* play;
 
-  for (unsigned int i = 0; i < _players.size(); ++i)
+
+for (unsigned int i = 0; i < _players.size(); ++i)
     {
       if (((play = dynamic_cast<Player *>(_players[i]))->getName()) == name)
 	  return play;

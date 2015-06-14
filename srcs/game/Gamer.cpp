@@ -115,7 +115,17 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
   return _stock;
 }
 
-  bool		Gamer::pauseMenu()
+void				Gamer::setRcs(Bomberman::RessourceStock *rcs)
+{
+  _stock = rcs;
+}
+
+void				Gamer::setMap(Bomberman::Map * map)
+{
+  _map = map;
+}
+
+bool		Gamer::pauseMenu()
   {
     Text2d*	save = new Text2d("Save Game", 200, 100, 800, 75, "resources/assets/textures/alpha3Blue.tga");
     Text2d*	resume = new Text2d("Resume Game", 200, 250, 800, 75, "resources/assets/textures/alpha3Blue.tga");
@@ -277,8 +287,16 @@ Player		*Gamer::randAlivePlayer() const
 		  }
 		else
 		  {
+		    // std::cout << "start test" << std::endl;
+		    // std::cout << _map->getCellValue(pos.x, pos.z) << std::endl;
+		    // std::cout << _map->getCellValue(pos.x, pos.z)->getObjectType() << " and ";
+		    // std::cout << ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()] << std::endl;
+		    // if (!assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]])
+		    //   std::cout << "dommage" << std::endl;
+		    // std::cout << "end test" << std::endl;
 		    assets[ObjectToAsset[_map->getCellValue(pos.x, pos.z)->getObjectType()]]
 		      ->setPosition(pos);
+		    // std::cout << "good" << std::endl;
 		    if (IObject::MINE <= _map->getCellValue(pos.x, pos.z)->getObjectType() ||
 			IObject::BONUS == _map->getCellValue(pos.x, pos.z)->getObjectType())
 		      {

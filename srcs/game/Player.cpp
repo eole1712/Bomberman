@@ -22,13 +22,13 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation(), _id(0)
 {
   this->init();
 }
 
 Player::Player()
-  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(glm::vec4(1)), _scoreList(NULL), animation()
+  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(glm::vec4(1)), _scoreList(NULL), animation(), _id(0)
 {
   this->init();
 }
@@ -549,6 +549,16 @@ void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
       else
 	shader.setUniform("color", glm::vec4(0));
     }
+}
+
+int			Player::getId() const
+{
+  return _id;
+}
+
+void			Player::setId(int id)
+{
+  _id = id;
 }
 
 }

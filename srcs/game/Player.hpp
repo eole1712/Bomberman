@@ -183,6 +183,14 @@ public:
   glm::vec3		getNewPos(Player const *) const;
   glm::vec3		getAbsVec(Player const *sec) const;
 
+public:
+  int			getId() const;
+  void			setId(int);
+
+private:
+  int			_id;
+
+
 };
 
 }
