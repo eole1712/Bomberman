@@ -43,6 +43,7 @@ public:
   void			startGame(bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int, unsigned int, unsigned int);
   void			gameMenu();
   void			firstMenu();
+  void			scoreMenu();
   bool			isOver() const;
   void			intro();
 
