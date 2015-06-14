@@ -75,7 +75,9 @@ for k, v in pairs(adjCells)
 do
    if (#route > 0 and isInMap(map, v.x, v.y) and v.shouldMove(player, route[1].x, route[1].y))
    then
-      if ((map:getCell(v.x, v.y) == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
+      local adjCellType = map:getCell(v.x, v.y)
+
+      if ((adjCellType == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
       then
 	 if (player.nbBomb > 0) then
 	    player:putBomb()
@@ -83,7 +85,7 @@ do
 	    route = {} -- clean route so the route will be set with an updated map
 	    break
 	 end
-      elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
+      elseif (adjCellType == SAFE or adjCellType == BONUS or
 	      currentCellType ~= SAFE)
       then
 	 --	    debug(v.moveDesc)
