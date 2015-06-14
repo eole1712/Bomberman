@@ -210,7 +210,7 @@ Bomberman::Player*				JSONDoc::unserialize<Bomberman::Player*>(std::string const
 	  {
 	    try {
 	      Bomberman::Player* ret = new Bomberman::Player(player["name"].GetString(), glm::vec4(player["red"].GetDouble(),
-												   player["green"].GetDouble(), player["blue"].GetDouble(), 0));
+												   player["green"].GetDouble(), player["blue"].GetDouble(), 1));
 	      ret->setPosition(glm::vec3(player["xPos"].GetDouble(), 0, player["yPos"].GetDouble()));
 	      SmartFactory<Bomberman::IBuff>* fac = Bomberman::Buff::Factory::getInstance();
 	      if (player.HasMember("buffs"))
@@ -570,41 +570,51 @@ void	JSONDoc::serialize(const Bomberman::Gamer& obj)
 
   if (_doc.HasMember("Players"))
     _doc.RemoveMember("Players");
+  if (_doc.HasMember("twoPlayers"))
+    _doc.RemoveMember("twoPlayers");
+  _doc.AddMember("twoPlayers", obj.is2Players(), _doc.GetAllocator());
   rs = obj.getRessourceStock();
   map = obj.getMap();
   for (unsigned int i = 0; i < rs->getNbPlayer(); ++i)
     {
       serialize<Bomberman::Player>(*rs->getPlayer(i));
       rs->getPlayer(i)->setId(i);
-      if (!rs->getPlayer(i)->isIA())
-	{
-	  rapidjson::Value & object(_doc["Players"]);
+      if (!dynamic_cast<Bomberman::PlayerAI*>(rs->getPlayer(i)))
+    	{
+      	  rapidjson::Value & object(_doc["Players"]);
 	  for (rapidjson::Value::ValueIterator it = object.Begin(); it != object.End(); ++it)
-	    {
-	      rapidjson::Value& player = *it;
-	      if (!player.HasMember("id"))
-		{
-		  player.AddMember("id", i, _doc.GetAllocator());
-		}
-	      if (player.HasMember("name") && player["name"].GetString() == rs->getPlayer(i)->getName() && player.HasMember("IA"))
-		player["IA"] = false;
-	    }
-	}
+      	    {
+      	      rapidjson::Value& player = *it;
+      	      if (player.HasMember("name") && player["name"].GetString() == rs->getPlayer(i)->getName() && player.HasMember("IA"))
+      		player["IA"] = false;
+      	    }
+      	}
     }
+   rapidjson::Value & object(_doc["Players"]);
+      unsigned int i = 0;
+      for (rapidjson::Value::ValueIterator it = object.Begin(); it != object.End(); ++it)
+	{
+	  rapidjson::Value& player = *it;
+	  if (!player.HasMember("id"))
+	    player.AddMember("id", i, _doc.GetAllocator());
+	  ++i;
+	}
   serialize(*map);
   writeDown("resources/SavedDatas.json");
+  std::cout << "end serialize" << std::endl;
 }
 
 template <>
 Bomberman::Gamer *JSONDoc::unserialize<Bomberman::Gamer*>(std::string const&) const
 {
   Bomberman::Gamer* game;
-  Bomberman::Map* map = unserialize<Bomberman::Map*>("");
+  Bomberman::Map* map;
   std::vector<Bomberman::Player*> players;
   Bomberman::RessourceStock* rc;
   int nbPlayers = 0;
   JSONDoc j;
   Bomberman::ScoreList* sList;
+  bool	twoPlayers = false;
 
   if (_doc.HasMember("Players"))
     {
@@ -620,20 +630,23 @@ Bomberman::Gamer *JSONDoc::unserialize<Bomberman::Gamer*>(std::string const&) co
 	  //player->initGame(player->getX(), player->getY(), map);
 	  if (!(*it)["IA"].GetBool())
 	    ++nbPlayers;
-
 	}
     }
+  if (_doc.HasMember("twoPlayers"))
+    twoPlayers = _doc["twoPlayers"].GetBool();
   if (!j.parse("./resources/json/Gamedata.json"))
     sList = new Bomberman::ScoreList;
   else
     sList = j.unserialize<Bomberman::ScoreList*>();
   rc = new Bomberman::RessourceStock(players, sList);
-  game = new Bomberman::Gamer(map->getWidth(), map->getHeight(), 1800, 900, (!nbPlayers == 1), "", "", players.size());
-  game->setRcs(rc);
+  map = unserialize<Bomberman::Map*>("");
   map->setRcs(rc);
+  game = new Bomberman::Gamer(map->getWidth(), map->getHeight(), (!twoPlayers) ? 1800 : 900, 900, twoPlayers, "", "", players.size());
+  game->setRcs(rc);
+
   for (std::vector<Bomberman::Player*>::iterator it = players.begin(); it != players.end(); ++it)
     (*it)->initGame((*it)->getX(), (*it)->getY(), map);
   game->setMap(map);
-  std::cout << "rcs init : " << map->getRcs() << std::endl;
+  std::cout << "json map ptr : " << map << std::endl;
   return game;
 }

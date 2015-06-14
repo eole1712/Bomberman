@@ -27,6 +27,7 @@ void		Score::inc(RessourceStock* rcs)
       if (this->_timer != NULL)
 	{
 	  delete this->_timer;
+	  this->_timer = NULL;
 	  this->_killStreak = 0;
 	}
       this->_timer = new Timer(Score::dftTime * 1000000);

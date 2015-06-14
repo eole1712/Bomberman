@@ -399,6 +399,26 @@ void		Core::gameMenu()
   _game = grid;
 }
 
+void		Core::scoreMenu()
+{
+  MenuGrid*	grid = new MenuGrid;
+  View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_score.tga");
+  View2d*	back = new View2d(458, 768, 619, 106, "resources/assets/textures/menu_score_back.tga");
+
+  background->unFocus();
+  grid->addObject(background, [] (void) {
+
+  });
+
+  grid->addObject(back, [this] (void) {
+    firstMenu();
+  });
+
+  _prev = _game;
+  _change = true;
+  _game = grid;
+}
+
 void		Core::firstMenu()
 {
   MenuGrid*	grid = new MenuGrid;
@@ -435,8 +455,8 @@ void		Core::firstMenu()
       }
     std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
   });
-  grid->addObject(text3, [] (void) {
-    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
+  grid->addObject(text3, [this] (void) {
+    scoreMenu();
   });
   grid->addObject(text4, [this] (void) {
     this->_status = true;
@@ -445,6 +465,7 @@ void		Core::firstMenu()
   _change = true;
   _game = grid;
 }
+
 
 bool		Core::update()
 {

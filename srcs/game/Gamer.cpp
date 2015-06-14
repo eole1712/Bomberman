@@ -114,6 +114,11 @@ void				Gamer::setRcs(Bomberman::RessourceStock *rcs)
   _stock = rcs;
 }
 
+bool				Gamer::is2Players() const
+{
+  return _twoPlayers;
+}
+
 bool		Gamer::pauseMenu()
   {
     View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_3_background.tga");
@@ -217,6 +222,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       if (endTimer->isFinished())
   	{
   	  delete endTimer;
+	  endTimer = NULL;
   	  _quit = true;
   	}
     }

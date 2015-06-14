@@ -65,7 +65,7 @@ private:
 
 public:
   CameraObject			&getCamera(unsigned int);
-  bool				is2Players();
+  bool				is2Players() const;
 
 public:
   void				setRcs(RessourceStock*);
