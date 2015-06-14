@@ -393,10 +393,30 @@ void		Core::gameMenu()
     startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai);
   });
   grid->addObject(back, [this] (void) {
-    firstMenu();
+    scoreMenu();
   });
 
 
+
+  _prev = _game;
+  _change = true;
+  _game = grid;
+}
+
+void		Core::scoreMenu()
+{
+  MenuGrid*	grid = new MenuGrid;
+  View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/background_score.tga");
+  View2d*	back = new View2d(1600, 400, 619, 106, "resources/assets/textures/background_score_back.tga");
+
+  background->unFocus();
+  grid->addObject(background, [this] (void) {
+    firstMenu();
+  });
+
+  grid->addObject(back, [] (void) {
+    ;
+  });
 
   _prev = _game;
   _change = true;
@@ -449,6 +469,7 @@ void		Core::firstMenu()
   _change = true;
   _game = grid;
 }
+
 
 bool		Core::update()
 {
