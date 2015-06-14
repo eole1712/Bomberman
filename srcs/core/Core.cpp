@@ -435,11 +435,25 @@ void		Core::selectMenu()
   _game = grid;
 }
 
+unsigned int	Core::lengthCalc(unsigned int nb)
+{
+  unsigned int	result = 0;
+
+  while (nb > 9)
+    {
+      ++result;
+      nb = nb / 10;
+    }
+  return (result);
+}
+
 void		Core::scoreMenu()
 {
   MenuGrid*	grid = new MenuGrid;
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_score.tga");
   View2d*	back = new View2d(458, 768, 619, 106, "resources/assets/textures/menu_score_back.tga");
+  std::vector<std::pair<std::string, unsigned int> >	top5 = _scoreList->top(5);
+  Text2d*	top[5];
 
   background->unFocus();
   grid->addObject(background, [] (void) {
@@ -449,6 +463,19 @@ void		Core::scoreMenu()
   grid->addObject(back, [this] (void) {
     firstMenu();
   });
+
+  for (unsigned int i = 0 ; i < 5 ; ++i)
+    {
+      if (top5[i].first != "")
+	{
+	  top[i] = new Text2d((top5[i].first + std::string(14 - top5[i].first.size() - lengthCalc(top5[i].second), ' ')
+			       + Conversion::typeToString<unsigned int>(top5[i].second)),
+			      410, 280 + (i * ((i < 3) ? (110) : (102))), 1200, 55,
+			      "resources/assets/textures/alpha3Blue.tga");
+	  top[i]->unFocus();
+	  grid->addObject(top[i], [] (void) {});
+	}
+    }
 
   _prev = _game;
   _change = true;
@@ -522,6 +549,21 @@ void		Core::draw()
 {
   _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
+}
+
+gdl::SdlContext		&Core::getContext()
+{
+  return _context;
+}
+
+gdl::Clock		&Core::getClock()
+{
+  return _clock;
+}
+
+gdl::BasicShader	&Core::getShader()
+{
+  return _shader;
 }
 
 bool			Core::isOver() const
