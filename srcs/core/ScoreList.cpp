@@ -16,6 +16,54 @@ ScoreList::~ScoreList()
   ;
 }
 
+bool	ScoreList::contains(std::vector<std::pair<std::string, unsigned int> > const& list,
+			    std::pair<std::string, unsigned int> const& element) const
+{
+  bool	result = false;
+
+  std::for_each(list.begin(), list.end(), [element, &result] (std::pair<std::string, unsigned int> pair) {
+    if (pair.first == element.first && pair.second == element.second)
+      result = true;
+  });
+  return (result);
+}
+
+std::vector<std::pair<std::string, unsigned int> >	ScoreList::top(unsigned int nb) const
+{
+  unsigned int						size = 0;
+  unsigned int						diff = 0;
+  std::vector<std::pair<std::string, unsigned int> >	top;
+
+  std::for_each(_scores.begin(), _scores.end(), [&size] (std::pair<std::string, std::list<unsigned int> > pair) {
+    size += pair.second.size();
+  });
+
+  if (size < nb)
+    {
+      diff = nb - size;
+      nb = size;
+    }
+  for (unsigned int i = 0 ; i < nb ; ++i)
+    {
+      std::pair<std::string, unsigned int>	tmp = std::make_pair("", 0);
+
+      std::for_each(_scores.begin(), _scores.end(), [this, &top, &tmp] (std::pair<std::string, std::list<unsigned int> > pair) {
+	std::list<unsigned int>	list = pair.second;
+
+	std::for_each(list.begin(), list.end(), [this, &top, &tmp, &pair] (unsigned int val) {
+	  if (!contains(top, std::make_pair(pair.first, val)))
+	    tmp = ((val >= tmp.second) ? (std::make_pair(pair.first, val)) : (tmp));
+	});
+      });
+
+      top.push_back(tmp);
+    }
+
+  for (unsigned int i = 0 ; i < diff ; ++i)
+    top.push_back(std::make_pair("", 0));
+  return (top);
+}
+
 int	ScoreList::getBestScore(const std::string &name) const
 {
   std::unordered_map<int, int> _map;

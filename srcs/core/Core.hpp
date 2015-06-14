@@ -46,6 +46,7 @@ public:
   void			gameMenu();
   void			selectMenu();
   void			firstMenu();
+  unsigned int		lengthCalc(unsigned int);
   void			scoreMenu();
   bool			isOver() const;
   void			intro();
