@@ -198,13 +198,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType, rec)
       i = i + 1
    end
 
-   -- print "------- maincoo"
-   -- for k, v in pairs(mainCoo)
-   -- do
-   --    print(v.x, v.y, v.count)
-   -- end
-   -- print "--------- end"
-
    local path = { { x = xStart, y = yStart } }
    local count = 1
 
