@@ -48,19 +48,18 @@ bool		IBomb::exploseCase(Map *map, int x, int y,
   if (map->getCellValue(x, y)->getObjectType() == IObject::DESTROYABLEWALL ||
       map->getCellValue(x, y)->getObjectType() == IObject::WALL)
     {
-      // if (map->getCellValue(x, y)->getObjectType() == IObject::DESTROYABLEWALL)
-      // 	{
-      // 	  int		d = my_random(0, IBuff::prob);
+      if (map->getCellValue(x, y)->getObjectType() == IObject::DESTROYABLEWALL)
+      	{
+      	  int		d = my_random(0, IBuff::prob);
 
-      // 	  if (d < (IBuff::nbBuff + 8))
-      // 	    {
-      // 	      d = d >= IBuff::nbBuff ? (int)(IBuff::WEAPON) : d;
-      // 	      map->setCellValue(x, y, map->getRcs()->getBuff((IBuff::Type)(d)));
-      // 	    }
-      // 	  else
-      // 	    map->addFire(player, x, y, Fire::explosionTime / (r + 1));
-      // 	}
-      map->setCellValue(x, y, map->getRcs()->getBuff(IBuff::PARALYZED));
+      	  if (d < (IBuff::nbBuff + 8))
+      	    {
+      	      d = d >= IBuff::nbBuff ? (int)(IBuff::WEAPON) : d;
+      	      map->setCellValue(x, y, map->getRcs()->getBuff((IBuff::Type)(d)));
+      	    }
+      	  else
+      	    map->addFire(player, x, y, Fire::explosionTime / (r + 1));
+      	}
       return true;
     }
   isOtherBomb(map, x, y, player, x2, y2, Fire::explosionTime / (r + 1));
