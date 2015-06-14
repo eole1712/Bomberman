@@ -36,13 +36,13 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1800), _height(900)
+  : _game(NULL), _change(false), _width(1800), _height(900)
 {
   init();
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
-  : _change(false), _width(width), _height(height)
+  : _game(NULL), _change(false), _width(width), _height(height)
 {
   init();
 }
@@ -56,7 +56,8 @@ Core::~Core()
   _json->writeDown("./resources/json/Gamedata.json");
   delete (_mapList);
   delete (_scoreList);
-  delete _game;
+  if (_game != NULL)
+    delete _game;
   delete _json;
 }
 
