@@ -24,7 +24,6 @@ namespace Bomberman
       };
 
   public:
-    PlayerAI(std::string const& name, std::string const& script);
     PlayerAI(std::string const& name, std::string const& script, glm::vec4 color);
     virtual ~PlayerAI();
 

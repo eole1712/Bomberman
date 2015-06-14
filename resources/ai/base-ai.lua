@@ -231,7 +231,7 @@ function targetEnemy(map, player)
 
    while (idx < map:getNbPlayers())
    do
-      if ((player.x ~= map:getPlayerPosX(idx) and player.y ~= map:getPlayerPosY(idx)) and
+      if (map:getPlayerName(idx) ~= player.name and
 	    (res.x == -1 or res.y == -1 or
 		(math.abs(player.x - map:getPlayerPosX(idx)) +
 		    math.abs(player.y - map:getPlayerPosY(idx)) <

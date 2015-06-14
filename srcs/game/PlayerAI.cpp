@@ -14,15 +14,6 @@ namespace Bomberman
   /*
   ** Constructor/Destructor
   */
-  PlayerAI::PlayerAI(std::string const& name, std::string const& script) :
-    Player() /* tmp */, LuaScript(script), _aiAction(NULL), _moveDir(NONE)
-  {
-    luaObjectInit();
-    run();
-    loadAIData();
-    static_cast<void>(name);
-  }
-
   PlayerAI::PlayerAI(std::string const& name,
 		     std::string const& script, glm::vec4 color) :
     Player(name, color), LuaScript(script), _aiAction(NULL), _moveDir(NONE)
@@ -264,6 +255,7 @@ bool		PlayerAI::isIA() const
       .addFunction("toString", &AI::StateMap::toString)
       .addFunction("getPlayerPosX", &AI::StateMap::getPlayerPosX)
       .addFunction("getPlayerPosY", &AI::StateMap::getPlayerPosY)
+      .addFunction("getPlayerName", &AI::StateMap::getPlayerName)
       .addFunction("getNbPlayers", &AI::StateMap::getNbPlayers)
       .addFunction("getCell", &AI::StateMap::getIntCell)
       .endClass();
