@@ -47,12 +47,6 @@ void		Text2d::update()
       _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size),
 				    _y + 40 * _size,
 				    0));
-
-      // _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size), _y, 0));
-      // _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
-      // _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
-      // _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size), _y + 40 * _size, 0));
-
       _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i), 1.0f));
       _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 1.0f));
       _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 0.0f));
@@ -105,9 +99,7 @@ void	Text2d::draw(gdl::BasicShader shader)
   if (!_hidden)
     {
       for (it = _geo.begin(); it != _geo.end(); it++)
-	{
-	  (*it)->draw(shader, glm::mat4(), GL_QUADS);
-	}
+	(*it)->draw(shader, glm::mat4(), GL_QUADS);
     }
 }
 

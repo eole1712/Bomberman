@@ -129,15 +129,14 @@ void		Core::attachObject(Asset3d *obj)
   _assets.push_back(obj);
 }
 
-// 959 / 388
-// 551 / 112
-
 void				Core::intro()
 {
   Player	*player;
   Gamer		*tmpGame;
   View2d*	intro = new View2d(0, 0, 741, 300, "resources/assets/textures/intro_1.tga");
   View2d*	intro2 = new View2d(580, 670, 639, 130, "resources/assets/textures/intro_2.tga");
+  Timer		timer(30000000);
+  unsigned int	x = 1;
 
   tmpGame = new Gamer(NULL, NULL);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
@@ -148,10 +147,6 @@ void				Core::intro()
       player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
 					 _assets[PLAYER]->getAnimationSpeed()));
     }
-
-  Timer		timer(30000000);
-  unsigned int	x = 1;
-
   while (tmpGame->update(_clock, _input))
     {
       if (timer.isFinished())
@@ -203,9 +198,7 @@ void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const&
 void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_2_background.tga");
-
   Text2d*	map_height = new Text2d("20", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	map_width = new Text2d("20", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	aiField = new Text2d("10", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
@@ -218,35 +211,26 @@ void		Core::gameMenu()
   View2d*	back = new View2d(1500, 820, 250, 60, "resources/assets/textures/menu_2_back.tga");
 
   p1Field->setModifiable();
-
   p2Field->setModifiable();
   p2Field->unFocus();
   p2Field->setHidden(true);
-
   p2TextBackGround->unFocus();
   p2TextBackGround->setHidden(true);
-
   p1TextBackGround->unFocus();
-
   aiField->setDynamic();
   pField->setDynamic();
   map_height->setDynamic();
   map_width->setDynamic();
-
   background->unFocus();
-
   grid->addObject(background, [] (void) {
     ;
   });
-
   grid->addObject(p1TextBackGround, [] (void) {
     ;
   });
-
   grid->addObject(p2TextBackGround, [] (void) {
     ;
   });
-
   grid->addDynObject(map_width, [] (void) {
   },
   [aiField, map_width, map_height, pField] (void) {
@@ -274,7 +258,6 @@ void		Core::gameMenu()
     value = Conversion::stringToType<int>(map_width->getText()) + 1;
     map_width->setText(Conversion::typeToString(value));
   });
-
   grid->addDynObject(map_height, [] (void) {
   },
   [aiField, map_width, map_height, pField] (void) {
@@ -382,14 +365,12 @@ void		Core::gameMenu()
 	value = 2;
       }
 
-
     nbAI = Conversion::stringToType<int>(aiField->getText());
     mapX = Conversion::stringToType<int>(map_width->getText());
     mapY = Conversion::stringToType<int>(map_height->getText());
     if (value + nbAI > (mapX * mapY / 16))
       nbAI = (mapX * mapY / 16) - value;
     aiField->setText(Conversion::typeToString(nbAI));
-
 
     pField->setText(Conversion::typeToString(value));
   });
@@ -398,7 +379,8 @@ void		Core::gameMenu()
   grid->addObject(p2Field, [p2Field] (void) {
   });
   grid->addObject(start, [this, p1Field, p2Field, map_height, map_width, aiField, pField] (void) {
-    /// START GAME
+    // START GAME
+
     int height = Conversion::stringToType<int>(map_height->getText());
     int width = Conversion::stringToType<int>(map_width->getText());
     int ai = Conversion::stringToType<int>(aiField->getText());
