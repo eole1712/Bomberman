@@ -18,12 +18,17 @@ BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb)
 BombTimer::BombTimer(Player *player, unsigned int range, IBomb *bomb, float time, unsigned int x, unsigned int y, bool isVirus)
   : Timer(time * 1000000), _player(player), _range(range), _bomb(bomb), _x(x), _y(y), _isFinished(false), _isVirus(isVirus), _byPlayer(false)
 {
+  if (_bomb == NULL)
+    std::cout << "c'est null" << std::endl;
   if (!_isVirus && bomb->getBombType() == Bomb::MINE)
     {
       player->incBomb();
     }
   player->setBombType(Bomb::CLASSIC);
-  start();
+//usleep(60000);
+std::cout << getElapsedTime() << std::endl;
+std::cout << _time.count() << std::endl;
+  //start();
 }
 
 BombTimer::~BombTimer()

@@ -562,4 +562,14 @@ void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
     }
 }
 
+int			Player::getId() const
+{
+  return _id;
+}
+
+void			Player::setId(int id)
+{
+  _id = id;
+}
+
 }

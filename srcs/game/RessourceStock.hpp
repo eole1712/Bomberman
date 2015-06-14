@@ -27,7 +27,7 @@ public:
   static unsigned int const	nbChannels;
 
   RessourceStock(std::vector<std::string> const &, unsigned int, ScoreList*, bool, bool intro = false);
-  RessourceStock(std::vector<Bomberman::Player*> const& players);
+  RessourceStock(std::vector<Bomberman::Player*> const& players, ScoreList*);
   virtual ~RessourceStock();
   RessourceStock(const RessourceStock &);
   RessourceStock &operator=(const RessourceStock &);

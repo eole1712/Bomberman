@@ -30,7 +30,7 @@ namespace Bomberman
 {
 
 unsigned int const	RessourceStock::nbSounds = 20;
-unsigned int const	RessourceStock::nbChannels = 10;
+unsigned int const	RessourceStock::nbChannels = 5;
 
 RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs,
 			       ScoreList* scoreList, bool twoPlayer, bool intro)
@@ -199,7 +199,7 @@ SoundManager*	RessourceStock::getSound(SoundType type)
 
   if (!this->_toggleSounds)
     return (this->_calm);
-  for (i = 0 ; i < _players.size() ; ++i)
+  for (i = 0 ; i < nbChannels ; ++i)
     {
       if (this->_soundsPlaying[i].first == nullptr)
 	break;
@@ -212,6 +212,8 @@ SoundManager*	RessourceStock::getSound(SoundType type)
 	  break;
 	}
     }
+  if (i >= nbChannels)
+    return (this->_calm);
   if (type >= nbSounds - 2)
     sound = nbSounds - 2 + my_random(0, 3);
   else

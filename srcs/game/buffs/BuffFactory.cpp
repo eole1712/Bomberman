@@ -6,6 +6,7 @@
 #include "BuffIncRange.hpp"
 #include "BuffParalyzed.hpp"
 #include "BuffIncSpeed.hpp"
+#include "BuffWeapon.hpp"
 
 namespace Bomberman
 {
@@ -20,6 +21,7 @@ namespace Bomberman
       learn(new Bomberman::Buff::IncRange);
       learn(new Bomberman::Buff::DecSpeed);
       learn(new Bomberman::Buff::Paralyzed);
+      learn(new Bomberman::Buff::Weapon);
     }
 
     Factory::~Factory()

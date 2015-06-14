@@ -186,10 +186,13 @@ public:
   glm::vec3		getAbsVec(Player const *sec) const;
 
 public:
-  Timer*		getDeadTimer() const;
+	int			getId() const;
+	void		setId(int); 
+ 	Timer*		getDeadTimer() const;
 
 private:
   Timer			*_timeDead;
+  int			_id;
 
 };
 

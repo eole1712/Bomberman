@@ -46,6 +46,7 @@ public:
 
 public:
   RessourceStock	*getRcs() const;
+  void			setRcs(RessourceStock*);
   typedef std::pair<unsigned int, unsigned int> TwoInt;
   TwoInt		findEmptySpawn();
   float			calcLong(unsigned int x1, unsigned int y1,
@@ -66,6 +67,7 @@ public:
   void		killPlayers(unsigned int x, unsigned int y, Player *);
   void		checkBombsOnMap();
   void		addBomb(BombTimer*);
+  void		addFire(Fire*);
   void		addFire(Player*, unsigned int, unsigned int);
   void		addFire(Player*, unsigned int, unsigned int, float);
 

@@ -255,7 +255,13 @@ void		Map::killObject(unsigned int x, unsigned int y)
 
 RessourceStock	*Map::getRcs() const
 {
+  std::cout << _rcs << std::endl;
   return _rcs;
+}
+
+void			Map::setRcs(RessourceStock* rcs)
+{
+  _rcs = rcs;
 }
 
 bool		Map::hasToQuit() const
@@ -332,6 +338,11 @@ void		Map::checkBombsOnMap()
 void		Map::addBomb(BombTimer *bomb)
 {
   _bombs.push_back(bomb);
+}
+
+void		Map::addFire(Fire* fire)
+{
+  _firebox.push_back(fire);
 }
 
 void		Map::addFire(Player *player, unsigned int x, unsigned int y)
