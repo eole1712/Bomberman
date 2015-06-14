@@ -410,10 +410,46 @@ void		Core::gameMenu()
     startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai, "");
   });
   grid->addObject(back, [this] (void) {
-    firstMenu();
+    selectMenu();
   });
 
 
+
+  _prev = _game;
+  _change = true;
+  _game = grid;
+}
+
+void		Core::selectMenu()
+{
+  MenuGrid*	grid = new MenuGrid;
+  View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_select.tga");
+  View2d*	map1 = new View2d(195, 200, 330, 136, "resources/assets/textures/menu_select_map1.tga");
+  View2d*	map2 = new View2d(200, 300, 330, 136, "resources/assets/textures/menu_select_map2.tga");
+  View2d*	map3 = new View2d(200, 400, 330, 136, "resources/assets/textures/menu_select_map3.tga");
+  View2d*	custom = new View2d(700, 650, 636, 126, "resources/assets/textures/menu_select_custom.tga");
+  View2d*	back = new View2d(1500, 750, 264, 124, "resources/assets/textures/menu_select_back.tga");
+
+  background->unFocus();
+  grid->addObject(background, [] (void) {
+
+  });
+  grid->addObject(map1, [this] (void) {
+    gameMenu();
+  });
+  grid->addObject(map2, [this] (void) {
+    gameMenu();
+  });
+  grid->addObject(map3, [this] (void) {
+    gameMenu();
+  });
+  grid->addObject(custom, [this] (void) {
+    gameMenu();
+  });
+
+  grid->addObject(back, [this] (void) {
+    firstMenu();
+  });
 
   _prev = _game;
   _change = true;
@@ -454,7 +490,7 @@ void		Core::firstMenu()
     ;
   });
   grid->addObject(text2, [this, &grid] (void) {
-    this->gameMenu();
+    this->selectMenu();
   });
   grid->addObject(text1, [this] (void) {
     Gamer *tmpGame = NULL;
