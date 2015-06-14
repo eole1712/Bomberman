@@ -68,6 +68,8 @@ namespace Bomberman
 
   protected:
     static const MoveBook	moveBook;
+  public:
+    static const std::string	scriptName;
   };
 }
 

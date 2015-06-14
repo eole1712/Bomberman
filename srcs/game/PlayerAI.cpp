@@ -6,10 +6,13 @@
 
 namespace Bomberman
 {
+
+
   /*
   ** Static variables
   */
   const PlayerAI::MoveBook	PlayerAI::moveBook	= PlayerAI::getMoveBook();
+const std::string	PlayerAI::scriptName	= "resources/ai/base-ai.lua";
 
   /*
   ** Constructor/Destructor

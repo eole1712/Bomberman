@@ -49,7 +49,7 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
       else
 	{
 	  _players[i] = new PlayerAI("AI" + Conversion::typeToString<unsigned int>(ai_id),
-				     "resources/ai/base-ai.lua",
+				     PlayerAI::scriptName,
 				     Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
 	  ++ai_id;
 	}
