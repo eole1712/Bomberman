@@ -235,7 +235,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
     return false;
   _map->checkBombsOnMap();
-  if (_map->isGod())
+  if (!_map->isGod())
     updateAllAI(elapsedTime);
   updateCamera();
   return true;
