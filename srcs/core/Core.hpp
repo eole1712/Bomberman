@@ -44,6 +44,7 @@ public:
   void			startGame(bool, std::string const&, std::string const&,
 				  unsigned int, unsigned int, unsigned int, std::string);
   void			gameMenu();
+  void			selectMenu();
   void			firstMenu();
   void			scoreMenu();
   bool			isOver() const;
@@ -64,10 +65,6 @@ private:
   Bomberman::ScoreList*		_scoreList;
 
 public:
-  gdl::SdlContext		&getContext();
-  gdl::Clock			&getClock();
-  gdl::BasicShader		&getShader();
-
 private:
   int				_width;
   int				_height;

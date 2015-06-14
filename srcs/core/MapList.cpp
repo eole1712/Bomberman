@@ -29,12 +29,12 @@ void	MapList::addMap(Map* map)
   this->_maps.insert(std::make_pair(map->getName(), std::make_pair(map->getWidth(), map->getHeight())));
 }
 
-void	MapList::addMap(std::string name, unsigned int width, unsigned int height)
+void	MapList::addMap(std::string const& name, unsigned int width, unsigned int height)
 {
   this->_maps.insert(std::make_pair(name, std::make_pair(width, height)));
 }
 
-std::unordered_map<std::string, std::pair<unsigned int, unsigned int> >	MapList::getMapList() const
+std::unordered_map<std::string, std::pair<unsigned int, unsigned int> > const&	MapList::getMapList() const
 {
   return (this->_maps);
 }

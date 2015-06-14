@@ -1,4 +1,3 @@
-
 #include "Geometry.hh"
 #include "View2d.hpp"
 

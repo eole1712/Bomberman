@@ -3,7 +3,6 @@
 #include "Sound.hpp"
 
 /* AUDIOMANAGER */
-
 AudioManager::AudioManager()
 {
   this->_inst = libvlc_new(0, NULL);
@@ -18,10 +17,9 @@ libvlc_instance_t*	AudioManager::getInst() const
 {
   return (this->_inst);
 }
-
 /* !AUDIOMANAGER */
-/* SOUND MANAGER */
 
+/* SOUND MANAGER */
 SoundManager::SoundManager(AudioManager* audioManager, const std::string& file)
 {
   if (file != "")
@@ -53,5 +51,4 @@ bool	SoundManager::isPlaying() const
 {
   return (this->_mediaPlayer != NULL && libvlc_media_player_is_playing(this->_mediaPlayer));
 }
-
 /* !SOUND MANAGER */

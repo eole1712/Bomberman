@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -17,6 +16,16 @@ Animation::~Animation(){}
 void	Animation::setSpeed(unsigned int const speed)
 {
   _defaultSpeed = speed;
+}
+
+void	Animation::stop()
+{
+  _timer.stop();
+}
+
+void	Animation::start()
+{
+  _timer.start();
 }
 
 void	Animation::setAnim(unsigned int const startframe,

@@ -159,7 +159,7 @@ public:
 
 public:
   void			setColor(glm::vec4 color);
-  glm::vec4		getColor() const;
+  glm::vec4 const&	getColor() const;
 
 public:
   Score			_score;
@@ -178,8 +178,13 @@ protected:
   Map			*_map;
 
 public:
-  Animation		*animation;
+  Animation		*getAnimation() const;
+  void			setAnimation(Animation *animation);
 
+private:
+  Animation		*_animation;
+
+public:
   void			draw(Asset3d & asset,
 			     gdl::BasicShader & shader,
 			     gdl::Clock const & clock) const;
@@ -187,7 +192,7 @@ public:
   glm::vec3		getAbsVec(Player const *sec) const;
 
 public:
-	int			getId() const;
+	int		getId() const;
 	void		setId(int);
  	Timer*		getDeadTimer() const;
 

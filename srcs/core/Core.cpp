@@ -129,15 +129,14 @@ void		Core::attachObject(Asset3d *obj)
   _assets.push_back(obj);
 }
 
-// 959 / 388
-// 551 / 112
-
 void				Core::intro()
 {
   Player	*player;
   Gamer		*tmpGame;
   View2d*	intro = new View2d(0, 0, 741, 300, "resources/assets/textures/intro_1.tga");
   View2d*	intro2 = new View2d(580, 670, 639, 130, "resources/assets/textures/intro_2.tga");
+  Timer		timer(30000000);
+  unsigned int	x = 1;
 
   tmpGame = new Gamer(NULL, NULL);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
@@ -145,13 +144,9 @@ void				Core::intro()
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
       player = tmpGame->getRcs()->getPlayer(i);
-      player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
-					_assets[PLAYER]->getAnimationSpeed());
+      player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					 _assets[PLAYER]->getAnimationSpeed()));
     }
-
-  Timer		timer(30000000);
-  unsigned int	x = 1;
-
   while (tmpGame->update(_clock, _input))
     {
       if (timer.isFinished())
@@ -192,8 +187,8 @@ void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const&
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
       player = tmpGame->getRcs()->getPlayer(i);
-      player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
-					_assets[PLAYER]->getAnimationSpeed());
+      player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					 _assets[PLAYER]->getAnimationSpeed()));
     }
   _prev = _game;
   _change = true;
@@ -203,50 +198,39 @@ void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const&
 void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_2_background.tga");
-
-  Text2d*	map_height = new Text2d("50", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	map_width = new Text2d("50", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiField = new Text2d("100", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	map_height = new Text2d("20", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	map_width = new Text2d("20", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiField = new Text2d("10", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	pField = new Text2d("1", 1485, 480, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Field = new Text2d("Grisha", 1115, 600, 400, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Field = new Text2d("Alex", 1115, 660, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Field = new Text2d("Player1", 1115, 600, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Field = new Text2d("Player2", 1115, 660, 400, 50, "resources/assets/textures/alpha3Blue.tga");
   View2d*	start = new View2d(1065, 720, 350, 50, "resources/assets/textures/menu_2_start.tga");
   View2d*	p1TextBackGround = new View2d(1110, 600, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
   View2d*	p2TextBackGround = new View2d(1110, 660, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
   View2d*	back = new View2d(1500, 820, 250, 60, "resources/assets/textures/menu_2_back.tga");
 
   p1Field->setModifiable();
-
   p2Field->setModifiable();
   p2Field->unFocus();
   p2Field->setHidden(true);
-
   p2TextBackGround->unFocus();
   p2TextBackGround->setHidden(true);
-
   p1TextBackGround->unFocus();
-
   aiField->setDynamic();
   pField->setDynamic();
   map_height->setDynamic();
   map_width->setDynamic();
-
   background->unFocus();
-
   grid->addObject(background, [] (void) {
     ;
   });
-
   grid->addObject(p1TextBackGround, [] (void) {
     ;
   });
-
   grid->addObject(p2TextBackGround, [] (void) {
     ;
   });
-
   grid->addDynObject(map_width, [] (void) {
   },
   [aiField, map_width, map_height, pField] (void) {
@@ -274,7 +258,6 @@ void		Core::gameMenu()
     value = Conversion::stringToType<int>(map_width->getText()) + 1;
     map_width->setText(Conversion::typeToString(value));
   });
-
   grid->addDynObject(map_height, [] (void) {
   },
   [aiField, map_width, map_height, pField] (void) {
@@ -382,14 +365,12 @@ void		Core::gameMenu()
 	value = 2;
       }
 
-
     nbAI = Conversion::stringToType<int>(aiField->getText());
     mapX = Conversion::stringToType<int>(map_width->getText());
     mapY = Conversion::stringToType<int>(map_height->getText());
     if (value + nbAI > (mapX * mapY / 16))
       nbAI = (mapX * mapY / 16) - value;
     aiField->setText(Conversion::typeToString(nbAI));
-
 
     pField->setText(Conversion::typeToString(value));
   });
@@ -398,7 +379,8 @@ void		Core::gameMenu()
   grid->addObject(p2Field, [p2Field] (void) {
   });
   grid->addObject(start, [this, p1Field, p2Field, map_height, map_width, aiField, pField] (void) {
-    /// START GAME
+    // START GAME
+
     int height = Conversion::stringToType<int>(map_height->getText());
     int width = Conversion::stringToType<int>(map_width->getText());
     int ai = Conversion::stringToType<int>(aiField->getText());
@@ -407,10 +389,46 @@ void		Core::gameMenu()
     startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai, "");
   });
   grid->addObject(back, [this] (void) {
-    firstMenu();
+    selectMenu();
   });
 
 
+
+  _prev = _game;
+  _change = true;
+  _game = grid;
+}
+
+void		Core::selectMenu()
+{
+  MenuGrid*	grid = new MenuGrid;
+  View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_select.tga");
+  View2d*	map1 = new View2d(195, 200, 330, 136, "resources/assets/textures/menu_select_map1.tga");
+  View2d*	map2 = new View2d(200, 300, 330, 136, "resources/assets/textures/menu_select_map2.tga");
+  View2d*	map3 = new View2d(200, 400, 330, 136, "resources/assets/textures/menu_select_map3.tga");
+  View2d*	custom = new View2d(700, 650, 636, 126, "resources/assets/textures/menu_select_custom.tga");
+  View2d*	back = new View2d(1500, 750, 264, 124, "resources/assets/textures/menu_select_back.tga");
+
+  background->unFocus();
+  grid->addObject(background, [] (void) {
+
+  });
+  grid->addObject(map1, [this] (void) {
+    gameMenu();
+  });
+  grid->addObject(map2, [this] (void) {
+    gameMenu();
+  });
+  grid->addObject(map3, [this] (void) {
+    gameMenu();
+  });
+  grid->addObject(custom, [this] (void) {
+    gameMenu();
+  });
+
+  grid->addObject(back, [this] (void) {
+    firstMenu();
+  });
 
   _prev = _game;
   _change = true;
@@ -451,7 +469,7 @@ void		Core::firstMenu()
     ;
   });
   grid->addObject(text2, [this, &grid] (void) {
-    this->gameMenu();
+    this->selectMenu();
   });
   grid->addObject(text1, [this] (void) {
     Gamer *tmpGame = NULL;
@@ -463,9 +481,9 @@ void		Core::firstMenu()
 	tmpGame = j.unserialize<Bomberman::Gamer*>("");
     for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
       {
-	player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
-	player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
-					  _assets[PLAYER]->getAnimationSpeed());
+	player = tmpGame->getRcs()->getPlayer(i);
+	player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					_assets[PLAYER]->getAnimationSpeed()));
       }
     _prev = _game;
     _change = true;
@@ -504,21 +522,6 @@ void		Core::draw()
 {
   _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
-}
-
-gdl::SdlContext		&Core::getContext()
-{
-  return _context;
-}
-
-gdl::Clock		&Core::getClock()
-{
-  return _clock;
-}
-
-gdl::BasicShader	&Core::getShader()
-{
-  return _shader;
 }
 
 bool			Core::isOver() const

@@ -86,7 +86,7 @@ Bomberman::Map*		Gamer::getMap() const
   return _map;
 }
 
-Bomberman::ScoreList*	Gamer::getScoreList() const
+Bomberman::ScoreList const*	Gamer::getScoreList() const
 {
   return _scoreList;
 }
@@ -207,7 +207,10 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       _menu = NULL;
       _map->continueBombs();
     }
-  if ((!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive()) || _map->hasToQuit())
+  if (!_intro &&
+      ((!_map->getRcs()->isPlayerOneAlive() &&
+       !_map->getRcs()->isPlayerTwoAlive())
+       || _map->hasToQuit()))
     {
       if (endTimer == NULL)
   	endTimer = new Timer(4000000);
@@ -452,7 +455,6 @@ void			Gamer::showHeart(gdl::BasicShader &shader, Player *player)
 {
   static View2d		heart(0, 0, 1800, 900, "resources/assets/textures/heart.tga");
 
-
   if (!player->isAlive())
     return;
   shader.setUniform("view", glm::mat4());
@@ -473,7 +475,6 @@ void			Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
 {
   static View2d		win1(0, 0, 1800, 900, "resources/assets/textures/win1p.tga");
   static View2d		win2(0, 0, 900, 900, "resources/assets/textures/win2p.tga");
-
 
   if (!player->isAlive() || !_map->hasToQuit() || _map->getRcs()->getWinner() != player)
     return;

@@ -1,4 +1,3 @@
-
 #ifndef ASSET3D_H_
 # define ASSET3D_H_
 
@@ -13,8 +12,8 @@
 class Asset3d : public Object3d, public gdl::Model
 {
 public:
-Asset3d(std::string const &filename);
-virtual ~Asset3d();
+  Asset3d(std::string const &filename);
+  virtual ~Asset3d();
 
   unsigned int getAnimationFrame();
   unsigned int getAnimationSpeed();

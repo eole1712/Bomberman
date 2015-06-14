@@ -232,13 +232,13 @@ Player		*RessourceStock::getPlayer(std::string const &name) const
       if (_players[i]->getName() == name)
 	_players[i];
     }
-  return NULL; //EXCEPTION???
+  throw std::runtime_error("ResourceStock: Player " + name + " is not found");
 }
 
 Player		*RessourceStock::getPlayer(unsigned int id) const
 {
   if (id >= _players.size())
-    return NULL; //EXCEPTION???
+    throw std::runtime_error("ResourceStock: Player id " + Conversion::typeToString<unsigned int>(id) + " does not exists");
   return _players[id];
 }
 

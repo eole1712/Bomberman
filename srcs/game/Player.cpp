@@ -22,7 +22,7 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), _animation()
 {
   this->init();
 }
@@ -173,25 +173,25 @@ void			Player::resetShield()
 
 // bomb methods
 
-  unsigned int		Player::getNbBomb() const
-  {
-    return _bomb;
-  }
+unsigned int		Player::getNbBomb() const
+{
+  return _bomb;
+}
 
-  bool			Player::getPutBombStatus() const
-  {
-    return _putBombStatus;
-  }
+bool			Player::getPutBombStatus() const
+{
+  return _putBombStatus;
+}
 
-  unsigned int		Player::getShield() const
-  {
-    return _shield;
-  }
+unsigned int		Player::getShield() const
+{
+  return _shield;
+}
 
-  void			Player::setPutBombStatus(bool status)
-  {
-    _putBombStatus = status;
-  }
+void			Player::setPutBombStatus(bool status)
+{
+  _putBombStatus = status;
+}
 
 
 void			Player::incBomb()
@@ -224,11 +224,13 @@ void			Player::disableAttack()
 
 void			Player::paralyze()
 {
+  _animation->stop();
   _isParalyzed = true;
 }
 
 void			Player::unparalyze()
 {
+  _animation->start();
   _isParalyzed = false;
 }
 
@@ -351,21 +353,26 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     pos.x = 1;
   if (pos.z > 1)
     pos.z = 1;
+  if (pos.x < -1)
+    pos.x = -1;
+  if (pos.z < -1)
+    pos.z = -1;
   npos = getPosition() + pos;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
-      type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
+      type = _map->getCellValue(static_cast<int>(npos.x), static_cast<int>(getPosition().z))->getObjectType();
       if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
-	  (int(npos.x) == int(getX()) && int(getPosition().z) == int(getY())))
+	  (static_cast<int>(npos.x) == static_cast<int>(getX()) && static_cast<int>(getPosition().z) == static_cast<int>(getY())))
 	translate(glm::vec3(pos.x, 0, 0));
     }
   if (npos.z > 0 && npos.z < _map->getHeight())
     {
-      type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
+      type = _map->getCellValue(static_cast<int>(getPosition().x), static_cast<int>(npos.z))->getObjectType();
       if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
-	  (int(getPosition().x) == int(getX()) && int(npos.z) == int(getY())))
+	  (static_cast<int>(getPosition().x) == static_cast<int>(getX()) && static_cast<int>(npos.z) == static_cast<int>(getY())))
 	translate(glm::vec3(0, 0, pos.z));
     }
+
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
     {
       addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
@@ -381,17 +388,17 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     {
       dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished(true);
     }
-  if (animation->queueEmpty())
+  if (_animation->queueEmpty())
     {
-      animation->setAnim(10, 34, false,
-			 animation->getDefaultSpeed() / (getSpeed() + 0.5));
-      animation->setAnim(34, 55, false, animation->getDefaultSpeed() / getSpeed(), true);
-      animation->setAnim(55, 119, false,
-			 animation->getDefaultSpeed() / (getSpeed() + 0.5));
+      _animation->setAnim(10, 34, false,
+			 _animation->getDefaultSpeed() / (getSpeed() + 0.5));
+      _animation->setAnim(34, 55, false, _animation->getDefaultSpeed() / getSpeed(), true);
+      _animation->setAnim(55, 119, false,
+			 _animation->getDefaultSpeed() / (getSpeed() + 0.5));
     }
-  animFrame = animation->getFrame();
+  animFrame = _animation->getFrame();
   if (animFrame >= 34 && animFrame < 55)
-    animation->extend();
+    _animation->extend();
 }
 
 bool			Player::rotate(bool const & direction,
@@ -498,7 +505,7 @@ void			Player::setColor(glm::vec4 color)
   _color = color;
 }
 
-glm::vec4		Player::getColor() const
+glm::vec4 const&	Player::getColor() const
 {
   return _color;
 }
@@ -548,6 +555,16 @@ bool			Player::isNull() const
   return false;
 }
 
+Animation*		Player::getAnimation() const
+{
+  return _animation;
+}
+
+void			Player::setAnimation(Animation *animation)
+{
+  _animation = animation;
+}
+
 void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
 				     gdl::Clock const & clock) const
 {
@@ -559,7 +576,7 @@ void			Player::draw(Asset3d & asset, gdl::BasicShader & shader,
 	shader.setUniform("alpha", glm::vec4(0.2, 0.76, 1, 0.5));
       else
 	shader.setUniform("color", getColor());
-      asset.draw(shader, clock, *this->animation);
+      asset.draw(shader, clock, *this->_animation);
       if (isParalyzed())
 	shader.setUniform("alpha", glm::vec4(0));
       else

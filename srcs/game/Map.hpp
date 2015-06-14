@@ -41,8 +41,8 @@ public:
   };
 
   Map();
-  Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
-  Map(std::string, unsigned int, unsigned int, unsigned int, e_difficulty);
+  Map(std::string const&, unsigned int, unsigned int, unsigned int, e_difficulty, RessourceStock *);
+  Map(std::string const&, unsigned int, unsigned int, unsigned int, e_difficulty);
   virtual ~Map() {};
 
 public:
