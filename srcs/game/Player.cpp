@@ -16,7 +16,7 @@ namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 1;
+float const		Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
@@ -79,6 +79,10 @@ float   		Player::getSpeed() const
   return _speed;
 }
 
+bool			Player::isIA() const
+{
+  return false;
+}
 
 // check status
 
@@ -129,13 +133,14 @@ void			Player::resetRange()
 
 void			Player::incSpeed()
 {
-  _speed += 0.5;
+  if (_speed < 1.6)
+  _speed += 0.2;
 }
 
 void			Player::decSpeed()
 {
-  if (_speed >= 1.5)
-    _speed -= 0.5;
+  if (_speed > 0.6)
+    _speed -= 0.2;
 }
 
 void			Player::resetSpeed()
@@ -444,7 +449,7 @@ void			Player::putBomb()
 
 void			Player::putTimedBomb(unsigned int x, unsigned int y)
 {
-  if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
+  if (_map && _map->getCellValue(x, y)->getObjectType() == IObject::EMPTY)
     {
       IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
       BombTimer		*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y, true);

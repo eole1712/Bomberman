@@ -49,6 +49,7 @@ public:
   bool			zeroBomb() const;
   bool			canAbsorb() const;
   bool			isPlaced() const;
+  virtual bool		isIA() const;
 
 private:
   bool			_isAlive;
@@ -72,8 +73,8 @@ public:
   void			resetSpeed();
 
 private:
-  unsigned int		_speed;
-  static const unsigned int dftSpeed;
+  float			_speed;
+  static const float	dftSpeed;
 
 public:
   void			incShield();

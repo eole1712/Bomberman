@@ -36,12 +36,12 @@ bool		Virus::isNull() const
 
 void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
 {
+  map->killObject(x, y);
   for (int i = x; i >= 0 ; --i)
     {
       if (i == 0 ||
 	  map->getCellValue(i - 1, y)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(i - 1, y)->getObjectType() == IObject::WALL ||
-	  map->getCellValue(i, y)->getObjectType() == IObject::PLAYER)
+	  map->getCellValue(i - 1, y)->getObjectType() == IObject::WALL)
 	{
 	  player->putTimedBomb(i, y);
 	  break;
@@ -51,8 +51,7 @@ void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
     {
       if (i == (map->getWidth() - 1) ||
 	  map->getCellValue(i + 1, y)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(i + 1, y)->getObjectType() == IObject::WALL ||
-	  map->getCellValue(i, y)->getObjectType() == IObject::PLAYER)
+	  map->getCellValue(i + 1, y)->getObjectType() == IObject::WALL)
 	{
 	  player->putTimedBomb(i, y);
 	  break;
@@ -62,8 +61,7 @@ void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
     {
       if (i == 0 ||
 	  map->getCellValue(x, i - 1)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(x, i - 1)->getObjectType() == IObject::WALL ||
-	  map->getCellValue(x, i)->getObjectType() == IObject::PLAYER)
+	  map->getCellValue(x, i - 1)->getObjectType() == IObject::WALL)
 	{
 	  player->putTimedBomb(x, i);
 	  break;
@@ -73,8 +71,7 @@ void		Virus::explose(int x, int y, Map *map, unsigned int, Player *player) const
     {
       if (i == (map->getHeight() - 1) ||
 	  map->getCellValue(x, i + 1)->getObjectType() == IObject::DESTROYABLEWALL ||
-	  map->getCellValue(x, i + 1)->getObjectType() == IObject::WALL ||
-	  map->getCellValue(x, i)->getObjectType() == IObject::PLAYER)
+	  map->getCellValue(x, i + 1)->getObjectType() == IObject::WALL)
 	{
 	  player->putTimedBomb(x, i);
 	  break;

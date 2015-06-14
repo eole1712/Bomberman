@@ -279,21 +279,20 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player)
 	  dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill())
 	{
 	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
-	    {
-	      _rcs->getSound(Bomberman::RessourceStock::SUICIDE)->play();
-	      firstBlood = false;
-	    }
+	    _rcs->getSound(Bomberman::RessourceStock::SUICIDE)->play();
 	  else
 	    {
 	      if (firstBlood)
-		{
-		  this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD)->play();
-		  firstBlood = false;
-		}
+		this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD)->play();
 	      player->incScore();
 	    }
+	  firstBlood = false;
 	  if (this->getRcs()->countAlivePlayers() < 2)
-	    this->_quit = true;;
+	    this->_quit = true;
+	  if (i == 0)
+	    getRcs()->killPlayerOne();
+	  else if (i == this->_nbJoueurs - 1)
+	    getRcs()->killPlayerTwo();
 	}
     }
 }

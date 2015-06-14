@@ -59,6 +59,11 @@ namespace Bomberman
       }
   }
 
+bool		PlayerAI::isIA() const
+{
+  return true;
+}
+
   void			PlayerAI::moveRight()
   {
     _moveDir = RIGHT;
