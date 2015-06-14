@@ -25,6 +25,7 @@
 #include "JSONDoc.hpp"
 #include "Gamer.hpp"
 #include "Core.hpp"
+#include "View2d.hpp"
 #include "my_random.hpp"
 
 namespace Bomberman
@@ -117,29 +118,59 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
 
   bool		Gamer::pauseMenu()
   {
-    Text2d*	save = new Text2d("Save Game", 200, 100, 800, 75, "resources/assets/textures/alpha3Blue.tga");
-    Text2d*	resume = new Text2d("Resume Game", 200, 250, 800, 75, "resources/assets/textures/alpha3Blue.tga");
-    Text2d*	quit = new Text2d("Quit Game", 200, 400, 800, 75, "resources/assets/textures/alpha3Blue.tga");
-    Text2d*	toggleSounds = new Text2d("Toggle Sounds", 200, 550, 800, 75, "resources/assets/textures/alpha3Blue.tga");
-    Text2d*	toggleMusic = new Text2d("Toggle Music", 200, 700, 800, 75, "resources/assets/textures/alpha3Blue.tga");
+    View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_3_background.tga");
+
+    View2d*	resume = new View2d(610, 200, 654, 121, "resources/assets/textures/menu_3_resume.tga");
+    View2d*	save = new View2d(610, 610, 654, 121, "resources/assets/textures/menu_3_save.tga");
+    View2d*	quit = new View2d(610, 725, 654, 121, "resources/assets/textures/menu_3_quit.tga");
+
+    View2d*	viewON = new View2d(1080, 300, 176, 113, "resources/assets/textures/menu_3_on.tga");
+    View2d*	viewOFF = new View2d(1080, 300, 176, 113, "resources/assets/textures/menu_3_off.tga");
+    View2d*	soundON = new View2d(1080, 400, 176, 113, "resources/assets/textures/menu_3_on.tga");
+    View2d*	soundOFF = new View2d(1080, 400, 176, 113, "resources/assets/textures/menu_3_off.tga");
+    View2d*	musicON = new View2d(1080, 500, 176, 113, "resources/assets/textures/menu_3_on.tga");
+    View2d*	musicOFF = new View2d(1080, 500, 176, 113, "resources/assets/textures/menu_3_off.tga");
+
+    viewON->unFocus();
+    viewOFF->unFocus();
+    soundON->unFocus();
+    soundOFF->unFocus();
+    musicON->unFocus();
+    musicOFF->unFocus();
+    background->unFocus();
 
     _menu = new MenuGrid;
+    _menu->addObject(background, [] (void){
+      ;
+    });
+    _menu->addObject(resume, [this] (void) {
+	_resume = true;
+      });
+    _menu->addObject(viewON, [this] (void) {
+	;
+      });
+    _menu->addObject(viewOFF, [this] (void) {
+	;
+      });
+    _menu->addObject(soundON, [this] (void) {
+	;
+      });
+    _menu->addObject(soundOFF, [this] (void) {
+	;
+      });
+    _menu->addObject(musicON, [this] (void) {
+	_map->getRcs()->toggleSounds();
+      });
+    _menu->addObject(musicOFF, [this] (void) {
+	_map->getRcs()->toggleMusic();
+      });
     _menu->addObject(save, [this] (void) {
       //std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
       JSONDoc *j = new JSONDoc;
       j->serialize(*this);
     });
-    _menu->addObject(resume, [this] (void) {
-	_resume = true;
-      });
     _menu->addObject(quit, [this] (void) {
 	_quit = true;
-      });
-    _menu->addObject(toggleSounds, [this] (void) {
-	_map->getRcs()->toggleSounds();
-      });
-    _menu->addObject(toggleMusic, [this] (void) {
-	_map->getRcs()->toggleMusic();
       });
     std::cout << "pause" << std::endl;
     return true;
