@@ -1,4 +1,4 @@
-
+#include <exception>
 #include <string>
 #include <sstream>
 #include "Model.hh"
@@ -8,12 +8,13 @@
 #include "Animation.hpp"
 
 Asset3d::Asset3d(std::string const &filename)
-  :Object3d(), gdl::Model()
+  :Object3d(), gdl::Model(), _visibility(true)
 {
   int			framecount;
   std::stringstream	ss;
 
-  _visibility = load(filename.c_str());
+  if (!load(filename.c_str()))
+      throw (std::runtime_error(filename + ": Can't load asset: no such file"));
   framecount = 0;
   while (framecount < gdl::Model::getAnimationFrameNumber(0)
 	 && (ss << framecount)

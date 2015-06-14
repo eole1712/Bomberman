@@ -200,12 +200,12 @@ void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_2_background.tga");
-  Text2d*	map_height = new Text2d("20", 1475, 360, 100, 50, "resources/assets/textures/police.tga");
-  Text2d*	map_width = new Text2d("20", 1475, 300, 100, 50, "resources/assets/textures/police.tga");
-  Text2d*	aiField = new Text2d("10", 1475, 420, 100, 50, "resources/assets/textures/police.tga");
-  Text2d*	pField = new Text2d("1", 1485, 480, 100, 50, "resources/assets/textures/police.tga");
-  Text2d*	p1Field = new Text2d("Player1", 1115, 600, 400, 50, "resources/assets/textures/police.tga");
-  Text2d*	p2Field = new Text2d("Player2", 1115, 660, 400, 50, "resources/assets/textures/police.tga");
+  Text2d*	map_height = new Text2d("20", 1480, 365, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	map_width = new Text2d("20", 1480, 305, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	aiField = new Text2d("10", 1480, 425, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	pField = new Text2d("1", 1490, 485, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	p1Field = new Text2d("Player1", 1115, 605, 400, 50, "resources/assets/textures/police.tga");
+  Text2d*	p2Field = new Text2d("Player2", 1115, 665, 400, 50, "resources/assets/textures/police.tga");
   View2d*	start = new View2d(1065, 720, 350, 50, "resources/assets/textures/menu_2_start.tga");
   View2d*	p1TextBackGround = new View2d(1110, 600, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
   View2d*	p2TextBackGround = new View2d(1110, 660, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
