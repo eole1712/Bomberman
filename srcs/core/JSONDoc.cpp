@@ -447,8 +447,7 @@ void	JSONDoc::serialize(const Bomberman::Gamer& obj)
       rs->getPlayer(i)->setId(i);
       if (!dynamic_cast<Bomberman::PlayerAI*>(rs->getPlayer(i)))
     	{
-	  std::cout << "player" << std::endl;
-      	  rapidjson::Value & object(_doc["Players"]);
+	  rapidjson::Value & object(_doc["Players"]);
 	  for (rapidjson::Value::ValueIterator it = object.Begin(); it != object.End(); ++it)
       	    {
       	      rapidjson::Value& player = *it;
@@ -485,14 +484,10 @@ Bomberman::Gamer *JSONDoc::unserialize<Bomberman::Gamer*>(std::string const&) co
 
   if (_doc.HasMember("Players"))
     {
-      std::cout << "yolo" << std::endl;
       rapidjson::Value const& plays = _doc["Players"];
       for (rapidjson::Value::ConstValueIterator it = plays.Begin(); it != plays.End(); ++it)
 	{
 	  Bomberman::Player* player;
-	  std::cout << "player" << std::endl;
-	  if ((*it).HasMember("name"))
-	    std::cout << "cool" << std::endl;
 	  players.push_back((player = unserialize<Bomberman::Player*>((*it)["name"].GetString())));
 	  if (!(*it)["IA"].GetBool())
 	    ++nbPlayers;
