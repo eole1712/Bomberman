@@ -44,6 +44,7 @@ public:
   void			startGame(bool, std::string const&, std::string const&,
 				  unsigned int, unsigned int, unsigned int, std::string);
   void			gameMenu();
+  void			selectMenu();
   void			firstMenu();
   void			scoreMenu();
   bool			isOver() const;

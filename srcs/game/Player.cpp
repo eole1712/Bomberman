@@ -351,21 +351,27 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     pos.x = 1;
   if (pos.z > 1)
     pos.z = 1;
+  if (pos.x < -1)
+    pos.x = -1;
+  if (pos.z < -1)
+    pos.z = -1;
   npos = getPosition() + pos;
+  std::cout << pos.x <<"|" << pos.y << "|" << pos.z<< std::endl;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
-      type = _map->getCellValue(int(npos.x), int(getPosition().z))->getObjectType();
+      type = _map->getCellValue(static_cast<int>(npos.x), static_cast<int>(getPosition().z))->getObjectType();
       if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
-	  (int(npos.x) == int(getX()) && int(getPosition().z) == int(getY())))
+	  (static_cast<int>(npos.x) == static_cast<int>(getX()) && static_cast<int>(getPosition().z) == static_cast<int>(getY())))
 	translate(glm::vec3(pos.x, 0, 0));
     }
   if (npos.z > 0 && npos.z < _map->getHeight())
     {
-      type = _map->getCellValue(int(getPosition().x), int(npos.z))->getObjectType();
+      type = _map->getCellValue(static_cast<int>(getPosition().x), static_cast<int>(npos.z))->getObjectType();
       if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
-	  (int(getPosition().x) == int(getX()) && int(npos.z) == int(getY())))
+	  (static_cast<int>(getPosition().x) == static_cast<int>(getX()) && static_cast<int>(npos.z) == static_cast<int>(getY())))
 	translate(glm::vec3(0, 0, pos.z));
     }
+
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
     {
       addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
