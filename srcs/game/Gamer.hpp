@@ -72,7 +72,8 @@ protected:
   void				updateAllAI(const float elapsedTime);
 
 protected:
-  bool				handleKeyEvents(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyEvents(const float elapsedTime, gdl::Input& input,
+						bool end = false);
   bool				handleKeyToPause(const float elapsedTime, gdl::Input& input);
   bool				handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input);
   bool				handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input);

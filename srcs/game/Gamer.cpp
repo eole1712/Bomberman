@@ -214,6 +214,13 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
     return false;
   if (_menu != NULL)
     return _menu->update(clock, input);
+  if (_map->hasToQuit())
+    {
+      if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input, true))
+	return false;
+      updateCamera();
+      return true;
+    }
   if (input.getInput(SDL_QUIT) || _quit || !handleKeyEvents(elapsedTime, input))
     return false;
   _map->checkBombsOnMap();
@@ -501,7 +508,8 @@ CameraObject		&Gamer::getCamera(unsigned int i)
 /*
 ** Key handlers
 */
-bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input,
+						       bool end)
 {
   Player*			player;
 
@@ -513,7 +521,7 @@ bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input)
       player->getPutBombStatus())
     player->setPutBombStatus(false);
 
-  HandleKeyBook	const	*book = (_intro) ?  &handleKeyBookIntro : &handleKeyBook;
+  HandleKeyBook	const	*book = (_intro || end) ?  &handleKeyBookIntro : &handleKeyBook;
 
   for (HandleKeyBook::const_iterator it = book->begin(); it != book->end(); ++it)
     {
