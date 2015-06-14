@@ -16,6 +16,7 @@ class Map : public GenericMap<IObject*>
 public:
   typedef std::pair<unsigned int, unsigned int> PosPair;
   typedef std::map<std::pair<unsigned int, unsigned int>, BombTimer*> MapBomb;
+  typedef std::pair<unsigned int, unsigned int> TwoInt;
 
 private:
 
@@ -26,7 +27,7 @@ private:
   bool	checkDensity(unsigned int, unsigned int, unsigned int) const;
   void	equalize();
   void	pushSpawn(unsigned int, unsigned int, unsigned int);
-  void	addSpawn(unsigned int, unsigned int);
+  TwoInt	addSpawn(unsigned int, unsigned int);
 
 public:
   enum e_difficulty	{ EASY = 7, MEDIUM, DIFFICULT };
@@ -47,7 +48,6 @@ public:
 public:
   RessourceStock	*getRcs() const;
   void			setRcs(RessourceStock*);
-  typedef std::pair<unsigned int, unsigned int> TwoInt;
   TwoInt		findEmptySpawn();
   float			calcLong(unsigned int x1, unsigned int y1,
 				 unsigned int x2, unsigned int y2);

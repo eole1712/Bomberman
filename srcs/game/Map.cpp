@@ -220,8 +220,7 @@ Map::TwoInt			Map::findEmptySpawn()
 	    s.level = rest;
 	  }
       }
-  addSpawn(s.posX, s.posY);
-  return std::make_pair(s.posX, s.posY);
+  return addSpawn(s.posX, s.posY);
 }
 
 void			Map::pushSpawn(unsigned int x, unsigned int y, unsigned int level)
@@ -231,13 +230,15 @@ void			Map::pushSpawn(unsigned int x, unsigned int y, unsigned int level)
   this->_spawnList.push_back(spawn);
 }
 
-void	Map::addSpawn(unsigned int x, unsigned int y)
+Map::TwoInt	Map::addSpawn(unsigned int x, unsigned int y)
 {
+  unsigned int x1 = x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1));
+
   this->setCellValue(x, y, this->_rcs->getObject(IObject::EMPTY));
-  this->setCellValue(x + (((x > 0 && my_random(0, 1)) || x == _width - 1) ? (-1) : (1)), y,
-  		     this->_rcs->getObject(IObject::EMPTY));
+  this->setCellValue(x1, y, this->_rcs->getObject(IObject::EMPTY));
   this->setCellValue(x, y + (((y > 0 && my_random(0, 1)) || y == _height - 1) ? (-1) : (1)),
   		     this->_rcs->getObject(IObject::EMPTY));
+  return std::make_pair(x1, y);
 }
 
 void		Map::swapObjects(unsigned int x, unsigned int y, unsigned int nx, unsigned int ny)
