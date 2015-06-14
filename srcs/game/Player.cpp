@@ -18,7 +18,7 @@ namespace Bomberman
 unsigned int const	Player::dftRange = 3;
 unsigned int const	Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
-unsigned int const	Player::dftBomb = 2;
+unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::VIRUS;
 
 Player::Player(std::string const &name, glm::vec4 color)
@@ -293,6 +293,7 @@ void			Player::initGame(Map *map)
 	  setPosition(glm::vec3(two.first + 0.5, 0, two.second + 0.5));
 	  _isPlaced = true;
 	}
+      std::cout << getX() << " " << getY() <<  std::endl;
     }
 }
 
@@ -449,7 +450,7 @@ void			Player::putBomb()
 
 void			Player::putTimedBomb(unsigned int x, unsigned int y)
 {
-  if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
+  if (_map && _map->getCellValue(x, y)->getObjectType() == IObject::EMPTY)
     {
       IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
       BombTimer		*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y, true);

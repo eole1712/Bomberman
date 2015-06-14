@@ -40,7 +40,7 @@ namespace Bomberman
   ** Constructor/Destructors
   */
   Gamer::Gamer()
-    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(4), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
+    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(10), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
   {
     _json = new JSONDoc;
     this->init();
@@ -351,17 +351,17 @@ Player		*Gamer::randAlivePlayer() const
     assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
 
     if (type == IObject::BOMB)
-    for (unsigned int i = 1; i < player->getNbBomb(); i++)
-      {
-	double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) + angle) * M_PI) / 180;
-	int x1 = 820 + 50 * cos(a);
-	int y1 = 840 + 50 * sin(a);
+      for (unsigned int i = 1; i < player->getNbBomb(); i++)
+	{
+	  double a = (((360 / (player->getNbBomb() - 1)) * (i - 1) + angle) * M_PI) / 180;
+	  int x1 = 820 + 50 * cos(a);
+	  int y1 = 840 + 50 * sin(a);
 
-	assets[ObjectToAsset[type]]->setPosition(glm::vec3(x1, y1, 0));
-	assets[ObjectToAsset[type]]->scale(glm::vec3(-35));
-	assets[ObjectToAsset[type]]->draw(shader, clock);
-	assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
-      }
+	  assets[ObjectToAsset[type]]->setPosition(glm::vec3(x1, y1, 0));
+	  assets[ObjectToAsset[type]]->scale(glm::vec3(-35));
+	  assets[ObjectToAsset[type]]->draw(shader, clock);
+	  assets[ObjectToAsset[type]]->setScale(glm::vec3(1));
+	}
     angle = (angle + 1) % 360;
   }
 
