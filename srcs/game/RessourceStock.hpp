@@ -14,6 +14,8 @@
 namespace Bomberman
 {
 
+class IBomb;
+
 class RessourceStock
 {
 public:
@@ -34,14 +36,15 @@ public:
 
 public:
   IObject	*getObject(IObject::Type) const;
-  IObject	*getBuff(IBuff::Type) const;
-  IObject	*getBomb(Bomb::Type) const;
+  IBuff		*getBuff(IBuff::Type) const;
+  IBomb		*getBomb(Bomb::Type) const;
   SoundManager	*getMusic() const;
   SoundManager	*getSound(SoundType);
   Player	*getPlayer(std::string const &) const;
   Player	*getPlayer(unsigned int) const;
   unsigned int	getNbPlayer() const;
 
+public:
   unsigned int	countAlivePlayers();
   bool		isPlayerOneAlive() const;
   bool		isPlayerTwoAlive() const;
@@ -57,8 +60,8 @@ public:
 
 private:
   std::vector<Player *>		_players;
-  std::vector<IObject *>	_buffs;
-  std::vector<IObject *>	_bombs;
+  std::vector<IBuff *>		_buffs;
+  std::vector<IBomb *>		_bombs;
   std::vector<IObject *>	_objects;
   Player*			_winner;
   AudioManager			_audioManager;

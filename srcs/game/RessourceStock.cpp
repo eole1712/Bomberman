@@ -142,12 +142,12 @@ IObject		*RessourceStock::getObject(IObject::Type type) const
   return _objects[type];
 }
 
-IObject		*RessourceStock::getBuff(IBuff::Type type) const
+IBuff		*RessourceStock::getBuff(IBuff::Type type) const
 {
   return _buffs[type];
 }
 
-IObject		*RessourceStock::getBomb(Bomb::Type type) const
+IBomb		*RessourceStock::getBomb(Bomb::Type type) const
 {
   return _bombs[type];
 }
