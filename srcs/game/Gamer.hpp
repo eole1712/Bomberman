@@ -54,7 +54,7 @@ public:
 				       std::vector<Asset3d*>& assets, Player *player,
 				       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset);
   bool			pauseMenu();
-  void			updateRandCamera(Player *);
+  void			updateRandCamera();
   Player*		randAlivePlayer() const;
 
 private:

@@ -168,7 +168,7 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
 	    _quit = true;
 	  }
       }
-    if (_quit || _map->hasToQuit())
+    if (!_intro && (_quit || _map->hasToQuit()))
       return false;
     if (_menu != NULL)
       return _menu->update(clock, input);
@@ -235,7 +235,7 @@ Player		*Gamer::randAlivePlayer() const
     return _stock;
   }
 
-  void			Gamer::updateRandCamera(Player *)
+  void			Gamer::updateRandCamera()
   {
     static float	angle = 0;
     static float	y = 50;
