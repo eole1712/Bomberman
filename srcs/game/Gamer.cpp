@@ -202,7 +202,10 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       _menu = NULL;
       _map->continueBombs();
     }
-  if ((!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive()) || _map->hasToQuit())
+  if (!_intro &&
+      ((!_map->getRcs()->isPlayerOneAlive() &&
+       !_map->getRcs()->isPlayerTwoAlive())
+       || _map->hasToQuit()))
     {
       if (endTimer == NULL)
   	endTimer = new Timer(4000000);

@@ -155,10 +155,7 @@ void				Core::intro()
   while (tmpGame->update(_clock, _input))
     {
       if (timer.isFinished())
-	{
-	  std::cout << "end time" << std::endl;
-	  break;
-	}
+	break;
       tmpGame->updateRandCamera();
       _context.updateClock(_clock);
       _context.updateInputs(_input);
