@@ -222,15 +222,6 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType, rec)
       i = i + 1
    end
 
-   print("path:", xStart, yStart, xEnd, yEnd)
-   print "------- route"
-   for k, v in pairs(path)
-   do
-      print(v.x, v.y)
-   end
-   print "--------- end"
-
-
 return path
 end
 
