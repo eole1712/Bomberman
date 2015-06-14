@@ -193,7 +193,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
   if ((!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive()) || _map->hasToQuit())
     {
       if (endTimer == NULL)
-  	endTimer = new Timer(3 * 1000000);
+  	endTimer = new Timer(5000000);
       if (endTimer->isFinished())
   	{
   	  delete endTimer;
