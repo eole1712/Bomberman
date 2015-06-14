@@ -6,6 +6,11 @@ namespace Bomberman
   namespace AI
   {
     /*
+    ** Static member variables
+    */
+    const StateMap::putCellBook		StateMap::putCellHandleBook	= StateMap::getPutCellBook();
+
+    /*
     ** Constructors/Destructor
     */
     StateMap::StateMap() : GenericMap<Cell>()
@@ -65,35 +70,16 @@ namespace Bomberman
 	{
 	  for (unsigned int x = 0; x < _width; x++)
 	    {
-	      switch (map.getCellValue(x, y)->getObjectType())
-		{
-		case (IObject::FIRE):
-		case (IObject::WALL):
-		  setCellValue(x, y, AI::BLOCK);
-		break ;
-		case (IObject::DESTROYABLEWALL):
-		  setCellValue(x, y, AI::DESTROYABLE);
-		  break ;
-		case (IObject::BONUS):
-		  if (getCellValue(x, y) == AI::UNKNOWN || getCellValue(x, y) == AI::SAFE)
-		    setCellValue(x, y, AI::BONUS);
-		  break ;
-		case (IObject::BOMB):
-		case (IObject::MINE):
-		case (IObject::BARREL):
-		case (IObject::VIRUS):
-		  {
-		    BombTimer*	bomb = dynamic_cast<BombTimer*>(map.getCellValue(x, y));
+	      putCellBook::const_iterator	it = putCellHandleBook.find(map.getCellValue(x, y)->getObjectType());
 
-		    bomb->setBlastRangeToMap(this, &map);
-		    setCellValue(x, y, AI::BLOCK);
-		    break ;
-		  }
-		default:
+	      if (it == putCellHandleBook.end())
+		{
 		  if (getCellValue(x, y) == AI::UNKNOWN)
 		    setCellValue(x, y, AI::SAFE);
-		  break ;
 		}
+	      else
+		(this->*(it->second))(map, x, y);
+
 	    }
 	}
       _playersCoo.clear();
@@ -157,6 +143,51 @@ namespace Bomberman
 	      setCellValue(x, y, AI::UNKNOWN);
 	    }
 	}
+    }
+
+    void	StateMap::putBlock(Bomberman::Map const& map, unsigned int x, unsigned int y)
+    {
+      static_cast<void>(map);
+      setCellValue(x, y, AI::BLOCK);
+    }
+
+    void	StateMap::putDestroyable(Bomberman::Map const& map, unsigned int x, unsigned int y)
+    {
+      static_cast<void>(map);
+      setCellValue(x, y, AI::DESTROYABLE);
+    }
+
+    void	StateMap::putBonus(Bomberman::Map const& map, unsigned int x, unsigned int y)
+    {
+      static_cast<void>(map);
+      if (getCellValue(x, y) == AI::UNKNOWN || getCellValue(x, y) == AI::SAFE)
+	setCellValue(x, y, AI::BONUS);
+    }
+
+    void	StateMap::putBomb(Bomberman::Map const& map, unsigned int x, unsigned int y)
+    {
+      BombTimer*	bomb = dynamic_cast<BombTimer*>(map.getCellValue(x, y));
+
+      bomb->setBlastRangeToMap(this, &map);
+      setCellValue(x, y, AI::BLOCK);
+    }
+
+    /*
+    ** Static member functions
+    */
+    StateMap::putCellBook	StateMap::getPutCellBook()
+    {
+      putCellBook		book;
+
+      book[IObject::FIRE] = &StateMap::putBlock;
+      book[IObject::WALL] = &StateMap::putBlock;
+      book[IObject::DESTROYABLEWALL] = &StateMap::putDestroyable;
+      book[IObject::BONUS] = &StateMap::putBonus;
+      book[IObject::BOMB] = &StateMap::putBomb;
+      book[IObject::MINE] = &StateMap::putBomb;
+      book[IObject::BARREL] = &StateMap::putBomb;
+      book[IObject::VIRUS] = &StateMap::putBomb;
+      return book;
     }
   }
 }
