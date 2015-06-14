@@ -290,10 +290,6 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player)
 	  firstBlood = false;
 	  if (this->getRcs()->countAlivePlayers() < 2)
 	    this->_quit = true;
-	  if (i == 0)
-	    getRcs()->killPlayerOne();
-	  else if (i == this->_nbJoueurs - 1)
-	    getRcs()->killPlayerTwo();
 	}
     }
 }

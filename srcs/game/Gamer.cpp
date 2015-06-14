@@ -41,14 +41,14 @@ const Gamer::HandleKeyBook	Gamer::handleKeyBookIntro	= Gamer::getHandleKeyBookIn
 ** Constructor/Destructors
 */
 Gamer::Gamer()
-  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
+  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _viewMode(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
 {
   _json = new JSONDoc;
   this->init();
 }
 
 Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
-  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
+  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _viewMode(true), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
 {
   _json = new JSONDoc;
   this->init();
@@ -385,20 +385,6 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   angle = (angle + 1) % 360;
 }
 
-void		Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
-{
-  if (player->isAlive() || player->getDeadTimer()->isFinished())
-    return;
-
-  View2d*	lose = !_twoPlayers ?
-    new View2d(0, 0, 1800, 900, "resources/assets/textures/lose1p.tga") :
-    new View2d(0, 0, 900, 900, "resources/assets/textures/lose2p.tga");
-
-  shader.setUniform("view", glm::mat4());
-  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
-  lose->draw(shader);
-}
-
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
 			       std::vector<Asset3d*>& assets,
 			       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset)
@@ -407,94 +393,221 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
     glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  Player	*player = _stock->getPlayer(0);
-
-  if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
-    player = _spect;
-  draw(clock, shader, _camera, assets, ObjectToAsset, player);
-  drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
-  drawEndGame(shader, player);
-  if (_twoPlayers)
-    {
-      Player	*player = _stock->getPlayer(_stock->getNbPlayer() - 1);
+      Player	*player = _stock->getPlayer(0);
 
       if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
 	player = _spect;
-      glViewport(0, 0, 900, 900);
-      draw(clock, shader, _camera2, assets, ObjectToAsset, player);
+      draw(clock, shader, _camera, assets, ObjectToAsset, player);
       drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
       drawEndGame(shader, player);
+      if (_twoPlayers)
+	{
+	  Player	*player = _stock->getPlayer(_stock->getNbPlayer() - 1);
+
+	  if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
+	    player = _spect;
+	  glViewport(0, 0, 900, 900);
+	  draw(clock, shader, _camera2, assets, ObjectToAsset, player);
+	  drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
+	  drawEndGame(shader, player);
+	}
+      glViewport(0, 0, 1800, 900);
+      if (_menu)
+	_menu->drawNoBack(shader);
     }
-  glViewport(0, 0, 1800, 900);
-  if (_menu)
-    _menu->drawNoBack(shader);
-}
 
-CameraObject		&Gamer::getCamera(unsigned int i)
-{
-  if (i == 0)
-    return _camera;
-  return _camera2;
-}
-
-/*
-** Key handlers
-*/
-bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input)
-{
-  Player*			player;
-
-  if (!input.getKey(SDLK_RCTRL) && (player = (_stock->getPlayer(0))) != NULL &&
-      player->getPutBombStatus())
-    player->setPutBombStatus(false);
-  if (_twoPlayers && !input.getKey(SDLK_SPACE) &&
-      (player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) != NULL &&
-      player->getPutBombStatus())
-    player->setPutBombStatus(false);
-
-  HandleKeyBook	const	*book = (_intro) ?  &handleKeyBookIntro : &handleKeyBook;
-
-  for (HandleKeyBook::const_iterator it = book->begin(); it != book->end(); ++it)
+					      CameraObject		&Gamer::getCamera(unsigned int i)
     {
-      if (input.getKey(it->first) && (this->*(it->second))(elapsedTime, input) == false)
-	return false;
+      if (i == 0)
+	return _camera;
+      return _camera2;
     }
-  return true;
-}
 
-bool				Gamer::handleKeyToPause(const float elapsedTime, gdl::Input& input)
-{
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
-  pauseMenu();
-  return true;
-}
-
-bool				Gamer::handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input)
-{
-  Player*			player;
-
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
-  if ((player = (_stock->getPlayer(0))) == NULL)
-    throw std::runtime_error("Got a null value instead of a player from RessourceStock");
-  if (!player->getPutBombStatus())
+					      /*
+					      ** Key handlers
+					      */
+					      bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input)
     {
-      player->putBomb();
-      player->setPutBombStatus(true);
-    }
-  return true;
-}
+      Player*			player;
 
-bool				Gamer::handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input)
+      if (!input.getKey(SDLK_RCTRL) && (player = (_stock->getPlayer(0))) != NULL &&
+	  player->getPutBombStatus())
+	player->setPutBombStatus(false);
+      if (_twoPlayers && !input.getKey(SDLK_SPACE) &&
+	  (player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) != NULL &&
+	  player->getPutBombStatus())
+	player->setPutBombStatus(false);
+
+      HandleKeyBook	const	*book = (_intro) ?  &handleKeyBookIntro : &handleKeyBook;
+
+      for (HandleKeyBook::const_iterator it = book->begin(); it != book->end(); ++it)
+	{
+	  if (input.getKey(it->first) && (this->*(it->second))(elapsedTime, input) == false)
+	    return false;
+	}
+      return true;
+    }
+
+					      bool				Gamer::handleKeyToPause(const float elapsedTime, gdl::Input& input)
+    {
+      static_cast<void>(elapsedTime);
+      static_cast<void>(input);
+      pauseMenu();
+      return true;
+    }
+
+					      bool				Gamer::handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input)
+    {
+      Player*			player;
+
+      static_cast<void>(elapsedTime);
+      static_cast<void>(input);
+      if ((player = (_stock->getPlayer(0))) == NULL)
+	throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+      if (!player->getPutBombStatus())
+	{
+	  player->putBomb();
+	  player->setPutBombStatus(true);
+	}
+      return true;
+    }
+
+					      bool				Gamer::handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input)
+    {
+      Player*			player;
+      =======
+	{
+	  if (_twoPlayers)
+	    glViewport(900, 0, 900, 900);
+	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	  Player	*player = dynamic_cast<Player *>(_stock->getPlayer(0));
+
+	  if (!player->isAlive() && _spect && _spect->isAlive())
+	    player = _spect;
+	  draw(clock, shader, _camera, assets, ObjectToAsset, player);
+	  drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
+	  if (_twoPlayers)
+	    {
+	      Player	*player = dynamic_cast<Player *>(_stock->getPlayer(_stock->getNbPlayer() - 1));
+	      >>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
+
+			if (!player->isAlive() && _spect && _spect->isAlive())
+			  player = _spect;
+	      glViewport(0, 0, 900, 900);
+	      draw(clock, shader, _camera2, assets, ObjectToAsset, player);
+	      drawPlayerArme(clock, shader, assets, player, ObjectToAsset);
+	    }
+	  glViewport(0, 0, 1800, 900);
+	  if (_menu)
+	    _menu->drawNoBack(shader);
+	}
+
+	CameraObject		&Gamer::getCamera(unsigned int i)
+	{
+	  if (i == 0)
+	    return _camera;
+	  return _camera2;
+	}
+
+	/*
+	** Key handlers
+	*/
+	bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input)
+	{
+	  Player*			player;
+
+	  if (input.getKey(SDLK_F11))
+	    _viewMode = !_viewMode;
+	  if (!input.getKey(SDLK_RCTRL) && (player = dynamic_cast<Player*>(_stock->getPlayer(0))) != NULL &&
+	      player->getPutBombStatus())
+	    player->setPutBombStatus(false);
+	  if (_twoPlayers && !input.getKey(SDLK_SPACE) &&
+	      (player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) != NULL &&
+	      player->getPutBombStatus())
+	    player->setPutBombStatus(false);
+
+	  HandleKeyBook	const	*book = (_intro) ?  &handleKeyBookIntro : &handleKeyBook;
+
+	  for (HandleKeyBook::const_iterator it = book->begin(); it != book->end(); ++it)
+	    {
+	      if (input.getKey(it->first) && (this->*(it->second))(elapsedTime, input) == false)
+		return false;
+	    }
+	  return true;
+	  <<<<<<< HEAD
+		    if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+		      throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+	  if (!player->getPutBombStatus())
+	    {
+	      player->putBomb();
+	      player->setPutBombStatus(true);
+	    }
+	  return true;
+	}
+
+	bool				Gamer::handleKeyToP1Up(const float elapsedTime, gdl::Input& input)
+	{
+	  Player*			player;
+
+	  static_cast<void>(elapsedTime);
+	  static_cast<void>(input);
+	  if ((player = (_stock->getPlayer(0))) == NULL)
+	    throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+	  player->move(player->getRotation().y, elapsedTime);
+	  return (true);
+	}
+
+	bool				Gamer::handleKeyToP1Down(const float elapsedTime, gdl::Input& input)
+	{
+	  Player*			player;
+
+	  static_cast<void>(input);
+	  static_cast<void>(elapsedTime);
+	  if ((player = (_stock->getPlayer(0))) == NULL)
+	    throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+	  player->move(180 + player->getRotation().y, elapsedTime);
+	  return (true);
+	}
+	=======
+	  }
+
+					      bool				Gamer::handleKeyToPause(const float, gdl::Input&)
+    {
+      pauseMenu();
+      return true;
+    }
+					      >>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
+
+					      bool				Gamer::handleKeyToP1PutBomb(const float, gdl::Input&)
+    {
+      Player*			player;
+
+      if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
+	throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+      if (!player->getPutBombStatus())
+	{
+	  player->putBomb();
+	  player->setPutBombStatus(true);
+	}
+      return true;
+      <<<<<<< HEAD
+		if ((player = (_stock->getPlayer(0))) == NULL)
+		  throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+      player->Player::rotate(true, elapsedTime);
+      return true;
+    }
+					      =======
+					      }
+  >>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
+
+bool				Gamer::handleKeyToP2PutBomb(const float, gdl::Input&)
 {
   Player*			player;
 
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
   if (!_twoPlayers)
     return true;
-  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   if (!player->getPutBombStatus())
     {
@@ -502,27 +615,30 @@ bool				Gamer::handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input)
       player->setPutBombStatus(true);
     }
   return true;
+  <<<<<<< HEAD
+	    if ((player = (_stock->getPlayer(0))) == NULL)
+	      throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+  player->Player::rotate(false, elapsedTime);
+  return true;
 }
+=======
+       }
 
-bool				Gamer::handleKeyToP1Up(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToP1Up(const float elapsedTime, gdl::Input &)
 {
   Player*			player;
 
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
-  if ((player = (_stock->getPlayer(0))) == NULL)
+  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(player->getRotation().y, elapsedTime);
   return (true);
 }
 
-bool				Gamer::handleKeyToP1Down(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToP1Down(const float elapsedTime, gdl::Input&)
 {
   Player*			player;
 
-  static_cast<void>(input);
-  static_cast<void>(elapsedTime);
-  if ((player = (_stock->getPlayer(0))) == NULL)
+  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(180 + player->getRotation().y, elapsedTime);
   return (true);
@@ -534,58 +650,90 @@ bool				Gamer::handleKeyToP1Left(const float elapsedTime, gdl::Input& input)
 
   if (input.getKey(SDLK_RIGHT))
     return true;
-  if ((player = (_stock->getPlayer(0))) == NULL)
+  if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->Player::rotate(true, elapsedTime);
   return true;
 }
+>>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
 
 bool				Gamer::handleKeyToP1Right(const float elapsedTime, gdl::Input& input)
 {
   Player*			player;
 
-  if (input.getKey(SDLK_LEFT))
-    return true;
-  if ((player = (_stock->getPlayer(0))) == NULL)
-    throw std::runtime_error("Got a null value instead of a player from RessourceStock");
-  player->Player::rotate(false, elapsedTime);
-  return true;
-}
-
-bool				Gamer::handleKeyToP2Up(const float elapsedTime, gdl::Input& input)
-{
-  Player*			player;
-
-  static_cast<void>(input);
+  <<<<<<< HEAD
+	    static_cast<void>(input);
   if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(player->getRotation().y, elapsedTime);
   return true;
 }
+=======
+     if (input.getKey(SDLK_LEFT))
+       return true;
+if ((player = dynamic_cast<Player*>(_stock->getPlayer(0))) == NULL)
+  throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+player->Player::rotate(false, elapsedTime);
+return true;
+}
+>>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
 
-bool				Gamer::handleKeyToP2Down(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToP2Up(const float elapsedTime, gdl::Input&)
 {
   Player*			player;
 
-  static_cast<void>(input);
+  <<<<<<< HEAD
+	    static_cast<void>(input);
   if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(180 + player->getRotation().y, elapsedTime);
   return true;
 }
+=======
+     if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+       throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+player->move(player->getRotation().y, elapsedTime);
+return true;
+}
+>>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
+
+bool				Gamer::handleKeyToP2Down(const float elapsedTime, gdl::Input&)
+{
+  Player*			player;
+
+  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+    throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+  player->move(180 + player->getRotation().y, elapsedTime);
+  return true;
+  <<<<<<< HEAD
+	    if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+	      throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+  player->Player::rotate(true, elapsedTime);
+  return true;
+}
+=======
+      }
+>>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
 
 bool				Gamer::handleKeyToP2Left(const float elapsedTime, gdl::Input& input)
 {
   Player*			player;
 
-  static_cast<void>(input);
   if (input.getKey(SDLK_d))
     return true;
-  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->Player::rotate(true, elapsedTime);
   return true;
+  <<<<<<< HEAD
+	    if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+	      throw std::runtime_error("Got a null value instead of a player from RessourceStock");
+  player->Player::rotate(false, elapsedTime);
+  return true;
 }
+=======
+      }
+>>>>>>> 5a3a8be34cd1607b84066a26308ec1a9ad3ebae4
 
 bool				Gamer::handleKeyToP2Right(const float elapsedTime, gdl::Input& input)
 {
@@ -593,7 +741,7 @@ bool				Gamer::handleKeyToP2Right(const float elapsedTime, gdl::Input& input)
 
   if (input.getKey(SDLK_q) || input.getKey(SDLK_a))
     return true;
-  if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
+  if ((player = dynamic_cast<Player*>(_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->Player::rotate(false, elapsedTime);
   return true;

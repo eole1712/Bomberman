@@ -25,6 +25,8 @@ then
 end
 debug("player at", player.x, player.y)
 
+local currentCellType = map:getCell(player.x, player.y)
+
 if (#route > 0 and player.x == route[1].x and route[1].y)
 then
    table.remove(route, 1)
@@ -35,13 +37,13 @@ then
    route = {}
 end
 
-if (map:getCell(player.x, player.y) == UNSAFE and attack == true or
-    isTypeInTable(map:getCell(player.x, player.y), { UNSAFE, BLOCK }) and #route == 0)
+if (currentCellType == UNSAFE and attack == true or
+    isTypeInTable(currentCellType, { UNSAFE, BLOCK }) and #route == 0)
 then
    -- danger, run away to safe cell
    runAway(map, player)
-elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
-	map:getCell(player.x, player.y) == SAFE and #route == 0)
+elseif (currentCellType == SAFE and attack == false or
+	currentCellType == SAFE and #route == 0)
 then
    attack = true
    -- get enemy and set route to him
@@ -73,19 +75,29 @@ for k, v in pairs(adjCells)
 do
    if (#route > 0 and isInMap(map, v.x, v.y) and v.shouldMove(player, route[1].x, route[1].y))
    then
-      if ((map:getCell(v.x, v.y) == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
+      local adjCellType = map:getCell(v.x, v.y)
+
+      if ((adjCellType == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
       then
-	 player:putBomb()
-	 debug("putBomb at", player.x, player.y)
-	 route = {} -- clean route so the route will be set with an updated map
-	 break
-      elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
-	      map:getCell(player.x, player.y) ~= SAFE)
+	 if (player.nbBomb > 0) then
+	    player:putBomb()
+	    debug("putBomb at", player.x, player.y)
+	    route = {} -- clean route so the route will be set with an updated map
+	    break
+	 end
+      elseif (adjCellType == SAFE or adjCellType == BONUS or
+	      currentCellType ~= SAFE)
       then
 	 --	    debug(v.moveDesc)
 	 v.move(player)
       end
    end
+end
+
+if (attack and isEnemy(map, player.x, player.y) and player.nbBomb > 0) then
+       player:putBomb()
+       debug("putBomb at", player.x, player.y)
+       route = {} -- clean route so the route will be set with an updated map
 end
 end
 }
