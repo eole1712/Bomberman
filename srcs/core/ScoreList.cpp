@@ -19,13 +19,23 @@ ScoreList::~ScoreList()
 bool	ScoreList::contains(std::vector<std::pair<std::string, unsigned int> > const& list,
 			    std::pair<std::string, unsigned int> const& element) const
 {
-  bool	result = false;
+  unsigned int	count = 0;
+  unsigned int	count2 = 0;
 
-  std::for_each(list.begin(), list.end(), [element, &result] (std::pair<std::string, unsigned int> pair) {
+  std::for_each(list.begin(), list.end(), [&element, &count] (std::pair<std::string, unsigned int> const& pair) {
     if (pair.first == element.first && pair.second == element.second)
-      result = true;
+      ++count;
   });
-  return (result);
+
+  std::for_each(this->_scores.begin(), this->_scores.end(), [&element, &count2] (std::pair<std::string, std::list<unsigned int> > const& pair) {
+    std::list<unsigned int>	list2 = pair.second;
+
+    std::for_each(list2.begin(), list2.end(), [&pair, &element, &count2] (unsigned int val) {
+      if (pair.first == element.first && val == element.second)
+	++count2;
+    });
+  });
+  return (count2 < (count + 1));
 }
 
 std::vector<std::pair<std::string, unsigned int> >	ScoreList::top(unsigned int nb) const
