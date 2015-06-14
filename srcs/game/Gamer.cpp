@@ -40,7 +40,7 @@ namespace Bomberman
   ** Constructor/Destructors
   */
   Gamer::Gamer()
-    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(10), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
+    : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
   {
     _json = new JSONDoc;
     this->init();
