@@ -22,13 +22,7 @@ unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation(), _timeDead(NULL)
-{
-  this->init();
-}
-
-Player::Player()
-  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(glm::vec4(1)), _scoreList(NULL), animation(), _timeDead(NULL)
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
 {
   this->init();
 }
@@ -77,6 +71,16 @@ unsigned int   		Player::getRange() const
 float   		Player::getSpeed() const
 {
   return _speed;
+}
+
+bool			Player::isPlayerOne() const
+{
+  return (_map->getRcs()->getPlayer(0) == this);
+}
+
+bool			Player::isPlayerTwo() const
+{
+  return (_map->getRcs()->getPlayer(_map->getRcs()->getNbPlayer() - 1) == this);
 }
 
 bool			Player::isIA() const
@@ -365,6 +369,7 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
     {
+      _map->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
       tryToKill();
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::MINE)
@@ -467,6 +472,10 @@ bool			Player::tryToKill()
 	decShield();
       else
 	{
+	  if (isPlayerOne())
+	    this->_map->getRcs()->killPlayerOne();
+	  else if (isPlayerTwo())
+	    this->_map->getRcs()->killPlayerTwo();
 	  _isAlive = false;
 	  _timeDead = new Timer(5000000);
 	  return true;
