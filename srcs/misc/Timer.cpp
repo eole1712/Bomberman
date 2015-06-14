@@ -22,8 +22,6 @@ void	Timer::stop()
   _saveTime = getCurTime();
 }
 
-
-
 void	Timer::reset()
 {
   _clock = std::chrono::system_clock::now();

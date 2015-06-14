@@ -187,7 +187,6 @@ bool		Gamer::pauseMenu()
     _menu->addObject(musicOFF, [this] (void) {
       });
     _menu->addObject(save, [this] (void) {
-      //std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
       JSONDoc *j = new JSONDoc;
       j->serialize(*this);
     });
@@ -217,6 +216,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       if (endTimer->isFinished())
   	{
   	  delete endTimer;
+	  endTimer = NULL;
   	  _quit = true;
   	}
     }
