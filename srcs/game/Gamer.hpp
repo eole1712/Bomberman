@@ -44,7 +44,7 @@ public:
   virtual void		init(ScoreList*);
   virtual bool		update(gdl::Clock &, gdl::Input &);
   Bomberman::Map*	getMap() const;
-  Bomberman::ScoreList*	getScoreList() const;
+  Bomberman::ScoreList const*	getScoreList() const;
   Bomberman::RessourceStock* getRessourceStock() const;
   virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&, std::vector<Asset3d*>&,
 			     std::map<Bomberman::IObject::Type, mapAsset>&, Player *player);

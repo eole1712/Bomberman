@@ -10,10 +10,11 @@ public:
   CameraObject(float fov, float heigth, float width);
   virtual ~CameraObject();
 
-  glm::mat4		getProjection() const;
-  glm::mat4		getView() const;
+  glm::mat4 const&	getProjection() const;
+  glm::mat4 const&	getView() const;
 
   void			updateView();
+
 public:
   float			_depth;
   float			_fov;

@@ -15,16 +15,16 @@ public:
   Object3d();
   virtual ~Object3d();
 
-  glm::vec3	getPosition() const;
-  glm::vec3	getRotation() const;
-  glm::vec3	getScale() const;
-  void		setPosition(glm::vec3 const& pos);
-  void		setRotation(glm::vec3 const& rot);
-  void		setScale(glm::vec3 const& scale);
-  glm::mat4	getTransformation() const;
-  void		translate(glm::vec3 const &v);
-  void		rotate(glm::vec3 const& axis, float angle);
-  void		scale(glm::vec3 const& scale);
+  glm::vec3 const&	getPosition() const;
+  glm::vec3 const&	getRotation() const;
+  glm::vec3 const&	getScale() const;
+  void			setPosition(glm::vec3 const& pos);
+  void			setRotation(glm::vec3 const& rot);
+  void			setScale(glm::vec3 const& scale);
+  glm::mat4		getTransformation() const;
+  void			translate(glm::vec3 const &v);
+  void			rotate(glm::vec3 const& axis, float angle);
+  void			scale(glm::vec3 const& scale);
 };
 
 #endif /* !OBJECT3D_HPP_ */

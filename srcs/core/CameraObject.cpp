@@ -16,12 +16,12 @@ CameraObject::~CameraObject()
 
 }
 
-glm::mat4      	CameraObject::getProjection() const
+glm::mat4 const&	CameraObject::getProjection() const
 {
   return _projection;
 }
 
-glm::mat4      	CameraObject::getView() const
+glm::mat4 const&      	CameraObject::getView() const
 {
   return _view;
 }
