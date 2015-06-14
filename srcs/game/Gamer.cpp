@@ -349,7 +349,7 @@ void		Gamer::draw(gdl::Clock &clock,
 	    tmp = glm::rotate(pos - player->getPosition(),
 			      -player->getRotation().y, glm::vec3(0, 1, 0));
 	  if (player == NULL
-	      || (!_viewMode && tmp.x > -9 && tmp.x < 9 && tmp.z > -9 && tmp.z < 9)
+	      || (!_viewMode && tmp.x > -16 && tmp.x < 16 && tmp.z > -16 && tmp.z < 16)
 	      || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	    {
 	      if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
@@ -396,14 +396,14 @@ void		Gamer::draw(gdl::Clock &clock,
 	tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(),
 			  -player->getRotation().y, glm::vec3(0, 1, 0));
       if (player == NULL
-	  || (!_viewMode && tmp.x > -9 && tmp.x < 9 && tmp.z > -9 && tmp.z < 9)
+	  || (!_viewMode && tmp.x > -16 && tmp.x < 16 && tmp.z > -16 && tmp.z < 16)
 	  || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	drawPlayer->draw(*assets[PLAYER], shader, clock);
     }
   shader.setUniform("color", glm::vec4(1.0));
-  assets[SKYBOX]->setRotation(glm::vec3(fmod(assets[SKYBOX]->getRotation().x + 0.02, 360)
-					, assets[SKYBOX]->getRotation().y
-					, assets[SKYBOX]->getRotation().z));
+  assets[SKYBOX]->setRotation(glm::vec3(assets[SKYBOX]->getRotation().x,
+					fmod(assets[SKYBOX]->getRotation().y + 0.02, 360),
+					assets[SKYBOX]->getRotation().z));
   assets[SKYBOX]->draw(shader, clock);
   assets[SKYBOX]->rotate(glm::vec3(0, 1, 0), 180);
   assets[SKYBOX]->scale(glm::vec3(-1));
