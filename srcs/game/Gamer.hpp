@@ -24,7 +24,6 @@
 # include "Text2d.hpp"
 # include "IScene.hpp"
 # include "MenuGrid.hpp"
-# include "ThreadPool.hpp"
 # include "PlayerAI.hpp"
 
 class JSONDoc;

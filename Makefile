@@ -1,6 +1,6 @@
 CC		= g++
 
-NAME		= bomberman 
+NAME		= bomberman
 
 SRCSDIR		= srcs
 GAMEDIR		= $(SRCSDIR)/game/
@@ -13,7 +13,6 @@ GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
 VENDORSDIR	= $(SRCSDIR)/vendors/
 LUADIR		= $(VENDORSDIR)/lua-5.3.0/
 LUABDIR		= $(VENDORSDIR)/LuaBridge/
-THREADDIR	= $(SRCSDIR)/threading/
 
 LUAINCS		= $(LUADIR)/include/
 
@@ -71,10 +70,6 @@ MISCSRCS	= Timer.cpp		\
 		  my_random.cpp		\
 		  StringConversion.cpp	\
 		  LuaScript.cpp		\
-
-THREADSRCS	= Mutex.cpp		\
-		  CondVar.cpp		\
-		  ScopedLock.cpp	\
 
 EXCEPTSRCS	= ResourceUnavailable.cpp	\
 		  LuaError.cpp			\

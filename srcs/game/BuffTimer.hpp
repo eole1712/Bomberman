@@ -20,7 +20,7 @@ private:
   BuffTimer &operator=(const BuffTimer &);
 
 public:
-  IBuff const	*getBuff();
+  IBuff const	*getBuff() const;
 
 private:
   IBuff		*_buff;

@@ -40,12 +40,12 @@ bool	Timer::isFinished()
   return (this->getCurTime() > _time);
 }
 
-uintmax_t			Timer::getElapsedTime()
+uintmax_t			Timer::getElapsedTime() const
 {
   return (getCurTime().count());
 }
 
-std::chrono::microseconds	Timer::getCurTime()
+std::chrono::microseconds	Timer::getCurTime() const
 {
   std::chrono::time_point<std::chrono::system_clock> newTime = std::chrono::system_clock::now();
   return (_saveTime + std::chrono::duration_cast<std::chrono::microseconds>((newTime - _clock)));

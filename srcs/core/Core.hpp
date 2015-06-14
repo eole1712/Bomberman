@@ -64,10 +64,6 @@ private:
   Bomberman::ScoreList*		_scoreList;
 
 public:
-  gdl::SdlContext		&getContext();
-  gdl::Clock			&getClock();
-  gdl::BasicShader		&getShader();
-
 private:
   int				_width;
   int				_height;

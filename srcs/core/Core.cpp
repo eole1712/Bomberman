@@ -506,21 +506,6 @@ void		Core::draw()
   _context.flush();
 }
 
-gdl::SdlContext		&Core::getContext()
-{
-  return _context;
-}
-
-gdl::Clock		&Core::getClock()
-{
-  return _clock;
-}
-
-gdl::BasicShader	&Core::getShader()
-{
-  return _shader;
-}
-
 bool			Core::isOver() const
 {
   return _status;
