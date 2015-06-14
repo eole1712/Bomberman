@@ -35,12 +35,14 @@ public:
   Core(const unsigned int & width, const unsigned int & height);
   virtual ~Core();
 
+  virtual void		init();
   virtual bool		initialize();
   virtual bool		update();
   virtual void		draw();
   void			attachObject(Asset3d *);
   void			loadTextures();
-  void			startGame(bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int, unsigned int, unsigned int);
+  void			startGame(bool, std::string const&, std::string const&,
+				  unsigned int, unsigned int, unsigned int, std::string);
   void			gameMenu();
   void			firstMenu();
   void			scoreMenu();
@@ -52,11 +54,14 @@ private:
   Core &operator=(const Core &);
 
 private:
-  bool						_inGame;
-  Bomberman::IScene*				_game;
-  Bomberman::IScene*				_prev;
-  bool						_change;
+  bool				_inGame;
+  Bomberman::IScene*		_game;
+  Bomberman::IScene*		_prev;
+  bool				_change;
 
+  JSONDoc*			_json;
+  Bomberman::MapList*		_mapList;
+  Bomberman::ScoreList*		_scoreList;
 
 public:
   gdl::SdlContext		&getContext();

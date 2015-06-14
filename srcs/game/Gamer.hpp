@@ -28,7 +28,6 @@
 # include "PlayerAI.hpp"
 
 class JSONDoc;
-//# include "Core.hpp"
 
 namespace Bomberman
 {
@@ -36,15 +35,17 @@ namespace Bomberman
 class Gamer : public IScene
 {
 public:
-  Gamer();
+  Gamer(Map*, ScoreList*);
   Gamer(unsigned int, unsigned int, unsigned int, unsigned int,
-	bool, std::string const&, std::string const&, unsigned int);
+	bool, std::string const&, std::string const&, unsigned int,
+	Map*, ScoreList*);
   virtual ~Gamer();
 
 public:
-  virtual void		init();
+  virtual void		init(ScoreList*);
   virtual bool		update(gdl::Clock &, gdl::Input &);
   Bomberman::Map*	getMap() const;
+  Bomberman::ScoreList*	getScoreList() const;
   Bomberman::RessourceStock* getRessourceStock() const;
   virtual void		draw(gdl::Clock &, gdl::BasicShader &, CameraObject&, std::vector<Asset3d*>&,
 			     std::map<Bomberman::IObject::Type, mapAsset>&, Player *player);
@@ -100,7 +101,6 @@ public:
 private:
   int				_width;
   int				_height;
-  JSONDoc*			_json;
   MenuGrid*			_menu;
   bool				_quit;
   bool				_resume;
@@ -118,10 +118,9 @@ private:
   CameraObject			_camera2;
 
 public:
-  Bomberman::MapList*		_mapList;
-  Bomberman::ScoreList*		_scoreList;
   Bomberman::RessourceStock*	_stock;
   Bomberman::Map*		_map;
+  Bomberman::ScoreList*		_scoreList;
 
 protected:
   typedef bool	(Gamer::*HandleKey)(const float elapsedTime, gdl::Input& input);
