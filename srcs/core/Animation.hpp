@@ -10,7 +10,7 @@ class Animation
 public:
   Animation(unsigned int const & frames, unsigned int const & speed);
 
-virtual ~Animation();
+  virtual ~Animation();
 
   void		setAnim(unsigned int const startframe,
 			unsigned int const endframe,
@@ -33,6 +33,8 @@ virtual ~Animation();
   bool		queueEmpty() const;
   void		queuePop();
   void		queueClear();
+  void		stop();
+  void		start();
 
   void		setFrameCount(unsigned int const framecount);
 

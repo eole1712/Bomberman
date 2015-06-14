@@ -11,8 +11,7 @@ namespace Bomberman
 Map::Map()
 {}
 
-Map::Map(std::string name, unsigned int width, unsigned int height,
-	 unsigned int nbJoueurs, e_difficulty difficulty,
+Map::Map(std::string const& name, unsigned int width, unsigned int height, unsigned int nbJoueurs, e_difficulty difficulty,
 	 RessourceStock* objects)
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(objects), _quit(false)
@@ -22,7 +21,7 @@ Map::Map(std::string name, unsigned int width, unsigned int height,
   this->equalize();
 }
 
-Map::Map(std::string name, unsigned int width, unsigned int height,
+Map::Map(std::string const& name, unsigned int width, unsigned int height,
 	 unsigned int nbJoueurs, e_difficulty difficulty)
   : GenericMap<IObject*>(width, height), _name(name),
     _nbJoueurs(nbJoueurs), _difficulty(difficulty), _rcs(NULL), _quit(false)

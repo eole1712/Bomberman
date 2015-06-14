@@ -17,7 +17,7 @@ Bomberman::BuffTimer::~BuffTimer()
 
 }
 
-Bomberman::IBuff const	*Bomberman::BuffTimer::getBuff()
+Bomberman::IBuff const*	Bomberman::BuffTimer::getBuff() const
 {
   return _buff;
 }

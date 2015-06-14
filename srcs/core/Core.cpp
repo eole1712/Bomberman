@@ -145,8 +145,8 @@ void				Core::intro()
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
       player = tmpGame->getRcs()->getPlayer(i);
-      player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
-					_assets[PLAYER]->getAnimationSpeed());
+      player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					 _assets[PLAYER]->getAnimationSpeed()));
     }
 
   Timer		timer(30000000);
@@ -155,7 +155,10 @@ void				Core::intro()
   while (tmpGame->update(_clock, _input))
     {
       if (timer.isFinished())
-	break;
+	{
+	  std::cout << "end time" << std::endl;
+	  break;
+	}
       tmpGame->updateRandCamera();
       _context.updateClock(_clock);
       _context.updateInputs(_input);
@@ -192,8 +195,8 @@ void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const&
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
       player = tmpGame->getRcs()->getPlayer(i);
-      player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
-					_assets[PLAYER]->getAnimationSpeed());
+      player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					 _assets[PLAYER]->getAnimationSpeed()));
     }
   _prev = _game;
   _change = true;
@@ -206,12 +209,12 @@ void		Core::gameMenu()
 
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_2_background.tga");
 
-  Text2d*	map_height = new Text2d("50", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	map_width = new Text2d("50", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiField = new Text2d("100", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	map_height = new Text2d("20", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	map_width = new Text2d("20", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	aiField = new Text2d("10", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
   Text2d*	pField = new Text2d("1", 1485, 480, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Field = new Text2d("Grisha", 1115, 600, 400, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Field = new Text2d("Alex", 1115, 660, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p1Field = new Text2d("Player1", 1115, 600, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	p2Field = new Text2d("Player2", 1115, 660, 400, 50, "resources/assets/textures/alpha3Blue.tga");
   View2d*	start = new View2d(1065, 720, 350, 50, "resources/assets/textures/menu_2_start.tga");
   View2d*	p1TextBackGround = new View2d(1110, 600, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
   View2d*	p2TextBackGround = new View2d(1110, 660, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
@@ -499,9 +502,9 @@ void		Core::firstMenu()
 	tmpGame = j.unserialize<Bomberman::Gamer*>("");
     for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
       {
-	player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
-	player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
-					  _assets[PLAYER]->getAnimationSpeed());
+	player = tmpGame->getRcs()->getPlayer(i);
+	player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					_assets[PLAYER]->getAnimationSpeed()));
       }
     _prev = _game;
     _change = true;
@@ -540,21 +543,6 @@ void		Core::draw()
 {
   _game->drawAll(_clock, _shader, _assets, _ObjectToAsset);
   _context.flush();
-}
-
-gdl::SdlContext		&Core::getContext()
-{
-  return _context;
-}
-
-gdl::Clock		&Core::getClock()
-{
-  return _clock;
-}
-
-gdl::BasicShader	&Core::getShader()
-{
-  return _shader;
 }
 
 bool			Core::isOver() const
