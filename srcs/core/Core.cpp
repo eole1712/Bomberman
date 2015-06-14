@@ -487,7 +487,7 @@ void		Core::scoreMenu()
     {
       if (top5[i].first != "")
 	{
-	  top[i] = new Text2d((top5[i].first + std::string(14 - top5[i].first.size() - lengthCalc(top5[i].second), ' ')
+	  top[i] = new Text2d((top5[i].first + std::string(20 - top5[i].first.size() - lengthCalc(top5[i].second), ' ')
 			       + Conversion::typeToString<unsigned int>(top5[i].second)),
 			      410, 280 + (i * ((i < 3) ? (110) : (102))), 1200, 55,
 			      "resources/assets/textures/police.tga");
