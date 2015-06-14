@@ -18,6 +18,16 @@ void	Animation::setSpeed(unsigned int const speed)
   _defaultSpeed = speed;
 }
 
+void	Animation::stop()
+{
+  _timer.stop();
+}
+
+void	Animation::start()
+{
+  _timer.start();
+}
+
 void	Animation::setAnim(unsigned int const startframe,
 			   unsigned int const endframe,
 			   bool loop,

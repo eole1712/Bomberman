@@ -33,6 +33,8 @@ public:
   bool		queueEmpty() const;
   void		queuePop();
   void		queueClear();
+  void		stop();
+  void		start();
 
   void		setFrameCount(unsigned int const framecount);
 

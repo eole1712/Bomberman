@@ -25,6 +25,7 @@ private:
   std::chrono::microseconds				_time;
   std::chrono::microseconds				_saveTime;
   std::chrono::time_point<std::chrono::system_clock>	_clock;
+  bool							_freeze;
 };
 
 #endif /* !TIMER_H_ */
