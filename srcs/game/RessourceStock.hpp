@@ -55,9 +55,11 @@ public:
   void		deleteMusic();
   void		toggleMusic();
   void		toggleSounds();
+  Player*	getPlayerOne() const;
+  Player*	getPlayerTwo() const;
 
 private:
-  std::vector<IObject *>	_players;
+  std::vector<Player *>		_players;
   std::vector<IObject *>	_buffs;
   std::vector<IObject *>	_bombs;
   std::vector<IObject *>	_objects;

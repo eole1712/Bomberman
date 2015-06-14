@@ -25,6 +25,8 @@ then
 end
 debug("player at", player.x, player.y)
 
+local currentCellType = map:getCell(player.x, player.y)
+
 if (#route > 0 and player.x == route[1].x and route[1].y)
 then
    table.remove(route, 1)
@@ -35,20 +37,20 @@ then
    route = {}
 end
 
-if (map:getCell(player.x, player.y) == UNSAFE and attack == true or
-    isTypeInTable(map:getCell(player.x, player.y), { UNSAFE, BLOCK }) and #route == 0)
+if (currentCellType == UNSAFE and attack == true or
+    isTypeInTable(currentCellType, { UNSAFE, BLOCK }) and #route == 0)
 then
    -- danger, run away to safe cell
    runAway(map, player)
-elseif (map:getCell(player.x, player.y) == SAFE and attack == false or
-	map:getCell(player.x, player.y) == SAFE and #route == 0)
+elseif (currentCellType == SAFE and attack == false or
+	currentCellType == SAFE and #route == 0)
 then
    attack = true
    -- get enemy and set route to him
    local target = targetEnemy(map, player)
 
    if (target.x ~= -1 and target.y ~= -1) then
-      route = findPath(map, player.x, player.y, target.x, target.y, { SAFE, BONUS, DESTROYABLE })
+      route = findPath(map, player.x, player.y, target.x, target.y, { SAFE, BONUS, DESTROYABLE }, 20)
    else
       debug("AI: Error: player target not found")
    end
@@ -73,19 +75,29 @@ for k, v in pairs(adjCells)
 do
    if (#route > 0 and isInMap(map, v.x, v.y) and v.shouldMove(player, route[1].x, route[1].y))
    then
-      if ((map:getCell(v.x, v.y) == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
+      local adjCellType = map:getCell(v.x, v.y)
+
+      if ((adjCellType == DESTROYABLE or isEnemy(map, v.x, v.y)) and attack)
       then
-	 player:putBomb()
-	 debug("putBomb at", player.x, player.y)
-	 route = {} -- clean route so the route will be set with an updated map
-	 break
-      elseif (map:getCell(v.x, v.y) == SAFE or map:getCell(v.x, v.y) == BONUS or
-	      map:getCell(player.x, player.y) ~= SAFE)
+	 if (player.nbBomb > 0) then
+	    player:putBomb()
+	    debug("putBomb at", player.x, player.y)
+	    route = {} -- clean route so the route will be set with an updated map
+	    break
+	 end
+      elseif (adjCellType == SAFE or adjCellType == BONUS or
+	      currentCellType ~= SAFE)
       then
 	 --	    debug(v.moveDesc)
 	 v.move(player)
       end
    end
+end
+
+if (attack and isEnemy(map, player.x, player.y) and player.nbBomb > 0) then
+       player:putBomb()
+       debug("putBomb at", player.x, player.y)
+       route = {} -- clean route so the route will be set with an updated map
 end
 end
 }
@@ -96,7 +108,7 @@ function runAway(map, player)
    local cell = findCell(map, player.x, player.y, { SAFE, BONUS }, { BLOCK, DESTROYABLE })
 
    if (cell.x ~= -1 and cell.y ~= -1) then
-      route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS })
+      route = findPath(map, player.x, player.y, cell.x, cell.y, { UNSAFE, SAFE, BONUS }, 20)
       debug("safe cell", cell.x, cell.y)
       debugRoute()
    else
@@ -149,12 +161,12 @@ end
 -- returns a table containing each coordinates of cells to follow
 -- tableType is types where you can go through
 
-function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
-   local mainCoo = { { x = xEnd, y = yEnd, count = 0 } }
+function findPath(map, xStart, yStart, xEnd, yEnd, tableType, rec)
+   local mainCoo = { { x = xStart, y = yStart, count = 0 } }
    local i = 1
    local done = false
 
-   while (i <= #mainCoo and done == false)
+   while (i <= #mainCoo and done == false and (rec == -1 or i < rec))
    do
       local toTest = {
 	 { x = mainCoo[i].x + 1, y = mainCoo[i].y },
@@ -166,7 +178,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
       for k, v in pairs(toTest)
       do
 	 if (checkCell(map, mainCoo, v.x, v.y, tableType) == true or
-		v.x == xStart and v.y == yStart)
+		v.x == xEnd and v.y == yEnd)
 	 then
 	    mainCoo[#mainCoo + 1] = {
 	       x = v.x,
@@ -174,7 +186,7 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
 	       count = mainCoo[i].count + 1
 	    }
 
-	    if (v.x == xStart and v.y == yStart)
+	    if (v.x == xEnd and v.y == yEnd)
 	    then
 	       debug("start cell found")
 	       done = true
@@ -186,30 +198,28 @@ function findPath(map, xStart, yStart, xEnd, yEnd, tableType)
       i = i + 1
    end
 
---[[
-   debug "------- maincoo"
-   for k, v in pairs(mainCoo)
-   do
-      debug(v.x, v.y, v.count)
-   end
-   debug "--------- end"
-]]--
+   -- print "------- maincoo"
+   -- for k, v in pairs(mainCoo)
+   -- do
+   --    print(v.x, v.y, v.count)
+   -- end
+   -- print "--------- end"
 
    local path = { { x = xStart, y = yStart } }
-   local count = mainCoo[#mainCoo].count - 1
+   local count = 1
 
-   local i = #mainCoo
-   while (i >= 1)
+   local i = 1
+   while (i <= #mainCoo)
    do
       if (isAdjacentCell(mainCoo[i].x, mainCoo[i].y,
 			 path[#path].x, path[#path].y) == true and
 	     mainCoo[i].count == count)
       then
 	 path[#path + 1] = { x = mainCoo[i].x, y = mainCoo[i].y }
-	 count = count - 1
+	 count = count + 1
       end
 
-      i = i - 1
+      i = i + 1
    end
 
 return path
@@ -231,7 +241,7 @@ function targetEnemy(map, player)
 
    while (idx < map:getNbPlayers())
    do
-      if ((player.x ~= map:getPlayerPosX(idx) and player.y ~= map:getPlayerPosY(idx)) and
+      if (map:getPlayerName(idx) ~= player.name and
 	    (res.x == -1 or res.y == -1 or
 		(math.abs(player.x - map:getPlayerPosX(idx)) +
 		    math.abs(player.y - map:getPlayerPosY(idx)) <

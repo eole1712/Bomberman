@@ -99,10 +99,10 @@ namespace Bomberman
       _playersCoo.clear();
       for (unsigned int i = 0; i < map.getRcs()->getNbPlayer(); ++i)
       	{
-      	  Player*	player = dynamic_cast<Player*>(map.getRcs()->getPlayer(i));
+      	  Player*	player = map.getRcs()->getPlayer(i);
 
       	  if (player->isAlive())
-      	    _playersCoo.push_back(std::pair<int, int>(player->getX(), player->getY()));
+      	    _playersCoo.push_back(std::tuple<std::string, int, int>(player->getName(), player->getX(), player->getY()));
       	}
     }
 
@@ -110,14 +110,19 @@ namespace Bomberman
     {
       if (player >= _playersCoo.size())
 	return (-1);
-      return (_playersCoo[player].first);
+      return (std::get<1>(_playersCoo[player]));
     }
 
     int		StateMap::getPlayerPosY(unsigned int player) const
     {
       if (player >= _playersCoo.size())
 	return (-1);
-      return (_playersCoo[player].second);
+      return (std::get<2>(_playersCoo[player]));
+    }
+
+    std::string const&	StateMap::getPlayerName(unsigned int player) const
+    {
+      return (std::get<0>(_playersCoo[player]));
     }
 
     int		StateMap::getNbPlayers() const

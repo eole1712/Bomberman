@@ -49,6 +49,8 @@ public:
   bool			zeroBomb() const;
   bool			canAbsorb() const;
   bool			isPlaced() const;
+  bool			isPlayerOne() const;
+  bool			isPlayerTwo() const;
   virtual bool		isIA() const;
 
 private:
@@ -182,6 +184,12 @@ public:
 			     gdl::Clock const & clock) const;
   glm::vec3		getNewPos(Player const *) const;
   glm::vec3		getAbsVec(Player const *sec) const;
+
+public:
+  Timer*		getDeadTimer() const;
+
+private:
+  Timer			*_timeDead;
 
 };
 

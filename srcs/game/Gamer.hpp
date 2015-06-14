@@ -56,6 +56,7 @@ public:
   bool			pauseMenu();
   void			updateRandCamera();
   Player*		randAlivePlayer() const;
+  void			drawEndGame(gdl::BasicShader &shader, Player *player);
 
 private:
   Gamer(const Gamer &);
@@ -96,6 +97,7 @@ private:
   bool				_resume;
   bool				_twoPlayers;
   bool				_intro;
+  bool				_viewMode;
   std::string			_player1;
   std::string			_player2;
   AI::StateMap			_stateMap;
