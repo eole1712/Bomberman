@@ -11,11 +11,13 @@ public:
   virtual ~View2d();
 
   void	draw(gdl::BasicShader shader);
-  void	update(gdl::Input&);
+  void	update(int x, int y, int width, int height);
+  void	update(gdl::Input &);
+
 private:
-  View2d();
+  View2d(int x, int y, int width, int height, gdl::Geometry*);
 private:
-  gdl::Geometry	_geo;
+  gdl::Geometry *	_geo;
 
 };
 
