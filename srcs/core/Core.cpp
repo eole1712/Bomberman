@@ -128,6 +128,7 @@ void				Core::intro()
 {
   Player	*player;
   Gamer		*tmpGame;
+  View2d*	intro = new View2d(0, 0, 1800, 900, "resources/assets/textures/intro.tga");
 
   tmpGame = new Gamer;
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
@@ -150,8 +151,13 @@ void				Core::intro()
       _context.updateInputs(_input);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       tmpGame->draw(_clock, _shader, tmpGame->getCamera(0), _assets, _ObjectToAsset, NULL);
+      _shader.setUniform("view", glm::mat4());
+      _shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1000.0f, 1000.0f));
+      intro->draw(_shader);
       _context.flush();
+
     }
+  delete intro;
   delete tmpGame;
 }
 
