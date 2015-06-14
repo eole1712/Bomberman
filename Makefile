@@ -9,8 +9,8 @@ COREDIR		= $(SRCSDIR)/core/
 EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
 BOMBDIR		= $(GAMEDIR)/bombs/
-GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
 VENDORSDIR	= $(SRCSDIR)/vendors/
+GDLDIR		= $(VENDORSDIR)/LibBomberman_linux_x64/
 LUADIR		= $(VENDORSDIR)/lua-5.3.0/
 LUABDIR		= $(VENDORSDIR)/LuaBridge/
 
