@@ -226,14 +226,19 @@ Player		*Gamer::randAlivePlayer() const
     return _stock;
   }
 
-  void			Gamer::updateRandCamera(Player *player)
+  void			Gamer::updateRandCamera(Player *)
   {
-    _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
-			+ glm::rotate(glm::vec3(2.5, 4, 0),
-				      player->getRotation().y + 90,
-				      glm::vec3(0, 1, 0)));
-    _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+    static float	angle = 0;
+    static float	y = 50;
+    glm::vec3		pos = glm::rotate(glm::vec3(_width, 0, 0), angle, glm::vec3(0, 1, 0));
+
+    pos.y = 8 + y;
+    _camera.setPosition(pos + glm::vec3(_width / 2, 0, _height / 2 + 0.001));
+    _camera.setRotation(glm::vec3(_width / 2, 0, _height / 2));
     _camera.updateView();
+    angle += 0.5;
+    if (y > 0)
+      y -= 0.3;
   }
 
   void		Gamer::updateAllAI(const float elapsedTime)
@@ -270,8 +275,10 @@ Player		*Gamer::randAlivePlayer() const
       {
 	for (pos.z = -1; pos.z <= _height; pos.z++)
 	  {
-	    tmp = glm::rotate(pos - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-	    if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15)
+	    if (player)
+	      tmp = glm::rotate(pos - player->getPosition(),
+				-player->getRotation().y, glm::vec3(0, 1, 0));
+	    if (player == NULL || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	      {
 		if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
 		  {
@@ -313,8 +320,10 @@ Player		*Gamer::randAlivePlayer() const
     for (unsigned int i = 0; i < _stock->getNbPlayer(); i++)
       {
 	drawPlayer = dynamic_cast<Player *>(_stock->getPlayer(i));
-	tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(), -player->getRotation().y, glm::vec3(0, 1, 0));
-	if (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15)
+	if (player)
+	  tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(),
+			    -player->getRotation().y, glm::vec3(0, 1, 0));
+	if (player == NULL || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	  drawPlayer->draw(*assets[PLAYER], shader, clock);
       }
     shader.setUniform("color", glm::vec4(1.0));
