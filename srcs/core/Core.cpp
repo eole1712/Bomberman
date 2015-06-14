@@ -38,20 +38,38 @@ namespace Bomberman
 Core::Core()
   : _change(false), _width(1800), _height(900)
 {
-  _status = false;
+  init();
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
   : _change(false), _width(width), _height(height)
 {
-  _status = false;
+  init();
 }
 
 Core::~Core()
 {
   for (std::vector<Asset3d *>::iterator i = _assets.begin(); i != _assets.end(); i++)
     delete (*i);
+  _json->serialize<Bomberman::MapList>(*_mapList);
+  _json->serialize<Bomberman::ScoreList>(*_scoreList);
+  _json->writeDown("./resources/json/Gamedata.json");
+  delete (_mapList);
+  delete (_scoreList);
   delete _game;
+  delete _json;
+}
+
+void	Core::init()
+{
+  _status = false;
+  _json = new JSONDoc;
+  _mapList = ((_json->parse("./resources/json/Gamedata.json"))
+	      ? (_json->unserialize<Bomberman::MapList*>())
+	      : (new MapList()));
+  _scoreList = ((_json->parse("./resources/json/Gamedata.json"))
+		? (_json->unserialize<Bomberman::ScoreList*>())
+		: (new ScoreList()));
 }
 
 void				Core::loadTextures()
@@ -121,7 +139,7 @@ void				Core::intro()
   View2d*	intro = new View2d(0, 0, 741, 300, "resources/assets/textures/intro_1.tga");
   View2d*	intro2 = new View2d(580, 670, 639, 130, "resources/assets/textures/intro_2.tga");
 
-  tmpGame = new Gamer;
+  tmpGame = new Gamer(NULL, NULL);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(15 / 2, 0, 15 / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
@@ -160,15 +178,15 @@ void				Core::intro()
 }
 
 void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2,
-				unsigned int x, unsigned int y, unsigned int nbAI)
+				unsigned int x, unsigned int y, unsigned int nbAI, std::string mapName)
 {
   Player	*player;
   Gamer		*tmpGame;
 
   if (twoPlayers)
-    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, nbAI + 2);
+    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, nbAI + 2, _mapList->getMap(mapName), _scoreList);
   else
-    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, nbAI + 1);
+    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, nbAI + 1, _mapList->getMap(mapName), _scoreList);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
@@ -386,7 +404,7 @@ void		Core::gameMenu()
     int ai = Conversion::stringToType<int>(aiField->getText());
     bool players = Conversion::stringToType<int>(pField->getText()) == 1 ? false : true;
 
-    startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai);
+    startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai, "");
   });
   grid->addObject(back, [this] (void) {
     firstMenu();

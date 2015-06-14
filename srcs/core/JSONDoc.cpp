@@ -599,9 +599,9 @@ void	JSONDoc::serialize(const Bomberman::Gamer& obj)
 	    player.AddMember("id", i, _doc.GetAllocator());
 	  ++i;
 	}
+    }
   serialize(*map);
   writeDown("resources/SavedDatas.json");
-  std::cout << "end serialize" << std::endl;
 }
 
 template <>
@@ -630,6 +630,7 @@ Bomberman::Gamer *JSONDoc::unserialize<Bomberman::Gamer*>(std::string const&) co
 	  //player->initGame(player->getX(), player->getY(), map);
 	  if (!(*it)["IA"].GetBool())
 	    ++nbPlayers;
+
 	}
     }
   if (_doc.HasMember("twoPlayers"))
@@ -641,12 +642,12 @@ Bomberman::Gamer *JSONDoc::unserialize<Bomberman::Gamer*>(std::string const&) co
   rc = new Bomberman::RessourceStock(players, sList);
   map = unserialize<Bomberman::Map*>("");
   map->setRcs(rc);
-  game = new Bomberman::Gamer(map->getWidth(), map->getHeight(), (!twoPlayers) ? 1800 : 900, 900, twoPlayers, "", "", players.size());
+  game = new Bomberman::Gamer(map->getWidth(), map->getHeight(), (!twoPlayers) ? 1800 : 900, 900, twoPlayers, "", "", players.size(), map, sList);
   game->setRcs(rc);
-
+  map->setRcs(rc);
   for (std::vector<Bomberman::Player*>::iterator it = players.begin(); it != players.end(); ++it)
     (*it)->initGame((*it)->getX(), (*it)->getY(), map);
   game->setMap(map);
-  std::cout << "json map ptr : " << map << std::endl;
+  std::cout << "rcs init : " << map->getRcs() << std::endl;
   return game;
 }

@@ -41,18 +41,18 @@ const Gamer::HandleKeyBook	Gamer::handleKeyBookIntro	= Gamer::getHandleKeyBookIn
  /*
 ** Constructor/Destructors
 */
-Gamer::Gamer()
-  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _viewMode(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
+Gamer::Gamer(Map* map, ScoreList* scoreList)
+  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _viewMode(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900), _map(map), _scoreList(scoreList)
 {
-  _json = new JSONDoc;
-  this->init();
+  this->init(scoreList);
 }
 
-Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
-  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _viewMode(true),_player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
+Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam,
+	     bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers,
+	     Map* map, ScoreList* scoreList)
+  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _viewMode(true),_player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam), _map(map), _scoreList(scoreList)
 {
-  _json = new JSONDoc;
-  this->init();
+  this->init(scoreList);
 }
 
 Gamer::~Gamer()
@@ -61,15 +61,9 @@ Gamer::~Gamer()
     delete (_map);
   if (_stock)
     delete (_stock);
-  _json->serialize<Bomberman::MapList>(*_mapList);
-  _json->serialize<Bomberman::ScoreList>(*_scoreList);
-  _json->writeDown("./resources/json/Gamedata.json");
-  delete (_mapList);
-  delete (_scoreList);
-  delete _json;
 }
 
-void	Gamer::init()
+void	Gamer::init(ScoreList* scoreList)
 {
   std::vector<std::string>	nameList = {_player1,
 					    _player2 };
@@ -77,14 +71,7 @@ void	Gamer::init()
   std::vector<std::string>	vec;
   Player			*player;
 
-  _mapList = ((_json->parse("./resources/json/Gamedata.json"))
-	      ? (_json->unserialize<Bomberman::MapList*>())
-	      : (new MapList()));
-  _scoreList = ((_json->parse("./resources/json/Gamedata.json"))
-		? (_json->unserialize<Bomberman::ScoreList*>())
-		: (new ScoreList()));
-  _stock = new RessourceStock(nameList, _nbPlayers, _scoreList, _twoPlayers, _intro);
-  _map = _mapList->getMap(mapName);
+  _stock = new RessourceStock(nameList, _nbPlayers, scoreList, _twoPlayers, _intro);
   if (_map == NULL)
     _map = new Map("Random", _width, _height, _stock->getNbPlayer(), Map::EASY, _stock);
   for (unsigned int i = 0; i < _stock->getNbPlayer(); ++i)
@@ -97,6 +84,11 @@ void	Gamer::init()
 Bomberman::Map*		Gamer::getMap() const
 {
   return _map;
+}
+
+Bomberman::ScoreList*	Gamer::getScoreList() const
+{
+  return _scoreList;
 }
 
 Bomberman::RessourceStock*	Gamer::getRessourceStock() const
@@ -114,12 +106,7 @@ void				Gamer::setRcs(Bomberman::RessourceStock *rcs)
   _stock = rcs;
 }
 
-bool				Gamer::is2Players() const
-{
-  return _twoPlayers;
-}
-
-bool		Gamer::pauseMenu()
+bool				Gamer::pauseMenu()
   {
     View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_3_background.tga");
 
@@ -192,14 +179,13 @@ bool		Gamer::pauseMenu()
     _menu->addObject(musicOFF, [this] (void) {
       });
     _menu->addObject(save, [this] (void) {
-      //std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
-      JSONDoc j;
-      j.serialize(*this);
+      JSONDoc *j = new JSONDoc;
+      j->serialize(*this);
     });
     _menu->addObject(quit, [this] (void) {
 	_quit = true;
       });
-    std::cout << "pause" << std::endl;
+    _map->pauseBombs();
     return true;
   }
 
@@ -214,6 +200,7 @@ bool		Gamer::update(gdl::Clock &clock, gdl::Input &input)
       _resume = false;
       delete _menu;
       _menu = NULL;
+      _map->continueBombs();
     }
   if ((!_map->getRcs()->isPlayerOneAlive() && !_map->getRcs()->isPlayerTwoAlive()) || _map->hasToQuit())
     {
@@ -426,6 +413,7 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
   static int		angle = 0;
 
+  showHeart(shader, player);
   if (!player->isAlive() || player->zeroBomb() || player->isParalyzed())
     return;
   shader.setUniform("view", glm::mat4());
@@ -455,43 +443,68 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   angle = (angle + 1) % 360;
 }
 
-void		Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
+void			Gamer::showHeart(gdl::BasicShader &shader, Player *player)
 {
-  if (!player->isAlive() || !_map->hasToQuit() || _map->getRcs()->getWinner() != player)
+  static View2d		heart(0, 0, 1800, 900, "resources/assets/textures/heart.tga");
+
+
+  if (!player->isAlive())
     return;
-
-  View2d*	win = !_twoPlayers ?
-    new View2d(0, 0, 1800, 900, "resources/assets/textures/win1p.tga") :
-    new View2d(0, 0, 900, 900, "resources/assets/textures/win2p.tga");
-
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
-  win->draw(shader);
+
+  unsigned int x = 80;
+  unsigned int y = 820;
+
+  for (unsigned int i = 0; i <= player->getShield(); i++)
+    {
+      heart.update(x, y, 82 * 0.6, 77 * 0.6);
+      heart.draw(shader);
+      x += 60;
+    }
 }
 
-void		Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
+void			Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
 {
+  static View2d		win1(0, 0, 1800, 900, "resources/assets/textures/win1p.tga");
+  static View2d		win2(0, 0, 900, 900, "resources/assets/textures/win2p.tga");
+
+
+  if (!player->isAlive() || !_map->hasToQuit() || _map->getRcs()->getWinner() != player)
+    return;
+  shader.setUniform("view", glm::mat4());
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
+  if (!_twoPlayers)
+    win1.draw(shader);
+  else
+    win2.draw(shader);
+}
+
+void			Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
+{
+  static View2d		lose1(0, 0, 1800, 900, "resources/assets/textures/lose1p.tga");
+  static View2d		lose2(0, 0, 900, 900, "resources/assets/textures/lose2p.tga");
+
   if (player->isAlive() || player->getDeadTimer()->isFinished())
     return drawEndWin(shader, player);
 
-  View2d*	lose = !_twoPlayers ?
-    new View2d(0, 0, 1800, 900, "resources/assets/textures/lose1p.tga") :
-    new View2d(0, 0, 900, 900, "resources/assets/textures/lose2p.tga");
-
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
-  lose->draw(shader);
+  if (!_twoPlayers)
+    lose1.draw(shader);
+  else
+    lose2.draw(shader);
 }
 
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
 			       std::vector<Asset3d*>& assets,
 			       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset)
 {
+  Player	*player = _stock->getPlayer(0);
+
   if (_twoPlayers)
     glViewport(900, 0, 900, 900);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  Player	*player = _stock->getPlayer(0);
 
   if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
     player = _spect;
@@ -500,7 +513,7 @@ void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,
   drawEndGame(shader, player);
   if (_twoPlayers)
     {
-      Player	*player = _stock->getPlayer(_stock->getNbPlayer() - 1);
+      player = _stock->getPlayer(_stock->getNbPlayer() - 1);
 
       if (!player->isAlive() && _spect && _spect->isAlive() && player->getDeadTimer()->isFinished())
 	player = _spect;
