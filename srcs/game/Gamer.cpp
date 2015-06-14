@@ -124,9 +124,12 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     View2d*	resume = new View2d(610, 200, 654, 121, "resources/assets/textures/menu_3_resume.tga");
     View2d*	save = new View2d(610, 610, 654, 121, "resources/assets/textures/menu_3_save.tga");
     View2d*	quit = new View2d(610, 725, 654, 121, "resources/assets/textures/menu_3_quit.tga");
+    View2d*	view = new View2d(510, 310, 821, 99, "resources/assets/textures/menu_3_view.tga");
+    View2d*	sound = new View2d(510, 410, 821, 99, "resources/assets/textures/menu_3_sound.tga");
+    View2d*	music = new View2d(510, 510, 821, 99, "resources/assets/textures/menu_3_music.tga");
 
-    View2d*	viewON = new View2d(1080, 300, 176, 113, "resources/assets/textures/menu_3_on.tga");
-    View2d*	viewOFF = new View2d(1080, 300, 176, 113, "resources/assets/textures/menu_3_off.tga");
+    View2d*	viewON = new View2d(1080, 300, 176, 113, "resources/assets/textures/menu_3_3d.tga");
+    View2d*	viewOFF = new View2d(1080, 300, 176, 113, "resources/assets/textures/menu_3_2d.tga");
     View2d*	soundON = new View2d(1080, 400, 176, 113, "resources/assets/textures/menu_3_on.tga");
     View2d*	soundOFF = new View2d(1080, 400, 176, 113, "resources/assets/textures/menu_3_off.tga");
     View2d*	musicON = new View2d(1080, 500, 176, 113, "resources/assets/textures/menu_3_on.tga");
@@ -140,6 +143,14 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     musicOFF->unFocus();
     background->unFocus();
 
+    musicON->setHidden(!(_map->getRcs()->isPlayingMusic()));
+    musicOFF->setHidden((_map->getRcs()->isPlayingMusic()));
+    soundON->setHidden(!(_map->getRcs()->isPlayingSounds()));
+    soundOFF->setHidden((_map->getRcs()->isPlayingSounds()));
+
+    viewON->setHidden(_viewMode);
+    viewOFF->setHidden(!_viewMode);
+
     _menu = new MenuGrid;
     _menu->addObject(background, [] (void){
       ;
@@ -147,6 +158,21 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
     _menu->addObject(resume, [this] (void) {
 	_resume = true;
       });
+    _menu->addObject(view, [this, viewON, viewOFF] (void) {
+      _viewMode = !_viewMode;
+      viewON->setHidden(_viewMode);
+      viewOFF->setHidden(!_viewMode);
+      });
+    _menu->addObject(sound, [this, soundON, soundOFF] (void) {
+      _map->getRcs()->toggleSounds();
+      soundON->setHidden(!(_map->getRcs()->isPlayingSounds()));
+      soundOFF->setHidden((_map->getRcs()->isPlayingSounds()));
+    });
+    _menu->addObject(music, [this, musicON, musicOFF] (void) {
+      _map->getRcs()->toggleMusic();
+      musicON->setHidden(!(_map->getRcs()->isPlayingMusic()));
+      musicOFF->setHidden((_map->getRcs()->isPlayingMusic()));
+    });
     _menu->addObject(viewON, [this] (void) {
 	;
       });
@@ -160,10 +186,8 @@ Bomberman::RessourceStock*	Gamer::getRessourceStock() const
 	;
       });
     _menu->addObject(musicON, [this] (void) {
-	_map->getRcs()->toggleSounds();
       });
     _menu->addObject(musicOFF, [this] (void) {
-	_map->getRcs()->toggleMusic();
       });
     _menu->addObject(save, [this] (void) {
       //std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
