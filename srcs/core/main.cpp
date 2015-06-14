@@ -33,13 +33,11 @@ int main()
       return (EXIT_FAILURE);
     }
   engine.intro();
-  engine.firstMenu();
-  std::cout << "OK" << std::endl;
   while (!engine.isOver())
     {
+      engine.firstMenu();
       while (!engine.isOver() && engine.update() == true)
 	{
-	  // showfps();
 	  engine.draw();
 	}
     }

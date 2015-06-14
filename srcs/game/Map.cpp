@@ -203,7 +203,7 @@ Map::TwoInt			Map::findEmptySpawn()
 	ok = false;
 	for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
 	  {
-	    player = dynamic_cast<Player*>(_rcs->getPlayer(i));
+	    player = _rcs->getPlayer(i);
 	    if (player->isPlaced())
 	      {
 		tmp = calcLong(player->getX(), player->getY(), x, y);
@@ -280,26 +280,22 @@ void		Map::killPlayers(unsigned int x, unsigned int y, Player *player)
 
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
-      if (dynamic_cast<Player*>(_rcs->getPlayer(i))->getX() == x &&
-	  dynamic_cast<Player*>(_rcs->getPlayer(i))->getY() == y &&
-	  dynamic_cast<Player*>(_rcs->getPlayer(i))->tryToKill())
+      Player		*tmp = _rcs->getPlayer(i);
+      if (tmp->getX() == x &&
+	  tmp->getY() == y &&
+	  tmp->tryToKill())
 	{
-	  if (dynamic_cast<Player*>(_rcs->getPlayer(i)) == player)
-	    {
-	      _rcs->getSound(Bomberman::RessourceStock::SUICIDE)->play();
-	      firstBlood = false;
-	    }
+	  if (tmp == player)
+	    _rcs->getSound(Bomberman::RessourceStock::SUICIDE)->play();
 	  else
 	    {
 	      if (firstBlood)
-		{
-		  this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD)->play();
-		  firstBlood = false;
-		}
+		this->getRcs()->getSound(Bomberman::RessourceStock::FIRSTBLOOD)->play();
 	      player->incScore();
 	    }
+	  firstBlood = false;
 	  if (this->getRcs()->countAlivePlayers() < 2)
-	    this->_quit = true;;
+	    this->_quit = true;
 	}
     }
 }
@@ -330,7 +326,7 @@ void		Map::checkBombsOnMap()
     }
   for (unsigned int i = 0; i < _rcs->getNbPlayer(); i++)
     {
-      dynamic_cast<Player*>(_rcs->getPlayer(i))->checkBuffList();
+      _rcs->getPlayer(i)->checkBuffList();
     }
   if (this->getRcs()->isPlayingMusic() && !this->getRcs()->getMusic()->isPlaying())
     {

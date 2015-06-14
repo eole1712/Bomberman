@@ -52,7 +52,7 @@ bool		IBomb::exploseCase(Map *map, int x, int y,
 	{
 	  int		d = my_random(0, IBuff::prob);
 
-	  if (d < (IBuff::nbBuff + 5))
+	  if (d < (IBuff::nbBuff + 8))
 	    {
 	      d = d >= IBuff::nbBuff ? (int)(IBuff::WEAPON) : d;
 	      map->setCellValue(x, y, map->getRcs()->getBuff((IBuff::Type)(d)));

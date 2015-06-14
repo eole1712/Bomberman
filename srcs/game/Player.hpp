@@ -49,6 +49,8 @@ public:
   bool			zeroBomb() const;
   bool			canAbsorb() const;
   bool			isPlaced() const;
+  bool			isPlayerOne() const;
+  bool			isPlayerTwo() const;
   virtual bool		isIA() const;
 
 private:
@@ -73,8 +75,8 @@ public:
   void			resetSpeed();
 
 private:
-  unsigned int		_speed;
-  static const unsigned int dftSpeed;
+  float			_speed;
+  static const float	dftSpeed;
 
 public:
   void			incShield();
@@ -184,12 +186,13 @@ public:
   glm::vec3		getAbsVec(Player const *sec) const;
 
 public:
-  int			getId() const;
-  void			setId(int);
+	int			getId() const;
+	void		setId(int); 
+ 	Timer*		getDeadTimer() const;
 
 private:
+  Timer			*_timeDead;
   int			_id;
-
 
 };
 

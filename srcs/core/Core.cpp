@@ -128,44 +128,36 @@ void				Core::intro()
 {
   Player	*player;
   Gamer		*tmpGame;
+  View2d*	intro = new View2d(0, 0, 1800, 900, "resources/assets/textures/intro.tga");
 
   tmpGame = new Gamer;
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (30) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(15 / 2, 0, 15 / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
+      player = tmpGame->getRcs()->getPlayer(i);
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
 
-  Timer		timer(15000000);
-  unsigned int id = 0;
-  unsigned int x  = 1;
+  Timer		timer(30000000);
 
-  player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(0));
   while (tmpGame->update(_clock, _input))
     {
       if (timer.isFinished())
 	break;
-      if (timer.getElapsedTime() > (x * 3000000))
-	{
-	  do
-	    {
-	      id = (id + 1) % tmpGame->getRcs()->getNbPlayer();
-	      player = dynamic_cast<Player *>
-		(tmpGame->getRcs()->getPlayer(id));
-	    } while (!player->isAlive() && tmpGame->getRcs()->countAlivePlayers() > 0);
-	  x += 1;
-	}
-      tmpGame->updateRandCamera(player);
+      tmpGame->updateRandCamera();
       _context.updateClock(_clock);
       _context.updateInputs(_input);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      tmpGame->draw(_clock, _shader, tmpGame->getCamera(0), _assets, _ObjectToAsset, player);
+      tmpGame->draw(_clock, _shader, tmpGame->getCamera(0), _assets, _ObjectToAsset, NULL);
+      _shader.setUniform("view", glm::mat4());
+      _shader.setUniform("projection", glm::ortho(0.0f, 1800.0f, 900.0f, 0.0f, -1000.0f, 1000.0f));
+      intro->draw(_shader);
       _context.flush();
     }
-  delete tmpGame;
+  delete intro;
+  _game = tmpGame;
 }
 
 void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2,
@@ -182,7 +174,7 @@ void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const&
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
     {
-      player = dynamic_cast<Player *>(tmpGame->getRcs()->getPlayer(i));
+      player = tmpGame->getRcs()->getPlayer(i);
       player->animation = new Animation(_assets[PLAYER]->getAnimationFrame(),
 					_assets[PLAYER]->getAnimationSpeed());
     }
@@ -257,8 +249,6 @@ void		Core::gameMenu()
     if (nbAI + nbPlayer >= (mapY * value / 16))
       nbAI = (mapY * value / 16) - nbPlayer;
     aiField->setText(Conversion::typeToString(nbAI));
-
-    std::cout << value << std::endl;
     map_width->setText(Conversion::typeToString(value));
   },
   [map_width] (void) {
@@ -400,9 +390,9 @@ void		Core::gameMenu()
     int width = Conversion::stringToType<int>(map_width->getText());
     int ai = Conversion::stringToType<int>(aiField->getText());
     bool players = Conversion::stringToType<int>(pField->getText()) == 1 ? false : true;
+
     startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai);
   });
-  std::cout << "OK" << std::endl;
   grid->addObject(back, [this] (void) {
     firstMenu();
   });
@@ -417,7 +407,7 @@ void		Core::gameMenu()
 void		Core::firstMenu()
 {
   MenuGrid*	grid = new MenuGrid;
-  View2d*	back = new View2d(0, 0, 1800, 1000, "resources/assets/textures/background.tga");
+  View2d*	back = new View2d(0, 0, 1800, 900, "resources/assets/textures/background.tga");
   View2d*	text1 = new View2d(1100, 475, 500, 101, "resources/assets/textures/load.tga");
   View2d*	text2 = new View2d(1100, 325, 500, 101, "resources/assets/textures/new.tga");
   View2d*	text3 = new View2d(1100, 625, 500, 101, "resources/assets/textures/high.tga");
@@ -456,6 +446,8 @@ void		Core::firstMenu()
   grid->addObject(text4, [this] (void) {
     this->_status = true;
   });
+  _prev = _game;
+  _change = true;
   _game = grid;
 }
 
@@ -471,8 +463,6 @@ bool		Core::update()
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
-  if (!ret)
-    _status = true;
   return ret;
 }
 

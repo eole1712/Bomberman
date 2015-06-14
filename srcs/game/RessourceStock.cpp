@@ -32,8 +32,12 @@ namespace Bomberman
 unsigned int const	RessourceStock::nbSounds = 20;
 unsigned int const	RessourceStock::nbChannels = 10;
 
-RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs, ScoreList* scoreList, bool twoPlayer, bool intro)
-  : _players(nbJoueurs, NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned int nbJoueurs,
+			       ScoreList* scoreList, bool twoPlayer, bool intro)
+  : _players(nbJoueurs, NULL),
+    _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _winner(NULL),
+    _sounds(nbSounds + 2), _soundsTime(nbSounds + 2), _soundsPlaying(nbChannels, std::make_pair(nullptr, nullptr)),
+    _toggleMusic(false), _toggleSounds(true), _twoPlayers(twoPlayer)
 {
   unsigned int	size = names.size();
   unsigned int	ai_id = 1;
@@ -44,31 +48,37 @@ RessourceStock::RessourceStock(std::vector<std::string> const &names, unsigned i
 	_players[i] = new Player(names[!(i == 0)], Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
       else
 	{
-	  _players[i] = new PlayerAI("AI" + Conversion::typeToString<unsigned int>(ai_id), "resources/ai/base-ai.lua",
+	  _players[i] = new PlayerAI("AI" + Conversion::typeToString<unsigned int>(ai_id),
+				     "resources/ai/base-ai.lua",
 				     Color::HSVtoRGB(1.0 / nbJoueurs * i, 1, 1));
 	  ++ai_id;
 	}
-      dynamic_cast<Player*>(_players[i])->linkScoreList(scoreList);
+      _players[i]->linkScoreList(scoreList);
     }
   this->init();
 }
 
-RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players, ScoreList *scoreList)
-  : _players(players.size(), NULL), _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _sounds(RessourceStock::nbSounds + 2, ""), _soundsPlaying(RessourceStock::nbChannels, NULL), _toggleMusic(false), _toggleSounds(true)
+RessourceStock::RessourceStock(std::vector<Bomberman::Player*> const& players)
+  : _players(players.size(), NULL),
+    _buffs(IBuff::nbBuff, NULL), _bombs(Bomb::nbBomb, NULL), _objects(IObject::nbObject, NULL), _winner(NULL),
+    _sounds(nbSounds + 2), _soundsTime(nbSounds + 2), _soundsPlaying(nbChannels, std::make_pair(nullptr, nullptr)),
+    _toggleMusic(false), _toggleSounds(true)
 {
+  unsigned int		nb;
 
-
+  nb = 0;
   for (unsigned int i = 0; i < players.size(); ++i)
     {
       _players[i] = players[i];
-      dynamic_cast<Player*>(_players[i])->linkScoreList(scoreList);
+      if (_players[i]->isIA())
+	nb++;
     }
+  _twoPlayers = nb == 2 ? true : false;
   this->init();
 }
 
 RessourceStock::~RessourceStock()
 {
-  std::cout << "delete of rs" << std::endl;
   for (unsigned int i = 0; i < _players.size(); ++i)
     delete _players[i];
   for (unsigned int i = 0; i < _buffs.size(); ++i)
@@ -76,8 +86,12 @@ RessourceStock::~RessourceStock()
   for (unsigned int i = 0; i < _objects.size(); ++i)
     delete _objects[i];
   for (unsigned int i = 0; i < _soundsPlaying.size(); ++i)
-    if (_soundsPlaying[i] != NULL)
-      delete _soundsPlaying[i];
+    {
+      if (_soundsPlaying[i].first != nullptr)
+	delete _soundsPlaying[i].first;
+      if (_soundsPlaying[i].second != nullptr)
+	delete _soundsPlaying[i].second;
+    }
   delete _calm;
   if (_toggleMusic)
     delete _music;
@@ -108,6 +122,12 @@ void	RessourceStock::init()
   _objects[IObject::SPAWN] = new Spawn;
   _objects[IObject::EMPTY] = new Empty;
   _objects[IObject::FIRE] = NULL;
+  this->initSounds();
+}
+
+void	RessourceStock::initSounds()
+{
+  _calm = new SoundManager(&_audioManager, "");
   _sounds[TWO] = "./resources/sound/killstreak/rampage.wav";
   _sounds[THREE] = "./resources/sound/killstreak/killingspree.wav";
   _sounds[FOUR] = "./resources/sound/killstreak/dominating.wav";
@@ -128,7 +148,26 @@ void	RessourceStock::init()
   _sounds[PREPARE2] = "./resources/sound/prepare2.wav";
   _sounds[PREPARE3] = "./resources/sound/prepare3.wav";
   _sounds[PREPARE4] = "./resources/sound/prepare4.wav";
-  _calm = new SoundManager(&_audioManager, "");
+  _soundsTime[TWO] = 2.5;
+  _soundsTime[THREE] = 2.5;
+  _soundsTime[FOUR] = 1.5;
+  _soundsTime[FIVE] = 2;
+  _soundsTime[SIX] = 1.5;
+  _soundsTime[SEVEN] = 1.5;
+  _soundsTime[EIGHT] = 2.5;
+  _soundsTime[NINE] = 2.5;
+  _soundsTime[TEN] = 5.5;
+  _soundsTime[ELEVEN] = 3.5;
+  _soundsTime[TWELVE] = 2;
+  _soundsTime[FIRSTBLOOD] = 1.5;
+  _soundsTime[SUICIDE] = 2;
+  _soundsTime[EXPLOSE] = 1.2;
+  _soundsTime[PICKUP] = 1;
+  _soundsTime[HITSHIELD] = 1;
+  _soundsTime[PREPARE1] = 2;
+  _soundsTime[PREPARE2] = 3;
+  _soundsTime[PREPARE3] = 2;
+  _soundsTime[PREPARE4] = 1.5;
   this->toggleMusic();
   this->getSound(Bomberman::RessourceStock::PREPARE1)->play();
 }
@@ -138,12 +177,12 @@ IObject		*RessourceStock::getObject(IObject::Type type) const
   return _objects[type];
 }
 
-IObject		*RessourceStock::getBuff(IBuff::Type type) const
+IBuff		*RessourceStock::getBuff(IBuff::Type type) const
 {
   return _buffs[type];
 }
 
-IObject		*RessourceStock::getBomb(Bomb::Type type) const
+IBomb		*RessourceStock::getBomb(Bomb::Type type) const
 {
   return _bombs[type];
 }
@@ -155,31 +194,40 @@ SoundManager*	RessourceStock::getMusic() const
 
 SoundManager*	RessourceStock::getSound(SoundType type)
 {
-  static unsigned int	pos = 0;
+  unsigned int	sound;
+  unsigned int	i;
 
   if (!this->_toggleSounds)
     return (this->_calm);
-  ++pos;
-  pos = ((pos >= nbChannels) ? (0) : (pos));
-  if (this->_soundsPlaying[pos] != NULL)
-    delete (this->_soundsPlaying[pos]);
+  for (i = 0 ; i < _players.size() ; ++i)
+    {
+      if (this->_soundsPlaying[i].first == nullptr)
+	break;
+      else if (this->_soundsPlaying[i].second->isFinished())
+	{
+	  delete this->_soundsPlaying[i].first;
+	  delete this->_soundsPlaying[i].second;
+	  this->_soundsPlaying[i].first = nullptr;
+	  this->_soundsPlaying[i].second = nullptr;
+	  break;
+	}
+    }
   if (type >= nbSounds - 2)
-    this->_soundsPlaying[pos] = new SoundManager(&this->_audioManager,
-						 this->_sounds[nbSounds - 2 + my_random(0, 3)]);
+    sound = nbSounds - 2 + my_random(0, 3);
   else
-    this->_soundsPlaying[pos] = new SoundManager(&this->_audioManager, this->_sounds[type]);
-  return (this->_soundsPlaying[pos]);
+    sound = type;
+  this->_soundsPlaying[i] = std::make_pair(new SoundManager(&this->_audioManager,
+							    this->_sounds[sound]),
+					   new Timer(_soundsTime[sound] * 1000000));
+  return (this->_soundsPlaying[i].first);
 }
 
 Player		*RessourceStock::getPlayer(std::string const &name) const
 {
-  Bomberman::Player* play;
-
-
-for (unsigned int i = 0; i < _players.size(); ++i)
+  for (unsigned int i = 0; i < _players.size(); ++i)
     {
-      if (((play = dynamic_cast<Player *>(_players[i]))->getName()) == name)
-	  return play;
+      if (_players[i]->getName() == name)
+	_players[i];
     }
   return NULL; //EXCEPTION???
 }
@@ -188,7 +236,7 @@ Player		*RessourceStock::getPlayer(unsigned int id) const
 {
   if (id >= _players.size())
     return NULL; //EXCEPTION???
-  return dynamic_cast<Bomberman::Player*>(_players[id]);
+  return _players[id];
 }
 
 unsigned int	RessourceStock::getNbPlayer() const
@@ -200,16 +248,30 @@ unsigned int	RessourceStock::countAlivePlayers()
 {
   unsigned int	alivePlayers = 0;
 
+  _winner = NULL;
   for (unsigned int i = 0; i < _players.size(); ++i)
     {
-      alivePlayers += dynamic_cast<Player*>(_players[i])->isAlive();
-      _winner = ((dynamic_cast<Player*>(_players[i])->isAlive())
-		 ? ((i == 0)
-		    ? (PLAYER1)
-		    : ((i == _players.size() - 1) ? (PLAYER2) : (IA)))
+      alivePlayers += _players[i]->isAlive();
+      _winner = (_players[i]->isAlive()
+		 ? (_players[i])
 		 : (_winner));
     }
   return (alivePlayers);
+}
+
+Player		*RessourceStock::getWinner() const
+{
+  return _winner;
+}
+
+bool	RessourceStock::isPlayerOneAlive() const
+{
+  return (_players[0]->isAlive());
+}
+
+bool	RessourceStock::isPlayerTwoAlive() const
+{
+  return (_twoPlayers && _players[_players.size() - 1]->isAlive());
 }
 
 bool	RessourceStock::isPlayingMusic() const
@@ -246,6 +308,16 @@ void	RessourceStock::toggleMusic()
 void	RessourceStock::toggleSounds()
 {
   _toggleSounds = !_toggleSounds;
+}
+
+Player	*RessourceStock::getPlayerOne() const
+{
+  return _players[0];
+}
+
+Player	*RessourceStock::getPlayerTwo() const
+{
+  return _players[_players.size() - 1];
 }
 
 }

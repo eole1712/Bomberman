@@ -16,19 +16,13 @@ namespace Bomberman
 {
 
 unsigned int const	Player::dftRange = 3;
-unsigned int const	Player::dftSpeed = 1;
+float const		Player::dftSpeed = 1;
 unsigned int const	Player::dftShield = 0;
 unsigned int const	Player::dftBomb = 1;
 Bomb::Type const	Player::dftBombType = Bomb::CLASSIC;
 
 Player::Player(std::string const &name, glm::vec4 color)
-  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation(), _id(0)
-{
-  this->init();
-}
-
-Player::Player()
-  : _name("IA"), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(glm::vec4(1)), _scoreList(NULL), animation(), _id(0)
+  : IObject(), _name(name), _isAlive(true), _isParalyzed(false), _zeroBomb(false), _isPlaced(false), _range(dftRange), _speed(dftSpeed), _shield(dftShield), _bomb(dftBomb), _putBombStatus(false), _bombType(dftBombType), _color(color), _scoreList(NULL), animation()
 {
   this->init();
 }
@@ -79,9 +73,18 @@ float   		Player::getSpeed() const
   return _speed;
 }
 
+bool			Player::isPlayerOne() const
+{
+  return (_map->getRcs()->getPlayer(0) == this);
+}
+
+bool			Player::isPlayerTwo() const
+{
+  return (_map->getRcs()->getPlayer(_map->getRcs()->getNbPlayer() - 1) == this);
+}
+
 bool			Player::isIA() const
 {
-  std::cout << "player" << std::endl;
   return false;
 }
 
@@ -134,13 +137,14 @@ void			Player::resetRange()
 
 void			Player::incSpeed()
 {
-  _speed += 0.5;
+  if (_speed < 1.6)
+  _speed += 0.2;
 }
 
 void			Player::decSpeed()
 {
-  if (_speed >= 1.5)
-    _speed -= 0.5;
+  if (_speed > 0.6)
+    _speed -= 0.2;
 }
 
 void			Player::resetSpeed()
@@ -365,6 +369,7 @@ void			Player::move(const float & direction, float const & elsapsedTime)
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
     {
+      _map->getRcs()->getSound(Bomberman::RessourceStock::SUICIDE)->play();
       tryToKill();
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::MINE)
@@ -438,7 +443,7 @@ void			Player::putBomb()
 {
   if (_map && isAlive() && !isParalyzed() && !zeroBomb() && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
-      IBomb	*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(getBombType()));
+      IBomb	*bomb = _map->getRcs()->getBomb(getBombType());
       BombTimer	*bombT = new BombTimer(this, getRange(), bomb);
 
       _map->addBomb(bombT);
@@ -449,9 +454,9 @@ void			Player::putBomb()
 
 void			Player::putTimedBomb(unsigned int x, unsigned int y)
 {
-  if (_map && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
+  if (_map && _map->getCellValue(x, y)->getObjectType() == IObject::EMPTY)
     {
-      IBomb		*bomb = dynamic_cast<IBomb*>(_map->getRcs()->getBomb(Bomb::CLASSIC));
+      IBomb		*bomb = _map->getRcs()->getBomb(Bomb::CLASSIC);
       BombTimer		*bombT = new BombTimer(this, getRange(), bomb, 0.5, x, y, true);
 
       _map->addBomb(bombT);
@@ -468,11 +473,17 @@ bool			Player::tryToKill()
       else
 	{
 	  _isAlive = false;
+	  _timeDead = new Timer(5000000);
 	  return true;
 	}
       return false;
     }
   return false;
+}
+
+Timer*			Player::getDeadTimer() const
+{
+  return _timeDead;
 }
 
 // color

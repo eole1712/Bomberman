@@ -54,8 +54,10 @@ public:
 				       std::vector<Asset3d*>& assets, Player *player,
 				       std::map<Bomberman::IObject::Type, mapAsset> &ObjectToAsset);
   bool			pauseMenu();
-  void			updateRandCamera(Player *);
+  void			updateRandCamera();
   Player*		randAlivePlayer() const;
+  void			drawEndGame(gdl::BasicShader &shader, Player *player);
+  void			drawEndWin(gdl::BasicShader &shader, Player *player);
 
 private:
   Gamer(const Gamer &);
@@ -76,7 +78,8 @@ protected:
   void				updateAllAI(const float elapsedTime);
 
 protected:
-  bool				handleKeyEvents(const float elapsedTime, gdl::Input& input);
+  bool				handleKeyEvents(const float elapsedTime, gdl::Input& input,
+						bool end = false);
   bool				handleKeyToPause(const float elapsedTime, gdl::Input& input);
   bool				handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input);
   bool				handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input);
@@ -102,6 +105,7 @@ private:
   bool				_resume;
   bool				_twoPlayers;
   bool				_intro;
+  bool				_viewMode;
   std::string			_player1;
   std::string			_player2;
   AI::StateMap			_stateMap;

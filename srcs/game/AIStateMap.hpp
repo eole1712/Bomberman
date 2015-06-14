@@ -3,6 +3,7 @@
 
 # include <vector>
 # include <utility>
+# include <tuple>
 # include "GenericMap.hpp"
 # include "Map.hpp"
 
@@ -40,21 +41,22 @@ namespace Bomberman
       std::string	toString() const;
 
     public:
-      int		getPlayerPosX(unsigned int player) const;
-      int		getPlayerPosY(unsigned int player) const;
-      int		getNbPlayers() const;
-      int		getIntCell(unsigned int x, unsigned int y) const;
+      int			getPlayerPosX(unsigned int player) const;
+      int			getPlayerPosY(unsigned int player) const;
+      std::string const&	getPlayerName(unsigned int player) const;
+      int			getNbPlayers() const;
+      int			getIntCell(unsigned int x, unsigned int y) const;
 
     public:
-      void		setAICells(Bomberman::Map const& map);
-      int		getIntWidth() const;
-      int		getIntHeight() const;
+      void			setAICells(Bomberman::Map const& map);
+      int			getIntWidth() const;
+      int			getIntHeight() const;
 
     protected:
-      void		clear();
+      void			clear();
 
     protected:
-      std::vector<std::pair<int, int> >	_playersCoo;
+      std::vector<std::tuple<std::string, int, int> >	_playersCoo;
     };
   }
 }

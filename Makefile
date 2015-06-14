@@ -10,8 +10,6 @@ EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
 BOMBDIR		= $(GAMEDIR)/bombs/
 GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
-VLCLIB		= $(SRCSDIR)/vlc/
-TMPDIR		= $(GDLDIR)/test/
 VENDORSDIR	= $(SRCSDIR)/vendors/
 LUADIR		= $(VENDORSDIR)/lua-5.3.0/
 LUABDIR		= $(VENDORSDIR)/LuaBridge/
@@ -28,6 +26,10 @@ CORESRCS	= main.cpp		\
 		  MapList.cpp		\
 		  Animation.cpp		\
 		  Core.cpp		\
+		  AMenuObject.cpp	\
+		  MenuGrid.cpp		\
+		  Text2d.cpp		\
+		  View2d.cpp		\
 
 GAMESRCS	= Player.cpp 		\
 		  Gamer.cpp		\
@@ -62,13 +64,8 @@ BOMBSRCS	= BombClassic.cpp	\
 		  BombVirus.cpp		\
 		  IBomb.cpp		\
 		  BombMine.cpp		\
-		  BombBarrel.cpp		\
+		  BombBarrel.cpp	\
 		  BombFactory.cpp	\
-
-MENUSRCS	= AMenuObject.cpp	\
-		  MenuGrid.cpp		\
-		  Text2d.cpp		\
-		  View2d.cpp		\
 
 MISCSRCS	= Timer.cpp		\
 		  my_random.cpp		\
@@ -95,18 +92,16 @@ SRCS		+= $(addprefix $(BUFFDIR), $(BUFFSRCS))
 SRCS		+= $(addprefix $(BOMBDIR), $(BOMBSRCS))
 SRCS		+= $(addprefix $(THREADDIR), $(THREADSRCS))
 SRCS		+= $(addprefix $(EXCEPTDIR), $(EXCEPTSRCS))
-SRCS		+= $(addprefix $(TMPDIR), $(MENUSRCS))
-
 OBJS		= $(SRCS:.cpp=.o)
 
 CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -O3 -march=native
 CXXFLAGS	+= -ftree-vectorize -ffast-math
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
-CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(VLCDIR)/include/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
+CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
 CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS) -I./$(THREADDIR)
 
-LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(VLCDIR)/lib/ -L $(LUADIR)/lib
+LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib
 LDFLAGS		+= -pthread -lgdl_gl -lGL -lGLEW -lrt -lfbxsdk -lSDL -lSDL2 -ldl -llua -lvlc
 
 all: $(NAME)
