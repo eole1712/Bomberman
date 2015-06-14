@@ -436,10 +436,47 @@ void		Core::selectMenu()
       gameMenu();
   });
   grid->addObject(map2, [this] (void) {
-    gameMenu();
+    JSONDoc	map;
+    Gamer	*tmpGame;
+    Player	*player;
+
+    if (map.parse("resources/Map2.json"))
+      {
+	tmpGame = map.unserialize<Bomberman::Gamer*>("");
+	for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+	  {
+	    player = tmpGame->getRcs()->getPlayer(i);
+	    player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					       _assets[PLAYER]->getAnimationSpeed()));
+	  }
+	_prev = _game;
+	_change = true;
+	_game = tmpGame;
+      }
+    else
+      gameMenu();
   });
   grid->addObject(map3, [this] (void) {
-    gameMenu();
+    JSONDoc	map;
+    Gamer	*tmpGame;
+    Player	*player;
+
+    if (map.parse("resources/Map3.json"))
+      {
+	tmpGame = map.unserialize<Bomberman::Gamer*>("");
+	for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+	  {
+	    player = tmpGame->getRcs()->getPlayer(i);
+	    player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					       _assets[PLAYER]->getAnimationSpeed()));
+	  }
+	_prev = _game;
+	_change = true;
+	_game = tmpGame;
+      }
+    else
+      gameMenu();
+
   });
   grid->addObject(custom, [this] (void) {
     gameMenu();
