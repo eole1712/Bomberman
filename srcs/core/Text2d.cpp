@@ -30,26 +30,26 @@ Text2d::~Text2d()
 void		Text2d::update()
 {
   _geo.clear();
-  for (unsigned int i = 0; i < _text.size() && (34.98 * _size * i) < _width + _size * i
+  for (unsigned int i = 0; i < _text.size() && (22.50 * _size * i) < _width + _size * i
 	 ; i++)
     {
       _geo.push_back(new gdl::Geometry);
 
-      _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size),
+      _geo[i]->pushVertex(glm::vec3(_x + i * (22.50 * _size),
 				    _y,
 				    0));
-      _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
+      _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (22.50 * _size),
 				    _y,
 				    0));
-      _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (34.98 * _size),
+      _geo[i]->pushVertex(glm::vec3(_x + (i + 1) * (22.50 * _size),
 				    _y + 40 * _size,
 				    0));
-      _geo[i]->pushVertex(glm::vec3(_x + i * (34.98 * _size),
+      _geo[i]->pushVertex(glm::vec3(_x + i * (22.50 * _size),
 				    _y + 40 * _size,
 				    0));
       _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i), 1.0f));
-      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 1.0f));
-      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1), 0.0f));
+      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1) - 0.0005f, 1.0f));
+      _geo[i]->pushUv(glm::vec2(0.0078125 * (_text.at(i) + 1) - 0.0005f, 0.0f));
       _geo[i]->pushUv(glm::vec2(0.0078125 * _text.at(i), 0.0f));
       _geo[i]->build();
     }

@@ -13,6 +13,7 @@ VENDORSDIR	= $(SRCSDIR)/vendors/
 GDLDIR		= $(VENDORSDIR)/LibBomberman_linux_x64/
 LUADIR		= $(VENDORSDIR)/lua-5.3.0/
 LUABDIR		= $(VENDORSDIR)/LuaBridge/
+RJSONDIR	= $(VENDORSDIR)/rapidjson/
 
 LUAINCS		= $(LUADIR)/include/
 
@@ -89,11 +90,11 @@ SRCS		+= $(addprefix $(THREADDIR), $(THREADSRCS))
 SRCS		+= $(addprefix $(EXCEPTDIR), $(EXCEPTSRCS))
 OBJS		= $(SRCS:.cpp=.o)
 
-CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -g3 -march=native
+CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -O3 -march=native
 CXXFLAGS	+= -ftree-vectorize -ffast-math
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
-CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson
+CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(RJSONDIR)
 CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS) -I./$(THREADDIR)
 
 LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib

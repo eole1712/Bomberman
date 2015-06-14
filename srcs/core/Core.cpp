@@ -36,13 +36,13 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1800), _height(900), _god(false)
+  : _game(NULL), _change(false), _width(1800), _height(900), _god(false)
 {
   init();
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
-  : _change(false), _width(width), _height(height), _god(false)
+  : _game(NULL), _change(false), _width(width), _height(height), _god(false)
 {
   init();
 }
@@ -56,7 +56,8 @@ Core::~Core()
   _json->writeDown("./resources/json/Gamedata.json");
   delete (_mapList);
   delete (_scoreList);
-  delete _game;
+  if (_game != NULL)
+    delete _game;
   delete _json;
 }
 
@@ -199,12 +200,12 @@ void		Core::gameMenu()
 {
   MenuGrid*	grid = new MenuGrid;
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_2_background.tga");
-  Text2d*	map_height = new Text2d("20", 1475, 360, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	map_width = new Text2d("20", 1475, 300, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	aiField = new Text2d("10", 1475, 420, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	pField = new Text2d("1", 1485, 480, 100, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p1Field = new Text2d("Player1", 1115, 600, 400, 50, "resources/assets/textures/alpha3Blue.tga");
-  Text2d*	p2Field = new Text2d("Player2", 1115, 660, 400, 50, "resources/assets/textures/alpha3Blue.tga");
+  Text2d*	map_height = new Text2d("20", 1480, 365, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	map_width = new Text2d("20", 1480, 305, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	aiField = new Text2d("10", 1480, 425, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	pField = new Text2d("1", 1490, 485, 100, 50, "resources/assets/textures/police.tga");
+  Text2d*	p1Field = new Text2d("Player1", 1115, 605, 400, 50, "resources/assets/textures/police.tga");
+  Text2d*	p2Field = new Text2d("Player2", 1115, 665, 400, 50, "resources/assets/textures/police.tga");
   View2d*	start = new View2d(1065, 720, 350, 50, "resources/assets/textures/menu_2_start.tga");
   View2d*	p1TextBackGround = new View2d(1110, 600, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
   View2d*	p2TextBackGround = new View2d(1110, 660, 410, 55, "resources/assets/textures/menu_2_placeholder.tga");
@@ -435,10 +436,47 @@ void		Core::selectMenu()
       gameMenu();
   });
   grid->addObject(map2, [this] (void) {
-    gameMenu();
+    JSONDoc	map;
+    Gamer	*tmpGame;
+    Player	*player;
+
+    if (map.parse("resources/Map2.json"))
+      {
+	tmpGame = map.unserialize<Bomberman::Gamer*>("");
+	for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+	  {
+	    player = tmpGame->getRcs()->getPlayer(i);
+	    player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					       _assets[PLAYER]->getAnimationSpeed()));
+	  }
+	_prev = _game;
+	_change = true;
+	_game = tmpGame;
+      }
+    else
+      gameMenu();
   });
   grid->addObject(map3, [this] (void) {
-    gameMenu();
+    JSONDoc	map;
+    Gamer	*tmpGame;
+    Player	*player;
+
+    if (map.parse("resources/Map3.json"))
+      {
+	tmpGame = map.unserialize<Bomberman::Gamer*>("");
+	for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+	  {
+	    player = tmpGame->getRcs()->getPlayer(i);
+	    player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					       _assets[PLAYER]->getAnimationSpeed()));
+	  }
+	_prev = _game;
+	_change = true;
+	_game = tmpGame;
+      }
+    else
+      gameMenu();
+
   });
   grid->addObject(custom, [this] (void) {
     gameMenu();
@@ -486,10 +524,10 @@ void		Core::scoreMenu()
     {
       if (top5[i].first != "")
 	{
-	  top[i] = new Text2d((top5[i].first + std::string(14 - top5[i].first.size() - lengthCalc(top5[i].second), ' ')
+	  top[i] = new Text2d((top5[i].first + std::string(20 - top5[i].first.size() - lengthCalc(top5[i].second), ' ')
 			       + Conversion::typeToString<unsigned int>(top5[i].second)),
 			      410, 280 + (i * ((i < 3) ? (110) : (102))), 1200, 55,
-			      "resources/assets/textures/alpha3Blue.tga");
+			      "resources/assets/textures/police.tga");
 	  top[i]->unFocus();
 	  grid->addObject(top[i], [] (void) {});
 	}
@@ -555,6 +593,11 @@ bool		Core::update()
     {
       _change = false;
       delete _prev;
+    }
+  else if (!ret)
+    {
+      _prev = _game;
+      _change = true;
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);

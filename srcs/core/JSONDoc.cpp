@@ -17,8 +17,8 @@
 #include "DestroyableWall.hpp"
 #include "Spawn.hpp"
 #include "Empty.hpp"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/rapidjson.h"
+#include "stringbuffer.h"
+#include "rapidjson.h"
 #include "PlayerAI.hpp"
 
 JSONDoc::JSONDoc()
@@ -94,11 +94,14 @@ void				JSONDoc::serialize<Bomberman::ScoreList>(const Bomberman::ScoreList &obj
   while (_doc.HasMember("Scores"))
     _doc.RemoveMember("Scores");
   std::for_each(names.cbegin(), names.cend(), [this, &object, &obj] (const std::string& value) {
-    rapidjson::Value arr(rapidjson::kArrayType);
-    std::for_each(obj.getScore(value).begin(), obj.getScore(value).end(), [this, &arr] (unsigned int score) {
-      arr.PushBack(score, _doc.GetAllocator());
-    });
-    object.AddMember(value.c_str() , arr, _doc.GetAllocator());
+    if ((value.find("AI")))
+      {
+	rapidjson::Value arr(rapidjson::kArrayType);
+	std::for_each(obj.getScore(value).begin(), obj.getScore(value).end(), [this, &arr] (unsigned int score) {
+	  arr.PushBack(score, _doc.GetAllocator());
+	});
+	object.AddMember(value.c_str() , arr, _doc.GetAllocator());
+      }
   });
   _doc.AddMember("Scores", object, _doc.GetAllocator());
 }
