@@ -1,6 +1,6 @@
 CC		= g++
 
-NAME		= bomberman
+NAME		= bomberman 
 
 SRCSDIR		= srcs
 GAMEDIR		= $(SRCSDIR)/game/
