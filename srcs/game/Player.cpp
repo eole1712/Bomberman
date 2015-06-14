@@ -183,6 +183,11 @@ void			Player::resetShield()
     return _putBombStatus;
   }
 
+  unsigned int		Player::getShield() const
+  {
+    return _shield;
+  }
+
   void			Player::setPutBombStatus(bool status)
   {
     _putBombStatus = status;

@@ -4,7 +4,7 @@
 #include "LuaScript.hpp"
 
 /*
-** Constructors/Destructor
+** Constructors / Destructor
 */
 LuaScript::LuaScript()
 {

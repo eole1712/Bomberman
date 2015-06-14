@@ -413,6 +413,7 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   IObject::Type	type = _stock->getBomb(player->getBombType())->getObjectType();
   static int		angle = 0;
 
+  showHeart(shader, player);
   if (!player->isAlive() || player->zeroBomb() || player->isParalyzed())
     return;
   shader.setUniform("view", glm::mat4());
@@ -442,32 +443,57 @@ void			Gamer::drawPlayerArme(gdl::Clock &clock,
   angle = (angle + 1) % 360;
 }
 
-void		Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
+void			Gamer::showHeart(gdl::BasicShader &shader, Player *player)
 {
-  if (!player->isAlive() || !_map->hasToQuit() || _map->getRcs()->getWinner() != player)
+  static View2d		heart(0, 0, 1800, 900, "resources/assets/textures/heart.tga");
+
+
+  if (!player->isAlive())
     return;
-
-  View2d*	win = !_twoPlayers ?
-    new View2d(0, 0, 1800, 900, "resources/assets/textures/win1p.tga") :
-    new View2d(0, 0, 900, 900, "resources/assets/textures/win2p.tga");
-
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
-  win->draw(shader);
+
+  unsigned int x = 80;
+  unsigned int y = 820;
+
+  for (unsigned int i = 0; i <= player->getShield(); i++)
+    {
+      heart.update(x, y, 82 * 0.6, 77 * 0.6);
+      heart.draw(shader);
+      x += 60;
+    }
 }
 
-void		Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
+void			Gamer::drawEndWin(gdl::BasicShader &shader, Player *player)
 {
+  static View2d		win1(0, 0, 1800, 900, "resources/assets/textures/win1p.tga");
+  static View2d		win2(0, 0, 900, 900, "resources/assets/textures/win2p.tga");
+
+
+  if (!player->isAlive() || !_map->hasToQuit() || _map->getRcs()->getWinner() != player)
+    return;
+  shader.setUniform("view", glm::mat4());
+  shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
+  if (!_twoPlayers)
+    win1.draw(shader);
+  else
+    win2.draw(shader);
+}
+
+void			Gamer::drawEndGame(gdl::BasicShader &shader, Player *player)
+{
+  static View2d		lose1(0, 0, 1800, 900, "resources/assets/textures/lose1p.tga");
+  static View2d		lose2(0, 0, 900, 900, "resources/assets/textures/lose2p.tga");
+
   if (player->isAlive() || player->getDeadTimer()->isFinished())
     return drawEndWin(shader, player);
 
-  View2d*	lose = !_twoPlayers ?
-    new View2d(0, 0, 1800, 900, "resources/assets/textures/lose1p.tga") :
-    new View2d(0, 0, 900, 900, "resources/assets/textures/lose2p.tga");
-
   shader.setUniform("view", glm::mat4());
   shader.setUniform("projection", glm::ortho(0.0f, 1800.0f / (_twoPlayers ? 2 : 1), 900.0f, 0.0f, -1000.0f, 1000.0f));
-  lose->draw(shader);
+  if (!_twoPlayers)
+    lose1.draw(shader);
+  else
+    lose2.draw(shader);
 }
 
 void		Gamer::drawAll(gdl::Clock &clock, gdl::BasicShader &shader,

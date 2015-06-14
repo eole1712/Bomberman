@@ -59,6 +59,7 @@ public:
   Player*		randAlivePlayer() const;
   void			drawEndGame(gdl::BasicShader &shader, Player *player);
   void			drawEndWin(gdl::BasicShader &shader, Player *player);
+  void			showHeart(gdl::BasicShader &shader, Player *player);
 
 private:
   Gamer(const Gamer &);
