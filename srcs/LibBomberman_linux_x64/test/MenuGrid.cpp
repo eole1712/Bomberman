@@ -91,7 +91,7 @@ void	MenuGrid::drawAll(gdl::Clock &, gdl::BasicShader &shader, std::vector<Asset
   //shader.bind();
   // shader.setUniform("view", _camera.getView());
   // shader.setUniform("projection", _camera.getProjection());
-glEnable(GL_BLEND);
+  glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDisable(GL_DEPTH_TEST);
 
