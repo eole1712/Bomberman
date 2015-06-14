@@ -42,14 +42,14 @@ const Gamer::HandleKeyBook	Gamer::handleKeyBookIntro	= Gamer::getHandleKeyBookIn
 ** Constructor/Destructors
 */
 Gamer::Gamer()
-  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
+  : _width(10), _height(10), _menu(NULL), _quit(false), _resume(false), _twoPlayers(false), _intro(true), _viewMode(true), _player1(""), _player2(""), _nbPlayers(6), _spect(NULL), _camera(90.0, 1800, 900), _camera2(90.0, 900, 900)
 {
   _json = new JSONDoc;
   this->init();
 }
 
 Gamer::Gamer(unsigned int width, unsigned int height, unsigned int widthCam, unsigned int heightCam, bool twoPlayers, std::string const& p1, std::string const& p2, unsigned int nbPlayers)
-  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
+  : _width(width), _height(height), _menu(NULL),  _quit(false), _resume(false), _twoPlayers(twoPlayers), _intro(false), _viewMode(true),_player1(p1), _player2(p2), _nbPlayers(nbPlayers), _spect(NULL), _camera(90.0, widthCam, heightCam), _camera2(90.0, widthCam, heightCam)
 {
   _json = new JSONDoc;
   this->init();
@@ -76,7 +76,6 @@ void	Gamer::init()
   std::string			mapName = "Classic Map";
   std::vector<std::string>	vec;
   Player			*player;
-  Player			*player2;
 
   _mapList = ((_json->parse("./resources/json/Gamedata.json"))
 	      ? (_json->unserialize<Bomberman::MapList*>())
@@ -93,18 +92,6 @@ void	Gamer::init()
       player = _stock->getPlayer(i);
       player->initGame(_map);
     }
-  player = _stock->getPlayer(0);
-  player2 = _stock->getPlayer(_stock->getNbPlayer() - 1);
-  _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
-		      + glm::rotate(glm::vec3(2.5, 4, 0),
-				    player->getRotation().y + 90,
-				    glm::vec3(0, 1, 0)));
-  _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
-  _camera2.setPosition(player2->getPosition() + glm::vec3(-0.5, 0, -0.5)
-		       + glm::rotate(glm::vec3(2.5, 4, 0),
-				     player2->getRotation().y + 90,
-				     glm::vec3(0, 1, 0)));
-  _camera2.setRotation(player2->getPosition() + glm::vec3(-0.5, 0, -0.5));
 }
 
 Bomberman::Map*		Gamer::getMap() const
@@ -261,7 +248,8 @@ void		Gamer::updateCamera()
 	player = _spect;
     }
   _camera.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
-		      + glm::rotate(glm::vec3(2.5, 4, 0),
+		      + glm::rotate(((_viewMode) ? glm::vec3(2.5, 4, 0) :
+				     glm::vec3(0.0001, 10, 0)),
 				    player->getRotation().y + 90,
 				    glm::vec3(0, 1, 0)));
   _camera.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
@@ -276,12 +264,13 @@ void		Gamer::updateCamera()
 	  if (_spect && _spect->isAlive())
 	    player = _spect;
 	}
-      _camera2.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
-			   + glm::rotate(glm::vec3(2.5, 4, 0),
-					 player->getRotation().y + 90,
-					 glm::vec3(0, 1, 0)));
-      _camera2.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
-      _camera2.updateView();
+	_camera2.setPosition(player->getPosition() + glm::vec3(-0.5, 0, -0.5)
+			     + glm::rotate(((_viewMode) ? glm::vec3(2.5, 4, 0) :
+					    glm::vec3(0.0001, 10, 0)),
+					   player->getRotation().y + 90,
+					   glm::vec3(0, 1, 0)));
+	_camera2.setRotation(player->getPosition() + glm::vec3(-0.5, 0, -0.5));
+	_camera2.updateView();
     }
 }
 
@@ -342,7 +331,9 @@ void		Gamer::draw(gdl::Clock &clock,
 	  if (player)
 	    tmp = glm::rotate(pos - player->getPosition(),
 			      -player->getRotation().y, glm::vec3(0, 1, 0));
-	  if (player == NULL || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
+	  if (player == NULL
+	      || (!_viewMode && tmp.x > -21 && tmp.x < 21 && tmp.z > -21 && tmp.z < 21)
+	      || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	    {
 	      if (pos.x == -1 || pos.z == -1 || pos.x == _width || pos.z == _height)
 		{
@@ -387,7 +378,9 @@ void		Gamer::draw(gdl::Clock &clock,
       if (player)
 	tmp = glm::rotate(drawPlayer->getPosition() - player->getPosition(),
 			  -player->getRotation().y, glm::vec3(0, 1, 0));
-      if (player == NULL || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
+      if (player == NULL
+	  || (!_viewMode && tmp.x > -21 && tmp.x < 21 && tmp.z > -21 && tmp.z < 21)
+	  || (tmp.x > -20 && tmp.x < 20 && tmp.z > -5 && tmp.z < 15))
 	drawPlayer->draw(*assets[PLAYER], shader, clock);
     }
   shader.setUniform("color", glm::vec4(1.0));
@@ -517,20 +510,16 @@ bool				Gamer::handleKeyEvents(const float elapsedTime, gdl::Input& input)
   return true;
 }
 
-bool				Gamer::handleKeyToPause(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToPause(const float, gdl::Input&)
 {
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
   pauseMenu();
   return true;
 }
 
-bool				Gamer::handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToP1PutBomb(const float, gdl::Input&)
 {
   Player*			player;
 
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
   if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   if (!player->getPutBombStatus())
@@ -541,12 +530,10 @@ bool				Gamer::handleKeyToP1PutBomb(const float elapsedTime, gdl::Input& input)
   return true;
 }
 
-bool				Gamer::handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToP2PutBomb(const float, gdl::Input&)
 {
   Player*			player;
 
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
   if (!_twoPlayers)
     return true;
   if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
@@ -559,24 +546,20 @@ bool				Gamer::handleKeyToP2PutBomb(const float elapsedTime, gdl::Input& input)
   return true;
 }
 
-bool				Gamer::handleKeyToP1Up(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToP1Up(const float elapsedTime, gdl::Input&)
 {
   Player*			player;
 
-  static_cast<void>(elapsedTime);
-  static_cast<void>(input);
   if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(player->getRotation().y, elapsedTime);
   return (true);
 }
 
-bool				Gamer::handleKeyToP1Down(const float elapsedTime, gdl::Input& input)
+bool				Gamer::handleKeyToP1Down(const float  elapsedTime, gdl::Input&)
 {
   Player*			player;
 
-  static_cast<void>(input);
-  static_cast<void>(elapsedTime);
   if ((player = (_stock->getPlayer(0))) == NULL)
     throw std::runtime_error("Got a null value instead of a player from RessourceStock");
   player->move(180 + player->getRotation().y, elapsedTime);
@@ -633,7 +616,6 @@ bool				Gamer::handleKeyToP2Left(const float elapsedTime, gdl::Input& input)
 {
   Player*			player;
 
-  static_cast<void>(input);
   if (input.getKey(SDLK_d))
     return true;
   if ((player = (_stock->getPlayer(_stock->getNbPlayer() - 1))) == NULL)
