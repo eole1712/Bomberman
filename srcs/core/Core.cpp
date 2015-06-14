@@ -421,7 +421,7 @@ void		Core::selectMenu()
 {
   MenuGrid*	grid = new MenuGrid;
   View2d*	background = new View2d(0, 0, 1800, 900, "resources/assets/textures/menu_select.tga");
-  View2d*	map1 = new View2d(200, 200, 330, 136, "resources/assets/textures/menu_select_map1.tga");
+  View2d*	map1 = new View2d(195, 200, 330, 136, "resources/assets/textures/menu_select_map1.tga");
   View2d*	map2 = new View2d(200, 300, 330, 136, "resources/assets/textures/menu_select_map2.tga");
   View2d*	map3 = new View2d(200, 400, 330, 136, "resources/assets/textures/menu_select_map3.tga");
   View2d*	custom = new View2d(700, 650, 636, 126, "resources/assets/textures/menu_select_custom.tga");
