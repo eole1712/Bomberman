@@ -36,13 +36,13 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _change(false), _width(1800), _height(900)
+  : _game(NULL), _change(false), _width(1800), _height(900)
 {
   init();
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
-  : _change(false), _width(width), _height(height)
+  : _game(NULL), _change(false), _width(width), _height(height)
 {
   init();
 }
@@ -56,7 +56,8 @@ Core::~Core()
   _json->writeDown("./resources/json/Gamedata.json");
   delete (_mapList);
   delete (_scoreList);
-  delete _game;
+  if (_game != NULL)
+    delete _game;
   delete _json;
 }
 
@@ -414,7 +415,25 @@ void		Core::selectMenu()
 
   });
   grid->addObject(map1, [this] (void) {
-    gameMenu();
+    JSONDoc	map;
+    Gamer	*tmpGame;
+    Player	*player;
+
+    if (map.parse("resources/Map1.json"))
+      {
+	tmpGame = map.unserialize<Bomberman::Gamer*>("");
+	for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+	  {
+	    player = tmpGame->getRcs()->getPlayer(i);
+	    player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					       _assets[PLAYER]->getAnimationSpeed()));
+	  }
+	_prev = _game;
+	_change = true;
+	_game = tmpGame;
+      }
+    else
+      gameMenu();
   });
   grid->addObject(map2, [this] (void) {
     gameMenu();
@@ -492,7 +511,7 @@ void		Core::firstMenu()
   View2d*	text4 = new View2d(1100, 775, 500, 101, "resources/assets/textures/quit.tga");
 
   back->unFocus();
-   grid->addObject(back, [] (void) {
+  grid->addObject(back, [] (void) {
     ;
   });
   grid->addObject(text2, [this, &grid] (void) {
@@ -504,19 +523,17 @@ void		Core::firstMenu()
     JSONDoc j;
     if (j.parse("resources/SavedDatas.json"))
       {
-	std::cout << "Ca marche" << std::endl;
 	tmpGame = j.unserialize<Bomberman::Gamer*>("");
-    for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
-      {
-	player = tmpGame->getRcs()->getPlayer(i);
-	player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
-					_assets[PLAYER]->getAnimationSpeed()));
+	for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
+	  {
+	    player = tmpGame->getRcs()->getPlayer(i);
+	    player->setAnimation(new Animation(_assets[PLAYER]->getAnimationFrame(),
+					       _assets[PLAYER]->getAnimationSpeed()));
+	  }
+	_prev = _game;
+	_change = true;
+	_game = tmpGame;
       }
-    _prev = _game;
-    _change = true;
-    _game = tmpGame;
-      }
-    std::cout << "Désolé, fonctionnalité encore non implémentée" << std::endl;
   });
   grid->addObject(text3, [this] (void) {
     scoreMenu();

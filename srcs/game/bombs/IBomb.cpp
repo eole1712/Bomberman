@@ -59,6 +59,11 @@ bool		IBomb::exploseCase(Map *map, int x, int y,
       	    }
       	  else
       	    map->addFire(player, x, y, Fire::explosionTime / (r + 1));
+	  // IBomb		*bomb = map->getRcs()->getBomb(Bomb::VIRUS);
+	  // BombTimer		*bombT = new BombTimer(player, player->getRange(), bomb, 0.5, x, y, true);
+
+	  // map->addBomb(bombT);
+	  // map->setCellValue(x, y, bombT);
       	}
       return true;
     }
