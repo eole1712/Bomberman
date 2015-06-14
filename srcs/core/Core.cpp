@@ -36,13 +36,13 @@ namespace Bomberman
 {
 
 Core::Core()
-  : _game(NULL), _change(false), _width(1800), _height(900)
+  : _game(NULL), _change(false), _width(1800), _height(900), _god(false)
 {
   init();
 }
 
 Core::Core(const unsigned int & width, const unsigned int & height)
-  : _game(NULL), _change(false), _width(width), _height(height)
+  : _game(NULL), _change(false), _width(width), _height(height), _god(false)
 {
   init();
 }
@@ -174,15 +174,15 @@ void				Core::intro()
 }
 
 void		Core::startGame(bool twoPlayers, std::string const& p1, std::string const& p2,
-				unsigned int x, unsigned int y, unsigned int nbAI, std::string mapName)
+				unsigned int x, unsigned int y, unsigned int nbAI, std::string mapName, bool god)
 {
   Player	*player;
   Gamer		*tmpGame;
 
   if (twoPlayers)
-    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, nbAI + 2, _mapList->getMap(mapName), _scoreList);
+    tmpGame = new Gamer(x, y, _width / 2, _height, twoPlayers, p1, p2, nbAI + 2, _mapList->getMap(mapName), _scoreList, god);
   else
-    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, nbAI + 1, _mapList->getMap(mapName), _scoreList);
+    tmpGame = new Gamer(x, y, _width, _height, twoPlayers, p1, p2, nbAI + 1, _mapList->getMap(mapName), _scoreList, god);
   _assets[SKYBOX]->setScale(glm::vec3(10.5 * (x + y) / 2));
   _assets[SKYBOX]->setPosition(glm::vec3(x / 2, 0, y / 2));
   for (unsigned int i = 0; i < tmpGame->getRcs()->getNbPlayer(); ++i)
@@ -387,7 +387,7 @@ void		Core::gameMenu()
     int ai = Conversion::stringToType<int>(aiField->getText());
     bool players = Conversion::stringToType<int>(pField->getText()) == 1 ? false : true;
 
-    startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai, "");
+    startGame(players, p1Field->getText(), p2Field->getText(), height, width, ai, "", _god);
   });
   grid->addObject(back, [this] (void) {
     selectMenu();
@@ -601,6 +601,8 @@ bool		Core::update()
     }
   _context.updateClock(_clock);
   _context.updateInputs(_input);
+  if (_input.getKey(SDLK_g))
+    _god = true;
   return ret;
 }
 

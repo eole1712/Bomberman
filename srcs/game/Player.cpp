@@ -361,18 +361,17 @@ void			Player::move(const float & direction, float const & elsapsedTime)
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
       type = _map->getCellValue(static_cast<int>(npos.x), static_cast<int>(getPosition().z))->getObjectType();
-      if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
-	  (static_cast<int>(npos.x) == static_cast<int>(getX()) && static_cast<int>(getPosition().z) == static_cast<int>(getY())))
+      if (_map->isGod() || (type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
+  	  (static_cast<int>(npos.x) == static_cast<int>(getX()) && static_cast<int>(getPosition().z) == static_cast<int>(getY())))
 	translate(glm::vec3(pos.x, 0, 0));
     }
   if (npos.z > 0 && npos.z < _map->getHeight())
     {
       type = _map->getCellValue(static_cast<int>(getPosition().x), static_cast<int>(npos.z))->getObjectType();
-      if ((type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
-	  (static_cast<int>(getPosition().x) == static_cast<int>(getX()) && static_cast<int>(npos.z) == static_cast<int>(getY())))
+      if (_map->isGod() || (type != IObject::DESTROYABLEWALL && type != IObject::WALL && type < IObject::BOMB) ||
+  	  (static_cast<int>(getPosition().x) == static_cast<int>(getX()) && static_cast<int>(npos.z) == static_cast<int>(getY())))
 	translate(glm::vec3(0, 0, pos.z));
     }
-
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::BONUS)
     {
       addBuff(dynamic_cast<IBuff*>(_map->getCellValue(getX(), getY())));
@@ -391,10 +390,10 @@ void			Player::move(const float & direction, float const & elsapsedTime)
   if (_animation->queueEmpty())
     {
       _animation->setAnim(10, 34, false,
-			 _animation->getDefaultSpeed() / (getSpeed() + 0.5));
+			  _animation->getDefaultSpeed() / (getSpeed() + 0.5));
       _animation->setAnim(34, 55, false, _animation->getDefaultSpeed() / getSpeed(), true);
       _animation->setAnim(55, 119, false,
-			 _animation->getDefaultSpeed() / (getSpeed() + 0.5));
+			  _animation->getDefaultSpeed() / (getSpeed() + 0.5));
     }
   animFrame = _animation->getFrame();
   if (animFrame >= 34 && animFrame < 55)
@@ -453,6 +452,21 @@ Bomb::Type		Player::getBombType() const
 
 void			Player::putBomb()
 {
+  static int		i = 0;
+
+  if (_map->isGod())
+    {
+      if (i > 0)
+	{
+	  if (i % 2 == 0)
+	    _map->setCellValue(getX(), getY(), _map->getRcs()->getObject(IObject::WALL));
+	  else
+	    _map->setCellValue(getX(), getY(), _map->getRcs()->getObject(IObject::DESTROYABLEWALL));
+	  i++;
+	  return;
+	}
+      i++;
+    }
   if (_map && isAlive() && !isParalyzed() && !zeroBomb() && _map->getCellValue(getX(), getY())->getObjectType() == IObject::EMPTY)
     {
       IBomb	*bomb = _map->getRcs()->getBomb(getBombType());
@@ -478,6 +492,8 @@ void			Player::putTimedBomb(unsigned int x, unsigned int y)
 
 bool			Player::tryToKill()
 {
+  if (_map->isGod())
+    return false;
   if (isAlive())
     {
       if (canAbsorb())

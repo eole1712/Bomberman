@@ -42,7 +42,7 @@ public:
   void			attachObject(Asset3d *);
   void			loadTextures();
   void			startGame(bool, std::string const&, std::string const&,
-				  unsigned int, unsigned int, unsigned int, std::string);
+				  unsigned int, unsigned int, unsigned int, std::string, bool god = false);
   void			gameMenu();
   void			selectMenu();
   void			firstMenu();
@@ -75,6 +75,7 @@ private:
   gdl::BasicShader		_shader;
   float				_speed;
   bool				_status;
+  bool				_god;
 
 private:
   std::vector<Asset3d *>	_assets;
