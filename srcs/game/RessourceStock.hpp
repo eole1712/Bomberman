@@ -33,6 +33,7 @@ public:
   RessourceStock &operator=(const RessourceStock &);
 
   void		init();
+  void		initSounds();
 
 public:
   IObject	*getObject(IObject::Type) const;
@@ -68,7 +69,8 @@ private:
   SoundManager*			_music;
   SoundManager*			_calm;
   std::vector<std::string>	_sounds;
-  std::vector<SoundManager*>	_soundsPlaying;
+  std::vector<float>		_soundsTime;
+  std::vector<std::pair<SoundManager*, Timer*> >	_soundsPlaying;
   bool				_toggleMusic;
   bool				_toggleSounds;
   bool				_twoPlayers;
