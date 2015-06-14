@@ -356,7 +356,7 @@ void			Player::move(const float & direction, float const & elsapsedTime)
   if (pos.z < -1)
     pos.z = -1;
   npos = getPosition() + pos;
-  std::cout << pos.x <<"|" << pos.y << "|" << pos.z<< std::endl;
+  //  std::cout << pos.x <<"|" << pos.y << "|" << pos.z<< std::endl;
   if (npos.x > 0 && npos.x < _map->getWidth())
     {
       type = _map->getCellValue(static_cast<int>(npos.x), static_cast<int>(getPosition().z))->getObjectType();
