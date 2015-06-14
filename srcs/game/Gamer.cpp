@@ -86,7 +86,7 @@ Bomberman::Map*		Gamer::getMap() const
   return _map;
 }
 
-Bomberman::ScoreList*	Gamer::getScoreList() const
+Bomberman::ScoreList const*	Gamer::getScoreList() const
 {
   return _scoreList;
 }

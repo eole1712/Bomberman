@@ -159,7 +159,7 @@ public:
 
 public:
   void			setColor(glm::vec4 color);
-  glm::vec4		getColor() const;
+  glm::vec4 const&	getColor() const;
 
 public:
   Score			_score;

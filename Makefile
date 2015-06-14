@@ -1,6 +1,6 @@
 CC		= g++
 
-NAME		= bomberman 
+NAME		= bomberman
 
 SRCSDIR		= srcs
 GAMEDIR		= $(SRCSDIR)/game/
@@ -9,11 +9,10 @@ COREDIR		= $(SRCSDIR)/core/
 EXCEPTDIR	= $(SRCSDIR)/exceptions/
 BUFFDIR		= $(GAMEDIR)/buffs/
 BOMBDIR		= $(GAMEDIR)/bombs/
-GDLDIR		= $(SRCSDIR)/LibBomberman_linux_x64/
 VENDORSDIR	= $(SRCSDIR)/vendors/
+GDLDIR		= $(VENDORSDIR)/LibBomberman_linux_x64/
 LUADIR		= $(VENDORSDIR)/lua-5.3.0/
 LUABDIR		= $(VENDORSDIR)/LuaBridge/
-THREADDIR	= $(SRCSDIR)/threading/
 
 LUAINCS		= $(LUADIR)/include/
 
@@ -72,10 +71,6 @@ MISCSRCS	= Timer.cpp		\
 		  StringConversion.cpp	\
 		  LuaScript.cpp		\
 
-THREADSRCS	= Mutex.cpp		\
-		  CondVar.cpp		\
-		  ScopedLock.cpp	\
-
 EXCEPTSRCS	= ResourceUnavailable.cpp	\
 		  LuaError.cpp			\
 		  InvalidNbPlayers.cpp		\
@@ -98,7 +93,7 @@ CXXFLAGS	+= -W -Wall -Werror -Wextra -std=c++11 -g3 -march=native
 CXXFLAGS	+= -ftree-vectorize -ffast-math
 CXXFLAGS	+= -I./$(SRCSDIR) -I./$(GAMEDIR) -I./$(COREDIR) -I./$(BOMBDIR)
 CXXFLAGS	+= -I./$(MISCDIR) -I./$(BUFFDIR) -I./$(EXCEPTDIR) -I./srcs/server/
-CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson -I ./$(TMPDIR)
+CXXFLAGS	+= -I./$(GDLDIR)/includes/ -I./$(COREDIR)/rapidjson
 CXXFLAGS	+= -I./$(LUABDIR) -I./$(LUABDIR)/detail -I./$(LUAINCS) -I./$(THREADDIR)
 
 LDFLAGS		+= -L $(GDLDIR)/libs/ -L $(LUADIR)/lib

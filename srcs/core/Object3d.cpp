@@ -46,17 +46,17 @@ void		Object3d::setScale(glm::vec3 const& scale)
   _scale = scale;
 }
 
-glm::vec3	Object3d::getPosition() const
+glm::vec3 const&	Object3d::getPosition() const
 {
   return _position;
 }
 
-glm::vec3	Object3d::getRotation() const
+glm::vec3 const&	Object3d::getRotation() const
 {
   return _rotation;
 }
 
-glm::vec3	Object3d::getScale() const
+glm::vec3 const&	Object3d::getScale() const
 {
   return _scale;
 }

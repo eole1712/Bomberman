@@ -14,12 +14,12 @@ public:
   void				reset();
   void				reset(uintmax_t time);
   bool				isFinished();
-  uintmax_t			getElapsedTime();
+  uintmax_t			getElapsedTime() const;
 
 private:
   Timer(const Timer &);
   Timer &operator=(const Timer &);
-  std::chrono::microseconds	getCurTime();
+  std::chrono::microseconds	getCurTime() const;
 
 private:
   std::chrono::microseconds				_time;

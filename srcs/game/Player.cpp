@@ -505,7 +505,7 @@ void			Player::setColor(glm::vec4 color)
   _color = color;
 }
 
-glm::vec4		Player::getColor() const
+glm::vec4 const&	Player::getColor() const
 {
   return _color;
 }
