@@ -99,7 +99,7 @@ namespace Bomberman
       _playersCoo.clear();
       for (unsigned int i = 0; i < map.getRcs()->getNbPlayer(); ++i)
       	{
-      	  Player*	player = dynamic_cast<Player*>(map.getRcs()->getPlayer(i));
+      	  Player*	player = map.getRcs()->getPlayer(i);
 
       	  if (player->isAlive())
       	    _playersCoo.push_back(std::tuple<std::string, int, int>(player->getName(), player->getX(), player->getY()));
