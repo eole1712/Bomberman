@@ -31,7 +31,7 @@ Player::~Player()
 {
   for (std::list<BuffTimer*>::iterator it = _buff.begin(); it != _buff.end(); it++)
     delete *it;
-  if (_scoreList != NULL)
+  if (_scoreList != NULL && !(_name.substr(0, 2).compare("AI") == 0))
     _scoreList->addScore(getName(), getScore().getValue());
 }
 
@@ -379,14 +379,10 @@ void			Player::move(const float & direction, float const & elsapsedTime)
       _map->getRcs()->getSound(Bomberman::RessourceStock::PICKUP)->play();
     }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::FIRE)
-    {
+    if (tryToKill())
       dynamic_cast<Fire*>(_map->getCellValue(getX(), getY()))->getPlayer()->incScore();
-      tryToKill();
-    }
   if (_map->getCellValue(getX(), getY())->getObjectType() == IObject::MINE)
-    {
-      dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished(true);
-    }
+    dynamic_cast<BombTimer*>(_map->getCellValue(getX(), getY()))->setFinished(true);
   if (_animation->queueEmpty())
     {
       _animation->setAnim(10, 34, false,
